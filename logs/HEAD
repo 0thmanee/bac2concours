@@ -1,0 +1,10 @@
+0000000000000000000000000000000000000000 4cf2d1fa885035a5a928682b83a001809ce4ead1 0thmanee <bouchtaothmane75@gmail.com> 1765133115 +0100	commit (initial): first commit
+4cf2d1fa885035a5a928682b83a001809ce4ead1 0000000000000000000000000000000000000000 0thmanee <bouchtaothmane75@gmail.com> 1765133115 +0100	Branch: renamed refs/heads/main to refs/heads/main
+4cf2d1fa885035a5a928682b83a001809ce4ead1 4cf2d1fa885035a5a928682b83a001809ce4ead1 0thmanee <bouchtaothmane75@gmail.com> 1765133115 +0100	Branch: renamed refs/heads/main to refs/heads/main
+4cf2d1fa885035a5a928682b83a001809ce4ead1 b844cc8bcae38ed9e7949002415b620c8950785c 0thmanee <bouchtaothmane75@gmail.com> 1765135688 +0100	commit: feat: Implement quiz management features for admin and student interfaces
+b844cc8bcae38ed9e7949002415b620c8950785c 665fe40d594392b0a272cff45bbd581054a6f0ac 0thmanee <bouchtaothmane75@gmail.com> 1765146845 +0100	commit: feat: Add 'Écoles' navigation item to the student sidebar
+665fe40d594392b0a272cff45bbd581054a6f0ac 5c5d6b84fd53118fe601386c5f976d077987847f 0thmanee <bouchtaothmane75@gmail.com> 1766870563 +0100	commit: feat: Add initial data for schools, users, and videos; implement types for books, quizzes, and schools
+5c5d6b84fd53118fe601386c5f976d077987847f b21f092f7f01b4658de28a5bcaf07983933ddb55 0thmanee <bouchtaothmane75@gmail.com> 1766872503 +0100	commit: feat: update student sidebar navigation path and add school detail and listing pages
+b21f092f7f01b4658de28a5bcaf07983933ddb55 7c18c136f15a9079ecbeb7b9d542e03130890d96 0thmanee <bouchtaothmane75@gmail.com> 1766877052 +0100	commit: refactor: centralize school and book data management
+7c18c136f15a9079ecbeb7b9d542e03130890d96 e1fe8e0a36d9d3503a8e14a0d31311ef8865680e 0thmanee <bouchtaothmane75@gmail.com> 1766878082 +0100	commit: feat: enhance SVG handling and update dependencies
+e1fe8e0a36d9d3503a8e14a0d31311ef8865680e 15a9289de6599cf5224ef371c607dd68d6321bde 0thmanee <bouchtaothmane75@gmail.com> 1766881519 +0100	commit: chore: update ESLint configuration, refine error messages, and enhance type handling

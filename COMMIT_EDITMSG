@@ -1,0 +1,6 @@
+chore: update ESLint configuration, refine error messages, and enhance type handling
+
+- Disabled the "react/no-unescaped-entities" rule in ESLint configuration for better JSX handling.
+- Updated package dependencies in package-lock.json and package.json, including adding new types for three.js.
+- Refined error messages in AddBookModal, EditBookModal, AddVideoModal, and EditVideoModal to use standard apostrophe formatting.
+- Improved type handling in various components, ensuring consistency and clarity in data management.

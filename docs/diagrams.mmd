@@ -1,0 +1,709 @@
+# IncubationOS - System Diagrams
+
+This file contains comprehensive Mermaid diagrams for the IncubationOS project.
+
+---
+
+## 1. Database Entity Relationship Diagram (ERD)
+
+```mermaid
+erDiagram
+    User ||--o{ Startup : "founds/assigned"
+    User ||--o{ Expense : "submits"
+    User ||--o{ ProgressUpdate : "submits"
+    
+    Startup ||--o{ BudgetCategory : "has"
+    Startup ||--o{ Expense : "has"
+    Startup ||--o{ ProgressUpdate : "has"
+    
+    BudgetCategory ||--o{ Expense : "categorizes"
+    
+    User {
+        string id PK
+        string email UK
+        string password
+        string name
+        enum role "ADMIN|FOUNDER"
+        datetime emailVerified
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    Startup {
+        string id PK
+        string name
+        string description
+        string industry
+        datetime incubationStart
+        datetime incubationEnd
+        enum status "ACTIVE|INACTIVE"
+        float totalBudget
+        boolean isDeleted
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    BudgetCategory {
+        string id PK
+        string name
+        float maxBudget
+        string startupId FK
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    Expense {
+        string id PK
+        float amount
+        string description
+        datetime date
+        string receiptUrl
+        enum status "PENDING|APPROVED|REJECTED"
+        string adminComment
+        string categoryId FK
+        string startupId FK
+        string submittedById FK
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    ProgressUpdate {
+        string id PK
+        text whatWasDone
+        text whatIsBlocked
+        text whatIsNext
+        string startupId FK
+        string submittedById FK
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    IncubatorSettings {
+        string id PK
+        string incubatorName
+        enum updateFrequency "WEEKLY|MONTHLY"
+        boolean autoApproveExpenses
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    VerificationToken {
+        string id PK
+        string email
+        string token UK
+        datetime expires
+        datetime createdAt
+    }
+    
+    PasswordResetToken {
+        string id PK
+        string email
+        string token UK
+        datetime expires
+        datetime createdAt
+    }
+```
+
+---
+
+## 2. System Architecture
+
+```mermaid
+graph TB
+    subgraph "Client Layer"
+        Browser[Browser]
+        Mobile[Mobile Browser]
+    end
+    
+    subgraph "Next.js Application"
+        subgraph "Frontend - App Router"
+            AuthPages[Auth Pages<br/>Login, Register, Reset]
+            AdminDash[Admin Dashboard]
+            FounderDash[Founder Dashboard]
+            AdminPages[Admin Pages<br/>Startups, Budgets, Expenses, Reports]
+            FounderPages[Founder Pages<br/>Expenses, Progress]
+        end
+        
+        subgraph "API Layer"
+            AuthAPI[Auth API<br/>NextAuth.js]
+            StartupAPI[Startup API]
+            BudgetAPI[Budget API]
+            ExpenseAPI[Expense API]
+            ProgressAPI[Progress API]
+            ReportAPI[Report API]
+            SettingsAPI[Settings API]
+        end
+        
+        subgraph "Business Logic"
+            AuthService[Auth Service]
+            StartupService[Startup Service]
+            BudgetService[Budget Service]
+            ExpenseService[Expense Service]
+            ProgressService[Progress Service]
+            ReportService[Report Service]
+        end
+        
+        subgraph "Data Layer"
+            Prisma[Prisma ORM]
+            Validation[Zod Validation]
+        end
+    end
+    
+    subgraph "External Services"
+        Database[(PostgreSQL<br/>Database)]
+        S3[S3 Storage<br/>Receipt Uploads]
+        Email[Email Service<br/>Resend/Postmark]
+        Sentry[Sentry<br/>Error Tracking]
+    end
+    
+    Browser --> AuthPages
+    Browser --> AdminDash
+    Browser --> FounderDash
+    Browser --> AdminPages
+    Browser --> FounderPages
+    
+    AuthPages --> AuthAPI
+    AdminDash --> StartupAPI
+    AdminDash --> BudgetAPI
+    AdminDash --> ExpenseAPI
+    AdminDash --> ReportAPI
+    FounderDash --> ExpenseAPI
+    FounderDash --> ProgressAPI
+    
+    AuthAPI --> AuthService
+    StartupAPI --> StartupService
+    BudgetAPI --> BudgetService
+    ExpenseAPI --> ExpenseService
+    ProgressAPI --> ProgressService
+    ReportAPI --> ReportService
+    
+    AuthService --> Prisma
+    StartupService --> Prisma
+    BudgetService --> Prisma
+    ExpenseService --> Prisma
+    ProgressService --> Prisma
+    ReportService --> Prisma
+    
+    Prisma --> Validation
+    Prisma --> Database
+    
+    ExpenseService --> S3
+    AuthService --> Email
+    AuthService --> Sentry
+```
+
+---
+
+## 3. Authentication & Authorization Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Browser
+    participant Middleware
+    participant AuthAPI
+    participant AuthService
+    participant Database
+    participant Session
+    
+    User->>Browser: Access protected route
+    Browser->>Middleware: Request with no session
+    Middleware->>Browser: Redirect to /login
+    
+    User->>Browser: Enter credentials
+    Browser->>AuthAPI: POST /api/auth/login
+    AuthAPI->>AuthService: Validate credentials
+    AuthService->>Database: Query user by email
+    Database-->>AuthService: User data
+    AuthService->>AuthService: Verify password (bcrypt)
+    AuthService->>AuthService: Check email verification
+    AuthService->>Session: Create JWT session
+    Session-->>AuthAPI: Session token
+    AuthAPI-->>Browser: Set httpOnly cookie + redirect
+    
+    Browser->>Middleware: Request with session
+    Middleware->>Session: Verify JWT
+    Session-->>Middleware: User role (ADMIN/FOUNDER)
+    Middleware->>Middleware: Check route access
+    alt Admin role
+        Middleware->>Browser: Allow /admin/* routes
+    else Founder role
+        Middleware->>Browser: Allow /founder/* routes
+    else Unauthorized
+        Middleware->>Browser: Redirect to /forbidden
+    end
+```
+
+---
+
+## 4. Admin User Flow
+
+```mermaid
+flowchart TD
+    Start([Admin Login]) --> Auth{Authenticated?}
+    Auth -->|No| Login[Login Page]
+    Login --> Auth
+    Auth -->|Yes| AdminDash[Admin Dashboard]
+    
+    AdminDash --> ViewStartups[View Startups]
+    AdminDash --> ManageBudgets[Manage Budgets]
+    AdminDash --> ReviewExpenses[Review Expenses]
+    AdminDash --> ViewReports[View Reports]
+    AdminDash --> Settings[Settings]
+    
+    ViewStartups --> CreateStartup[Create Startup]
+    CreateStartup --> AssignFounders[Assign Founders]
+    AssignFounders --> SetBudget[Set Total Budget]
+    SetBudget --> CreateCategories[Create Budget Categories]
+    CreateCategories --> AdminDash
+    
+    ManageBudgets --> AllocateBudget[Allocate Budget]
+    AllocateBudget --> SetCategoryLimits[Set Category Limits]
+    SetCategoryLimits --> AdminDash
+    
+    ReviewExpenses --> ViewPending[View Pending Expenses]
+    ViewPending --> ApproveExpense{Approve?}
+    ApproveExpense -->|Yes| Approve[Approve Expense]
+    ApproveExpense -->|No| Reject[Reject Expense]
+    Approve --> AdminDash
+    Reject --> AdminDash
+    
+    ViewReports --> GenerateReport[Generate Report]
+    GenerateReport --> ExportPDF[Export PDF]
+    GenerateReport --> ExportCSV[Export CSV]
+    ExportPDF --> AdminDash
+    ExportCSV --> AdminDash
+    
+    Settings --> UpdateSettings[Update Settings]
+    UpdateSettings --> ChangeFrequency[Change Update Frequency]
+    UpdateSettings --> ToggleAutoApprove[Toggle Auto-Approve]
+    ChangeFrequency --> AdminDash
+    ToggleAutoApprove --> AdminDash
+```
+
+---
+
+## 5. Founder User Flow
+
+```mermaid
+flowchart TD
+    Start([Founder Login]) --> Auth{Authenticated?}
+    Auth -->|No| Login[Login Page]
+    Login --> Auth
+    Auth -->|Yes| FounderDash[Founder Dashboard]
+    
+    FounderDash --> ViewBudget[View Budget Status]
+    FounderDash --> SubmitExpense[Submit Expense]
+    FounderDash --> SubmitProgress[Submit Progress Update]
+    
+    ViewBudget --> ViewTotal[View Total Budget]
+    ViewTotal --> ViewRemaining[View Remaining Budget]
+    ViewRemaining --> ViewByCategory[View by Category]
+    ViewByCategory --> FounderDash
+    
+    SubmitExpense --> FillExpenseForm[Fill Expense Form]
+    FillExpenseForm --> EnterAmount[Enter Amount]
+    EnterAmount --> SelectCategory[Select Category]
+    SelectCategory --> EnterDescription[Enter Description]
+    EnterDescription --> UploadReceipt{Upload Receipt?}
+    UploadReceipt -->|Yes| UploadFile[Upload Receipt File]
+    UploadReceipt -->|No| SubmitExpenseForm[Submit Expense]
+    UploadFile --> SubmitExpenseForm
+    SubmitExpenseForm --> WaitApproval[Wait for Admin Approval]
+    WaitApproval --> FounderDash
+    
+    SubmitProgress --> FillProgressForm[Fill Progress Form]
+    FillProgressForm --> WhatDone[What Was Done]
+    WhatDone --> WhatBlocked[What Is Blocked]
+    WhatBlocked --> WhatNext[What's Next]
+    WhatNext --> SubmitProgressForm[Submit Progress Update]
+    SubmitProgressForm --> FounderDash
+```
+
+---
+
+## 6. Expense Approval Workflow
+
+```mermaid
+stateDiagram-v2
+    [*] --> Pending: Founder submits expense
+    
+    Pending --> Checking: Admin reviews
+    Checking --> Approved: Admin approves
+    Checking --> Rejected: Admin rejects
+    
+    state Pending {
+        [*] --> Validation
+        Validation --> BudgetCheck: Valid
+        Validation --> [*]: Invalid
+        BudgetCheck --> WithinLimit: Amount OK
+        BudgetCheck --> OverLimit: Amount exceeds
+        WithinLimit --> [*]
+        OverLimit --> Warning: Show warning
+        Warning --> [*]
+    }
+    
+    state Approved {
+        [*] --> UpdateBudget
+        UpdateBudget --> DeductAmount
+        DeductAmount --> NotifyFounder
+        NotifyFounder --> [*]
+    }
+    
+    state Rejected {
+        [*] --> AddComment
+        AddComment --> NotifyFounder
+        NotifyFounder --> [*]
+    }
+    
+    Approved --> [*]
+    Rejected --> [*]
+```
+
+---
+
+## 7. Component Structure
+
+```mermaid
+graph TD
+    subgraph "Layout Components"
+        RootLayout[Root Layout]
+        AdminLayout[Admin Layout]
+        FounderLayout[Founder Layout]
+        AuthLayout[Auth Layout]
+    end
+    
+    subgraph "Navigation Components"
+        AdminSidebar[Admin Sidebar]
+        FounderSidebar[Founder Sidebar]
+        DashboardHeader[Dashboard Header]
+    end
+    
+    subgraph "Dashboard Components"
+        AdminDashboard[Admin Dashboard]
+        FounderDashboard[Founder Dashboard]
+        MetricCard[Metric Card]
+        QuickAction[Quick Action Card]
+    end
+    
+    subgraph "Feature Components"
+        StartupList[Startup List]
+        StartupForm[Startup Form]
+        BudgetAllocation[Budget Allocation]
+        ExpenseList[Expense List]
+        ExpenseForm[Expense Form]
+        ProgressForm[Progress Form]
+        ReportGenerator[Report Generator]
+    end
+    
+    subgraph "UI Components (shadcn/ui)"
+        Button[Button]
+        Input[Input]
+        Card[Card]
+        Table[Table]
+        Dialog[Dialog]
+        Select[Select]
+        Badge[Badge]
+    end
+    
+    subgraph "Form Components"
+        LoginForm[Login Form]
+        RegisterForm[Register Form]
+        ExpenseFormComponent[Expense Form]
+        ProgressFormComponent[Progress Form]
+    end
+    
+    RootLayout --> AdminLayout
+    RootLayout --> FounderLayout
+    RootLayout --> AuthLayout
+    
+    AdminLayout --> AdminSidebar
+    AdminLayout --> DashboardHeader
+    AdminLayout --> AdminDashboard
+    
+    FounderLayout --> FounderSidebar
+    FounderLayout --> DashboardHeader
+    FounderLayout --> FounderDashboard
+    
+    AdminDashboard --> MetricCard
+    AdminDashboard --> QuickAction
+    AdminDashboard --> StartupList
+    AdminDashboard --> ExpenseList
+    
+    FounderDashboard --> MetricCard
+    FounderDashboard --> QuickAction
+    FounderDashboard --> ExpenseForm
+    FounderDashboard --> ProgressForm
+    
+    StartupList --> Table
+    StartupForm --> Input
+    StartupForm --> Select
+    ExpenseForm --> Input
+    ExpenseForm --> Dialog
+    ProgressForm --> Input
+    
+    LoginForm --> Button
+    LoginForm --> Input
+    ExpenseFormComponent --> Button
+    ExpenseFormComponent --> Input
+    ProgressFormComponent --> Button
+    ProgressFormComponent --> Input
+    
+    MetricCard --> Card
+    QuickAction --> Card
+    StartupList --> Card
+    ExpenseList --> Card
+```
+
+---
+
+## 8. API Endpoint Structure
+
+```mermaid
+graph LR
+    subgraph "Authentication API"
+        A1[POST /api/auth/login]
+        A2[POST /api/auth/register]
+        A3[POST /api/auth/forgot-password]
+        A4[POST /api/auth/reset-password]
+        A5[POST /api/auth/verify-email]
+        A6[POST /api/auth/resend-verification]
+    end
+    
+    subgraph "Startup API"
+        S1[GET /api/startups]
+        S2[POST /api/startups]
+        S3[GET /api/startups/:id]
+        S4[PATCH /api/startups/:id]
+        S5[DELETE /api/startups/:id]
+        S6[POST /api/startups/:id/budgets]
+    end
+    
+    subgraph "Budget API"
+        B1[GET /api/budgets]
+        B2[PATCH /api/budgets/:id]
+        B3[DELETE /api/budgets/:id]
+    end
+    
+    subgraph "Expense API"
+        E1[GET /api/expenses]
+        E2[POST /api/expenses]
+        E3[PATCH /api/expenses/:id/approve]
+        E4[PATCH /api/expenses/:id/reject]
+    end
+    
+    subgraph "Progress API"
+        P1[GET /api/progress]
+        P2[POST /api/progress]
+        P3[GET /api/progress/me]
+    end
+    
+    subgraph "Report API"
+        R1[GET /api/reports/budget]
+        R2[GET /api/reports/expenses]
+        R3[GET /api/reports/activity]
+    end
+    
+    subgraph "Settings API"
+        SET1[GET /api/settings]
+        SET2[PATCH /api/settings]
+    end
+```
+
+---
+
+## 9. Data Flow: Expense Submission
+
+```mermaid
+sequenceDiagram
+    participant Founder
+    participant Frontend
+    participant API
+    participant Validation
+    participant Service
+    participant Database
+    participant S3
+    participant Admin
+    
+    Founder->>Frontend: Fill expense form
+    Frontend->>Frontend: Client-side validation (Zod)
+    Frontend->>API: POST /api/expenses
+    API->>Validation: Validate request (Zod)
+    Validation-->>API: Validated data
+    
+    alt Receipt uploaded
+        API->>S3: Upload receipt file
+        S3-->>API: Receipt URL
+    end
+    
+    API->>Service: Create expense
+    Service->>Database: Check budget limits
+    Database-->>Service: Budget data
+    
+    alt Within budget
+        Service->>Database: Create expense (PENDING)
+        Database-->>Service: Expense created
+        Service-->>API: Success
+        API-->>Frontend: Expense created
+        Frontend-->>Founder: Success message
+        
+        Note over Database,Admin: Expense status = PENDING
+        Database->>Admin: Notification (if configured)
+    else Over budget
+        Service-->>API: Error: Budget exceeded
+        API-->>Frontend: Error message
+        Frontend-->>Founder: Warning/Error
+    end
+```
+
+---
+
+## 10. System Deployment Architecture
+
+```mermaid
+graph TB
+    subgraph "Development"
+        DevEnv[Local Development]
+        DevDB[(Local PostgreSQL)]
+    end
+    
+    subgraph "Version Control"
+        GitHub[GitHub Repository]
+    end
+    
+    subgraph "CI/CD"
+        Vercel[Vercel Platform]
+    end
+    
+    subgraph "Production"
+        subgraph "Application"
+            VercelApp[Next.js App<br/>Serverless Functions]
+        end
+        
+        subgraph "Database"
+            NeonDB[(Neon PostgreSQL<br/>Serverless)]
+            SupabaseDB[(Supabase PostgreSQL<br/>Alternative)]
+        end
+        
+        subgraph "Storage"
+            S3Storage[AWS S3<br/>Receipt Storage]
+            R2Storage[Cloudflare R2<br/>Alternative]
+        end
+        
+        subgraph "Services"
+            ResendEmail[Resend<br/>Transactional Email]
+            SentryError[Sentry<br/>Error Tracking]
+        end
+    end
+    
+    DevEnv --> DevDB
+    DevEnv --> GitHub
+    GitHub --> Vercel
+    Vercel --> VercelApp
+    
+    VercelApp --> NeonDB
+    VercelApp --> S3Storage
+    VercelApp --> ResendEmail
+    VercelApp --> SentryError
+    
+    NeonDB -.Alternative.-> SupabaseDB
+    S3Storage -.Alternative.-> R2Storage
+```
+
+---
+
+## 11. Role-Based Access Control (RBAC)
+
+```mermaid
+graph TD
+    User[User] --> CheckRole{Check Role}
+    
+    CheckRole -->|ADMIN| AdminRoutes[Admin Routes]
+    CheckRole -->|FOUNDER| FounderRoutes[Founder Routes]
+    CheckRole -->|Unauthenticated| AuthRoutes[Auth Routes]
+    
+    AdminRoutes --> AdminDash[/admin Dashboard]
+    AdminRoutes --> AdminStartups[/admin/startups]
+    AdminRoutes --> AdminBudgets[/admin/budgets]
+    AdminRoutes --> AdminExpenses[/admin/expenses]
+    AdminRoutes --> AdminReports[/admin/reports]
+    AdminRoutes --> AdminSettings[/admin/settings]
+    
+    FounderRoutes --> FounderDash[/founder Dashboard]
+    FounderRoutes --> FounderExpenses[/founder/expenses]
+    FounderRoutes --> FounderProgress[/founder/progress]
+    
+    AuthRoutes --> Login[/login]
+    AuthRoutes --> Register[/register]
+    AuthRoutes --> ForgotPassword[/forgot-password]
+    AuthRoutes --> ResetPassword[/reset-password]
+    
+    AdminRoutes -.Blocked.-> FounderRoutes
+    FounderRoutes -.Blocked.-> AdminRoutes
+    
+    AdminRoutes --> AdminAPI[Admin API Endpoints]
+    FounderRoutes --> FounderAPI[Founder API Endpoints]
+    
+    AdminAPI --> FullAccess[Full System Access]
+    FounderAPI --> LimitedAccess[Own Startup Data Only]
+```
+
+---
+
+## 12. Budget Allocation Flow
+
+```mermaid
+flowchart TD
+    Start([Admin creates startup]) --> SetTotal[Set Total Budget]
+    SetTotal --> CreateCategories[Create Budget Categories]
+    
+    CreateCategories --> Category1[Marketing Category]
+    CreateCategories --> Category2[Development Category]
+    CreateCategories --> Category3[Legal Category]
+    CreateCategories --> Category4[Operations Category]
+    
+    Category1 --> SetLimit1[Set Max Budget for Marketing]
+    Category2 --> SetLimit2[Set Max Budget for Development]
+    Category3 --> SetLimit3[Set Max Budget for Legal]
+    Category4 --> SetLimit4[Set Max Budget for Operations]
+    
+    SetLimit1 --> ValidateTotal{Sum <= Total?}
+    SetLimit2 --> ValidateTotal
+    SetLimit3 --> ValidateTotal
+    SetLimit4 --> ValidateTotal
+    
+    ValidateTotal -->|Yes| SaveBudget[Save Budget Allocation]
+    ValidateTotal -->|No| Error[Show Error: Exceeds Total]
+    Error --> CreateCategories
+    
+    SaveBudget --> TrackExpenses[Track Expenses Against Categories]
+    TrackExpenses --> CheckLimit{Expense <= Category Limit?}
+    
+    CheckLimit -->|Yes| AllowExpense[Allow Expense]
+    CheckLimit -->|No| BlockExpense[Block Expense + Warning]
+    
+    AllowExpense --> UpdateRemaining[Update Remaining Budget]
+    BlockExpense --> NotifyAdmin[Notify Admin]
+    
+    UpdateRemaining --> Dashboard[Update Dashboard]
+    NotifyAdmin --> Dashboard
+```
+
+---
+
+## Notes
+
+- All diagrams use standard Mermaid syntax
+- Diagrams can be rendered in:
+  - GitHub (native support)
+  - VS Code (with Mermaid extension)
+  - Online editors (mermaid.live)
+  - Documentation tools (Docusaurus, GitBook, etc.)
+- To update diagrams, edit this file and the changes will be reflected in all viewers
+- For complex diagrams, consider splitting into separate files
+
+---
+
+_Last Updated: December 2024_  
+_Project: IncubationOS MVP_
+

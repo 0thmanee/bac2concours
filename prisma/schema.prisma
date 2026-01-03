@@ -1,0 +1,386 @@
+// IncubationOS - Prisma Schema
+// Defines the complete database schema for MVP
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum UserRole {
+  ADMIN
+  FOUNDER
+}
+
+enum StartupStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ExpenseStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum UpdateFrequency {
+  WEEKLY
+  MONTHLY
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum PaymentStatus {
+  NOT_SUBMITTED
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum BookStatus {
+  ACTIVE
+  INACTIVE
+  PROCESSING
+}
+
+// ============================================================
+// USER & AUTHENTICATION
+// ============================================================
+
+model User {
+  id            String     @id @default(cuid())
+  email         String     @unique
+  password      String // Hashed password
+  name          String
+  role          UserRole
+  status        UserStatus @default(INACTIVE)
+  emailVerified DateTime? // Null if not verified
+
+  // Payment verification
+  paymentStatus          PaymentStatus @default(NOT_SUBMITTED)
+  paymentProofUrl        String? // URL de la preuve de paiement
+  paymentRejectionReason String? // Raison du rejet si applicable
+  paymentSubmittedAt     DateTime? // Date de soumission de la preuve
+  paymentReviewedAt      DateTime? // Date de révision par l'admin
+
+  // Relations
+  startups                Startup[]               @relation("StartupFounders")
+  expenses                Expense[]
+  progressUpdates         ProgressUpdate[]
+  notifications           Notification[]
+  notificationPreferences NotificationPreference? @relation("NotificationPreferences")
+  books                   Book[] // Books uploaded by this user (admin)
+
+  // Audit fields
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([paymentStatus])
+  @@map("users")
+}
+
+// ============================================================
+// STARTUP
+// ============================================================
+
+model Startup {
+  id              String        @id @default(cuid())
+  name            String
+  description     String?
+  industry        String?
+  incubationStart DateTime
+  incubationEnd   DateTime
+  status          StartupStatus @default(ACTIVE)
+
+  // Budget
+  totalBudget Float @default(0)
+
+  // Relations
+  founders         User[]           @relation("StartupFounders")
+  budgetCategories BudgetCategory[]
+  expenses         Expense[]
+  progressUpdates  ProgressUpdate[]
+
+  // Audit fields (soft delete supported)
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@map("startups")
+}
+
+// ============================================================
+// CATEGORIES (Global - managed by admins)
+// ============================================================
+
+model Category {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
+  isActive    Boolean @default(true)
+
+  // Relations
+  expenses Expense[]
+
+  // Audit fields
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
+  @@map("categories")
+}
+
+// ============================================================
+// BUDGET CATEGORIES
+// ============================================================
+
+model BudgetCategory {
+  id        String @id @default(cuid())
+  name      String // e.g., Marketing, Development, Legal, Operations
+  maxBudget Float
+
+  // Relations
+  startupId String
+  startup   Startup @relation(fields: [startupId], references: [id], onDelete: Cascade)
+
+  // Audit fields
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([startupId])
+  @@map("budget_categories")
+}
+
+// ============================================================
+// EXPENSES
+// ============================================================
+
+model Expense {
+  id           String        @id @default(cuid())
+  amount       Float
+  description  String
+  date         DateTime
+  receiptUrl   String? // S3 URL for receipt
+  status       ExpenseStatus @default(PENDING)
+  adminComment String? // Optional comment on approval/rejection
+
+  // Relations
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  startupId String
+  startup   Startup @relation(fields: [startupId], references: [id], onDelete: Cascade)
+
+  submittedById String
+  submittedBy   User   @relation(fields: [submittedById], references: [id])
+
+  // Audit fields
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([startupId])
+  @@index([status])
+  @@index([categoryId])
+  @@map("expenses")
+}
+
+// ============================================================
+// PROGRESS UPDATES
+// ============================================================
+
+model ProgressUpdate {
+  id            String @id @default(cuid())
+  whatWasDone   String @db.Text
+  whatIsBlocked String @db.Text
+  whatIsNext    String @db.Text
+
+  // Relations
+  startupId String
+  startup   Startup @relation(fields: [startupId], references: [id], onDelete: Cascade)
+
+  submittedById String
+  submittedBy   User   @relation(fields: [submittedById], references: [id])
+
+  // Audit fields
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([startupId])
+  @@index([createdAt])
+  @@map("progress_updates")
+}
+
+// ============================================================
+// INCUBATOR SETTINGS
+// ============================================================
+
+model IncubatorSettings {
+  id                  String          @id @default(cuid())
+  incubatorName       String
+  updateFrequency     UpdateFrequency @default(MONTHLY)
+  autoApproveExpenses Boolean         @default(false)
+
+  // Audit fields
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("incubator_settings")
+}
+
+// ============================================================
+// NOTIFICATIONS
+// ============================================================
+
+enum NotificationType {
+  EXPENSE_SUBMITTED
+  EXPENSE_APPROVED
+  EXPENSE_REJECTED
+  PROGRESS_UPDATE_SUBMITTED
+  PROGRESS_UPDATE_REMINDER
+  BUDGET_THRESHOLD_WARNING
+  BUDGET_EXCEEDED
+  STARTUP_ASSIGNED
+  STARTUP_STATUS_CHANGED
+  USER_ACTIVATED
+  USER_DEACTIVATED
+  INCUBATION_ENDING_SOON
+  NEW_USER_REGISTERED
+  SYSTEM_ANNOUNCEMENT
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  BOTH
+}
+
+model Notification {
+  id      String              @id @default(cuid())
+  type    NotificationType
+  title   String
+  message String              @db.Text
+  data    Json?
+  isRead  Boolean             @default(false)
+  channel NotificationChannel @default(IN_APP)
+
+  // Recipient
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Audit
+  createdAt DateTime  @default(now())
+  readAt    DateTime?
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([type])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation("NotificationPreferences", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Per-type preferences
+  expenseUpdates      NotificationChannel @default(BOTH)
+  progressReminders   NotificationChannel @default(BOTH)
+  budgetAlerts        NotificationChannel @default(BOTH)
+  startupUpdates      NotificationChannel @default(IN_APP)
+  systemAnnouncements NotificationChannel @default(EMAIL)
+
+  // Email digest preference
+  emailDigest Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("notification_preferences")
+}
+
+// ============================================================
+// EMAIL VERIFICATION & PASSWORD RESET
+// ============================================================
+
+model VerificationToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  createdAt DateTime @default(now())
+
+  @@unique([email, token])
+  @@index([email])
+  @@index([token])
+  @@map("verification_tokens")
+}
+
+model PasswordResetToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  createdAt DateTime @default(now())
+
+  @@unique([email, token])
+  @@index([email])
+  @@index([token])
+  @@map("password_reset_tokens")
+}
+
+// ============================================================
+// EDUCATIONAL RESOURCES - BOOKS
+// ============================================================
+
+model Book {
+  id          String     @id @default(cuid())
+  title       String
+  author      String
+  school      String // e.g., "Sciences Mathématiques", "Sciences Physiques"
+  category    String // e.g., "Mathématiques", "Physique"
+  description String?    @db.Text
+  coverUrl    String? // URL to book cover image
+  fileUrl     String // URL to PDF file
+  fileName    String
+  fileSize    String // e.g., "25.4 MB"
+  totalPages  Int
+  language    String     @default("fr")
+  level       String // e.g., "Terminale", "Première"
+  subject     String // Same as category for consistency
+  tags        String[] // Array of tags for filtering
+  downloads   Int        @default(0)
+  views       Int        @default(0)
+  rating      Float      @default(0)
+  status      BookStatus @default(ACTIVE)
+  isPublic    Boolean    @default(true)
+
+  // Relations
+  uploadedById String
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+
+  // Audit fields
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([category])
+  @@index([level])
+  @@index([isPublic])
+  @@index([uploadedById])
+  @@map("books")
+}

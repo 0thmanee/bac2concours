@@ -1,0 +1,119 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useLogout } from "@/lib/hooks/use-auth";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { AUTH_ROUTES, FOUNDER_ROUTES } from "@/lib/routes";
+import { NotificationBell } from "@/components/notifications/notification-bell";
+
+interface FounderHeaderProps {
+  userName: string;
+  userEmail: string;
+  startupName?: string;
+}
+
+export function FounderHeader({ userName, userEmail, startupName }: FounderHeaderProps) {
+  const logoutMutation = useLogout();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logoutMutation.mutate(undefined, {
+      onSuccess: () => {
+        router.push(AUTH_ROUTES.LOGIN);
+      },
+    });
+  };
+
+  // Get initials from name
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  return (
+    <header 
+      className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b border-ops bg-ops-surface px-4 md:px-6"
+    >
+      <SidebarTrigger className="md:hidden" />
+      
+      {/* Startup Name */}
+      <div className="flex-1 max-w-md">
+        {startupName && (
+          <div className="hidden md:block">
+            <p className="text-sm font-semibold text-ops-primary">{startupName}</p>
+            <p className="text-xs text-ops-tertiary">Your Startup</p>
+          </div>
+        )}
+      </div>
+
+      {/* Actions */}
+      <div className="flex items-center gap-2 ml-auto">
+        {/* Notifications */}
+        <NotificationBell />
+
+        {/* User Menu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-9 gap-2 px-2">
+              <Avatar className="h-7 w-7">
+                <AvatarFallback 
+                  className="text-xs font-semibold bg-metric-cyan-light text-metric-cyan-dark"
+                >
+                  {getInitials(userName)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="hidden md:flex flex-col items-start">
+                <span className="text-sm font-medium text-ops-primary">
+                  {userName}
+                </span>
+                {startupName && (
+                  <span className="text-xs text-ops-tertiary">
+                    {startupName}
+                  </span>
+                )}
+              </div>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="ops-card">
+            <DropdownMenuLabel className="text-ops-primary">
+              My Account
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator className="bg-ops-border" />
+            <div className="px-2 py-1.5">
+              <p className="text-sm font-medium text-ops-primary">{userName}</p>
+              <p className="text-xs text-ops-tertiary">{userEmail}</p>
+            </div>
+            <DropdownMenuSeparator className="bg-ops-border" />
+            <DropdownMenuItem asChild>
+              <Link href={FOUNDER_ROUTES.PROFILE}>Profile</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-ops-border" />
+            <DropdownMenuItem 
+              className="text-destructive"
+              onClick={handleLogout}
+              disabled={logoutMutation.isPending}
+            >
+              {logoutMutation.isPending ? "Logging out..." : "Log out"}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </header>
+  );
+}
+
