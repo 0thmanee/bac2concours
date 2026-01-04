@@ -100,13 +100,13 @@ export function useLogin() {
 
       return { session, email: validated.email };
     },
-           onSuccess: async (data) => {
-             // Invalidate all queries on successful login
-             queryClient.invalidateQueries();
-             toast.success("Welcome back!");
+    onSuccess: async (data) => {
+      // Invalidate all queries on successful login
+      queryClient.invalidateQueries();
+      toast.success("Welcome back!");
 
-      // For students, check if they have startups assigned
-      // If inactive or no startups, redirect to pending page
+      // For students, check if they have approved payment
+      // If inactive or no approved payment, redirect to pending page
       if (data.session.user.role === USER_ROLE.STUDENT) {
         // If inactive, redirect to pending page
         if (data.session.user.status === USER_STATUS.INACTIVE) {
@@ -115,8 +115,7 @@ export function useLogin() {
           return;
         }
 
-        // Check if they have startups assigned (will be handled by layout, but we can do it here too)
-        // The layout will handle the redirect if no startups
+        // Payment status will be handled by the layout
       }
 
       // Redirect to role-specific dashboard

@@ -20,10 +20,9 @@ import { NotificationBell } from "@/components/notifications/notification-bell";
 interface StudentHeaderProps {
   userName: string;
   userEmail: string;
-  startupName?: string;
 }
 
-export function StudentHeader({ userName, userEmail, startupName }: StudentHeaderProps) {
+export function StudentHeader({ userName, userEmail }: StudentHeaderProps) {
   const logoutMutation = useLogout();
   const router = useRouter();
 
@@ -51,15 +50,8 @@ export function StudentHeader({ userName, userEmail, startupName }: StudentHeade
     >
       <SidebarTrigger className="md:hidden" />
       
-      {/* Startup Name */}
-      <div className="flex-1 max-w-md">
-        {startupName && (
-          <div className="hidden md:block">
-            <p className="text-sm font-semibold text-ops-primary">{startupName}</p>
-            <p className="text-xs text-ops-tertiary">Your Startup</p>
-          </div>
-        )}
-      </div>
+      {/* Spacer */}
+      <div className="flex-1" />
 
       {/* Actions */}
       <div className="flex items-center gap-2 ml-auto">
@@ -81,11 +73,6 @@ export function StudentHeader({ userName, userEmail, startupName }: StudentHeade
                 <span className="text-sm font-medium text-ops-primary">
                   {userName}
                 </span>
-                {startupName && (
-                  <span className="text-xs text-ops-tertiary">
-                    {startupName}
-                  </span>
-                )}
               </div>
             </Button>
           </DropdownMenuTrigger>

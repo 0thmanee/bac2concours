@@ -37,7 +37,7 @@ type NestedDictionaryValue = string | { [key: string]: NestedDictionaryValue };
 
 /**
  * Get nested value from dictionary using dot notation
- * Example: t("admin.startups.title")
+ * Example: t("admin.books.title")
  */
 export function t(
   key: string,

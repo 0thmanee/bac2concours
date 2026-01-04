@@ -155,7 +155,7 @@ export const emailService = {
           </p>
           <div style="background-color: #f0fdf4; border-radius: 8px; padding: 20px; margin-bottom: 24px; border-left: 4px solid ${BRAND.success};">
             <p style="color: ${BRAND.textPrimary}; font-size: 16px; line-height: 24px; margin: 0;">
-              Excellente nouvelle ! Votre preuve de paiement a été vérifiée et approuvée. Votre compte est maintenant actif et vous pouvez accéder à tous les services de la plateforme d'incubation.
+              Excellente nouvelle ! Votre preuve de paiement a été vérifiée et approuvée. Votre compte est maintenant actif et vous pouvez accéder à tous les contenus de la plateforme.
             </p>
           </div>
           <div style="background-color: ${BRAND.background}; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
@@ -164,8 +164,7 @@ export const emailService = {
             </h3>
             <ul style="color: ${BRAND.textSecondary}; font-size: 14px; line-height: 24px; margin: 0; padding-left: 20px;">
               <li>Connectez-vous à votre tableau de bord</li>
-              <li>Complétez les informations de votre startup</li>
-              <li>Commencez à soumettre vos dépenses</li>
+              <li>Accédez aux livres et vidéos</li>
               <li>Suivez votre progression</li>
             </ul>
           </div>

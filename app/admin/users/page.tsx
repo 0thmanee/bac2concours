@@ -200,7 +200,7 @@ export default function UsersPage() {
       value: metrics.studentCount,
       icon: User,
       color: "cyan",
-      subtitle: "Startup students",
+      subtitle: "Platform students",
     },
     {
       title: "Active",

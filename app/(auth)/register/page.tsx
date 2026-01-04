@@ -117,7 +117,7 @@ export default function RegisterPage() {
           Create Account
         </h2>
         <p className="text-sm text-ops-secondary">
-          Start managing startup operations
+          Start your learning journey
         </p>
       </div>
 

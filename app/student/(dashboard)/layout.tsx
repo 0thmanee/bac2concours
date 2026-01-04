@@ -37,7 +37,6 @@ export default async function DashboardLayout({
           <StudentHeader 
             userName={user.name || ""}
             userEmail={user.email || ""}
-            startupName="Mon Espace"
           />
           <main 
             className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 bg-ops-background"

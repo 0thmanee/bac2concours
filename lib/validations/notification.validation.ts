@@ -56,11 +56,8 @@ export type MarkAsReadInput = z.infer<typeof markAsReadSchema>;
 // ============================================================
 
 export const updateNotificationPreferencesSchema = z.object({
-  expenseUpdates: notificationChannelSchema.optional(),
-  progressReminders: notificationChannelSchema.optional(),
-  budgetAlerts: notificationChannelSchema.optional(),
-  startupUpdates: notificationChannelSchema.optional(),
   systemAnnouncements: notificationChannelSchema.optional(),
+  newContent: notificationChannelSchema.optional(),
   emailDigest: z.boolean().optional(),
 });
 
@@ -88,11 +85,8 @@ export interface NotificationWithUser {
 export interface NotificationPreferencesResponse {
   id: string;
   userId: string;
-  expenseUpdates: NotificationChannel;
-  progressReminders: NotificationChannel;
-  budgetAlerts: NotificationChannel;
-  startupUpdates: NotificationChannel;
   systemAnnouncements: NotificationChannel;
+  newContent: NotificationChannel;
   emailDigest: boolean;
 }
 
