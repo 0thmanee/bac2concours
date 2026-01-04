@@ -1,0 +1,137 @@
+"use client";
+
+import { ReactNode } from "react";
+import { LucideIcon } from "lucide-react";
+import { SupabaseImage } from "@/components/ui/supabase-image";
+import { StudentStarRating } from "./student-star-rating";
+import { StudentCategoryBadge } from "./student-category-badge";
+
+interface MediaCardMetric {
+  icon: LucideIcon;
+  value: number | string;
+}
+
+interface StudentMediaCardProps {
+  onClick: () => void;
+  thumbnailUrl?: string | null;
+  thumbnailAlt: string;
+  thumbnailAspect?: "video" | "book";
+  fallbackIcon: LucideIcon;
+  badge?: ReactNode;
+  title: string;
+  subtitle?: ReactNode;
+  description?: string | null;
+  category?: string | null;
+  level?: string | null;
+  metrics?: MediaCardMetric[];
+  rating?: number | null;
+  actions?: ReactNode;
+  overlayContent?: ReactNode;
+}
+
+export function StudentMediaCard({
+  onClick,
+  thumbnailUrl,
+  thumbnailAlt,
+  thumbnailAspect = "video",
+  fallbackIcon: FallbackIcon,
+  badge,
+  title,
+  subtitle,
+  description,
+  category,
+  level,
+  metrics,
+  rating,
+  actions,
+  overlayContent,
+}: StudentMediaCardProps) {
+  const aspectClass = thumbnailAspect === "book" ? "aspect-3/4" : "aspect-video";
+
+  return (
+    <div
+      onClick={onClick}
+      className="ops-card border border-ops group h-full flex flex-col overflow-hidden transition-all duration-300 hover:border-[rgb(var(--brand-400))] dark:hover:border-[rgb(var(--brand-600))] cursor-pointer"
+    >
+      <div className="relative flex-1 flex flex-col p-4 sm:p-5">
+        {/* Thumbnail */}
+        <div
+          className={`${aspectClass} bg-linear-to-br from-[rgb(var(--brand-50))] via-[rgb(var(--brand-100))] to-[rgb(var(--brand-200))] dark:from-[rgb(var(--brand-950))]/40 dark:via-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 rounded-xl mb-4 flex items-center justify-center relative overflow-hidden shadow-inner group-hover:shadow-md transition-shadow duration-300`}
+        >
+          {thumbnailUrl ? (
+            <>
+              <SupabaseImage
+                src={thumbnailUrl}
+                alt={thumbnailAlt}
+                fill
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              {overlayContent}
+            </>
+          ) : (
+            <div className="relative">
+              <div className="absolute inset-0 bg-[rgb(var(--brand-500))]/10 blur-3xl" />
+              <FallbackIcon className="relative w-16 h-16 sm:w-20 sm:h-20 text-[rgb(var(--brand-500))] dark:text-[rgb(var(--brand-400))]" />
+            </div>
+          )}
+          {badge && (
+            <div className="absolute top-3 right-3 z-10">{badge}</div>
+          )}
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 flex flex-col justify-between space-y-4">
+          <div className="space-y-3">
+            <div>
+              <h3 className="line-clamp-2 mb-1.5 font-semibold text-gray-900 text-base sm:text-lg dark:text-white group-hover:text-[rgb(var(--brand-600))] dark:group-hover:text-[rgb(var(--brand-400))] transition-colors">
+                {title}
+              </h3>
+              {subtitle && (
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                  {subtitle}
+                </div>
+              )}
+            </div>
+
+            {description && (
+              <p className="line-clamp-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                {description}
+              </p>
+            )}
+
+            {/* Metadata */}
+            <div className="space-y-2.5">
+              {(category || level) && (
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {category && <StudentCategoryBadge category={category} variant="brand" />}
+                  {level && <StudentCategoryBadge category={level} variant="purple" />}
+                </div>
+              )}
+              {metrics && metrics.length > 0 && (
+                <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 pt-1 border-t border-gray-100 dark:border-gray-800">
+                  {metrics.map((metric, index) => (
+                    <span key={index} className="flex items-center gap-1.5">
+                      <metric.icon size={13} className="text-gray-400" />
+                      <span className="font-medium">{metric.value}</span>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Rating and Actions */}
+          <div className="space-y-3 mt-auto pt-3">
+            {rating && rating > 0 && (
+              <div className="pb-2">
+                <StudentStarRating rating={rating} />
+              </div>
+            )}
+            {actions && <div className="flex gap-2">{actions}</div>}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

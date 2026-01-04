@@ -49,7 +49,9 @@ export function useBooks(filters?: Partial<BookFilters>) {
         });
       }
       const queryString = params.toString();
-      const url = queryString ? `${API_ROUTES.BOOKS}?${queryString}` : API_ROUTES.BOOKS;
+      const url = queryString
+        ? `${API_ROUTES.BOOKS}?${queryString}`
+        : API_ROUTES.BOOKS;
       return apiClient.get<
         ApiSuccessResponse<{
           books: BookWithRelations[];
@@ -71,7 +73,26 @@ export function useBooks(filters?: Partial<BookFilters>) {
 export function useBook(id: string | null) {
   return useQuery<ApiSuccessResponse<BookWithRelations>>({
     queryKey: bookKeys.detail(id!),
-    queryFn: () => apiClient.get<ApiSuccessResponse<BookWithRelations>>(API_ROUTES.BOOK(id!)),
+    queryFn: () =>
+      apiClient.get<ApiSuccessResponse<BookWithRelations>>(
+        API_ROUTES.BOOK(id!)
+      ),
+    enabled: !!id,
+    staleTime: QUERY_CONFIG.STALE_TIME.MEDIUM,
+    gcTime: QUERY_CONFIG.CACHE_TIME.MEDIUM,
+  });
+}
+
+/**
+ * Get related books (same category or level)
+ */
+export function useRelatedBooks(id: string | null) {
+  return useQuery<ApiSuccessResponse<BookWithRelations[]>>({
+    queryKey: [...bookKeys.detail(id!), "related"],
+    queryFn: () =>
+      apiClient.get<ApiSuccessResponse<BookWithRelations[]>>(
+        `${API_ROUTES.BOOK(id!)}/related`
+      ),
     enabled: !!id,
     staleTime: QUERY_CONFIG.STALE_TIME.MEDIUM,
     gcTime: QUERY_CONFIG.CACHE_TIME.MEDIUM,
@@ -84,7 +105,8 @@ export function useBook(id: string | null) {
 export function useBookStats() {
   return useQuery<ApiSuccessResponse<BookStats>>({
     queryKey: bookKeys.stats(),
-    queryFn: () => apiClient.get<ApiSuccessResponse<BookStats>>(API_ROUTES.BOOKS_STATS),
+    queryFn: () =>
+      apiClient.get<ApiSuccessResponse<BookStats>>(API_ROUTES.BOOKS_STATS),
     staleTime: QUERY_CONFIG.STALE_TIME.MEDIUM,
     gcTime: QUERY_CONFIG.CACHE_TIME.MEDIUM,
   });
@@ -96,7 +118,10 @@ export function useBookStats() {
 export function useBookFilters() {
   return useQuery<ApiSuccessResponse<BookFilterOptions>>({
     queryKey: bookKeys.filters(),
-    queryFn: () => apiClient.get<ApiSuccessResponse<BookFilterOptions>>(API_ROUTES.BOOKS_FILTERS),
+    queryFn: () =>
+      apiClient.get<ApiSuccessResponse<BookFilterOptions>>(
+        API_ROUTES.BOOKS_FILTERS
+      ),
     staleTime: QUERY_CONFIG.STALE_TIME.LONG,
     gcTime: QUERY_CONFIG.CACHE_TIME.LONG,
   });
@@ -110,7 +135,10 @@ export function useCreateBook() {
 
   return useMutation({
     mutationFn: (data: CreateBookInput) =>
-      apiClient.post<ApiSuccessResponse<BookWithRelations>>(API_ROUTES.BOOKS, data),
+      apiClient.post<ApiSuccessResponse<BookWithRelations>>(
+        API_ROUTES.BOOKS,
+        data
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: bookKeys.lists() });
       queryClient.invalidateQueries({ queryKey: bookKeys.stats() });
@@ -127,7 +155,10 @@ export function useUpdateBook(id: string) {
 
   return useMutation({
     mutationFn: (data: UpdateBookInput) =>
-      apiClient.patch<ApiSuccessResponse<BookWithRelations>>(API_ROUTES.BOOK(id), data),
+      apiClient.patch<ApiSuccessResponse<BookWithRelations>>(
+        API_ROUTES.BOOK(id),
+        data
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: bookKeys.lists() });
       queryClient.invalidateQueries({ queryKey: bookKeys.detail(id) });
@@ -161,7 +192,10 @@ export function useIncrementBookCounter(id: string) {
 
   return useMutation({
     mutationFn: (type: "download" | "view") =>
-      apiClient.post<ApiSuccessResponse<BookWithRelations>>(API_ROUTES.BOOK_COUNTER(id), { type }),
+      apiClient.post<ApiSuccessResponse<BookWithRelations>>(
+        API_ROUTES.BOOK_COUNTER(id),
+        { type }
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: bookKeys.detail(id) });
       queryClient.invalidateQueries({ queryKey: bookKeys.lists() });

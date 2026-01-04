@@ -52,6 +52,7 @@ export const STUDENT_ROUTES = {
   PROGRESS: "/student/progress",
   PROGRESS_NEW: "/student/progress/new",
   BOOKS: "/student/books",
+  BOOK: (id: string) => `/student/books/${id}`,
   VIDEOS: "/student/videos",
   VIDEO: (id: string) => `/student/videos/${id}`,
   PROFILE: "/student/profile",
