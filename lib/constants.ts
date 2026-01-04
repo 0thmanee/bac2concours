@@ -3,12 +3,7 @@
  * Centralized constants for easy maintenance and scaling
  */
 
-import {
-  UserRole,
-  UserStatus,
-  UpdateFrequency,
-  PaymentStatus,
-} from "@prisma/client";
+import { UserRole, UserStatus, PaymentStatus } from "@prisma/client";
 
 // ============================================================
 // STATUS VALUES
@@ -29,11 +24,6 @@ export const PAYMENT_STATUS = {
   PENDING: "PENDING" as PaymentStatus,
   APPROVED: "APPROVED" as PaymentStatus,
   REJECTED: "REJECTED" as PaymentStatus,
-} as const;
-
-export const UPDATE_FREQUENCY = {
-  WEEKLY: "WEEKLY" as UpdateFrequency,
-  MONTHLY: "MONTHLY" as UpdateFrequency,
 } as const;
 
 // ============================================================

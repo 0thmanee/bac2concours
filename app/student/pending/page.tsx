@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { startupService } from "@/lib/services/startup.service";
 import { paymentService } from "@/lib/services/payment.service";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Clock, Mail, UserCheck } from "lucide-react";
@@ -26,11 +25,8 @@ export default async function PendingPage() {
     redirect(STUDENT_ROUTES.PAYMENT_REJECTED);
   }
 
-  // Check if user has been assigned to any startup and is active
-  const startups = await startupService.findByStudentId(user.id);
-
-  // If user is active and has startups, redirect to dashboard
-  if (user.status === USER_STATUS.ACTIVE && startups.length > 0) {
+  // If user is active and payment approved, redirect to dashboard
+  if (user.status === USER_STATUS.ACTIVE) {
     redirect(STUDENT_ROUTES.DASHBOARD);
   }
 
@@ -56,14 +52,10 @@ export default async function PendingPage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-ops-primary">
-                  {user.status === USER_STATUS.INACTIVE
-                    ? "En attente d'activation"
-                    : "En attente d'assignation"}
+                  En attente d&apos;activation
                 </p>
                 <p className="mt-1 text-sm text-ops-secondary">
-                  {user.status === USER_STATUS.INACTIVE
-                    ? "Votre compte doit être activé par un administrateur."
-                    : "Un administrateur doit vous assigner à un cours avant de pouvoir accéder à la plateforme."}
+                  Votre compte doit être activé par un administrateur.
                 </p>
               </div>
             </div>
@@ -77,7 +69,7 @@ export default async function PendingPage() {
                   Vous serez notifié
                 </p>
                 <p className="mt-1 text-sm text-ops-secondary">
-                  Une fois assigné, vous pourrez accéder à votre tableau de bord et commencer votre préparation.
+                  Une fois activé, vous pourrez accéder à votre tableau de bord et commencer votre préparation.
                 </p>
               </div>
             </div>

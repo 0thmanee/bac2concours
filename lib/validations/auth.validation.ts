@@ -11,7 +11,10 @@ const passwordSchema = z
 
 // Register schema
 export const registerSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters").max(100, "Name too long"),
+  name: z
+    .string()
+    .min(2, "Name must be at least 2 characters")
+    .max(100, "Name too long"),
   email: z.string().email("Invalid email address").max(255, "Email too long"),
   password: passwordSchema,
 });
@@ -20,6 +23,11 @@ export const registerSchema = z.object({
 export const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(1, "Password is required"),
+});
+
+// Forgot password schema
+export const forgotPasswordSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
 });
 
 // Reset password schema for form (includes confirmPassword)
@@ -80,6 +88,7 @@ export const verifyEmailRequestSchema = z.object({
 // Type exports
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type ResetPasswordApiInput = z.infer<typeof resetPasswordApiSchema>;
 export type ResendVerificationInput = z.infer<typeof resendVerificationSchema>;

@@ -1,37 +1,44 @@
 /**
-examine very carefuly the categories cleaning, because I get no categories on the categories routes after doing all this:
-@zsh (44-114) 
+ * Clean Script - Reset database
+ * WARNING: This will delete all data!
  */
-import "dotenv/config";
-import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+import prisma from "../lib/prisma";
 
-async function main() {
-  console.log("🌱 Starting comprehensive database clean...");
+async function clean() {
+  console.log("🗑️  Starting database cleanup...\n");
 
-  // Clear existing data (optional - comment out if you want to keep existing data)
-  console.log("🧹 Clearing existing data...");
+  // Delete in order (respecting foreign key constraints)
+  console.log("Deleting notifications...");
   await prisma.notification.deleteMany();
+
+  console.log("Deleting notification preferences...");
   await prisma.notificationPreference.deleteMany();
-  await prisma.expense.deleteMany();
-  await prisma.progressUpdate.deleteMany();
-  await prisma.budgetCategory.deleteMany();
-  await prisma.category.deleteMany();
-  await prisma.startup.deleteMany();
-  await prisma.user.deleteMany();
+
+  console.log("Deleting videos...");
+  await prisma.video.deleteMany();
+
+  console.log("Deleting books...");
+  await prisma.book.deleteMany();
+
+  console.log("Deleting settings...");
   await prisma.incubatorSettings.deleteMany();
 
-  console.log("✅ Database clean completed.");
+  console.log("Deleting verification tokens...");
+  await prisma.verificationToken.deleteMany();
+
+  console.log("Deleting password reset tokens...");
+  await prisma.passwordResetToken.deleteMany();
+
+  console.log("Deleting users...");
+  await prisma.user.deleteMany();
+
+  console.log("\n✅ Database cleaned successfully!");
 }
 
-main()
+clean()
   .catch((e) => {
-    console.error("❌ clean error:", e);
+    console.error("❌ Clean failed:", e);
     process.exit(1);
   })
   .finally(async () => {

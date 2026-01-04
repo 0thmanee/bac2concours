@@ -185,7 +185,11 @@ export const emailService = {
     }
   },
 
-  async sendPaymentRejectedEmail(email: string, userName: string, rejectionReason: string) {
+  async sendPaymentRejectedEmail(
+    email: string,
+    userName: string,
+    rejectionReason: string
+  ) {
     const paymentUrl = `${appUrl}/student/payment`;
 
     try {
@@ -247,18 +251,8 @@ const notificationIcons: Record<
   NotificationType,
   { icon: string; color: string }
 > = {
-  EXPENSE_SUBMITTED: { icon: "💰", color: BRAND.primary },
-  EXPENSE_APPROVED: { icon: "✅", color: BRAND.success },
-  EXPENSE_REJECTED: { icon: "❌", color: BRAND.error },
-  PROGRESS_UPDATE_SUBMITTED: { icon: "📊", color: BRAND.primary },
-  PROGRESS_UPDATE_REMINDER: { icon: "⏰", color: BRAND.warning },
-  BUDGET_THRESHOLD_WARNING: { icon: "⚠️", color: BRAND.warning },
-  BUDGET_EXCEEDED: { icon: "🚨", color: BRAND.error },
-  STARTUP_ASSIGNED: { icon: "🚀", color: BRAND.primary },
-  STARTUP_STATUS_CHANGED: { icon: "🔄", color: BRAND.primary },
   USER_ACTIVATED: { icon: "✅", color: BRAND.success },
   USER_DEACTIVATED: { icon: "🔒", color: BRAND.error },
-  INCUBATION_ENDING_SOON: { icon: "📅", color: BRAND.warning },
   NEW_USER_REGISTERED: { icon: "👤", color: BRAND.primary },
   SYSTEM_ANNOUNCEMENT: { icon: "📢", color: BRAND.primary },
 };
@@ -283,32 +277,13 @@ export const notificationEmailService = {
 
     if (data) {
       switch (type) {
-        case "EXPENSE_SUBMITTED":
-        case "EXPENSE_APPROVED":
-        case "EXPENSE_REJECTED":
-          actionUrl = `${appUrl}/admin/expenses`;
-          actionText = "View Expenses";
-          break;
-        case "PROGRESS_UPDATE_SUBMITTED":
-          actionUrl = `${appUrl}/admin/startups/${data.startupId}`;
-          actionText = "View Startup";
-          break;
-        case "BUDGET_THRESHOLD_WARNING":
-        case "BUDGET_EXCEEDED":
-          actionUrl = `${appUrl}/admin/budgets`;
-          actionText = "View Budgets";
-          break;
-        case "STARTUP_ASSIGNED":
-          actionUrl = `${appUrl}/student`;
-          actionText = "View My Startup";
-          break;
         case "NEW_USER_REGISTERED":
           actionUrl = `${appUrl}/admin/users`;
           actionText = "Manage Users";
           break;
-        case "INCUBATION_ENDING_SOON":
-          actionUrl = `${appUrl}/admin/startups/${data.startupId}`;
-          actionText = "View Startup";
+        case "USER_ACTIVATED":
+          actionUrl = `${appUrl}/student`;
+          actionText = "Go to Dashboard";
           break;
       }
     }

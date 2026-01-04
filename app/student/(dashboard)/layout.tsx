@@ -4,9 +4,7 @@ import { StudentHeader } from "@/components/layouts/student-header";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { PAYMENT_STATUS } from "@/lib/constants";
 import { STUDENT_ROUTES } from "@/lib/routes";
-import { startupService } from "@/lib/services/startup.service";
 import { paymentService } from "@/lib/services/payment.service";
-import type { StartupWithRelations } from "@/lib/types/prisma";
 import { requireStudent } from "@/lib/auth-security";
 
 export default async function DashboardLayout({
@@ -30,9 +28,6 @@ export default async function DashboardLayout({
   }
 
   // At this point, payment is approved - user can access dashboard
-  // Get user's startups if they have any
-  const startups = await startupService.findByStudentId(user.id);
-  const startup = startups.length > 0 ? (startups[0] as StartupWithRelations) : null;
 
   return (
     <SidebarProvider>
@@ -42,7 +37,7 @@ export default async function DashboardLayout({
           <StudentHeader 
             userName={user.name || ""}
             userEmail={user.email || ""}
-            startupName={startup?.name || "Mon Espace"}
+            startupName="Mon Espace"
           />
           <main 
             className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 bg-ops-background"

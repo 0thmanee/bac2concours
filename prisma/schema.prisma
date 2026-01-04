@@ -18,11 +18,6 @@ enum UserRole {
   STUDENT
 }
 
-enum UpdateFrequency {
-  WEEKLY
-  MONTHLY
-}
-
 enum UserStatus {
   ACTIVE
   INACTIVE
@@ -111,10 +106,8 @@ model User {
 // ============================================================
 
 model IncubatorSettings {
-  id                  String          @id @default(cuid())
-  incubatorName       String
-  updateFrequency     UpdateFrequency @default(MONTHLY)
-  autoApproveExpenses Boolean         @default(false)
+  id            String @id @default(cuid())
+  incubatorName String
 
   // Audit fields
   createdAt DateTime @default(now())

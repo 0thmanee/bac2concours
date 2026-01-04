@@ -23,8 +23,6 @@ export async function PATCH(req: NextRequest) {
 
     const settings = await settingsService.update({
       incubatorName: validated.incubatorName,
-      updateFrequency: validated.updateFrequency,
-      autoApproveExpenses: validated.autoApproveExpenses,
     });
 
     return settings;

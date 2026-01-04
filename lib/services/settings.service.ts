@@ -11,8 +11,6 @@ export const settingsService = {
       settings = await prisma.incubatorSettings.create({
         data: {
           incubatorName: SETTINGS_DEFAULTS.INCUBATOR_NAME,
-          updateFrequency: SETTINGS_DEFAULTS.UPDATE_FREQUENCY,
-          autoApproveExpenses: SETTINGS_DEFAULTS.AUTO_APPROVE_EXPENSES,
         },
       });
     }
@@ -29,12 +27,6 @@ export const settingsService = {
       data: {
         ...(data.incubatorName !== undefined && {
           incubatorName: data.incubatorName,
-        }),
-        ...(data.updateFrequency !== undefined && {
-          updateFrequency: data.updateFrequency,
-        }),
-        ...(data.autoApproveExpenses !== undefined && {
-          autoApproveExpenses: data.autoApproveExpenses,
         }),
       },
     });
