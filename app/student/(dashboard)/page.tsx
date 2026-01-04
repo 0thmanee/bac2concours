@@ -114,7 +114,7 @@ export default async function StudentDashboard() {
                   <Link
                     key={book.id}
                     href={STUDENT_ROUTES.BOOK(book.id)}
-                    className="flex items-center justify-between rounded-lg border border-ops-border bg-ops-card-secondary p-3 transition-colors hover:bg-ops-hover"
+                    className="flex items-center justify-between rounded-lg border border-ops bg-ops-card-secondary p-3 transition-colors hover:bg-ops-hover"
                   >
                     <div className="flex items-center gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-metric-blue-light">
@@ -158,7 +158,7 @@ export default async function StudentDashboard() {
                   <Link
                     key={video.id}
                     href={STUDENT_ROUTES.VIDEO(video.id)}
-                    className="flex items-center justify-between rounded-lg border border-ops-border bg-ops-card-secondary p-3 transition-colors hover:bg-ops-hover"
+                    className="flex items-center justify-between rounded-lg border border-ops bg-ops-card-secondary p-3 transition-colors hover:bg-ops-hover"
                   >
                     <div className="flex items-center gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-metric-orange-light">
@@ -192,28 +192,28 @@ export default async function StudentDashboard() {
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <Link 
               href={STUDENT_ROUTES.BOOKS}
-              className="flex flex-col items-center justify-center rounded-lg border border-ops-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover"
+              className="flex flex-col items-center justify-center rounded-lg border border-ops bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover"
             >
               <BookOpen className="h-8 w-8 text-metric-blue mb-3" />
               <span className="text-sm font-medium">Tous les Livres</span>
             </Link>
             <Link 
               href={STUDENT_ROUTES.VIDEOS}
-              className="flex flex-col items-center justify-center rounded-lg border border-ops-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover"
+              className="flex flex-col items-center justify-center rounded-lg border border-ops bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover"
             >
               <Video className="h-8 w-8 text-metric-orange mb-3" />
               <span className="text-sm font-medium">Toutes les Vidéos</span>
             </Link>
             <Link 
               href={STUDENT_ROUTES.PROFILE}
-              className="flex flex-col items-center justify-center rounded-lg border border-ops-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover"
+              className="flex flex-col items-center justify-center rounded-lg border border-ops bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover"
             >
               <GraduationCap className="h-8 w-8 text-metric-mint mb-3" />
               <span className="text-sm font-medium">Mon Profil</span>
             </Link>
             <Link 
               href={STUDENT_ROUTES.PROFILE}
-              className="flex flex-col items-center justify-center rounded-lg border border-ops-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover"
+              className="flex flex-col items-center justify-center rounded-lg border border-ops bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover"
             >
               <Clock className="h-8 w-8 text-metric-purple mb-3" />
               <span className="text-sm font-medium">Historique</span>

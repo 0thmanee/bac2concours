@@ -121,28 +121,28 @@ export default async function AdminDashboard() {
             <div className="grid grid-cols-2 gap-3">
               <Link 
                 href={ADMIN_ROUTES.USERS}
-                className="flex flex-col items-center justify-center rounded-lg border border-ops-border bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover"
+                className="flex flex-col items-center justify-center rounded-lg border border-ops bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover"
               >
                 <Users className="h-6 w-6 text-metric-blue mb-2" />
                 <span className="text-sm font-medium">Gérer Utilisateurs</span>
               </Link>
               <Link 
                 href={ADMIN_ROUTES.BOOKS}
-                className="flex flex-col items-center justify-center rounded-lg border border-ops-border bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover"
+                className="flex flex-col items-center justify-center rounded-lg border border-ops bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover"
               >
                 <BookOpen className="h-6 w-6 text-metric-orange mb-2" />
                 <span className="text-sm font-medium">Gérer Livres</span>
               </Link>
               <Link 
                 href={ADMIN_ROUTES.VIDEOS}
-                className="flex flex-col items-center justify-center rounded-lg border border-ops-border bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover"
+                className="flex flex-col items-center justify-center rounded-lg border border-ops bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover"
               >
                 <Video className="h-6 w-6 text-metric-mint mb-2" />
                 <span className="text-sm font-medium">Gérer Vidéos</span>
               </Link>
               <Link 
                 href="/admin/payments"
-                className="flex flex-col items-center justify-center rounded-lg border border-ops-border bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover"
+                className="flex flex-col items-center justify-center rounded-lg border border-ops bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover"
               >
                 <CreditCard className="h-6 w-6 text-metric-purple mb-2" />
                 <span className="text-sm font-medium">Paiements</span>
@@ -165,7 +165,7 @@ export default async function AdminDashboard() {
                 recentUsers.map((user) => (
                   <div
                     key={user.id}
-                    className="flex items-center justify-between rounded-lg border border-ops-border bg-ops-card-secondary p-3"
+                    className="flex items-center justify-between rounded-lg border border-ops bg-ops-card-secondary p-3"
                   >
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{user.name}</p>
