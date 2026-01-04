@@ -7,10 +7,7 @@ import prisma from "@/lib/prisma";
 import {
   NotificationType,
   NotificationChannel,
-  type Expense,
-  type ProgressUpdate,
   type User,
-  type Startup,
 } from "@prisma/client";
 import { USER_ROLE } from "@/lib/constants";
 import type {
@@ -275,29 +272,11 @@ export const notificationService = {
   getEffectiveChannel(
     type: NotificationType,
     preferences: {
-      expenseUpdates: NotificationChannel;
-      progressReminders: NotificationChannel;
-      budgetAlerts: NotificationChannel;
-      startupUpdates: NotificationChannel;
       systemAnnouncements: NotificationChannel;
     },
     defaultChannel: NotificationChannel
   ): NotificationChannel {
     switch (type) {
-      case "EXPENSE_SUBMITTED":
-      case "EXPENSE_APPROVED":
-      case "EXPENSE_REJECTED":
-        return preferences.expenseUpdates;
-      case "PROGRESS_UPDATE_SUBMITTED":
-      case "PROGRESS_UPDATE_REMINDER":
-        return preferences.progressReminders;
-      case "BUDGET_THRESHOLD_WARNING":
-      case "BUDGET_EXCEEDED":
-        return preferences.budgetAlerts;
-      case "STARTUP_ASSIGNED":
-      case "STARTUP_STATUS_CHANGED":
-      case "INCUBATION_ENDING_SOON":
-        return preferences.startupUpdates;
       case "USER_ACTIVATED":
       case "USER_DEACTIVATED":
       case "NEW_USER_REGISTERED":
@@ -342,195 +321,6 @@ export const notificationService = {
   // ============================================================
 
   /**
-   * Trigger: Expense submitted (notify admins)
-   */
-  async onExpenseSubmitted(
-    expense: Expense & {
-      submittedBy: { name: string };
-      startup: { name: string };
-      category: { name: string };
-    }
-  ) {
-    const amount = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(expense.amount);
-
-    await this.notifyAdmins(
-      "EXPENSE_SUBMITTED",
-      "New Expense Submitted",
-      `${expense.submittedBy.name} submitted an expense of ${amount} for ${expense.startup.name} in ${expense.category.name}.`,
-      {
-        expenseId: expense.id,
-        startupId: expense.startupId,
-        amount: expense.amount,
-      }
-    );
-  },
-
-  /**
-   * Trigger: Expense approved (notify student)
-   */
-  async onExpenseApproved(
-    expense: Expense & {
-      startup: { name: string };
-      category: { name: string };
-    },
-    adminComment?: string
-  ) {
-    const amount = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(expense.amount);
-
-    let message = `Your expense of ${amount} for "${expense.description}" has been approved.`;
-    if (adminComment) {
-      message += ` Admin comment: "${adminComment}"`;
-    }
-
-    await this.notifyUser(
-      expense.submittedById,
-      "EXPENSE_APPROVED",
-      "Expense Approved",
-      message,
-      {
-        expenseId: expense.id,
-        startupId: expense.startupId,
-        amount: expense.amount,
-      }
-    );
-  },
-
-  /**
-   * Trigger: Expense rejected (notify student)
-   */
-  async onExpenseRejected(
-    expense: Expense & {
-      startup: { name: string };
-      category: { name: string };
-    },
-    adminComment?: string
-  ) {
-    const amount = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(expense.amount);
-
-    let message = `Your expense of ${amount} for "${expense.description}" has been rejected.`;
-    if (adminComment) {
-      message += ` Reason: "${adminComment}"`;
-    }
-
-    await this.notifyUser(
-      expense.submittedById,
-      "EXPENSE_REJECTED",
-      "Expense Rejected",
-      message,
-      {
-        expenseId: expense.id,
-        startupId: expense.startupId,
-        amount: expense.amount,
-        reason: adminComment,
-      }
-    );
-  },
-
-  /**
-   * Trigger: Progress update submitted (notify admins)
-   */
-  async onProgressUpdateSubmitted(
-    progressUpdate: ProgressUpdate & {
-      submittedBy: { name: string };
-      startup: { name: string };
-    }
-  ) {
-    await this.notifyAdmins(
-      "PROGRESS_UPDATE_SUBMITTED",
-      "New Progress Update",
-      `${progressUpdate.submittedBy.name} submitted a progress update for ${progressUpdate.startup.name}.`,
-      {
-        progressUpdateId: progressUpdate.id,
-        startupId: progressUpdate.startupId,
-      }
-    );
-  },
-
-  /**
-   * Trigger: Budget threshold reached (notify students of startup)
-   */
-  async onBudgetThresholdReached(
-    startup: Startup & { students: { id: string }[] },
-    categoryName: string,
-    percentage: number
-  ) {
-    const notifications = startup.students.map((student) => ({
-      type: "BUDGET_THRESHOLD_WARNING" as NotificationType,
-      title: "Budget Warning",
-      message: `The ${categoryName} budget for ${
-        startup.name
-      } has reached ${percentage.toFixed(0)}% utilization.`,
-      data: {
-        startupId: startup.id,
-        categoryName,
-        percentage,
-      },
-      userId: student.id,
-      channel: "BOTH" as NotificationChannel,
-    }));
-
-    await this.createBulk(notifications);
-
-    // Also notify admins
-    await this.notifyAdmins(
-      "BUDGET_THRESHOLD_WARNING",
-      "Budget Warning",
-      `${
-        startup.name
-      }'s ${categoryName} budget has reached ${percentage.toFixed(
-        0
-      )}% utilization.`,
-      { startupId: startup.id, categoryName, percentage }
-    );
-  },
-
-  /**
-   * Trigger: Budget exceeded (notify students and admins)
-   */
-  async onBudgetExceeded(
-    startup: Startup & { students: { id: string }[] },
-    categoryName: string,
-    overage: number
-  ) {
-    const formattedOverage = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(overage);
-
-    const notifications = startup.students.map((student) => ({
-      type: "BUDGET_EXCEEDED" as NotificationType,
-      title: "Budget Exceeded",
-      message: `The ${categoryName} budget for ${startup.name} has been exceeded by ${formattedOverage}.`,
-      data: {
-        startupId: startup.id,
-        categoryName,
-        overage,
-      },
-      userId: student.id,
-      channel: "BOTH" as NotificationChannel,
-    }));
-
-    await this.createBulk(notifications);
-
-    // Also notify admins
-    await this.notifyAdmins(
-      "BUDGET_EXCEEDED",
-      "Budget Exceeded",
-      `${startup.name}'s ${categoryName} budget has been exceeded by ${formattedOverage}.`,
-      { startupId: startup.id, categoryName, overage }
-    );
-  },
-
-  /**
    * Trigger: User activated (notify user)
    */
   async onUserActivated(user: User) {
@@ -568,51 +358,6 @@ export const notificationService = {
       "New User Registration",
       `${user.name} (${user.email}) has registered and is awaiting account activation.`,
       { userId: user.id, email: user.email }
-    );
-  },
-
-  /**
-   * Trigger: Startup assigned to student
-   */
-  async onStartupAssigned(startup: Startup, studentId: string) {
-    await this.notifyUser(
-      studentId,
-      "STARTUP_ASSIGNED",
-      "Assigned to Startup",
-      `You have been assigned to ${startup.name}. You can now submit expenses and progress updates.`,
-      { startupId: startup.id, startupName: startup.name },
-      "BOTH"
-    );
-  },
-
-  /**
-   * Trigger: Incubation ending soon
-   */
-  async onIncubationEndingSoon(
-    startup: Startup & { students: { id: string }[] },
-    daysRemaining: number
-  ) {
-    const notifications = startup.students.map((student) => ({
-      type: "INCUBATION_ENDING_SOON" as NotificationType,
-      title: "Incubation Period Ending",
-      message: `The incubation period for ${startup.name} will end in ${daysRemaining} days.`,
-      data: {
-        startupId: startup.id,
-        daysRemaining,
-        endDate: startup.incubationEnd,
-      },
-      userId: student.id,
-      channel: "BOTH" as NotificationChannel,
-    }));
-
-    await this.createBulk(notifications);
-
-    // Also notify admins
-    await this.notifyAdmins(
-      "INCUBATION_ENDING_SOON",
-      "Incubation Period Ending",
-      `${startup.name}'s incubation period will end in ${daysRemaining} days.`,
-      { startupId: startup.id, daysRemaining, endDate: startup.incubationEnd }
     );
   },
 };

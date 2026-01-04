@@ -56,7 +56,6 @@ import { useUsers, useCreateUser, useUpdateUser, useDeleteUser, useUserMetrics }
 import { StatusBadge } from "@/components/shared/status-badge";
 import { LoadingState } from "@/components/shared/loading-state";
 import { EmptyState } from "@/components/shared/empty-state";
-import { formatDate } from "@/lib/utils/startup.utils";
 import { MESSAGES, USER_ROLE, USER_STATUS } from "@/lib/constants";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
@@ -66,12 +65,36 @@ import {
   updateUserSchema,
   type CreateUserInput,
   type UpdateUserInput,
-  type UserWithCount,
   type UserUIFilters,
 } from "@/lib/validations/user.validation";
 import { Label } from "@/components/ui/label";
 import { TablePagination, type PaginationConfig } from "@/components/ui/data-table";
 import { toApiParam } from "@/lib/utils/filter.utils";
+
+// User type based on what's returned from the user service
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  emailVerified: Date | boolean | null;
+  paymentStatus?: string | null;
+  paymentProofUrl?: string | null;
+  paymentSubmittedAt?: Date | string | null;
+  paymentReviewedAt?: Date | string | null;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+};
+
+// Helper function to format date
+function formatDate(date: Date | string): string {
+  return new Date(date).toLocaleDateString("fr-FR", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
 
 // Default filter values
 const DEFAULT_FILTERS: UserUIFilters = {
@@ -88,7 +111,7 @@ export default function UsersPage() {
 
   // Dialog state
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState<UserWithCount | null>(null);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
   // API calls with proper params
@@ -147,7 +170,7 @@ export default function UsersPage() {
     [deleteMutation]
   );
 
-  const handleEdit = (user: UserWithCount) => {
+  const handleEdit = (user: User) => {
     setEditingUser(user);
     setIsEditOpen(true);
   };
@@ -250,7 +273,6 @@ export default function UsersPage() {
               <TableHead className="font-medium text-ops-secondary">Role</TableHead>
               <TableHead className="font-medium text-ops-secondary">Status</TableHead>
               <TableHead className="font-medium text-ops-secondary">Email Verified</TableHead>
-              <TableHead className="font-medium text-ops-secondary">Startups</TableHead>
               <TableHead className="font-medium text-ops-secondary">Created</TableHead>
               <TableHead className="text-right font-medium text-ops-secondary">Actions</TableHead>
             </TableRow>
@@ -258,7 +280,7 @@ export default function UsersPage() {
           <TableBody>
             {users.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center">
+                <TableCell colSpan={6} className="text-center">
                   <EmptyState
                     title="No users found"
                     description="Create your first user to get started"
@@ -298,11 +320,6 @@ export default function UsersPage() {
                   </TableCell>
                   <TableCell>
                     <span className="text-sm text-ops-secondary">
-                      {user._count?.startups || 0}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-sm text-ops-secondary">
                       {formatDate(user.createdAt)}
                     </span>
                   </TableCell>
@@ -335,11 +352,6 @@ export default function UsersPage() {
                               <AlertDialogDescription>
                                 Are you sure you want to delete {user.name}? This action
                                 cannot be undone.
-                                {user._count && user._count.startups > 0 && (
-                                  <span className="block mt-2 text-destructive">
-                                    Warning: This user is assigned to {user._count.startups} startup(s).
-                                  </span>
-                                )}
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
@@ -551,7 +563,7 @@ function EditUserDialog({
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  user: UserWithCount;
+  user: User;
   onUpdate: ReturnType<typeof useUpdateUser>;
 }) {
   const {

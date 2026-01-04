@@ -18,17 +18,8 @@ export const AUTH_ROUTES = {
 
 export const ADMIN_ROUTES = {
   DASHBOARD: "/admin",
-  STARTUPS: "/admin/startups",
-  STARTUP: (id: string) => `/admin/startups/${id}`,
-  STARTUP_NEW: "/admin/startups/new",
-  STARTUP_EDIT: (id: string) => `/admin/startups/${id}/edit`,
-  STARTUP_BUDGETS: (id: string) => `/admin/startups/${id}/budgets`,
-  BUDGETS: "/admin/budgets",
-  EXPENSES: "/admin/expenses",
   USERS: "/admin/users",
   USER: (id: string) => `/admin/users/${id}`,
-  CATEGORIES: "/admin/categories",
-  CATEGORY: (id: string) => `/admin/categories/${id}`,
   BOOKS: "/admin/books",
   BOOK: (id: string) => `/admin/books/${id}`,
   BOOK_NEW: "/admin/books/new",
@@ -38,7 +29,6 @@ export const ADMIN_ROUTES = {
   VIDEO_NEW: "/admin/videos/new",
   VIDEO_EDIT: (id: string) => `/admin/videos/${id}/edit`,
   SETTINGS: "/admin/settings",
-  REPORTS: "/admin/reports",
   PROFILE: "/admin/profile",
 } as const;
 
@@ -47,10 +37,6 @@ export const STUDENT_ROUTES = {
   PENDING: "/student/pending",
   PAYMENT: "/student/payment",
   PAYMENT_REJECTED: "/student/payment-rejected",
-  EXPENSES: "/student/expenses",
-  EXPENSE_NEW: "/student/expenses/new",
-  PROGRESS: "/student/progress",
-  PROGRESS_NEW: "/student/progress/new",
   BOOKS: "/student/books",
   BOOK: (id: string) => `/student/books/${id}`,
   VIDEOS: "/student/videos",

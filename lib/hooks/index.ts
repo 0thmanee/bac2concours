@@ -2,12 +2,10 @@
 export * from "./use-auth";
 
 // Resource hooks
-export * from "./use-startups";
-export * from "./use-budgets";
-export * from "./use-expenses";
-export * from "./use-progress";
 export * from "./use-settings";
-export * from "./use-reports";
+export * from "./use-users";
+export * from "./use-books";
+export * from "./use-videos";
 
 // Form utilities
 export * from "./use-form";

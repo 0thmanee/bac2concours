@@ -111,13 +111,6 @@ export const userWithCountSchema = z.object({
   emailVerified: z.date().nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  _count: z
-    .object({
-      startups: z.number(),
-      expenses: z.number(),
-      progressUpdates: z.number(),
-    })
-    .optional(),
 });
 
 export type UserRoleInput = z.infer<typeof userRoleSchema>;

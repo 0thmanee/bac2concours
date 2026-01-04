@@ -44,13 +44,6 @@ export const userService = {
         paymentReviewedAt: true,
         createdAt: true,
         updatedAt: true,
-        _count: {
-          select: {
-            startups: true,
-            expenses: true,
-            progressUpdates: true,
-          },
-        },
       },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
@@ -79,20 +72,6 @@ export const userService = {
         emailVerified: true,
         createdAt: true,
         updatedAt: true,
-        startups: {
-          select: {
-            id: true,
-            name: true,
-            status: true,
-          },
-        },
-        _count: {
-          select: {
-            startups: true,
-            expenses: true,
-            progressUpdates: true,
-          },
-        },
       },
     });
   },
@@ -188,22 +167,12 @@ export const userService = {
 
   // Delete user
   async delete(id: string) {
-    // Check if user has any startups assigned
     const user = await prisma.user.findUnique({
       where: { id },
-      include: {
-        startups: true,
-      },
     });
 
     if (!user) {
       throw new Error("User not found");
-    }
-
-    if (user.startups.length > 0) {
-      throw new Error(
-        "Cannot delete user with assigned startups. Please remove them from startups first."
-      );
     }
 
     return prisma.user.delete({

@@ -57,10 +57,10 @@ export const en = {
   // Navigation
   nav: {
     dashboard: "Dashboard",
-    startups: "Startups",
-    budgets: "Budgets",
-    expenses: "Expenses",
-    reports: "Reports",
+    books: "Books",
+    videos: "Videos",
+    users: "Users",
+    payments: "Payments",
     settings: "Settings",
     profile: "Profile",
     logout: "Logout",
@@ -72,179 +72,60 @@ export const en = {
       title: "Admin Dashboard",
       welcomeBack: "Welcome back",
       stats: {
-        totalStartups: "Total Startups",
-        totalBudget: "Total Budget Allocated",
-        totalExpenses: "Total Expenses",
-        activePrograms: "Active Programs",
+        totalUsers: "Total Users",
+        totalBooks: "Total Books",
+        totalVideos: "Total Videos",
+        pendingPayments: "Pending Payments",
       },
       quickActions: {
         title: "Quick Actions",
-        addStartup: {
-          title: "Add New Startup",
-          description: "Register a new startup in the incubation program",
+        addBook: {
+          title: "Add New Book",
+          description: "Add a new book to the library",
         },
-        reviewExpenses: {
-          title: "Review Expenses",
-          description: "Check pending expense reports",
+        addVideo: {
+          title: "Add New Video",
+          description: "Add a new educational video",
         },
-        generateReport: {
-          title: "Generate Report",
-          description: "Create financial reports and exports",
+        reviewPayments: {
+          title: "Review Payments",
+          description: "Check pending payment submissions",
         },
       },
     },
 
-    startups: {
-      title: "Startups",
-      description: "Manage startups in the incubation program",
-      addNew: "Add Startup",
-      searchPlaceholder: "Search startups...",
-      noStartups: "No startups found",
-      noStartupsDescription: "Get started by creating your first startup",
-      tryAdjustSearch: "Try adjusting your search query",
+    users: {
+      title: "Users",
+      description: "Manage platform users",
+      addNew: "Add User",
+      searchPlaceholder: "Search users...",
+      noUsers: "No users found",
+      noUsersDescription: "Get started by creating your first user",
       table: {
         name: "Name",
-        industry: "Industry",
-        students: "Students",
-        budget: "Budget",
+        email: "Email",
+        role: "Role",
         status: "Status",
-        incubationPeriod: "Incubation Period",
-        noStudents: "No students",
-        moreStudents: "more",
-      },
-      create: {
-        title: "Add New Startup",
-        description: "Register a new startup in the incubation program",
-        cardTitle: "Startup Information",
-        fields: {
-          name: {
-            label: "Startup Name",
-            placeholder: "Acme Inc.",
-          },
-          description: {
-            label: "Description",
-            placeholder: "Brief description of the startup...",
-            help: "What does this startup do?",
-          },
-          industry: {
-            label: "Industry",
-            placeholder: "e.g., FinTech, HealthTech",
-          },
-          incubationStart: {
-            label: "Incubation Start Date",
-          },
-          incubationEnd: {
-            label: "Incubation End Date",
-          },
-          totalBudget: {
-            label: "Total Budget",
-            placeholder: "50000",
-            help: "Total budget allocated to this startup (in USD)",
-          },
-          students: {
-            label: "Students",
-            help: "Select one or more students for this startup",
-            noStudents: "No students available",
-            noStudentsDescription: "Please create student accounts first.",
-            loading: "Loading students...",
-          },
-        },
-        buttons: {
-          create: "Create Startup",
-          creating: "Creating...",
-        },
-      },
-      delete: {
-        title: "Are you sure?",
-        description:
-          "This will permanently delete the startup and all associated data. This action cannot be undone.",
-        deleting: "Deleting...",
+        createdAt: "Created At",
       },
     },
 
-    budgets: {
-      title: "Budget Management",
-      description: "Manage budget allocations and categories for startups",
-      addCategory: "Add Category",
-      selectStartup: "Select a startup...",
-      noStartups: "No startups available",
-      noStartupsDescription: "Create a startup first to manage budgets",
-      selectStartupPrompt: {
-        title: "Select a startup",
-        description:
-          "Choose a startup from the dropdown above to view and manage its budget categories",
-      },
-      summary: {
-        totalBudget: "Total Budget",
-        totalAllocated: "Total Allocated",
-        totalSpent: "Total Spent",
-        ofBudget: "of budget",
-        ofAllocated: "of allocated",
-      },
-      categories: {
-        noCategories: "No budget categories",
-        noCategoriesDescription:
-          "Create your first budget category to start tracking expenses",
-        table: {
-          category: "Category",
-          description: "Description",
-          allocated: "Allocated",
-          spent: "Spent",
-          remaining: "Remaining",
-          used: "used",
-        },
-      },
-      delete: {
-        title: "Are you sure?",
-        description:
-          "This will permanently delete the budget category. This action cannot be undone.",
-        deleting: "Deleting...",
-      },
+    books: {
+      title: "Books",
+      description: "Manage educational books and resources",
+      addNew: "Add Book",
+      searchPlaceholder: "Search books...",
+      noBooks: "No books found",
+      noBooksDescription: "Get started by adding your first book",
     },
 
-    expenses: {
-      title: "Expense Management",
-      description: "Review and approve expense requests from startups",
-      filters: {
-        status: "Status",
-        all: "All",
-        pending: "Pending",
-        approved: "Approved",
-        rejected: "Rejected",
-      },
-      noExpenses: "No expenses found",
-      noExpensesDescription: "No expense requests to review at this time",
-      table: {
-        startup: "Startup",
-        category: "Category",
-        description: "Description",
-        amount: "Amount",
-        date: "Date",
-        status: "Status",
-        submittedBy: "Submitted By",
-      },
-      actions: {
-        approve: "Approve",
-        reject: "Reject",
-        viewDetails: "View Details",
-      },
-      approve: {
-        title: "Approve Expense",
-        description: "Are you sure you want to approve this expense?",
-        approving: "Approving...",
-      },
-      reject: {
-        title: "Reject Expense",
-        description: "Please provide a reason for rejecting this expense",
-        commentLabel: "Admin Comment",
-        commentPlaceholder: "Reason for rejection...",
-        rejecting: "Rejecting...",
-      },
-      status: {
-        pending: "Pending",
-        approved: "Approved",
-        rejected: "Rejected",
-      },
+    videos: {
+      title: "Videos",
+      description: "Manage educational videos",
+      addNew: "Add Video",
+      searchPlaceholder: "Search videos...",
+      noVideos: "No videos found",
+      noVideosDescription: "Get started by adding your first video",
     },
 
     settings: {
@@ -253,14 +134,6 @@ export const en = {
       comingSoon: "Coming Soon",
       comingSoonDescription: "System settings will be available here",
     },
-
-    reports: {
-      title: "Reports",
-      description: "Generate and export financial reports",
-      comingSoon: "Coming Soon",
-      comingSoonDescription:
-        "Report generation features will be available here",
-    },
   },
 
   // Student Dashboard
@@ -268,6 +141,14 @@ export const en = {
     dashboard: {
       title: "Student Dashboard",
       welcomeBack: "Welcome back",
+    },
+    books: {
+      title: "Library",
+      description: "Browse educational books and resources",
+    },
+    videos: {
+      title: "Videos",
+      description: "Watch educational videos",
     },
   },
 
@@ -300,10 +181,9 @@ export const en = {
   loading: {
     page: "Loading page...",
     data: "Loading data...",
-    startups: "Loading startups...",
-    budgets: "Loading budgets...",
-    expenses: "Loading expenses...",
-    students: "Loading students...",
+    users: "Loading users...",
+    books: "Loading books...",
+    videos: "Loading videos...",
     saving: "Saving...",
     creating: "Creating...",
     updating: "Updating...",

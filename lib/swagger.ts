@@ -18,12 +18,11 @@ export const openApiSpec = {
   ],
   tags: [
     { name: "Auth", description: "Authentication and registration" },
-    { name: "Startups", description: "Startup management operations" },
-    { name: "Budgets", description: "Budget category operations" },
-    { name: "Expenses", description: "Expense tracking and approval" },
-    { name: "Progress", description: "Progress update tracking" },
-    { name: "Settings", description: "Incubator settings" },
-    { name: "Reports", description: "Analytics and reporting" },
+    { name: "Users", description: "User management operations" },
+    { name: "Books", description: "Educational books and resources" },
+    { name: "Videos", description: "Educational videos" },
+    { name: "Payments", description: "Payment verification" },
+    { name: "Settings", description: "Platform settings" },
   ],
   components: {
     securitySchemes: {
@@ -34,72 +33,65 @@ export const openApiSpec = {
       },
     },
     schemas: {
-      Startup: {
-        type: "object",
-        properties: {
-          id: { type: "string", format: "uuid" },
-          name: { type: "string" },
-          description: { type: "string", nullable: true },
-          industry: { type: "string", nullable: true },
-          incubationStart: { type: "string", format: "date" },
-          incubationEnd: { type: "string", format: "date" },
-          totalBudget: { type: "number" },
-          status: { type: "string", enum: ["ACTIVE", "INACTIVE"] },
-          isDeleted: { type: "boolean" },
-          createdAt: { type: "string", format: "date-time" },
-          updatedAt: { type: "string", format: "date-time" },
-          students: {
-            type: "array",
-            items: { $ref: "#/components/schemas/User" },
-          },
-        },
-      },
-      BudgetCategory: {
-        type: "object",
-        properties: {
-          id: { type: "string", format: "uuid" },
-          name: { type: "string" },
-          maxBudget: { type: "number" },
-          startupId: { type: "string", format: "uuid" },
-          createdAt: { type: "string", format: "date-time" },
-          updatedAt: { type: "string", format: "date-time" },
-        },
-      },
-      Expense: {
-        type: "object",
-        properties: {
-          id: { type: "string", format: "uuid" },
-          amount: { type: "number" },
-          description: { type: "string" },
-          date: { type: "string", format: "date" },
-          receiptUrl: { type: "string", nullable: true },
-          status: { type: "string", enum: ["PENDING", "APPROVED", "REJECTED"] },
-          adminComment: { type: "string", nullable: true },
-          categoryId: { type: "string", format: "uuid" },
-          startupId: { type: "string", format: "uuid" },
-          submittedById: { type: "string", format: "uuid" },
-          createdAt: { type: "string", format: "date-time" },
-          updatedAt: { type: "string", format: "date-time" },
-        },
-      },
-      ProgressUpdate: {
-        type: "object",
-        properties: {
-          id: { type: "string", format: "uuid" },
-          whatWasDone: { type: "string" },
-          whatIsBlocked: { type: "string" },
-          whatIsNext: { type: "string" },
-          startupId: { type: "string", format: "uuid" },
-          submittedById: { type: "string", format: "uuid" },
-          createdAt: { type: "string", format: "date-time" },
-        },
-      },
       User: {
         type: "object",
         properties: {
           id: { type: "string", format: "uuid" },
           name: { type: "string" },
           email: { type: "string", format: "email" },
+          role: { type: "string", enum: ["ADMIN", "STUDENT"] },
+          status: { type: "string", enum: ["ACTIVE", "INACTIVE"] },
+          paymentStatus: {
+            type: "string",
+            enum: ["NOT_SUBMITTED", "PENDING", "APPROVED", "REJECTED"],
+          },
+          createdAt: { type: "string", format: "date-time" },
+          updatedAt: { type: "string", format: "date-time" },
+        },
+      },
+      Book: {
+        type: "object",
+        properties: {
+          id: { type: "string", format: "uuid" },
+          title: { type: "string" },
+          author: { type: "string" },
+          school: { type: "string" },
+          category: { type: "string" },
+          description: { type: "string", nullable: true },
+          fileUrl: { type: "string" },
+          fileName: { type: "string" },
+          fileSize: { type: "string" },
+          totalPages: { type: "integer" },
+          level: { type: "string" },
+          subject: { type: "string" },
+          tags: { type: "array", items: { type: "string" } },
+          downloads: { type: "integer" },
+          views: { type: "integer" },
+          rating: { type: "number" },
+          status: { type: "string", enum: ["ACTIVE", "INACTIVE", "PROCESSING"] },
+          createdAt: { type: "string", format: "date-time" },
+          updatedAt: { type: "string", format: "date-time" },
+        },
+      },
+      Video: {
+        type: "object",
+        properties: {
+          id: { type: "string", format: "uuid" },
+          title: { type: "string" },
+          description: { type: "string", nullable: true },
+          url: { type: "string" },
+          youtubeId: { type: "string", nullable: true },
+          school: { type: "string" },
+          category: { type: "string" },
+          level: { type: "string" },
+          subject: { type: "string" },
+          tags: { type: "array", items: { type: "string" } },
+          duration: { type: "integer", nullable: true },
+          views: { type: "integer" },
+          rating: { type: "number" },
+          status: { type: "string", enum: ["ACTIVE", "INACTIVE", "PROCESSING"] },
+          createdAt: { type: "string", format: "date-time" },
+          updatedAt: { type: "string", format: "date-time" },
         },
       },
       Settings: {
@@ -107,8 +99,6 @@ export const openApiSpec = {
         properties: {
           id: { type: "string", format: "uuid" },
           incubatorName: { type: "string" },
-          updateFrequency: { type: "string", enum: ["WEEKLY", "MONTHLY"] },
-          autoApproveExpenses: { type: "boolean" },
         },
       },
       Error: {
@@ -124,7 +114,7 @@ export const openApiSpec = {
       post: {
         tags: ["Auth"],
         summary: "Register a new user",
-        description: "Create a new user account with STUDENT role",
+        description: "Create a new student account",
         requestBody: {
           required: true,
           content: {
@@ -133,43 +123,84 @@ export const openApiSpec = {
                 type: "object",
                 required: ["name", "email", "password"],
                 properties: {
-                  name: {
-                    type: "string",
-                    minLength: 2,
-                    example: "John Doe",
-                  },
-                  email: {
-                    type: "string",
-                    format: "email",
-                    example: "john@example.com",
-                  },
-                  password: {
-                    type: "string",
-                    minLength: 8,
-                    example: "SecurePass123",
-                  },
+                  name: { type: "string", minLength: 2 },
+                  email: { type: "string", format: "email" },
+                  password: { type: "string", minLength: 8 },
                 },
               },
             },
           },
         },
         responses: {
-          201: {
-            description: "User created successfully",
+          201: { description: "User registered successfully" },
+          400: { description: "Validation error" },
+          409: { description: "Email already exists" },
+        },
+      },
+    },
+    "/api/auth/session": {
+      post: {
+        tags: ["Auth"],
+        summary: "Login",
+        description: "Authenticate user and create session",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["email", "password"],
+                properties: {
+                  email: { type: "string", format: "email" },
+                  password: { type: "string" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: "Login successful" },
+          401: { description: "Invalid credentials" },
+        },
+      },
+      delete: {
+        tags: ["Auth"],
+        summary: "Logout",
+        description: "End current session",
+        responses: {
+          200: { description: "Logged out successfully" },
+        },
+      },
+    },
+    "/api/users": {
+      get: {
+        tags: ["Users"],
+        summary: "List all users",
+        description: "Admin only - Get paginated list of users",
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: "page", in: "query", schema: { type: "integer", default: 1 } },
+          { name: "limit", in: "query", schema: { type: "integer", default: 10 } },
+          { name: "search", in: "query", schema: { type: "string" } },
+          { name: "role", in: "query", schema: { type: "string", enum: ["ADMIN", "STUDENT"] } },
+          { name: "status", in: "query", schema: { type: "string", enum: ["ACTIVE", "INACTIVE"] } },
+        ],
+        responses: {
+          200: {
+            description: "List of users",
             content: {
               "application/json": {
                 schema: {
                   type: "object",
                   properties: {
-                    message: { type: "string" },
-                    user: {
+                    data: { type: "array", items: { $ref: "#/components/schemas/User" } },
+                    pagination: {
                       type: "object",
                       properties: {
-                        id: { type: "string", format: "uuid" },
-                        name: { type: "string" },
-                        email: { type: "string", format: "email" },
-                        role: { type: "string", enum: ["ADMIN", "STUDENT"] },
-                        createdAt: { type: "string", format: "date-time" },
+                        page: { type: "integer" },
+                        limit: { type: "integer" },
+                        total: { type: "integer" },
+                        totalPages: { type: "integer" },
                       },
                     },
                   },
@@ -177,197 +208,84 @@ export const openApiSpec = {
               },
             },
           },
-          400: {
-            description: "Validation error or user already exists",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/Error" },
-              },
-            },
-          },
-          500: {
-            description: "Internal server error",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/Error" },
-              },
-            },
-          },
         },
       },
     },
-    "/api/startups": {
+    "/api/books": {
       get: {
-        tags: ["Startups"],
-        summary: "List all startups",
-        description: "Get all startups (Admin only)",
+        tags: ["Books"],
+        summary: "List all books",
+        description: "Get paginated list of books",
         security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: "page", in: "query", schema: { type: "integer", default: 1 } },
+          { name: "limit", in: "query", schema: { type: "integer", default: 10 } },
+          { name: "search", in: "query", schema: { type: "string" } },
+          { name: "category", in: "query", schema: { type: "string" } },
+          { name: "level", in: "query", schema: { type: "string" } },
+          { name: "school", in: "query", schema: { type: "string" } },
+        ],
         responses: {
           200: {
-            description: "List of startups",
+            description: "List of books",
             content: {
               "application/json": {
                 schema: {
-                  type: "array",
-                  items: { $ref: "#/components/schemas/Startup" },
-                },
-              },
-            },
-          },
-          401: { description: "Unauthorized" },
-          403: { description: "Forbidden - Admin only" },
-        },
-      },
-      post: {
-        tags: ["Startups"],
-        summary: "Create a new startup",
-        description: "Create a new startup (Admin only)",
-        security: [{ bearerAuth: [] }],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                required: [
-                  "name",
-                  "incubationStart",
-                  "incubationEnd",
-                  "totalBudget",
-                  "studentIds",
-                ],
-                properties: {
-                  name: { type: "string", minLength: 2 },
-                  description: { type: "string" },
-                  industry: { type: "string" },
-                  incubationStart: { type: "string", format: "date" },
-                  incubationEnd: { type: "string", format: "date" },
-                  totalBudget: { type: "number", minimum: 0 },
-                  studentIds: {
-                    type: "array",
-                    items: { type: "string" },
-                    minItems: 1,
+                  type: "object",
+                  properties: {
+                    data: { type: "array", items: { $ref: "#/components/schemas/Book" } },
+                    pagination: { type: "object" },
                   },
                 },
               },
             },
           },
         },
-        responses: {
-          200: {
-            description: "Startup created",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/Startup" },
-              },
-            },
-          },
-          400: { description: "Bad request - validation error" },
-          401: { description: "Unauthorized" },
-          403: { description: "Forbidden - Admin only" },
-        },
       },
-    },
-    "/api/startups/{id}": {
-      get: {
-        tags: ["Startups"],
-        summary: "Get startup by ID",
+      post: {
+        tags: ["Books"],
+        summary: "Create a new book",
+        description: "Admin only - Add a new book to the library",
         security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            schema: { type: "string" },
-          },
-        ],
-        responses: {
-          200: {
-            description: "Startup details",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/Startup" },
-              },
-            },
-          },
-          404: { description: "Startup not found" },
-        },
-      },
-      patch: {
-        tags: ["Startups"],
-        summary: "Update startup",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            schema: { type: "string" },
-          },
-        ],
         requestBody: {
+          required: true,
           content: {
             "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  name: { type: "string" },
-                  description: { type: "string" },
-                  industry: { type: "string" },
-                  incubationStart: { type: "string", format: "date" },
-                  incubationEnd: { type: "string", format: "date" },
-                  totalBudget: { type: "number" },
-                  status: { type: "string", enum: ["ACTIVE", "INACTIVE"] },
-                  studentIds: { type: "array", items: { type: "string" } },
-                },
-              },
+              schema: { $ref: "#/components/schemas/Book" },
             },
           },
         },
         responses: {
-          200: { description: "Startup updated" },
-          404: { description: "Startup not found" },
-        },
-      },
-      delete: {
-        tags: ["Startups"],
-        summary: "Soft delete startup",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            schema: { type: "string" },
-          },
-        ],
-        responses: {
-          200: { description: "Startup deleted" },
-          404: { description: "Startup not found" },
+          201: { description: "Book created successfully" },
+          400: { description: "Validation error" },
         },
       },
     },
-    "/api/startups/{id}/budgets": {
+    "/api/videos": {
       get: {
-        tags: ["Budgets"],
-        summary: "List budget categories for a startup",
+        tags: ["Videos"],
+        summary: "List all videos",
+        description: "Get paginated list of videos",
         security: [{ bearerAuth: [] }],
         parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            schema: { type: "string" },
-          },
+          { name: "page", in: "query", schema: { type: "integer", default: 1 } },
+          { name: "limit", in: "query", schema: { type: "integer", default: 10 } },
+          { name: "search", in: "query", schema: { type: "string" } },
+          { name: "category", in: "query", schema: { type: "string" } },
+          { name: "level", in: "query", schema: { type: "string" } },
+          { name: "school", in: "query", schema: { type: "string" } },
         ],
         responses: {
           200: {
-            description: "List of budget categories",
+            description: "List of videos",
             content: {
               "application/json": {
                 schema: {
-                  type: "array",
-                  items: { $ref: "#/components/schemas/BudgetCategory" },
+                  type: "object",
+                  properties: {
+                    data: { type: "array", items: { $ref: "#/components/schemas/Video" } },
+                    pagination: { type: "object" },
+                  },
                 },
               },
             },
@@ -375,410 +293,54 @@ export const openApiSpec = {
         },
       },
       post: {
-        tags: ["Budgets"],
-        summary: "Create budget category",
+        tags: ["Videos"],
+        summary: "Create a new video",
+        description: "Admin only - Add a new educational video",
         security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            schema: { type: "string" },
-          },
-        ],
         requestBody: {
           required: true,
           content: {
             "application/json": {
-              schema: {
-                type: "object",
-                required: ["name", "maxBudget"],
-                properties: {
-                  name: { type: "string", minLength: 2 },
-                  maxBudget: { type: "number", minimum: 0 },
-                },
-              },
+              schema: { $ref: "#/components/schemas/Video" },
             },
           },
         },
         responses: {
-          200: { description: "Budget category created" },
-          400: { description: "Would exceed startup total budget" },
+          201: { description: "Video created successfully" },
+          400: { description: "Validation error" },
         },
       },
     },
-    "/api/budgets/{id}": {
+    "/api/payments/pending": {
       get: {
-        tags: ["Budgets"],
-        summary: "Get budget category by ID",
+        tags: ["Payments"],
+        summary: "List pending payments",
+        description: "Admin only - Get list of users with pending payment verification",
         security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            schema: { type: "string" },
-          },
-        ],
         responses: {
           200: {
-            description: "Budget category details",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/BudgetCategory" },
-              },
-            },
-          },
-          404: { description: "Budget category not found" },
-        },
-      },
-      patch: {
-        tags: ["Budgets"],
-        summary: "Update budget category",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            schema: { type: "string" },
-          },
-        ],
-        requestBody: {
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  name: { type: "string" },
-                  maxBudget: { type: "number" },
-                },
-              },
-            },
-          },
-        },
-        responses: {
-          200: { description: "Budget category updated" },
-          404: { description: "Not found" },
-        },
-      },
-      delete: {
-        tags: ["Budgets"],
-        summary: "Delete budget category",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            schema: { type: "string" },
-          },
-        ],
-        responses: {
-          200: { description: "Budget category deleted" },
-          400: { description: "Cannot delete - has expenses" },
-          404: { description: "Not found" },
-        },
-      },
-    },
-    "/api/expenses": {
-      get: {
-        tags: ["Expenses"],
-        summary: "List expenses",
-        description: "Students see their own, Admins see all",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "startupId",
-            in: "query",
-            schema: { type: "string" },
-          },
-          {
-            name: "status",
-            in: "query",
-            schema: {
-              type: "string",
-              enum: ["PENDING", "APPROVED", "REJECTED"],
-            },
-          },
-        ],
-        responses: {
-          200: {
-            description: "List of expenses",
+            description: "List of pending payments",
             content: {
               "application/json": {
                 schema: {
                   type: "array",
-                  items: { $ref: "#/components/schemas/Expense" },
+                  items: { $ref: "#/components/schemas/User" },
                 },
               },
             },
           },
-        },
-      },
-      post: {
-        tags: ["Expenses"],
-        summary: "Create expense",
-        description: "Submit an expense (Student)",
-        security: [{ bearerAuth: [] }],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                required: [
-                  "amount",
-                  "description",
-                  "date",
-                  "categoryId",
-                  "startupId",
-                ],
-                properties: {
-                  amount: { type: "number", minimum: 0 },
-                  description: { type: "string", minLength: 5 },
-                  date: { type: "string", format: "date" },
-                  categoryId: { type: "string" },
-                  startupId: { type: "string" },
-                  receiptUrl: { type: "string" },
-                },
-              },
-            },
-          },
-        },
-        responses: {
-          200: { description: "Expense created" },
-          400: { description: "Would exceed budget" },
-          403: { description: "No access to startup" },
-        },
-      },
-    },
-    "/api/expenses/{id}": {
-      get: {
-        tags: ["Expenses"],
-        summary: "Get expense by ID",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            schema: { type: "string" },
-          },
-        ],
-        responses: {
-          200: {
-            description: "Expense details",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/Expense" },
-              },
-            },
-          },
-          404: { description: "Expense not found" },
-        },
-      },
-      patch: {
-        tags: ["Expenses"],
-        summary: "Update expense",
-        description: "Students can only edit their own PENDING expenses",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            schema: { type: "string" },
-          },
-        ],
-        requestBody: {
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  amount: { type: "number" },
-                  description: { type: "string" },
-                  date: { type: "string", format: "date" },
-                  categoryId: { type: "string" },
-                  receiptUrl: { type: "string" },
-                },
-              },
-            },
-          },
-        },
-        responses: {
-          200: { description: "Expense updated" },
-          400: { description: "Cannot edit non-pending expenses" },
-          403: { description: "Not your expense" },
-        },
-      },
-    },
-    "/api/expenses/{id}/approve": {
-      patch: {
-        tags: ["Expenses"],
-        summary: "Approve expense",
-        description: "Admin only",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            schema: { type: "string" },
-          },
-        ],
-        requestBody: {
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  adminComment: { type: "string" },
-                },
-              },
-            },
-          },
-        },
-        responses: {
-          200: { description: "Expense approved" },
-          400: { description: "Would exceed budget or already processed" },
-        },
-      },
-    },
-    "/api/expenses/{id}/reject": {
-      patch: {
-        tags: ["Expenses"],
-        summary: "Reject expense",
-        description: "Admin only",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            schema: { type: "string" },
-          },
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                required: ["adminComment"],
-                properties: {
-                  adminComment: { type: "string", minLength: 5 },
-                },
-              },
-            },
-          },
-        },
-        responses: {
-          200: { description: "Expense rejected" },
-          400: { description: "Already processed" },
-        },
-      },
-    },
-    "/api/progress": {
-      get: {
-        tags: ["Progress"],
-        summary: "List progress updates",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "startupId",
-            in: "query",
-            schema: { type: "string" },
-          },
-          {
-            name: "me",
-            in: "query",
-            schema: { type: "string" },
-            description: "Set to 'true' for students to get only their updates",
-          },
-        ],
-        responses: {
-          200: {
-            description: "List of progress updates",
-            content: {
-              "application/json": {
-                schema: {
-                  type: "array",
-                  items: { $ref: "#/components/schemas/ProgressUpdate" },
-                },
-              },
-            },
-          },
-        },
-      },
-      post: {
-        tags: ["Progress"],
-        summary: "Create progress update",
-        security: [{ bearerAuth: [] }],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                required: [
-                  "whatWasDone",
-                  "whatIsBlocked",
-                  "whatIsNext",
-                  "startupId",
-                ],
-                properties: {
-                  whatWasDone: { type: "string", minLength: 10 },
-                  whatIsBlocked: { type: "string", minLength: 5 },
-                  whatIsNext: { type: "string", minLength: 10 },
-                  startupId: { type: "string" },
-                },
-              },
-            },
-          },
-        },
-        responses: {
-          200: { description: "Progress update created" },
-          403: { description: "No access to startup" },
-        },
-      },
-    },
-    "/api/progress/{id}": {
-      get: {
-        tags: ["Progress"],
-        summary: "Get progress update by ID",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            schema: { type: "string" },
-          },
-        ],
-        responses: {
-          200: {
-            description: "Progress update details",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/ProgressUpdate" },
-              },
-            },
-          },
-          404: { description: "Progress update not found" },
         },
       },
     },
     "/api/settings": {
       get: {
         tags: ["Settings"],
-        summary: "Get incubator settings",
-        description: "Admin only",
+        summary: "Get settings",
+        description: "Admin only - Get platform settings",
         security: [{ bearerAuth: [] }],
         responses: {
           200: {
-            description: "Settings",
+            description: "Settings data",
             content: {
               "application/json": {
                 schema: { $ref: "#/components/schemas/Settings" },
@@ -790,7 +352,7 @@ export const openApiSpec = {
       patch: {
         tags: ["Settings"],
         summary: "Update settings",
-        description: "Admin only",
+        description: "Admin only - Update platform settings",
         security: [{ bearerAuth: [] }],
         requestBody: {
           content: {
@@ -799,11 +361,6 @@ export const openApiSpec = {
                 type: "object",
                 properties: {
                   incubatorName: { type: "string" },
-                  updateFrequency: {
-                    type: "string",
-                    enum: ["WEEKLY", "MONTHLY"],
-                  },
-                  autoApproveExpenses: { type: "boolean" },
                 },
               },
             },
@@ -811,114 +368,6 @@ export const openApiSpec = {
         },
         responses: {
           200: { description: "Settings updated" },
-        },
-      },
-    },
-    "/api/reports/budget": {
-      get: {
-        tags: ["Reports"],
-        summary: "Budget usage report",
-        description: "Admin only - Get budget utilization across startups",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "startupId",
-            in: "query",
-            schema: { type: "string" },
-            description: "Filter by specific startup",
-          },
-        ],
-        responses: {
-          200: {
-            description: "Budget report data",
-            content: {
-              "application/json": {
-                schema: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      startup: { type: "object" },
-                      budget: {
-                        type: "object",
-                        properties: {
-                          total: { type: "number" },
-                          allocated: { type: "number" },
-                          spent: { type: "number" },
-                          remaining: { type: "number" },
-                        },
-                      },
-                      categories: { type: "array" },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    "/api/reports/expenses": {
-      get: {
-        tags: ["Reports"],
-        summary: "Expense breakdown report",
-        description: "Admin only - Detailed expense analytics",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "startupId",
-            in: "query",
-            schema: { type: "string" },
-          },
-          {
-            name: "status",
-            in: "query",
-            schema: {
-              type: "string",
-              enum: ["PENDING", "APPROVED", "REJECTED"],
-            },
-          },
-          {
-            name: "startDate",
-            in: "query",
-            schema: { type: "string", format: "date" },
-          },
-          {
-            name: "endDate",
-            in: "query",
-            schema: { type: "string", format: "date" },
-          },
-        ],
-        responses: {
-          200: { description: "Expense report data" },
-        },
-      },
-    },
-    "/api/reports/activity": {
-      get: {
-        tags: ["Reports"],
-        summary: "Activity timeline report",
-        description: "Admin only - Timeline of progress updates and expenses",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          {
-            name: "startupId",
-            in: "query",
-            schema: { type: "string" },
-          },
-          {
-            name: "startDate",
-            in: "query",
-            schema: { type: "string", format: "date" },
-          },
-          {
-            name: "endDate",
-            in: "query",
-            schema: { type: "string", format: "date" },
-          },
-        ],
-        responses: {
-          200: { description: "Activity report data" },
         },
       },
     },
