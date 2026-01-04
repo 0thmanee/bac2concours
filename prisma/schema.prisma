@@ -73,6 +73,12 @@ enum ReviewStatus {
   FLAGGED
 }
 
+enum VideoStatus {
+  ACTIVE
+  INACTIVE
+  PROCESSING
+}
+
 // ============================================================
 // USER & AUTHENTICATION
 // ============================================================
@@ -100,6 +106,7 @@ model User {
   notifications           Notification[]
   notificationPreferences NotificationPreference? @relation("NotificationPreferences")
   books                   Book[] // Books uploaded by this user (admin)
+  videos                  Video[] // Videos uploaded by this user (admin)
   uploadedFiles           File[] // Files uploaded by this user
   reviews                 Review[] // Reviews written by this user
 
@@ -416,6 +423,52 @@ model Book {
 }
 
 // ============================================================
+// EDUCATIONAL RESOURCES - VIDEOS
+// ============================================================
+
+model Video {
+  id          String  @id @default(cuid())
+  title       String
+  description String? @db.Text
+  url         String // YouTube URL only
+
+  // Thumbnail - uploaded file only
+  thumbnailFileId String? // FK to File model
+  thumbnailFile   File?   @relation("VideoThumbnailFile", fields: [thumbnailFileId], references: [id], onDelete: SetNull)
+
+  school   String // e.g., "Sciences Mathématiques", "Sciences Physiques"
+  category String // e.g., "Mathématiques", "Physique"
+  level    String // e.g., "Terminale", "Première"
+  subject  String // Same as category for consistency
+  tags     String[] // Array of tags for filtering
+  duration Int? // Duration in seconds
+  views    Int         @default(0)
+  rating   Float       @default(0)
+  status   VideoStatus @default(ACTIVE)
+  isPublic Boolean     @default(true)
+
+  // YouTube video ID (auto-extracted from URL)
+  youtubeId String? // YouTube video ID
+
+  // Relations
+  uploadedById String
+  uploadedBy   User     @relation(fields: [uploadedById], references: [id])
+  reviews      Review[]
+
+  // Audit fields
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([category])
+  @@index([level])
+  @@index([isPublic])
+  @@index([uploadedById])
+  @@index([thumbnailFileId])
+  @@map("videos")
+}
+
+// ============================================================
 // FILE MANAGEMENT
 // ============================================================
 
@@ -432,8 +485,9 @@ model File {
   uploadedById String
   uploadedBy   User   @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
 
-  // Reverse relations for books
-  bookCovers Book[] @relation("BookCoverFile")
+  // Reverse relations for books and videos
+  bookCovers      Book[]  @relation("BookCoverFile")
+  videoThumbnails Video[] @relation("VideoThumbnailFile")
 
   // Metadata
   metadata Json? // Additional file-specific metadata
@@ -465,6 +519,9 @@ model Review {
   bookId String?
   book   Book?   @relation(fields: [bookId], references: [id], onDelete: Cascade)
 
+  videoId String?
+  video   Video?  @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
   // Author of the review
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -482,6 +539,7 @@ model Review {
 
   @@index([reviewableType, reviewableId])
   @@index([bookId])
+  @@index([videoId])
   @@index([userId])
   @@index([status])
   @@index([rating])

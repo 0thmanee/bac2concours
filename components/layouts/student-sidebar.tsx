@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   LogOut,
   BookOpen,
+  Video,
 } from "lucide-react";
 import {
   Sidebar,
@@ -34,6 +35,11 @@ const navigation = [
     name: "Bibliothèque",
     href: STUDENT_ROUTES.BOOKS,
     icon: BookOpen,
+  },
+  {
+    name: "Vidéos",
+    href: STUDENT_ROUTES.VIDEOS,
+    icon: Video,
   },
 ];
 

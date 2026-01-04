@@ -33,6 +33,10 @@ export const ADMIN_ROUTES = {
   BOOK: (id: string) => `/admin/books/${id}`,
   BOOK_NEW: "/admin/books/new",
   BOOK_EDIT: (id: string) => `/admin/books/${id}/edit`,
+  VIDEOS: "/admin/videos",
+  VIDEO: (id: string) => `/admin/videos/${id}`,
+  VIDEO_NEW: "/admin/videos/new",
+  VIDEO_EDIT: (id: string) => `/admin/videos/${id}/edit`,
   SETTINGS: "/admin/settings",
   REPORTS: "/admin/reports",
   PROFILE: "/admin/profile",
@@ -48,6 +52,8 @@ export const STUDENT_ROUTES = {
   PROGRESS: "/student/progress",
   PROGRESS_NEW: "/student/progress/new",
   BOOKS: "/student/books",
+  VIDEOS: "/student/videos",
+  VIDEO: (id: string) => `/student/videos/${id}`,
   PROFILE: "/student/profile",
 } as const;
 

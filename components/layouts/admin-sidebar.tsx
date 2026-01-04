@@ -15,6 +15,7 @@ import {
   LogOut,
   CreditCard,
   BookOpen,
+  Video,
 } from "lucide-react";
 import {
   Sidebar,
@@ -52,7 +53,12 @@ const navigation = [
     name: "Livres",
     href: ADMIN_ROUTES.BOOKS,
     icon: BookOpen,
-  }
+  },
+  {
+    name: "Vidéos",
+    href: ADMIN_ROUTES.VIDEOS,
+    icon: Video,
+  },
 ];
 
 export default function AdminSidebar() {

@@ -112,6 +112,13 @@ export const API_ROUTES = {
   BOOK_COUNTER: (id: string) => `/api/books/${id}/counter`,
   BOOKS_STATS: "/api/books/stats",
   BOOKS_FILTERS: "/api/books/filters",
+  // Videos
+  VIDEOS: "/api/videos",
+  VIDEO: (id: string) => `/api/videos/${id}`,
+  VIDEO_VIEW: (id: string) => `/api/videos/${id}/view`,
+  VIDEO_RELATED: (id: string) => `/api/videos/${id}/related`,
+  VIDEOS_STATS: "/api/videos/stats",
+  VIDEOS_FILTERS: "/api/videos/filter-options",
 } as const;
 
 // ============================================================
@@ -207,6 +214,18 @@ export const QUERY_KEYS = {
     DETAIL: (id: string) => [...QUERY_KEYS.BOOKS.DETAILS(), id] as const,
     STATS: () => [...QUERY_KEYS.BOOKS.ALL, "stats"] as const,
     FILTERS: () => [...QUERY_KEYS.BOOKS.ALL, "filters"] as const,
+  },
+  VIDEOS: {
+    ALL: ["videos"] as const,
+    LISTS: () => [...QUERY_KEYS.VIDEOS.ALL, "list"] as const,
+    LIST: (filters?: Record<string, unknown>) =>
+      [...QUERY_KEYS.VIDEOS.LISTS(), filters] as const,
+    DETAILS: () => [...QUERY_KEYS.VIDEOS.ALL, "detail"] as const,
+    DETAIL: (id: string) => [...QUERY_KEYS.VIDEOS.DETAILS(), id] as const,
+    RELATED: (id: string) =>
+      [...QUERY_KEYS.VIDEOS.DETAIL(id), "related"] as const,
+    STATS: () => [...QUERY_KEYS.VIDEOS.ALL, "stats"] as const,
+    FILTERS: () => [...QUERY_KEYS.VIDEOS.ALL, "filters"] as const,
   },
   PAYMENTS: {
     ALL: ["payments"] as const,
