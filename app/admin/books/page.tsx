@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Plus, Download, Eye, Star } from "lucide-react";
 import { MetricCard } from "@/components/ui/metric-card";
-import Image from "next/image";
 import { SearchInput } from "@/components/ui/search-input";
 import { FilterSelect } from "@/components/ui/filter-select";
 import { FilterPanel } from "@/components/ui/filter-panel";
@@ -27,6 +26,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { LoadingState } from "@/components/shared/loading-state";
 import { Badge } from "@/components/ui/badge";
+import { SupabaseImage } from "@/components/ui/supabase-image";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -112,9 +112,9 @@ export default function AdminBooksPage() {
       header: "Livre",
       cell: (book) => (
         <div className="flex items-start gap-3">
-          {book.coverUrl && (
-            <Image
-              src={book.coverUrl || ""}
+          {book.coverFile?.publicUrl && (
+            <SupabaseImage
+              src={book.coverFile.publicUrl}
               alt={book.title}
               width={36}
               height={48}
@@ -220,7 +220,7 @@ export default function AdminBooksPage() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <a href={book.fileUrl} download target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+              <a href={book.fileUrl || undefined} download target="_blank" rel="noopener noreferrer" className="cursor-pointer">
                 Télécharger
               </a>
             </DropdownMenuItem>

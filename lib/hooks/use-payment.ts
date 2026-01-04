@@ -54,6 +54,7 @@ export function useUploadPaymentProof() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: paymentKeys.status() });
+      queryClient.invalidateQueries({ queryKey: ["files"] });
     },
   });
 }

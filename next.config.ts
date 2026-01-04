@@ -19,9 +19,16 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "mswahyxhpaiuztsxbuga.supabase.co",
+      },
+      {
+        protocol: "https",
         hostname: "**.r2.cloudflarestorage.com",
       },
     ],
+    // Disable private IP check for Supabase (development only)
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
   },
 
   // Server actions

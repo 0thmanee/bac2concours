@@ -52,6 +52,27 @@ enum BookStatus {
   PROCESSING
 }
 
+enum FileType {
+  IMAGE // Covers, profile pictures
+  DOCUMENT // PDFs, books
+  PAYMENT_PROOF // Payment verification documents
+  OTHER
+}
+
+enum ReviewableType {
+  BOOK
+  VIDEO
+  COURSE
+  ARTICLE
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  FLAGGED
+}
+
 // ============================================================
 // USER & AUTHENTICATION
 // ============================================================
@@ -79,6 +100,8 @@ model User {
   notifications           Notification[]
   notificationPreferences NotificationPreference? @relation("NotificationPreferences")
   books                   Book[] // Books uploaded by this user (admin)
+  uploadedFiles           File[] // Files uploaded by this user
+  reviews                 Review[] // Reviews written by this user
 
   // Audit fields
   createdAt DateTime @default(now())
@@ -348,30 +371,36 @@ model PasswordResetToken {
 // ============================================================
 
 model Book {
-  id          String     @id @default(cuid())
+  id          String  @id @default(cuid())
   title       String
   author      String
   school      String // e.g., "Sciences Mathématiques", "Sciences Physiques"
   category    String // e.g., "Mathématiques", "Physique"
-  description String?    @db.Text
-  coverUrl    String? // URL to book cover image
-  fileUrl     String // URL to PDF file
-  fileName    String
-  fileSize    String // e.g., "25.4 MB"
-  totalPages  Int
-  language    String     @default("fr")
-  level       String // e.g., "Terminale", "Première"
-  subject     String // Same as category for consistency
-  tags        String[] // Array of tags for filtering
-  downloads   Int        @default(0)
-  views       Int        @default(0)
-  rating      Float      @default(0)
-  status      BookStatus @default(ACTIVE)
-  isPublic    Boolean    @default(true)
+  description String? @db.Text
+
+  // Cover image - uploaded file only
+  coverFileId String? // FK to File model
+  coverFile   File?   @relation("BookCoverFile", fields: [coverFileId], references: [id], onDelete: SetNull)
+
+  // PDF file - Google Drive link only
+  fileUrl    String // Google Drive or external link to PDF
+  fileName   String
+  fileSize   String // e.g., "25.4 MB"
+  totalPages Int
+  language   String     @default("fr")
+  level      String // e.g., "Terminale", "Première"
+  subject    String // Same as category for consistency
+  tags       String[] // Array of tags for filtering
+  downloads  Int        @default(0)
+  views      Int        @default(0)
+  rating     Float      @default(0)
+  status     BookStatus @default(ACTIVE)
+  isPublic   Boolean    @default(true)
 
   // Relations
   uploadedById String
-  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+  uploadedBy   User     @relation(fields: [uploadedById], references: [id])
+  reviews      Review[]
 
   // Audit fields
   createdAt DateTime @default(now())
@@ -382,5 +411,80 @@ model Book {
   @@index([level])
   @@index([isPublic])
   @@index([uploadedById])
+  @@index([coverFileId])
   @@map("books")
+}
+
+// ============================================================
+// FILE MANAGEMENT
+// ============================================================
+
+model File {
+  id          String   @id @default(cuid())
+  filename    String // Original filename
+  storagePath String // Path in Firebase Storage
+  publicUrl   String // Public access URL
+  mimeType    String // e.g., "image/jpeg", "application/pdf"
+  size        Int // File size in bytes
+  type        FileType // Category of file
+
+  // Relations
+  uploadedById String
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+
+  // Reverse relations for books
+  bookCovers Book[] @relation("BookCoverFile")
+
+  // Metadata
+  metadata Json? // Additional file-specific metadata
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([uploadedById])
+  @@index([type])
+  @@index([createdAt])
+  @@map("files")
+}
+
+// ============================================================
+// REVIEWS (Polymorphic - for Books, Videos, Courses, etc.)
+// ============================================================
+
+model Review {
+  id      String       @id @default(cuid())
+  rating  Int // 1-5 stars
+  comment String?      @db.Text
+  status  ReviewStatus @default(PENDING)
+
+  // Polymorphic relation fields
+  reviewableType ReviewableType // Type of resource being reviewed
+  reviewableId   String // ID of the resource being reviewed
+
+  // Specific relations (optional - based on reviewableType)
+  bookId String?
+  book   Book?   @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  // Author of the review
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Moderation
+  isVerifiedPurchase Boolean   @default(false) // For future e-commerce integration
+  helpfulCount       Int       @default(0) // Number of users who found this helpful
+  reportCount        Int       @default(0) // Number of times reported
+  moderatedAt        DateTime?
+  moderatedBy        String? // Admin user ID who moderated
+
+  // Audit fields
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([reviewableType, reviewableId])
+  @@index([bookId])
+  @@index([userId])
+  @@index([status])
+  @@index([rating])
+  @@index([createdAt])
+  @@map("reviews")
 }

@@ -1,45 +1,9 @@
 import prisma from "@/lib/prisma";
 import { PAYMENT_STATUS, USER_STATUS } from "@/lib/constants";
 import type { PaymentStatus } from "@prisma/client";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
-import { existsSync } from "fs";
 import { emailService } from "@/lib/email";
 
-// Directory for storing payment proofs
-const UPLOADS_DIR = path.join(process.cwd(), "public", "uploads", "payments");
-
 export const paymentService = {
-  /**
-   * Ensure uploads directory exists
-   */
-  async ensureUploadsDir() {
-    if (!existsSync(UPLOADS_DIR)) {
-      await mkdir(UPLOADS_DIR, { recursive: true });
-    }
-  },
-
-  /**
-   * Upload payment proof file
-   */
-  async uploadPaymentProof(userId: string, file: File): Promise<string> {
-    await this.ensureUploadsDir();
-
-    // Generate unique filename
-    const timestamp = Date.now();
-    const extension = file.name.split(".").pop() || "jpg";
-    const filename = `${userId}_${timestamp}.${extension}`;
-    const filepath = path.join(UPLOADS_DIR, filename);
-
-    // Convert File to Buffer and save
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    await writeFile(filepath, buffer);
-
-    // Return the public URL path
-    return `/uploads/payments/${filename}`;
-  },
-
   /**
    * Submit payment proof for a user
    */
@@ -156,13 +120,12 @@ export const paymentService = {
     });
 
     // Send approval email to user (async, don't block)
-    emailService.sendPaymentApprovedEmail(
-      user.email,
-      user.name
-    ).catch(error => {
-      console.error("Failed to send payment approval email:", error);
-      // Don't throw - email failure shouldn't block the approval
-    });
+    emailService
+      .sendPaymentApprovedEmail(user.email, user.name)
+      .catch((error) => {
+        console.error("Failed to send payment approval email:", error);
+        // Don't throw - email failure shouldn't block the approval
+      });
 
     return updatedUser;
   },
@@ -208,14 +171,12 @@ export const paymentService = {
     });
 
     // Send rejection email to user (async, don't block)
-    emailService.sendPaymentRejectedEmail(
-      user.email,
-      user.name,
-      rejectionReason
-    ).catch(error => {
-      console.error("Failed to send payment rejection email:", error);
-      // Don't throw - email failure shouldn't block the rejection
-    });
+    emailService
+      .sendPaymentRejectedEmail(user.email, user.name, rejectionReason)
+      .catch((error) => {
+        console.error("Failed to send payment rejection email:", error);
+        // Don't throw - email failure shouldn't block the rejection
+      });
 
     return updatedUser;
   },

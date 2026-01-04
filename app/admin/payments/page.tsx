@@ -36,10 +36,10 @@ import {
   AlertTriangle,
   Loader2,
 } from "lucide-react";
-import { usePendingPayments, useReviewPayment, type PendingPaymentUser } from "@/lib/hooks/use-payment";
+import { usePendingPayments, type PendingPaymentUser } from "@/lib/hooks/use-payment";
 import { toast } from "sonner";
 import { MESSAGES, VALIDATION } from "@/lib/constants";
-import Image from "next/image";
+import { SupabaseImage } from "@/components/ui/supabase-image";
 
 export default function PaymentsPage() {
   const { data, isLoading, refetch } = usePendingPayments();
@@ -280,7 +280,7 @@ export default function PaymentsPage() {
               <>
                 {viewingUser.paymentProofUrl.match(/\.(jpg|jpeg|png|webp)$/i) ? (
                   <div className="relative w-full h-96 rounded-lg overflow-hidden border border-ops">
-                    <Image
+                    <SupabaseImage
                       src={viewingUser.paymentProofUrl}
                       alt="Preuve de paiement"
                       fill

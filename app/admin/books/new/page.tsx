@@ -10,8 +10,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, AlertCircle, X, Plus } from "lucide-react";
+import { ArrowLeft, AlertCircle, X, Plus, Upload } from "lucide-react";
 import { useCreateBook, useBookFilters } from "@/lib/hooks/use-books";
+import { useUploadFile } from "@/lib/hooks/use-files";
 import { createBookSchema, type CreateBookInput } from "@/lib/validations/book.validation";
 import {
   Select,
@@ -22,14 +23,18 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
-import { BookStatus } from "@prisma/client";
+import { BookStatus, FileType } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
+import { SupabaseImage } from "@/components/ui/supabase-image";
 
 export default function NewBookPage() {
   const router = useRouter();
   const createMutation = useCreateBook();
+  const uploadFileMutation = useUploadFile();
   const { data: filtersData } = useBookFilters();
   const [newTag, setNewTag] = useState("");
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
 
   const {
     register,
@@ -50,6 +55,24 @@ export default function NewBookPage() {
 
   const watchedTags = (watch("tags") as string[]) || [];
 
+  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setCoverFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCoverPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeCover = () => {
+    setCoverFile(null);
+    setCoverPreview(null);
+    setValue("coverFileId", undefined);
+  };
+
   const addTag = () => {
     if (newTag && !watchedTags.includes(newTag)) {
       setValue("tags", [...watchedTags, newTag]);
@@ -63,6 +86,16 @@ export default function NewBookPage() {
 
   const onSubmit = async (data: CreateBookInput) => {
     try {
+      // Upload cover if provided
+      if (coverFile) {
+        const uploadResult = await uploadFileMutation.mutateAsync({
+          file: coverFile,
+          type: FileType.IMAGE,
+          folder: "book-covers",
+        });
+        data.coverFileId = uploadResult.data.id;
+      }
+
       await createMutation.mutateAsync(data);
       toast.success(MESSAGES.SUCCESS.BOOK_CREATED || "Livre créé avec succès");
       router.push(ADMIN_ROUTES.BOOKS);
@@ -345,24 +378,72 @@ export default function NewBookPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
+                  <Label htmlFor="cover" className="text-sm font-medium">
+                    Image de Couverture <span className="text-xs text-ops-tertiary">(Optionnel)</span>
+                  </Label>
+                  <div className="space-y-2">
+                    {coverPreview ? (
+                      <div className="relative w-full h-64 rounded-lg overflow-hidden border border-ops">
+                        <SupabaseImage
+                          src={coverPreview}
+                          alt="Aperçu de la couverture"
+                          fill
+                          className="object-contain"
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="absolute top-2 right-2"
+                          onClick={removeCover}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <label
+                        htmlFor="cover"
+                        className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-ops rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] transition-colors"
+                      >
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <Upload className="h-10 w-10 text-ops-tertiary mb-3" />
+                          <p className="text-sm text-ops-secondary mb-1">Cliquez pour télécharger</p>
+                          <p className="text-xs text-ops-tertiary">PNG, JPG, WEBP (max. 5MB)</p>
+                        </div>
+                        <input
+                          id="cover"
+                          type="file"
+                          className="hidden"
+                          accept="image/jpeg,image/jpg,image/png,image/webp"
+                          onChange={handleCoverChange}
+                        />
+                      </label>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
                   <Label htmlFor="fileUrl" className="text-sm font-medium">
-                    URL du Fichier PDF <span className="text-destructive">*</span>
+                    Lien Google Drive du PDF <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="fileUrl"
                     {...register("fileUrl")}
-                    placeholder="https://example.com/books/file.pdf"
+                    placeholder="https://drive.google.com/file/d/..."
                     className="ops-input h-9"
                   />
                   {errors.fileUrl && (
                     <p className="text-xs text-destructive">{errors.fileUrl.message}</p>
                   )}
+                  <p className="text-xs text-ops-tertiary">
+                    Assurez-vous que le lien est public et accessible à tous
+                  </p>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="fileName" className="text-sm font-medium">
-                      Nom du Fichier <span className="text-destructive">*</span>
+                      Nom du Fichier <span className="text-xs text-ops-tertiary">(Optionnel)</span>
                     </Label>
                     <Input
                       id="fileName"
@@ -377,7 +458,7 @@ export default function NewBookPage() {
 
                   <div className="space-y-2">
                     <Label htmlFor="fileSize" className="text-sm font-medium">
-                      Taille du Fichier <span className="text-destructive">*</span>
+                      Taille du Fichier <span className="text-xs text-ops-tertiary">(Optionnel)</span>
                     </Label>
                     <Input
                       id="fileSize"
@@ -393,7 +474,7 @@ export default function NewBookPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="totalPages" className="text-sm font-medium">
-                    Nombre de Pages <span className="text-destructive">*</span>
+                    Nombre de Pages <span className="text-xs text-ops-tertiary">(Optionnel)</span>
                   </Label>
                   <Input
                     id="totalPages"
@@ -405,21 +486,6 @@ export default function NewBookPage() {
                   />
                   {errors.totalPages && (
                     <p className="text-xs text-destructive">{errors.totalPages.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="coverUrl" className="text-sm font-medium">
-                    URL de la Couverture <span className="text-xs text-ops-tertiary">(Optionnel)</span>
-                  </Label>
-                  <Input
-                    id="coverUrl"
-                    {...register("coverUrl")}
-                    placeholder="https://example.com/covers/image.jpg"
-                    className="ops-input h-9"
-                  />
-                  {errors.coverUrl && (
-                    <p className="text-xs text-destructive">{errors.coverUrl.message}</p>
                   )}
                 </div>
               </CardContent>

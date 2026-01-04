@@ -241,7 +241,9 @@
   --ops-text-disabled: var(--neutral-500);
 
   --ops-action-primary: var(--brand-600); /* Keep Brand Purple in dark mode */
-  --ops-action-primary-hover: var(--brand-500); /* Lighter variant for dark mode */
+  --ops-action-primary-hover: var(
+    --brand-500
+  ); /* Lighter variant for dark mode */
 
   --background: var(--ops-background);
   --foreground: var(--ops-text-primary);
@@ -640,5 +642,18 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Ensure error messages are always visible with proper red color */
+  .text-destructive {
+    color: rgb(var(--error)) !important;
+  }
+
+  /* Form error text styling */
+  .form-error {
+    color: rgb(var(--error));
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    margin-top: 0.25rem;
   }
 }

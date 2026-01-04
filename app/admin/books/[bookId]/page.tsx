@@ -25,7 +25,7 @@ import { ErrorState } from "@/components/shared/error-state";
 import { Badge } from "@/components/ui/badge";
 import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
 import { format } from "date-fns";
-import Image from "next/image";
+import { SupabaseImage } from "@/components/ui/supabase-image";
 
 export default function BookDetailPage({ params }: { params: Promise<{ bookId: string }> }) {
   const { bookId } = use(params);
@@ -71,6 +71,8 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
   };
 
   const handleDownload = async () => {
+    if (!book.fileUrl) return;
+    
     try {
       await incrementCounter.mutateAsync("download");
       window.open(book.fileUrl, "_blank");
@@ -195,7 +197,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Book Preview */}
-          {book.coverUrl && (
+          {book.coverFile?.publicUrl && (
             <Card className="ops-card border border-ops">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-ops-primary">
@@ -204,8 +206,8 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
               </CardHeader>
               <CardContent>
                 <div className="flex justify-center">
-                  <Image
-                    src={book.coverUrl}
+                  <SupabaseImage
+                    src={book.coverFile.publicUrl}
                     alt={book.title}
                     width={300}
                     height={400}

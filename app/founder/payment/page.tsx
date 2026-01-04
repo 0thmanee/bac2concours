@@ -9,7 +9,7 @@ import { useUploadPaymentProof, usePaymentStatus } from "@/lib/hooks/use-payment
 import { toast } from "sonner";
 import { VALIDATION, API_ROUTES } from "@/lib/constants";
 import Link from "next/link";
-import Image from "next/image";
+import { SupabaseImage } from "@/components/ui/supabase-image";
 
 export default function PaymentPage() {
   const router = useRouter();
@@ -115,7 +115,7 @@ export default function PaymentPage() {
                 <p className="text-sm text-ops-secondary mb-2">Document soumis :</p>
                 {paymentStatus.paymentProofUrl.match(/\.(jpg|jpeg|png|webp)$/i) ? (
                   <div className="relative w-full h-48 rounded-lg overflow-hidden">
-                    <Image
+                    <SupabaseImage
                       src={paymentStatus.paymentProofUrl}
                       alt="Preuve de paiement"
                       fill
@@ -200,7 +200,7 @@ export default function PaymentPage() {
               <div className="space-y-4">
                 {preview ? (
                   <div className="relative w-full h-48 rounded-lg overflow-hidden mx-auto">
-                    <Image
+                    <SupabaseImage
                       src={preview}
                       alt="Aperçu"
                       fill

@@ -5,8 +5,6 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
-  Receipt,
-  TrendingUp,
   LogOut,
   BookOpen,
 } from "lucide-react";
@@ -28,19 +26,9 @@ import { cn } from "@/lib/utils";
 
 const navigation = [
   {
-    name: "Dashboard",
+    name: "Tableau de bord",
     href: FOUNDER_ROUTES.DASHBOARD,
     icon: LayoutDashboard,
-  },
-  {
-    name: "Expenses",
-    href: FOUNDER_ROUTES.EXPENSES,
-    icon: Receipt,
-  },
-  {
-    name: "Progress Updates",
-    href: FOUNDER_ROUTES.PROGRESS,
-    icon: TrendingUp,
   },
   {
     name: "Bibliothèque",

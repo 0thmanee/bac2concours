@@ -17,7 +17,20 @@ export const bookService = {
    * Get all books with optional filtering, pagination, and sorting
    */
   async findAll(filters: BookFilters) {
-    const { search, category, school, level, subject, status, isPublic, tags, page, limit, sortBy, sortOrder } = filters;
+    const {
+      search,
+      category,
+      school,
+      level,
+      subject,
+      status,
+      isPublic,
+      tags,
+      page,
+      limit,
+      sortBy,
+      sortOrder,
+    } = filters;
 
     // Build where clause
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -53,7 +66,8 @@ export const bookService = {
         author: true,
         school: true,
         category: true,
-        coverUrl: true,
+        coverFileId: true,
+        coverFile: true,
         fileSize: true,
         totalPages: true,
         level: true,
@@ -94,6 +108,7 @@ export const bookService = {
             email: true,
           },
         },
+        coverFile: true,
       },
     });
   },
@@ -115,6 +130,7 @@ export const bookService = {
             email: true,
           },
         },
+        coverFile: true,
       },
     });
   },
@@ -134,6 +150,7 @@ export const bookService = {
             email: true,
           },
         },
+        coverFile: true,
       },
     });
   },
@@ -197,31 +214,32 @@ export const bookService = {
    * Get book statistics
    */
   async getStats(): Promise<BookStats> {
-    const [totalBooks, activeBooks, aggregations, categoryGroup, levelGroup] = await Promise.all([
-      prisma.book.count(),
-      prisma.book.count({ where: { status: "ACTIVE" } }),
-      prisma.book.aggregate({
-        _sum: {
-          downloads: true,
-          views: true,
-        },
-        _avg: {
-          rating: true,
-        },
-      }),
-      prisma.book.groupBy({
-        by: ["category"],
-        _count: {
-          id: true,
-        },
-      }),
-      prisma.book.groupBy({
-        by: ["level"],
-        _count: {
-          id: true,
-        },
-      }),
-    ]);
+    const [totalBooks, activeBooks, aggregations, categoryGroup, levelGroup] =
+      await Promise.all([
+        prisma.book.count(),
+        prisma.book.count({ where: { status: "ACTIVE" } }),
+        prisma.book.aggregate({
+          _sum: {
+            downloads: true,
+            views: true,
+          },
+          _avg: {
+            rating: true,
+          },
+        }),
+        prisma.book.groupBy({
+          by: ["category"],
+          _count: {
+            id: true,
+          },
+        }),
+        prisma.book.groupBy({
+          by: ["level"],
+          _count: {
+            id: true,
+          },
+        }),
+      ]);
 
     const booksByCategory: Record<string, number> = {};
     categoryGroup.forEach((group) => {

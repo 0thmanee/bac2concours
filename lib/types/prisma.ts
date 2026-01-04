@@ -6,6 +6,7 @@ import {
   User,
   ProgressUpdate,
   Book,
+  File,
 } from "@prisma/client";
 
 // Expense with relations (as returned by expenseService.findAll)
@@ -53,6 +54,7 @@ export type BudgetCategoryWithRelations = BudgetCategory & {
 // Book with relations (as returned by bookService.findById)
 export type BookWithRelations = Book & {
   uploadedBy?: Pick<User, "id" | "name" | "email">;
+  coverFile?: File | null;
 };
 
 // ProgressUpdate with relations (as returned by progressService.findAll)

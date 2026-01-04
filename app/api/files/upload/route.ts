@@ -1,24 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fileService } from "@/lib/services/file.service";
-import { paymentService } from "@/lib/services/payment.service";
-import { requireApiFounder, ApiAuthError } from "@/lib/auth-security";
+import { validateApiSession, ApiAuthError } from "@/lib/auth-security";
 import {
+  fileUploadSchema,
   validateFileSize,
   isAllowedMimeType,
   FILE_VALIDATION_ERRORS,
   getFileSizeLimitLabel,
 } from "@/lib/validations/file.validation";
 import { FileType } from "@prisma/client";
-import { MESSAGES } from "@/lib/constants";
 
-// POST /api/payments/upload - Upload payment proof
+/**
+ * POST /api/files/upload
+ * Upload file to Firebase Storage
+ */
 export async function POST(req: NextRequest) {
   try {
-    // Validate user is authenticated founder
-    const user = await requireApiFounder();
+    const user = await validateApiSession();
+
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
+    const type = formData.get("type") as FileType;
+    const folder = formData.get("folder") as string | undefined;
+    const metadataStr = formData.get("metadata") as string | undefined;
 
     if (!file) {
       return NextResponse.json(
@@ -27,55 +35,50 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Validate file size for payment proof
-    if (!validateFileSize(file.size, FileType.PAYMENT_PROOF)) {
+    // Validate input
+    const validated = fileUploadSchema.parse({
+      type,
+      folder,
+      metadata: metadataStr ? JSON.parse(metadataStr) : undefined,
+    });
+
+    // Validate file size
+    if (!validateFileSize(file.size, validated.type)) {
       return NextResponse.json(
         {
           error: `${
             FILE_VALIDATION_ERRORS.FILE_TOO_LARGE
-          } (max ${getFileSizeLimitLabel(FileType.PAYMENT_PROOF)})`,
+          } (max ${getFileSizeLimitLabel(validated.type)})`,
         },
         { status: 400 }
       );
     }
 
-    // Validate file type for payment proof
-    if (!isAllowedMimeType(file.type, FileType.PAYMENT_PROOF)) {
+    // Validate MIME type
+    if (!isAllowedMimeType(file.type, validated.type)) {
       return NextResponse.json(
         { error: FILE_VALIDATION_ERRORS.INVALID_MIME_TYPE },
         { status: 400 }
       );
     }
 
-    // Upload file to Firebase
-    const uploadResult = await fileService.uploadFile({
+    // Upload file
+    const result = await fileService.uploadFile({
       file,
       userId: user.id,
-      type: FileType.PAYMENT_PROOF,
-      folder: "payments",
-      metadata: {
-        purpose: "payment_verification",
-      },
+      type: validated.type,
+      folder: validated.folder,
+      metadata: validated.metadata,
     });
-
-    // Submit payment proof with the file URL
-    const result = await paymentService.submitPaymentProof(
-      user.id,
-      uploadResult.publicUrl
-    );
 
     return NextResponse.json({
       success: true,
-      message: MESSAGES.SUCCESS.PAYMENT_UPLOADED,
-      data: {
-        ...result,
-        file: uploadResult,
-      },
+      message: "Fichier téléchargé avec succès",
+      data: result,
     });
   } catch (error) {
-    console.error("Payment upload error:", error);
+    console.error("File upload error:", error);
 
-    // Handle authentication errors
     if (error instanceof ApiAuthError) {
       return NextResponse.json(
         { error: error.message },
@@ -88,7 +91,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: MESSAGES.ERROR.PAYMENT_UPLOAD_FAILED },
+      { error: "Échec du téléchargement du fichier" },
       { status: 500 }
     );
   }

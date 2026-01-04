@@ -49,40 +49,10 @@ const navigation = [
     icon: Users,
   },
   {
-    name: "Startups",
-    href: ADMIN_ROUTES.STARTUPS,
-    icon: Building2,
-  },
-  {
-    name: "Budgets",
-    href: ADMIN_ROUTES.BUDGETS,
-    icon: Wallet,
-  },
-  {
-    name: "Dépenses",
-    href: ADMIN_ROUTES.EXPENSES,
-    icon: Receipt,
-  },
-  {
-    name: "Catégories",
-    href: ADMIN_ROUTES.CATEGORIES,
-    icon: Tag,
-  },
-  {
     name: "Livres",
     href: ADMIN_ROUTES.BOOKS,
     icon: BookOpen,
-  },
-  {
-    name: "Rapports",
-    href: ADMIN_ROUTES.REPORTS,
-    icon: BarChart3,
-  },
-  {
-    name: "Paramètres",
-    href: ADMIN_ROUTES.SETTINGS,
-    icon: Settings,
-  },
+  }
 ];
 
 export default function AdminSidebar() {
