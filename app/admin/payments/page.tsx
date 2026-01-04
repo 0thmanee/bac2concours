@@ -21,7 +21,11 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { MetricCard } from "@/components/ui/metric-card";
+import {
+  AdminPageHeader,
+  AdminStatsGrid,
+  type AdminStatItem,
+} from "@/components/admin";
 import { LoadingState } from "@/components/shared/loading-state";
 import { EmptyState } from "@/components/shared/empty-state";
 import {
@@ -123,49 +127,48 @@ export default function PaymentsPage() {
     return <LoadingState message="Chargement des paiements..." />;
   }
 
+  // Stats configuration
+  const statsConfig: AdminStatItem[] = [
+    {
+      title: "En attente",
+      value: metrics.pending,
+      icon: Clock,
+      color: "orange",
+      subtitle: "À vérifier",
+    },
+    {
+      title: "Approuvés",
+      value: metrics.approved,
+      icon: CheckCircle,
+      color: "mint",
+      subtitle: "Validés",
+    },
+    {
+      title: "Rejetés",
+      value: metrics.rejected,
+      icon: XCircle,
+      color: "rose",
+      subtitle: "Non validés",
+    },
+    {
+      title: "Non soumis",
+      value: metrics.notSubmitted,
+      icon: CreditCard,
+      color: "blue",
+      subtitle: "En attente d'upload",
+    },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-ops-primary">
-          Paiements en attente
-        </h1>
-        <p className="mt-1 text-sm text-ops-secondary">
-          Gérez les preuves de paiement des utilisateurs
-        </p>
-      </div>
+      <AdminPageHeader
+        title="Paiements en attente"
+        description="Gérez les preuves de paiement des utilisateurs"
+      />
 
       {/* Metrics */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <MetricCard
-          title="En attente"
-          value={metrics.pending}
-          icon={Clock}
-          color="orange"
-          subtitle="À vérifier"
-        />
-        <MetricCard
-          title="Approuvés"
-          value={metrics.approved}
-          icon={CheckCircle}
-          color="mint"
-          subtitle="Validés"
-        />
-        <MetricCard
-          title="Rejetés"
-          value={metrics.rejected}
-          icon={XCircle}
-          color="rose"
-          subtitle="Non validés"
-        />
-        <MetricCard
-          title="Non soumis"
-          value={metrics.notSubmitted}
-          icon={CreditCard}
-          color="blue"
-          subtitle="En attente d'upload"
-        />
-      </div>
+      <AdminStatsGrid stats={statsConfig} columns={4} />
 
       {/* Pending Payments Table */}
       <Card className="ops-card border-0">

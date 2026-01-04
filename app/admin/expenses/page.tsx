@@ -6,18 +6,21 @@ import { useExpenses, useApproveExpense, useRejectExpense, useExpenseMetrics } f
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { MetricCard } from "@/components/ui/metric-card";
+import {
+  AdminPageHeader,
+  AdminStatsGrid,
+  AdminFilterBar,
+  type AdminStatItem,
+  type FilterConfig,
+} from "@/components/admin";
 import {
   Receipt,
-  Search,
   Check,
   X,
   Eye,
   FileText,
   Clock,
   DollarSign,
-  Filter,
 } from "lucide-react";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { LoadingState } from "@/components/shared/loading-state";
@@ -43,13 +46,6 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 export default function ExpensesPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -110,69 +106,65 @@ export default function ExpensesPage() {
 
   const isApproving = approveMutation.isPending || rejectMutation.isPending;
 
+  // Stats configuration
+  const statsConfig: AdminStatItem[] = [
+    {
+      title: "Pending Approvals",
+      value: metrics.pendingCount,
+      icon: Clock,
+      color: "orange",
+      subtitle: "Requiring attention",
+    },
+    {
+      title: "Pending Amount",
+      value: formatCurrency(metrics.pendingTotal, { useK: true, decimals: 1 }),
+      icon: DollarSign,
+      color: "cyan",
+      subtitle: "To be reviewed",
+    },
+    {
+      title: "Total Requests",
+      value: metrics.totalCount,
+      icon: Receipt,
+      color: "purple",
+      subtitle: "All time",
+    },
+  ];
+
+  // Filters configuration
+  const filtersConfig: FilterConfig[] = [
+    {
+      value: statusFilter,
+      onChange: setStatusFilter,
+      options: [
+        { value: "all", label: "All Status" },
+        { value: EXPENSE_STATUS.PENDING, label: "Pending" },
+        { value: EXPENSE_STATUS.APPROVED, label: "Approved" },
+        { value: EXPENSE_STATUS.REJECTED, label: "Rejected" },
+      ],
+    },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-ops-primary">
-          Expense Approvals
-        </h1>
-        <p className="mt-1 text-sm text-ops-secondary">
-          Review and approve startup expense requests
-        </p>
-      </div>
+      <AdminPageHeader
+        title="Expense Approvals"
+        description="Review and approve startup expense requests"
+      />
 
       {/* Metric Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <MetricCard
-          title="Pending Approvals"
-          value={metrics.pendingCount}
-          icon={Clock}
-          color="orange"
-          subtitle="Requiring attention"
-        />
-        <MetricCard
-          title="Pending Amount"
-          value={formatCurrency(metrics.pendingTotal, { useK: true, decimals: 1 })}
-          icon={DollarSign}
-          color="cyan"
-          subtitle="To be reviewed"
-        />
-        <MetricCard
-          title="Total Requests"
-          value={metrics.totalCount}
-          icon={Receipt}
-          color="purple"
-          subtitle="All time"
-        />
-      </div>
+      <AdminStatsGrid stats={statsConfig} columns={3} />
 
       {/* Filters & Search */}
-      <Card className="ops-card border border-ops">
-        <CardContent className="p-4">
-          <div className="flex gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ops-tertiary" />
-              <Input
-                placeholder="Search expenses..."
-                className="ops-input pl-10 h-9"
-              />
-            </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-45 ops-input h-9">
-                <Filter className="h-4 w-4 mr-2" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="ops-card">
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value={EXPENSE_STATUS.PENDING}>Pending</SelectItem>
-                <SelectItem value={EXPENSE_STATUS.APPROVED}>Approved</SelectItem>
-                <SelectItem value={EXPENSE_STATUS.REJECTED}>Rejected</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+      <AdminFilterBar
+        searchValue=""
+        onSearchChange={() => {}}
+        searchPlaceholder="Search expenses..."
+        filters={filtersConfig}
+        resultsCount={expenses.length}
+        resultsLabel="expense"
+      />
 
       {/* Expenses Table */}
       <Card className="ops-card border border-ops">

@@ -4,8 +4,14 @@ import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Building2, Plus, Search, MoreHorizontal, TrendingUp, DollarSign } from "lucide-react";
-import { MetricCard } from "@/components/ui/metric-card";
+import { Building2, Plus, MoreHorizontal, TrendingUp, DollarSign } from "lucide-react";
+import {
+  AdminPageHeader,
+  AdminStatsGrid,
+  AdminFilterBar,
+  type AdminStatItem,
+  type FilterConfig,
+} from "@/components/admin";
 import { ChartCard } from "@/components/ui/chart-card";
 import {
   Table,
@@ -15,7 +21,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -87,50 +92,44 @@ export default function StartupsPage() {
     return <LoadingState message={MESSAGES.LOADING.STARTUPS} />;
   }
 
+  // Stats configuration
+  const statsConfig: AdminStatItem[] = [
+    {
+      title: "Active Startups",
+      value: startupMetrics.activeCount,
+      icon: Building2,
+      color: "blue",
+      subtitle: `${startupMetrics.totalCount} total startups`,
+    },
+    {
+      title: "Total Budget",
+      value: formatCurrency(startupMetrics.totalBudget, { useK: true }),
+      icon: DollarSign,
+      color: "orange",
+      subtitle: "Across all programs",
+    },
+    {
+      title: "Budget Utilized",
+      value: formatCurrency(startupMetrics.totalSpent, { useK: true }),
+      icon: TrendingUp,
+      color: "mint",
+      subtitle: formatPercentage(utilizationPercent),
+    },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-ops-primary">
-            Startups
-          </h1>
-          <p className="mt-1 text-sm text-ops-secondary">
-            Manage startups in your incubation program
-          </p>
-        </div>
-        <Button asChild className="ops-btn-primary h-9 gap-2">
-          <Link href={ADMIN_ROUTES.STARTUP_NEW}>
-            <Plus className="h-4 w-4" />
-            Add Startup
-          </Link>
-        </Button>
-      </div>
+      <AdminPageHeader
+        title="Startups"
+        description="Manage startups in your incubation program"
+        actionLabel="Add Startup"
+        actionHref={ADMIN_ROUTES.STARTUP_NEW}
+        actionIcon={Plus}
+      />
 
       {/* Metric Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <MetricCard
-          title="Active Startups"
-          value={startupMetrics.activeCount}
-          icon={Building2}
-          color="blue"
-          subtitle={`${startupMetrics.totalCount} total startups`}
-        />
-        <MetricCard
-          title="Total Budget"
-          value={formatCurrency(startupMetrics.totalBudget, { useK: true })}
-          icon={DollarSign}
-          color="orange"
-          subtitle="Across all programs"
-        />
-        <MetricCard
-          title="Budget Utilized"
-          value={formatCurrency(startupMetrics.totalSpent, { useK: true })}
-          icon={TrendingUp}
-          color="mint"
-          subtitle={formatPercentage(utilizationPercent)}
-        />
-      </div>
+      <AdminStatsGrid stats={statsConfig} columns={3} />
 
       {/* Charts Row */}
       <div className="grid gap-6 lg:grid-cols-3">
@@ -151,19 +150,14 @@ export default function StartupsPage() {
       </div>
 
       {/* Search */}
-      <Card className="ops-card border border-ops">
-        <div className="p-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ops-tertiary" />
-            <Input
-              placeholder="Search startups..."
-              className="ops-input pl-10 h-9"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-        </div>
-      </Card>
+      <AdminFilterBar
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search startups..."
+        filters={[]}
+        resultsCount={startups.length}
+        resultsLabel="startup"
+      />
 
       {/* Startups Table */}
       <Card className="ops-card border border-ops">

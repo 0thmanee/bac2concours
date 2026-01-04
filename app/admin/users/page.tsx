@@ -3,8 +3,15 @@
 import { useState, useMemo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Users, Plus, Search, MoreHorizontal, UserPlus, Shield, User } from "lucide-react";
-import { MetricCard } from "@/components/ui/metric-card";
+import { Users, Plus, MoreHorizontal, UserPlus, Shield, User } from "lucide-react";
+import {
+  AdminPageHeader,
+  AdminStatsGrid,
+  AdminFilterBar,
+  AdminEmptyState,
+  type AdminStatItem,
+  type FilterConfig,
+} from "@/components/admin";
 import {
   Table,
   TableBody,
@@ -113,102 +120,90 @@ export default function UsersPage() {
     return <LoadingState message={MESSAGES.LOADING.USERS} />;
   }
 
+  // Stats configuration
+  const statsConfig: AdminStatItem[] = [
+    {
+      title: "Total Users",
+      value: metrics.totalCount,
+      icon: Users,
+      color: "blue",
+      subtitle: "All users",
+    },
+    {
+      title: "Admins",
+      value: metrics.adminCount,
+      icon: Shield,
+      color: "purple",
+      subtitle: "Administrators",
+    },
+    {
+      title: "Students",
+      value: metrics.studentCount,
+      icon: User,
+      color: "cyan",
+      subtitle: "Startup students",
+    },
+    {
+      title: "Active",
+      value: metrics.activeCount,
+      icon: UserPlus,
+      color: "mint",
+      subtitle: "Active users",
+    },
+    {
+      title: "Verified",
+      value: metrics.verifiedCount,
+      icon: UserPlus,
+      color: "orange",
+      subtitle: "Email verified",
+    },
+  ];
+
+  // Filters configuration
+  const filtersConfig: FilterConfig[] = [
+    {
+      value: roleFilter,
+      onChange: setRoleFilter,
+      options: [
+        { value: "all", label: "All Roles" },
+        { value: USER_ROLE.ADMIN, label: "Admin" },
+        { value: USER_ROLE.STUDENT, label: "Student" },
+      ],
+    },
+    {
+      value: statusFilter,
+      onChange: setStatusFilter,
+      options: [
+        { value: "all", label: "All Status" },
+        { value: USER_STATUS.ACTIVE, label: "Active" },
+        { value: USER_STATUS.INACTIVE, label: "Inactive" },
+      ],
+    },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-ops-primary">
-            Users
-          </h1>
-          <p className="mt-1 text-sm text-ops-secondary">
-            Manage users and their access to the platform
-          </p>
-        </div>
-        <Button
-          onClick={() => setIsCreateOpen(true)}
-          className="ops-btn-primary h-9 gap-2"
-        >
-          <Plus className="h-4 w-4" />
-          Add User
-        </Button>
-      </div>
+      <AdminPageHeader
+        title="Users"
+        description="Manage users and their access to the platform"
+        actionLabel="Add User"
+        actionIcon={Plus}
+        onActionClick={() => setIsCreateOpen(true)}
+      />
 
       {/* Metric Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-        <MetricCard
-          title="Total Users"
-          value={metrics.totalCount}
-          icon={Users}
-          color="blue"
-          subtitle="All users"
-        />
-        <MetricCard
-          title="Admins"
-          value={metrics.adminCount}
-          icon={Shield}
-          color="purple"
-          subtitle="Administrators"
-        />
-        <MetricCard
-          title="Students"
-          value={metrics.studentCount}
-          icon={User}
-          color="cyan"
-          subtitle="Startup students"
-        />
-        <MetricCard
-          title="Active"
-          value={metrics.activeCount}
-          icon={UserPlus}
-          color="mint"
-          subtitle="Active users"
-        />
-        <MetricCard
-          title="Verified"
-          value={metrics.verifiedCount}
-          icon={UserPlus}
-          color="orange"
-          subtitle="Email verified"
-        />
-      </div>
+      <AdminStatsGrid stats={statsConfig} columns={5} />
 
       {/* Filters */}
-      <Card className="ops-card border-0">
-        <div className="p-4">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ops-tertiary" />
-              <Input
-                placeholder="Search users by name or email..."
-                className="ops-input pl-10 h-9"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="ops-input h-9 w-full md:w-45">
-                <SelectValue placeholder="All Roles" />
-              </SelectTrigger>
-              <SelectContent className="ops-card">
-                <SelectItem value="all">All Roles</SelectItem>
-                <SelectItem value={USER_ROLE.ADMIN}>Admin</SelectItem>
-                <SelectItem value={USER_ROLE.STUDENT}>Student</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="ops-input h-9 w-full md:w-45">
-                <SelectValue placeholder="All Status" />
-              </SelectTrigger>
-              <SelectContent className="ops-card">
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value={USER_STATUS.ACTIVE}>Active</SelectItem>
-                <SelectItem value={USER_STATUS.INACTIVE}>Inactive</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </Card>
+      <AdminFilterBar
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search users by name or email..."
+        filters={filtersConfig}
+        resultsCount={users.length}
+        resultsLabel="user"
+      />
 
       {/* Users Table */}
       <Card className="ops-card border-0">

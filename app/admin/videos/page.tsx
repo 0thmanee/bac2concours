@@ -4,11 +4,15 @@ import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Video, Plus, Eye, Star } from "lucide-react";
-import { MetricCard } from "@/components/ui/metric-card";
-import { SearchInput } from "@/components/ui/search-input";
-import { FilterSelect } from "@/components/ui/filter-select";
-import { FilterPanel } from "@/components/ui/filter-panel";
 import { DataTable, Column } from "@/components/ui/data-table";
+import {
+  AdminPageHeader,
+  AdminStatsGrid,
+  AdminFilterBar,
+  AdminEmptyState,
+  type AdminStatItem,
+  type FilterConfig,
+} from "@/components/admin";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -33,86 +37,43 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { MESSAGES, ADMIN_ROUTES } from "@/lib/constants";
 import { format } from "date-fns";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useVideos,
+  useVideoStats,
+  useVideoFilterOptions,
+  useDeleteVideo,
+} from "@/lib/hooks/use-videos";
 import type { VideoStatus } from "@prisma/client";
-import type {
-  VideoWithRelations,
-  VideoStats,
-  VideoFilterOptions,
-} from "@/lib/validations/video.validation";
+import type { VideoWithRelations } from "@/lib/validations/video.validation";
 
 export default function AdminVideosPage() {
-  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSchool, setSelectedSchool] = useState("");
   const [selectedLevel, setSelectedLevel] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<VideoStatus | "">("");
 
-  // Fetch videos
-  const { data: videosData, isLoading } = useQuery({
-    queryKey: [
-      "admin-videos",
-      searchQuery,
-      selectedCategory,
-      selectedSchool,
-      selectedLevel,
-      selectedStatus,
-    ],
-    queryFn: async () => {
-      const params = new URLSearchParams();
-      if (searchQuery) params.append("search", searchQuery);
-      if (selectedCategory) params.append("category", selectedCategory);
-      if (selectedSchool) params.append("school", selectedSchool);
-      if (selectedLevel) params.append("level", selectedLevel);
-      if (selectedStatus) params.append("status", selectedStatus);
-      params.append("limit", "50");
-
-      const res = await fetch(`/api/videos?${params.toString()}`);
-      if (!res.ok) throw new Error("Failed to fetch videos");
-      return res.json();
-    },
+  // Use centralized hooks
+  const { data: videosData, isLoading } = useVideos({
+    search: searchQuery || undefined,
+    category: selectedCategory || undefined,
+    school: selectedSchool || undefined,
+    level: selectedLevel || undefined,
+    status: selectedStatus || undefined,
+    page: 1,
+    limit: 50,
   });
 
-  // Fetch stats
-  const { data: statsData } = useQuery({
-    queryKey: ["admin-videos-stats"],
-    queryFn: async () => {
-      const res = await fetch("/api/videos/stats");
-      if (!res.ok) throw new Error("Failed to fetch stats");
-      return res.json();
-    },
-  });
-
-  // Fetch filter options
-  const { data: filtersData } = useQuery({
-    queryKey: ["admin-videos-filters"],
-    queryFn: async () => {
-      const res = await fetch("/api/videos/filter-options");
-      if (!res.ok) throw new Error("Failed to fetch filter options");
-      return res.json();
-    },
-  });
-
-  // Delete mutation
-  const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const res = await fetch(`/api/videos/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed to delete video");
-      return res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-videos"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-videos-stats"] });
-    },
-  });
+  const { data: statsData } = useVideoStats();
+  const { data: filtersData } = useVideoFilterOptions();
+  const deleteMutation = useDeleteVideo();
 
   const videos = useMemo(
     () => (videosData?.data?.videos as VideoWithRelations[]) || [],
     [videosData]
   );
 
-  const stats = (statsData?.data as VideoStats) || {
+  const stats = statsData?.data || {
     total: 0,
     active: 0,
     inactive: 0,
@@ -120,7 +81,7 @@ export default function AdminVideosPage() {
     averageRating: 0,
   };
 
-  const filters = (filtersData?.data as VideoFilterOptions) || {
+  const filters = filtersData?.data || {
     categories: [],
     schools: [],
     levels: [],
@@ -157,6 +118,76 @@ export default function AdminVideosPage() {
     return `${minutes}:${secs.toString().padStart(2, "0")}`;
   };
 
+  // Stats configuration
+  const statsConfig: AdminStatItem[] = [
+    {
+      title: "Total Vidéos",
+      value: stats.total,
+      icon: Video,
+      color: "blue",
+      subtitle: `${stats.active} actives`,
+    },
+    {
+      title: "Inactives",
+      value: stats.inactive,
+      icon: Video,
+      color: "orange",
+      subtitle: "Total",
+    },
+    {
+      title: "Total Vues",
+      value: stats.totalViews.toLocaleString(),
+      icon: Eye,
+      color: "mint",
+      subtitle: "Total",
+    },
+    {
+      title: "Note Moyenne",
+      value: stats.averageRating.toFixed(1),
+      icon: Star,
+      color: "purple",
+      subtitle: "Sur 5.0",
+    },
+  ];
+
+  // Filters configuration
+  const filtersConfig: FilterConfig[] = [
+    {
+      value: selectedCategory || "all",
+      onChange: setSelectedCategory,
+      options: [
+        { value: "all", label: "Toutes catégories" },
+        ...filters.categories.map((cat) => ({ value: cat, label: cat })),
+      ],
+    },
+    {
+      value: selectedSchool || "all",
+      onChange: setSelectedSchool,
+      options: [
+        { value: "all", label: "Toutes écoles" },
+        ...filters.schools.map((school) => ({ value: school, label: school })),
+      ],
+    },
+    {
+      value: selectedLevel || "all",
+      onChange: setSelectedLevel,
+      options: [
+        { value: "all", label: "Tous niveaux" },
+        ...filters.levels.map((level) => ({ value: level, label: level })),
+      ],
+    },
+    {
+      value: selectedStatus || "all",
+      onChange: (val) => setSelectedStatus(val as VideoStatus | ""),
+      options: [
+        { value: "all", label: "Tous statuts" },
+        { value: "ACTIVE", label: "Actif" },
+        { value: "INACTIVE", label: "Inactif" },
+        { value: "PROCESSING", label: "En traitement" },
+      ],
+    },
+  ];
+
   const columns: Column<VideoWithRelations>[] = [
     {
       header: "Vidéo",
@@ -166,13 +197,13 @@ export default function AdminVideosPage() {
             <SupabaseImage
               src={video.thumbnailFile.publicUrl}
               alt={video.title}
-              width={80}
-              height={45}
-              className="h-11 w-20 rounded object-cover shrink-0"
+              width={36}
+              height={48}
+              className="h-12 w-9 rounded object-cover shrink-0"
             />
           ) : (
-            <div className="h-11 w-20 rounded bg-gray-200 dark:bg-gray-700 flex items-center justify-center shrink-0">
-              <Video className="h-5 w-5 text-gray-400" />
+            <div className="h-12 w-9 rounded bg-gray-200 dark:bg-gray-700 flex items-center justify-center shrink-0">
+              <Video className="h-4 w-4 text-gray-400" />
             </div>
           )}
           <div>
@@ -180,7 +211,7 @@ export default function AdminVideosPage() {
               {video.title}
             </p>
             {video.duration && (
-              <p className="text-xs text-gray-400 dark:text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 {formatDuration(video.duration)}
               </p>
             )}
@@ -204,7 +235,7 @@ export default function AdminVideosPage() {
       ),
     },
     {
-      header: "École",
+      header: "École/Niveau",
       cell: (video) => (
         <div>
           <p className="text-sm text-gray-900 dark:text-white">
@@ -219,82 +250,93 @@ export default function AdminVideosPage() {
     {
       header: "Statistiques",
       cell: (video) => (
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
+        <div className="flex gap-3 text-xs text-gray-600 dark:text-gray-400">
+          <span className="flex items-center gap-1">
             <Eye className="h-3 w-3" />
-            <span>{video.views}</span>
-          </div>
-          <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
-            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-            <span>{video.rating.toFixed(1)}</span>
-          </div>
+            {video.views}
+          </span>
+          {video.rating && (
+            <span className="flex items-center gap-1">
+              <Star className="h-3 w-3 fill-current text-yellow-500" />
+              {video.rating.toFixed(1)}
+            </span>
+          )}
         </div>
       ),
     },
     {
       header: "Statut",
       cell: (video) => (
-        <div>
+        <div className="flex items-center gap-1 flex-wrap">
           {getStatusBadge(video.status)}
-          {!video.isPublic && (
-            <Badge variant="secondary" className="ml-1 text-xs">
-              Privé
+          {video.isPublic && (
+            <Badge variant="outline" className="text-xs">
+              Publique
             </Badge>
           )}
         </div>
       ),
     },
     {
-      header: "Date",
+      header: "Ajouté le",
       cell: (video) => (
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          {format(new Date(video.createdAt), "dd/MM/yyyy")}
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          {format(new Date(video.createdAt), "MMM d, yyyy")}
         </p>
       ),
     },
     {
       header: "Actions",
+      headerClassName: "text-right",
+      cellClassName: "text-right",
       cell: (video) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="w-48">
             <DropdownMenuItem asChild>
-              <Link href={ADMIN_ROUTES.VIDEO_EDIT(video.id)}>Modifier</Link>
+              <Link
+                href={ADMIN_ROUTES.VIDEO_EDIT(video.id)}
+                className="cursor-pointer"
+              >
+                Modifier
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <a
                 href={video.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="cursor-pointer"
               >
                 Voir sur YouTube
               </a>
             </DropdownMenuItem>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  <span className="text-red-600 dark:text-red-400">
-                    Supprimer
-                  </span>
+                <DropdownMenuItem
+                  className="text-destructive cursor-pointer"
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  Supprimer
                 </DropdownMenuItem>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+                  <AlertDialogTitle>Supprimer la vidéo</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Êtes-vous sûr de vouloir supprimer &quot;{video.title}&quot; ?
-                    Cette action est irréversible.
+                    Êtes-vous sûr de vouloir supprimer &ldquo;{video.title}
+                    &rdquo; ? Cette action est irréversible.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Annuler</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => handleDelete(video.id, video.title)}
-                    className="bg-red-600 hover:bg-red-700"
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   >
                     Supprimer
                   </AlertDialogAction>
@@ -308,114 +350,46 @@ export default function AdminVideosPage() {
   ];
 
   if (isLoading) {
-    return <LoadingState />;
+    return <LoadingState message="Chargement des vidéos..." />;
   }
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Vidéos
-          </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Gérez les vidéos éducatives de la plateforme
-          </p>
-        </div>
-        <Button asChild>
-          <Link href={ADMIN_ROUTES.VIDEO_NEW}>
-            <Plus className="mr-2 h-4 w-4" />
-            Ajouter une vidéo
-          </Link>
-        </Button>
-      </div>
+      <AdminPageHeader
+        title="Vidéos"
+        description="Gérer les vidéos éducatives de la plateforme"
+        actionLabel="Ajouter une vidéo"
+        actionHref={ADMIN_ROUTES.VIDEO_NEW}
+        actionIcon={Plus}
+      />
 
-      {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-        <MetricCard
-          title="Total Vidéos"
-          value={stats.total}
-          icon={Video}
-          color="blue"
-        />
-        <MetricCard
-          title="Actives"
-          value={stats.active}
-          icon={Video}
-          color="mint"
-        />
-        <MetricCard
-          title="Inactives"
-          value={stats.inactive}
-          icon={Video}
-          color="orange"
-        />
-        <MetricCard
-          title="Total Vues"
-          value={stats.totalViews}
-          icon={Eye}
-          color="cyan"
-        />
-        <MetricCard
-          title="Note Moyenne"
-          value={stats.averageRating.toFixed(1)}
-          icon={Star}
-          color="yellow"
-        />
-      </div>
+      {/* Metric Cards */}
+      <AdminStatsGrid stats={statsConfig} columns={4} />
 
       {/* Filters */}
-      <FilterPanel>
-        <SearchInput
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Rechercher par titre..."
-        />
-        <FilterSelect
-          label="Catégorie"
-          value={selectedCategory}
-          onChange={setSelectedCategory}
-          options={filters.categories.map((cat) => ({
-            label: cat,
-            value: cat,
-          }))}
-        />
-        <FilterSelect
-          label="École"
-          value={selectedSchool}
-          onChange={setSelectedSchool}
-          options={filters.schools.map((school) => ({
-            label: school,
-            value: school,
-          }))}
-        />
-        <FilterSelect
-          label="Niveau"
-          value={selectedLevel}
-          onChange={setSelectedLevel}
-          options={filters.levels.map((level) => ({
-            label: level,
-            value: level,
-          }))}
-        />
-        <FilterSelect
-          label="Statut"
-          value={selectedStatus}
-          onChange={(val) => setSelectedStatus(val as VideoStatus | "")}
-          options={[
-            { label: "Actif", value: "ACTIVE" },
-            { label: "Inactif", value: "INACTIVE" },
-            { label: "En traitement", value: "PROCESSING" },
-          ]}
-        />
-      </FilterPanel>
+      <AdminFilterBar
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Rechercher des vidéos..."
+        filters={filtersConfig}
+        resultsCount={videos.length}
+        resultsLabel="résultat"
+      />
 
-      {/* Table */}
-      <DataTable<VideoWithRelations>
-        columns={columns}
+      {/* Videos Table */}
+      <DataTable
         data={videos}
+        columns={columns}
         keyExtractor={(video) => video.id}
+        isLoading={isLoading}
+        emptyState={
+          <AdminEmptyState
+            icon={Video}
+            title="Aucune vidéo trouvée"
+            description="Ajoutez votre première vidéo pour commencer"
+          />
+        }
       />
     </div>
   );

@@ -4,11 +4,15 @@ import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Plus, Download, Eye, Star } from "lucide-react";
-import { MetricCard } from "@/components/ui/metric-card";
-import { SearchInput } from "@/components/ui/search-input";
-import { FilterSelect } from "@/components/ui/filter-select";
-import { FilterPanel } from "@/components/ui/filter-panel";
 import { DataTable, Column } from "@/components/ui/data-table";
+import {
+  AdminPageHeader,
+  AdminStatsGrid,
+  AdminFilterBar,
+  AdminEmptyState,
+  type AdminStatItem,
+  type FilterConfig,
+} from "@/components/admin";
 import { useBooks, useDeleteBook, useBookStats, useBookFilters } from "@/lib/hooks/use-books";
 import { BookWithRelations } from "@/lib/types/prisma";
 import type { BookStatusType } from "@/lib/validations/book.validation";
@@ -107,6 +111,76 @@ export default function AdminBooksPage() {
     );
   };
 
+  // Stats configuration
+  const statsConfig: AdminStatItem[] = [
+    {
+      title: "Total Livres",
+      value: stats.totalBooks,
+      icon: BookOpen,
+      color: "blue",
+      subtitle: `${stats.activeBooks} actifs`,
+    },
+    {
+      title: "Téléchargements",
+      value: stats.totalDownloads.toLocaleString(),
+      icon: Download,
+      color: "orange",
+      subtitle: "Total",
+    },
+    {
+      title: "Vues",
+      value: stats.totalViews.toLocaleString(),
+      icon: Eye,
+      color: "mint",
+      subtitle: "Total",
+    },
+    {
+      title: "Note Moyenne",
+      value: stats.averageRating.toFixed(1),
+      icon: Star,
+      color: "purple",
+      subtitle: "Sur 5.0",
+    },
+  ];
+
+  // Filters configuration
+  const filtersConfig: FilterConfig[] = [
+    {
+      value: selectedCategory || "all",
+      onChange: setSelectedCategory,
+      options: [
+        { value: "all", label: "Toutes catégories" },
+        ...filters.categories.map((cat) => ({ value: cat, label: cat })),
+      ],
+    },
+    {
+      value: selectedSchool || "all",
+      onChange: setSelectedSchool,
+      options: [
+        { value: "all", label: "Toutes écoles" },
+        ...filters.schools.map((school) => ({ value: school, label: school })),
+      ],
+    },
+    {
+      value: selectedLevel || "all",
+      onChange: setSelectedLevel,
+      options: [
+        { value: "all", label: "Tous niveaux" },
+        ...filters.levels.map((level) => ({ value: level, label: level })),
+      ],
+    },
+    {
+      value: selectedStatus || "all",
+      onChange: (val) => setSelectedStatus(val as BookStatusType | ""),
+      options: [
+        { value: "all", label: "Tous statuts" },
+        { value: "ACTIVE", label: "Actif" },
+        { value: "INACTIVE", label: "Inactif" },
+        { value: "PROCESSING", label: "En traitement" },
+      ],
+    },
+  ];
+
   const columns: Column<BookWithRelations>[] = [
     {
       header: "Livre",
@@ -118,7 +192,7 @@ export default function AdminBooksPage() {
               alt={book.title}
               width={36}
               height={48}
-              className="h-12 w-9 rounded object-cover flex-shrink-0"
+              className="h-12 w-9 rounded object-cover shrink-0"
             />
           )}
           <div>
@@ -259,118 +333,32 @@ export default function AdminBooksPage() {
   ];
 
   if (isLoading) {
-    return <LoadingState message="Loading books..." />;
+    return <LoadingState message="Chargement des livres..." />;
   }
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-ops-primary">
-            Livres
-          </h1>
-          <p className="mt-1 text-sm text-ops-secondary">
-            Gérer les ressources pédagogiques et les livres
-          </p>
-        </div>
-        <Button asChild className="ops-btn-primary h-9 gap-2">
-          <Link href={ADMIN_ROUTES.BOOK_NEW}>
-            <Plus className="h-4 w-4" />
-            Ajouter un livre
-          </Link>
-        </Button>
-      </div>
+      <AdminPageHeader
+        title="Livres"
+        description="Gérer les ressources pédagogiques et les livres"
+        actionLabel="Ajouter un livre"
+        actionHref={ADMIN_ROUTES.BOOK_NEW}
+        actionIcon={Plus}
+      />
 
       {/* Metric Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
-        <MetricCard
-          title="Total Livres"
-          value={stats.totalBooks}
-          icon={BookOpen}
-          color="blue"
-          subtitle={`${stats.activeBooks} actifs`}
-        />
-        <MetricCard
-          title="Téléchargements"
-          value={stats.totalDownloads.toLocaleString()}
-          icon={Download}
-          color="orange"
-          subtitle="Total"
-        />
-        <MetricCard
-          title="Vues"
-          value={stats.totalViews.toLocaleString()}
-          icon={Eye}
-          color="mint"
-          subtitle="Total"
-        />
-        <MetricCard
-          title="Note Moyenne"
-          value={stats.averageRating.toFixed(1)}
-          icon={Star}
-          color="purple"
-          subtitle="Sur 5.0"
-        />
-      </div>
+      <AdminStatsGrid stats={statsConfig} columns={4} />
 
       {/* Filters */}
-      <FilterPanel className="space-y-3">
-        <div className="flex flex-col lg:flex-row gap-3">
-          <SearchInput
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Rechercher des livres..."
-            containerClassName="flex-1 min-w-[250px]"
-          />
-          
-          <FilterSelect
-            value={selectedCategory}
-            onChange={(value) => setSelectedCategory(value === "all" ? "" : value)}
-            options={[
-              { value: "all", label: "Toutes catégories" },
-              ...filters.categories.map(cat => ({ value: cat, label: cat }))
-            ]}
-            className="w-full lg:w-[180px]"
-          />
-
-          <FilterSelect
-            value={selectedSchool}
-            onChange={(value) => setSelectedSchool(value === "all" ? "" : value)}
-            options={[
-              { value: "all", label: "Toutes écoles" },
-              ...filters.schools.map(school => ({ value: school, label: school }))
-            ]}
-            className="w-full lg:w-[180px]"
-          />
-
-          <FilterSelect
-            value={selectedLevel}
-            onChange={(value) => setSelectedLevel(value === "all" ? "" : value)}
-            options={[
-              { value: "all", label: "Tous niveaux" },
-              ...filters.levels.map(level => ({ value: level, label: level }))
-            ]}
-            className="w-full lg:w-[180px]"
-          />
-
-          <FilterSelect
-            value={selectedStatus}
-            onChange={(value) => setSelectedStatus(value === "all" ? "" : value as BookStatusType)}
-            options={[
-              { value: "all", label: "Tous statuts" },
-              { value: "ACTIVE", label: "Actif" },
-              { value: "INACTIVE", label: "Inactif" },
-              { value: "PROCESSING", label: "En traitement" }
-            ]}
-            className="w-full lg:w-[180px]"
-          />
-        </div>
-        
-        <div className="text-sm text-gray-500 dark:text-gray-400">
-          {books.length} résultat{books.length > 1 ? 's' : ''} trouvé{books.length > 1 ? 's' : ''}
-        </div>
-      </FilterPanel>
+      <AdminFilterBar
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Rechercher des livres..."
+        filters={filtersConfig}
+        resultsCount={books.length}
+        resultsLabel="résultat"
+      />
 
       {/* Books Table */}
       <DataTable
@@ -379,15 +367,11 @@ export default function AdminBooksPage() {
         keyExtractor={(book) => book.id}
         isLoading={isLoading}
         emptyState={
-          <div className="text-center py-8">
-            <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
-              Aucun livre trouvé
-            </h3>
-            <p className="text-gray-500 dark:text-gray-400 text-sm">
-              Ajoutez votre premier livre pour commencer
-            </p>
-          </div>
+          <AdminEmptyState
+            icon={BookOpen}
+            title="Aucun livre trouvé"
+            description="Ajoutez votre premier livre pour commencer"
+          />
         }
       />
     </div>

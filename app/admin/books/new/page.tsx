@@ -2,15 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, AlertCircle, X, Plus, Upload } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AlertCircle, X, Upload } from "lucide-react";
 import { useCreateBook, useBookFilters } from "@/lib/hooks/use-books";
 import { useUploadFile } from "@/lib/hooks/use-files";
 import { createBookSchema, type CreateBookInput } from "@/lib/validations/book.validation";
@@ -21,18 +19,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
 import { BookStatus, FileType } from "@prisma/client";
-import { Badge } from "@/components/ui/badge";
 import { SupabaseImage } from "@/components/ui/supabase-image";
+import {
+  AdminFormHeader,
+  AdminFormCard,
+  AdminFormActions,
+  AdminStatusVisibility,
+  AdminTagsInput,
+} from "@/components/admin";
+
+const BOOK_STATUS_OPTIONS = [
+  { value: BookStatus.ACTIVE, label: "Actif" },
+  { value: BookStatus.INACTIVE, label: "Inactif" },
+  { value: BookStatus.PROCESSING, label: "En traitement" },
+];
 
 export default function NewBookPage() {
   const router = useRouter();
   const createMutation = useCreateBook();
   const uploadFileMutation = useUploadFile();
   const { data: filtersData } = useBookFilters();
-  const [newTag, setNewTag] = useState("");
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
 
@@ -54,6 +64,8 @@ export default function NewBookPage() {
   });
 
   const watchedTags = (watch("tags") as string[]) || [];
+  const watchedStatus = watch("status") || BookStatus.ACTIVE;
+  const watchedIsPublic = watch("isPublic") ?? true;
 
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -71,17 +83,6 @@ export default function NewBookPage() {
     setCoverFile(null);
     setCoverPreview(null);
     setValue("coverFileId", undefined);
-  };
-
-  const addTag = () => {
-    if (newTag && !watchedTags.includes(newTag)) {
-      setValue("tags", [...watchedTags, newTag]);
-      setNewTag("");
-    }
-  };
-
-  const removeTag = (tag: string) => {
-    setValue("tags", watchedTags.filter((t) => t !== tag));
   };
 
   const onSubmit = async (data: CreateBookInput) => {
@@ -112,277 +113,243 @@ export default function NewBookPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <Button
-          variant="ghost"
-          size="sm"
-          asChild
-          className="mb-4 -ml-2 text-ops-secondary"
-        >
-          <Link href={ADMIN_ROUTES.BOOKS}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Retour aux Livres
-          </Link>
-        </Button>
-        <h1 className="text-2xl font-semibold text-ops-primary">
-          Ajouter un Nouveau Livre
-        </h1>
-        <p className="mt-1 text-sm text-ops-secondary">
-          Ajoutez un nouveau livre à la bibliothèque
-        </p>
-      </div>
+      <AdminFormHeader
+        backLabel="Retour aux Livres"
+        backHref={ADMIN_ROUTES.BOOKS}
+        title="Ajouter un Nouveau Livre"
+        description="Ajoutez un nouveau livre à la bibliothèque"
+      />
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Main Form */}
           <div className="lg:col-span-2 space-y-6">
             {/* Basic Information */}
-            <Card className="ops-card border border-ops">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-ops-primary">
-                  Informations de Base
-                </CardTitle>
-                <CardDescription className="text-ops-secondary">
-                  Détails essentiels du livre
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="title" className="text-sm font-medium">
-                    Titre <span className="text-destructive">*</span>
-                  </Label>
-                  <Input
-                    id="title"
-                    {...register("title")}
-                    placeholder="ex: Mathématiques - Analyse et Algèbre"
-                    className="ops-input h-9"
-                  />
-                  {errors.title && (
-                    <p className="text-xs text-destructive">{errors.title.message}</p>
-                  )}
-                </div>
+            <AdminFormCard
+              title="Informations de Base"
+              description="Détails essentiels du livre"
+            >
+              <div className="space-y-2">
+                <Label htmlFor="title" className="text-sm font-medium">
+                  Titre <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="title"
+                  {...register("title")}
+                  placeholder="ex: Mathématiques - Analyse et Algèbre"
+                  className="ops-input h-9"
+                />
+                {errors.title && (
+                  <p className="text-xs text-destructive">{errors.title.message}</p>
+                )}
+              </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="author" className="text-sm font-medium">
-                    Auteur <span className="text-destructive">*</span>
-                  </Label>
-                  <Input
-                    id="author"
-                    {...register("author")}
-                    placeholder="ex: Mohammed Alami & Fatima Zahra Bennani"
-                    className="ops-input h-9"
-                  />
-                  {errors.author && (
-                    <p className="text-xs text-destructive">{errors.author.message}</p>
-                  )}
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="author" className="text-sm font-medium">
+                  Auteur <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="author"
+                  {...register("author")}
+                  placeholder="ex: Mohammed Alami & Fatima Zahra Bennani"
+                  className="ops-input h-9"
+                />
+                {errors.author && (
+                  <p className="text-xs text-destructive">{errors.author.message}</p>
+                )}
+              </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="description" className="text-sm font-medium">
-                    Description <span className="text-xs text-ops-tertiary">(Optionnel)</span>
-                  </Label>
-                  <Textarea
-                    id="description"
-                    {...register("description")}
-                    placeholder="Description complète du livre et de son contenu"
-                    rows={4}
-                    className="ops-input resize-none"
-                  />
-                  <p className="text-xs text-ops-tertiary">
-                    Fournir un aperçu du contenu du livre
-                  </p>
-                  {errors.description && (
-                    <p className="text-xs text-destructive">{errors.description.message}</p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+              <div className="space-y-2">
+                <Label htmlFor="description" className="text-sm font-medium">
+                  Description <span className="text-xs text-ops-tertiary">(Optionnel)</span>
+                </Label>
+                <Textarea
+                  id="description"
+                  {...register("description")}
+                  placeholder="Description complète du livre et de son contenu"
+                  rows={4}
+                  className="ops-input resize-none"
+                />
+                <p className="text-xs text-ops-tertiary">
+                  Fournir un aperçu du contenu du livre
+                </p>
+                {errors.description && (
+                  <p className="text-xs text-destructive">{errors.description.message}</p>
+                )}
+              </div>
+            </AdminFormCard>
 
             {/* Classification */}
-            <Card className="ops-card border border-ops">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-ops-primary">
-                  Classification
-                </CardTitle>
-                <CardDescription className="text-ops-secondary">
-                  Catégorisation et niveau académique
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="school" className="text-sm font-medium">
-                      École/Filière <span className="text-destructive">*</span>
-                    </Label>
-                    <Select onValueChange={(value) => setValue("school", value)}>
-                      <SelectTrigger id="school" className="ops-input h-9">
-                        <SelectValue placeholder="Sélectionner une filière" />
-                      </SelectTrigger>
-                      <SelectContent className="ops-card">
-                        {schools.length > 0 ? (
-                          schools.map((school) => (
-                            <SelectItem key={school} value={school}>
-                              {school}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <>
-                            <SelectItem value="Sciences Mathématiques">Sciences Mathématiques</SelectItem>
-                            <SelectItem value="Sciences Physiques">Sciences Physiques</SelectItem>
-                            <SelectItem value="Sciences de la Vie et de la Terre">Sciences de la Vie et de la Terre</SelectItem>
-                            <SelectItem value="Sciences Économiques">Sciences Économiques</SelectItem>
-                            <SelectItem value="Sciences Humaines">Sciences Humaines</SelectItem>
-                            <SelectItem value="Toutes Filières">Toutes Filières</SelectItem>
-                          </>
-                        )}
-                      </SelectContent>
-                    </Select>
-                    {errors.school && (
-                      <p className="text-xs text-destructive">{errors.school.message}</p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="level" className="text-sm font-medium">
-                      Niveau <span className="text-destructive">*</span>
-                    </Label>
-                    <Select onValueChange={(value) => setValue("level", value)}>
-                      <SelectTrigger id="level" className="ops-input h-9">
-                        <SelectValue placeholder="Sélectionner un niveau" />
-                      </SelectTrigger>
-                      <SelectContent className="ops-card">
-                        {levels.length > 0 ? (
-                          levels.map((level) => (
-                            <SelectItem key={level} value={level}>
-                              {level}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <>
-                            <SelectItem value="Terminale">Terminale</SelectItem>
-                            <SelectItem value="Première">Première</SelectItem>
-                            <SelectItem value="Seconde">Seconde</SelectItem>
-                          </>
-                        )}
-                      </SelectContent>
-                    </Select>
-                    {errors.level && (
-                      <p className="text-xs text-destructive">{errors.level.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="category" className="text-sm font-medium">
-                      Catégorie <span className="text-destructive">*</span>
-                    </Label>
-                    <Select onValueChange={(value) => setValue("category", value)}>
-                      <SelectTrigger id="category" className="ops-input h-9">
-                        <SelectValue placeholder="Sélectionner une catégorie" />
-                      </SelectTrigger>
-                      <SelectContent className="ops-card">
-                        {categories.length > 0 ? (
-                          categories.map((category) => (
-                            <SelectItem key={category} value={category}>
-                              {category}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <>
-                            <SelectItem value="Mathématiques">Mathématiques</SelectItem>
-                            <SelectItem value="Physique">Physique</SelectItem>
-                            <SelectItem value="Chimie">Chimie</SelectItem>
-                            <SelectItem value="SVT">SVT</SelectItem>
-                            <SelectItem value="Philosophie">Philosophie</SelectItem>
-                            <SelectItem value="Français">Français</SelectItem>
-                            <SelectItem value="Arabe">Arabe</SelectItem>
-                            <SelectItem value="Anglais">Anglais</SelectItem>
-                          </>
-                        )}
-                      </SelectContent>
-                    </Select>
-                    {errors.category && (
-                      <p className="text-xs text-destructive">{errors.category.message}</p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="subject" className="text-sm font-medium">
-                      Matière <span className="text-destructive">*</span>
-                    </Label>
-                    <Select onValueChange={(value) => setValue("subject", value)}>
-                      <SelectTrigger id="subject" className="ops-input h-9">
-                        <SelectValue placeholder="Sélectionner une matière" />
-                      </SelectTrigger>
-                      <SelectContent className="ops-card">
-                        {subjects.length > 0 ? (
-                          subjects.map((subject) => (
-                            <SelectItem key={subject} value={subject}>
-                              {subject}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <>
-                            <SelectItem value="Mathématiques">Mathématiques</SelectItem>
-                            <SelectItem value="Physique">Physique</SelectItem>
-                            <SelectItem value="Chimie">Chimie</SelectItem>
-                            <SelectItem value="SVT">SVT</SelectItem>
-                            <SelectItem value="Philosophie">Philosophie</SelectItem>
-                            <SelectItem value="Français">Français</SelectItem>
-                            <SelectItem value="Arabe">Arabe</SelectItem>
-                            <SelectItem value="Anglais">Anglais</SelectItem>
-                          </>
-                        )}
-                      </SelectContent>
-                    </Select>
-                    {errors.subject && (
-                      <p className="text-xs text-destructive">{errors.subject.message}</p>
-                    )}
-                  </div>
-                </div>
-
+            <AdminFormCard
+              title="Classification"
+              description="Catégorisation et niveau académique"
+            >
+              <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="language" className="text-sm font-medium">
-                    Langue
+                  <Label htmlFor="school" className="text-sm font-medium">
+                    École/Filière
                   </Label>
-                  <Select
-                    defaultValue="fr"
-                    onValueChange={(value) => setValue("language", value)}
-                  >
-                    <SelectTrigger id="language" className="ops-input h-9">
-                      <SelectValue placeholder="Sélectionner une langue" />
+                  <Select onValueChange={(value) => setValue("school", value)}>
+                    <SelectTrigger id="school" className="ops-input h-9">
+                      <SelectValue placeholder="Sélectionner une filière" />
                     </SelectTrigger>
                     <SelectContent className="ops-card">
-                      <SelectItem value="fr">Français</SelectItem>
-                      <SelectItem value="ar">Arabe</SelectItem>
-                      <SelectItem value="en">Anglais</SelectItem>
+                      {schools.length > 0 ? (
+                        schools.map((school) => (
+                          <SelectItem key={school} value={school}>
+                            {school}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <>
+                          <SelectItem value="Sciences Mathématiques">Sciences Mathématiques</SelectItem>
+                          <SelectItem value="Sciences Physiques">Sciences Physiques</SelectItem>
+                          <SelectItem value="Sciences de la Vie et de la Terre">Sciences de la Vie et de la Terre</SelectItem>
+                          <SelectItem value="Sciences Économiques">Sciences Économiques</SelectItem>
+                          <SelectItem value="Sciences Humaines">Sciences Humaines</SelectItem>
+                          <SelectItem value="Toutes Filières">Toutes Filières</SelectItem>
+                        </>
+                      )}
                     </SelectContent>
                   </Select>
-                  {errors.language && (
-                    <p className="text-xs text-destructive">{errors.language.message}</p>
+                  {errors.school && (
+                    <p className="text-xs text-destructive">{errors.school.message}</p>
                   )}
                 </div>
-              </CardContent>
-            </Card>
+
+                <div className="space-y-2">
+                  <Label htmlFor="level" className="text-sm font-medium">
+                    Niveau
+                  </Label>
+                  <Select onValueChange={(value) => setValue("level", value)}>
+                    <SelectTrigger id="level" className="ops-input h-9">
+                      <SelectValue placeholder="Sélectionner un niveau" />
+                    </SelectTrigger>
+                    <SelectContent className="ops-card">
+                      {levels.length > 0 ? (
+                        levels.map((level) => (
+                          <SelectItem key={level} value={level}>
+                            {level}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <>
+                          <SelectItem value="Terminale">Terminale</SelectItem>
+                          <SelectItem value="Première">Première</SelectItem>
+                          <SelectItem value="Seconde">Seconde</SelectItem>
+                        </>
+                      )}
+                    </SelectContent>
+                  </Select>
+                  {errors.level && (
+                    <p className="text-xs text-destructive">{errors.level.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="category" className="text-sm font-medium">
+                    Catégorie
+                  </Label>
+                  <Select onValueChange={(value) => setValue("category", value)}>
+                    <SelectTrigger id="category" className="ops-input h-9">
+                      <SelectValue placeholder="Sélectionner une catégorie" />
+                    </SelectTrigger>
+                    <SelectContent className="ops-card">
+                      {categories.length > 0 ? (
+                        categories.map((category) => (
+                          <SelectItem key={category} value={category}>
+                            {category}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <>
+                          <SelectItem value="Mathématiques">Mathématiques</SelectItem>
+                          <SelectItem value="Physique">Physique</SelectItem>
+                          <SelectItem value="Chimie">Chimie</SelectItem>
+                          <SelectItem value="SVT">SVT</SelectItem>
+                          <SelectItem value="Philosophie">Philosophie</SelectItem>
+                          <SelectItem value="Français">Français</SelectItem>
+                          <SelectItem value="Arabe">Arabe</SelectItem>
+                          <SelectItem value="Anglais">Anglais</SelectItem>
+                        </>
+                      )}
+                    </SelectContent>
+                  </Select>
+                  {errors.category && (
+                    <p className="text-xs text-destructive">{errors.category.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="subject" className="text-sm font-medium">
+                    Matière
+                  </Label>
+                  <Select onValueChange={(value) => setValue("subject", value)}>
+                    <SelectTrigger id="subject" className="ops-input h-9">
+                      <SelectValue placeholder="Sélectionner une matière" />
+                    </SelectTrigger>
+                    <SelectContent className="ops-card">
+                      {subjects.length > 0 ? (
+                        subjects.map((subject) => (
+                          <SelectItem key={subject} value={subject}>
+                            {subject}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <>
+                          <SelectItem value="Mathématiques">Mathématiques</SelectItem>
+                          <SelectItem value="Physique">Physique</SelectItem>
+                          <SelectItem value="Chimie">Chimie</SelectItem>
+                          <SelectItem value="SVT">SVT</SelectItem>
+                          <SelectItem value="Philosophie">Philosophie</SelectItem>
+                          <SelectItem value="Français">Français</SelectItem>
+                          <SelectItem value="Arabe">Arabe</SelectItem>
+                          <SelectItem value="Anglais">Anglais</SelectItem>
+                        </>
+                      )}
+                    </SelectContent>
+                  </Select>
+                  {errors.subject && (
+                    <p className="text-xs text-destructive">{errors.subject.message}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="language" className="text-sm font-medium">
+                  Langue
+                </Label>
+                <Select
+                  defaultValue="fr"
+                  onValueChange={(value) => setValue("language", value)}
+                >
+                  <SelectTrigger id="language" className="ops-input h-9">
+                    <SelectValue placeholder="Sélectionner une langue" />
+                  </SelectTrigger>
+                  <SelectContent className="ops-card">
+                    <SelectItem value="fr">Français</SelectItem>
+                    <SelectItem value="ar">Arabe</SelectItem>
+                    <SelectItem value="en">Anglais</SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.language && (
+                  <p className="text-xs text-destructive">{errors.language.message}</p>
+                )}
+              </div>
+            </AdminFormCard>
 
             {/* File Information */}
-            <Card className="ops-card border border-ops">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-ops-primary">
-                  Informations du Fichier
-                </CardTitle>
-                <CardDescription className="text-ops-secondary">
-                  Détails du fichier PDF et de la couverture
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <AdminFormCard
+              title="Informations du Fichier"
+              description="Détails du fichier PDF et de la couverture"
+            >
+              <div className="space-y-2">
+                <Label htmlFor="cover" className="text-sm font-medium">
+                  Image de Couverture <span className="text-xs text-ops-tertiary">(Optionnel)</span>
+                </Label>
                 <div className="space-y-2">
-                  <Label htmlFor="cover" className="text-sm font-medium">
-                    Image de Couverture <span className="text-xs text-ops-tertiary">(Optionnel)</span>
-                  </Label>
-                  <div className="space-y-2">
-                    {coverPreview ? (
+                  {coverPreview ? (
+                    <div className="space-y-2">
                       <div className="relative w-full h-64 rounded-lg overflow-hidden border border-ops">
                         <SupabaseImage
                           src={coverPreview}
@@ -400,16 +367,12 @@ export default function NewBookPage() {
                           <X className="h-4 w-4" />
                         </Button>
                       </div>
-                    ) : (
                       <label
                         htmlFor="cover"
-                        className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-ops rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] transition-colors"
+                        className="flex items-center justify-center w-full h-10 border border-ops rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                       >
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <Upload className="h-10 w-10 text-ops-tertiary mb-3" />
-                          <p className="text-sm text-ops-secondary mb-1">Cliquez pour télécharger</p>
-                          <p className="text-xs text-ops-tertiary">PNG, JPG, WEBP (max. 5MB)</p>
-                        </div>
+                        <Upload className="h-4 w-4 text-ops-secondary mr-2" />
+                        <span className="text-sm text-ops-secondary">Changer l&apos;image</span>
                         <input
                           id="cover"
                           type="file"
@@ -418,225 +381,125 @@ export default function NewBookPage() {
                           onChange={handleCoverChange}
                         />
                       </label>
-                    )}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="fileUrl" className="text-sm font-medium">
-                    Lien Google Drive du PDF <span className="text-destructive">*</span>
-                  </Label>
-                  <Input
-                    id="fileUrl"
-                    {...register("fileUrl")}
-                    placeholder="https://drive.google.com/file/d/..."
-                    className="ops-input h-9"
-                  />
-                  {errors.fileUrl && (
-                    <p className="text-xs text-destructive">{errors.fileUrl.message}</p>
-                  )}
-                  <p className="text-xs text-ops-tertiary">
-                    Assurez-vous que le lien est public et accessible à tous
-                  </p>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="fileName" className="text-sm font-medium">
-                      Nom du Fichier <span className="text-xs text-ops-tertiary">(Optionnel)</span>
-                    </Label>
-                    <Input
-                      id="fileName"
-                      {...register("fileName")}
-                      placeholder="livre-maths.pdf"
-                      className="ops-input h-9"
-                    />
-                    {errors.fileName && (
-                      <p className="text-xs text-destructive">{errors.fileName.message}</p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="fileSize" className="text-sm font-medium">
-                      Taille du Fichier <span className="text-xs text-ops-tertiary">(Optionnel)</span>
-                    </Label>
-                    <Input
-                      id="fileSize"
-                      {...register("fileSize")}
-                      placeholder="25.4 MB"
-                      className="ops-input h-9"
-                    />
-                    {errors.fileSize && (
-                      <p className="text-xs text-destructive">{errors.fileSize.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="totalPages" className="text-sm font-medium">
-                    Nombre de Pages <span className="text-xs text-ops-tertiary">(Optionnel)</span>
-                  </Label>
-                  <Input
-                    id="totalPages"
-                    type="number"
-                    min="1"
-                    {...register("totalPages", { valueAsNumber: true })}
-                    placeholder="456"
-                    className="ops-input h-9"
-                  />
-                  {errors.totalPages && (
-                    <p className="text-xs text-destructive">{errors.totalPages.message}</p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Tags */}
-            <Card className="ops-card border border-ops">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-ops-primary">
-                  Étiquettes
-                </CardTitle>
-                <CardDescription className="text-ops-secondary">
-                  Ajoutez des mots-clés pour faciliter la recherche
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="add-tag" className="text-sm font-medium">
-                    Ajouter une Étiquette
-                  </Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="add-tag"
-                      value={newTag}
-                      onChange={(e) => setNewTag(e.target.value)}
-                      onKeyPress={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          addTag();
-                        }
-                      }}
-                      placeholder="ex: exercices, corrigés, bac"
-                      className="ops-input h-9"
-                    />
-                    <Button
-                      type="button"
-                      onClick={addTag}
-                      variant="outline"
-                      size="sm"
-                      className="ops-btn-secondary h-9"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                {watchedTags.length > 0 && (
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">Étiquettes Ajoutées</Label>
-                    <div className="flex flex-wrap gap-2">
-                      {watchedTags.map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="secondary"
-                          className="flex items-center gap-1 px-3 py-1"
-                        >
-                          {tag}
-                          <button
-                            type="button"
-                            onClick={() => removeTag(tag)}
-                            className="ml-1 hover:text-destructive"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </Badge>
-                      ))}
                     </div>
-                  </div>
+                  ) : (
+                    <label
+                      htmlFor="cover"
+                      className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-ops rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] transition-colors"
+                    >
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <Upload className="h-10 w-10 text-ops-tertiary mb-3" />
+                        <p className="text-sm text-ops-secondary mb-1">Cliquez pour télécharger</p>
+                        <p className="text-xs text-ops-tertiary">PNG, JPG, WEBP (max. 5MB)</p>
+                      </div>
+                      <input
+                        id="cover"
+                        type="file"
+                        className="hidden"
+                        accept="image/jpeg,image/jpg,image/png,image/webp"
+                        onChange={handleCoverChange}
+                      />
+                    </label>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="fileUrl" className="text-sm font-medium">
+                  Lien Google Drive du PDF <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="fileUrl"
+                  {...register("fileUrl")}
+                  placeholder="https://drive.google.com/file/d/..."
+                  className="ops-input h-9"
+                />
+                {errors.fileUrl && (
+                  <p className="text-xs text-destructive">{errors.fileUrl.message}</p>
                 )}
                 <p className="text-xs text-ops-tertiary">
-                  Utilisez des étiquettes pertinentes pour améliorer la recherche
+                  Assurez-vous que le lien est public et accessible à tous
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="fileName" className="text-sm font-medium">
+                    Nom du Fichier <span className="text-xs text-ops-tertiary">(Optionnel)</span>
+                  </Label>
+                  <Input
+                    id="fileName"
+                    {...register("fileName")}
+                    placeholder="livre-maths.pdf"
+                    className="ops-input h-9"
+                  />
+                  {errors.fileName && (
+                    <p className="text-xs text-destructive">{errors.fileName.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="fileSize" className="text-sm font-medium">
+                    Taille du Fichier <span className="text-xs text-ops-tertiary">(Optionnel)</span>
+                  </Label>
+                  <Input
+                    id="fileSize"
+                    {...register("fileSize")}
+                    placeholder="25.4 MB"
+                    className="ops-input h-9"
+                  />
+                  {errors.fileSize && (
+                    <p className="text-xs text-destructive">{errors.fileSize.message}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="totalPages" className="text-sm font-medium">
+                  Nombre de Pages <span className="text-xs text-ops-tertiary">(Optionnel)</span>
+                </Label>
+                <Input
+                  id="totalPages"
+                  type="number"
+                  min="1"
+                  {...register("totalPages", { valueAsNumber: true })}
+                  placeholder="456"
+                  className="ops-input h-9"
+                />
+                {errors.totalPages && (
+                  <p className="text-xs text-destructive">{errors.totalPages.message}</p>
+                )}
+              </div>
+            </AdminFormCard>
           </div>
 
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Actions */}
-            <Card className="ops-card border border-ops">
-              <CardHeader>
-                <CardTitle className="text-base font-semibold text-ops-primary">
-                  Actions
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button
-                  type="submit"
-                  disabled={isSubmitting || createMutation.isPending}
-                  className="ops-btn-primary w-full h-9"
-                >
-                  {isSubmitting || createMutation.isPending ? "Création..." : "Créer le Livre"}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={isSubmitting || createMutation.isPending}
-                  asChild
-                  className="ops-btn-secondary w-full h-9"
-                >
-                  <Link href={ADMIN_ROUTES.BOOKS}>Annuler</Link>
-                </Button>
-              </CardContent>
-            </Card>
+            <AdminFormActions
+              submitLabel="Créer le Livre"
+              loadingLabel="Création..."
+              cancelHref={ADMIN_ROUTES.BOOKS}
+              isSubmitting={isSubmitting}
+              isPending={createMutation.isPending}
+            />
 
             {/* Status & Visibility */}
-            <Card className="ops-card border border-ops">
-              <CardHeader>
-                <CardTitle className="text-base font-semibold text-ops-primary">
-                  Statut & Visibilité
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="status" className="text-sm font-medium">
-                    Statut
-                  </Label>
-                  <Select
-                    defaultValue={BookStatus.ACTIVE}
-                    onValueChange={(value) => setValue("status", value as BookStatus)}
-                  >
-                    <SelectTrigger id="status" className="ops-input h-9">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="ops-card">
-                      <SelectItem value={BookStatus.ACTIVE}>Actif</SelectItem>
-                      <SelectItem value={BookStatus.INACTIVE}>Inactif</SelectItem>
-                      <SelectItem value={BookStatus.PROCESSING}>En traitement</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+            <AdminStatusVisibility
+              status={watchedStatus}
+              onStatusChange={(value) => setValue("status", value as BookStatus)}
+              statusOptions={BOOK_STATUS_OPTIONS}
+              isPublic={watchedIsPublic}
+              onIsPublicChange={(value) => setValue("isPublic", value)}
+            />
 
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label htmlFor="isPublic" className="text-sm font-medium">
-                      Public
-                    </Label>
-                    <p className="text-xs text-ops-tertiary">
-                      Visible par tous les utilisateurs
-                    </p>
-                  </div>
-                  <input
-                    id="isPublic"
-                    type="checkbox"
-                    defaultChecked={true}
-                    {...register("isPublic")}
-                    className="h-4 w-4 rounded border-gray-300 text-brand-500 focus:ring-brand-500"
-                  />
-                </div>
-              </CardContent>
-            </Card>
+            {/* Tags */}
+            <AdminTagsInput
+              tags={watchedTags}
+              onChange={(tags) => setValue("tags", tags)}
+              placeholder="ex: exercices, corrigés, bac"
+              helpText="Utilisez des étiquettes pertinentes pour améliorer la recherche"
+            />
 
             {/* Help */}
             <Card className="ops-card border border-ops ops-status-info">

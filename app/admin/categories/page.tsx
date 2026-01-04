@@ -3,8 +3,14 @@
 import { useState, useMemo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Tag, Plus, Search, MoreHorizontal, CheckCircle2, XCircle } from "lucide-react";
-import { MetricCard } from "@/components/ui/metric-card";
+import { Tag, Plus, MoreHorizontal, CheckCircle2, XCircle } from "lucide-react";
+import {
+  AdminPageHeader,
+  AdminStatsGrid,
+  AdminFilterBar,
+  type AdminStatItem,
+  type FilterConfig,
+} from "@/components/admin";
 import {
   Table,
   TableBody,
@@ -113,85 +119,74 @@ export default function CategoriesPage() {
     return <LoadingState message={MESSAGES.LOADING.CATEGORIES} />;
   }
 
+  // Stats configuration
+  const statsConfig: AdminStatItem[] = [
+    {
+      title: "Total Categories",
+      value: metrics.totalCount,
+      icon: Tag,
+      color: "blue",
+      subtitle: "All categories",
+    },
+    {
+      title: "Active",
+      value: metrics.activeCount,
+      icon: CheckCircle2,
+      color: "mint",
+      subtitle: "Active categories",
+    },
+    {
+      title: "Inactive",
+      value: metrics.inactiveCount,
+      icon: XCircle,
+      color: "rose",
+      subtitle: "Inactive categories",
+    },
+    {
+      title: "Total Expenses",
+      value: metrics.totalExpensesCount,
+      icon: Tag,
+      color: "orange",
+      subtitle: "Expenses using categories",
+    },
+  ];
+
+  // Filters configuration
+  const filtersConfig: FilterConfig[] = [
+    {
+      value: statusFilter,
+      onChange: setStatusFilter,
+      options: [
+        { value: "all", label: "All Status" },
+        { value: "true", label: "Active" },
+        { value: "false", label: "Inactive" },
+      ],
+    },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-ops-primary">
-            Categories
-          </h1>
-          <p className="mt-1 text-sm text-ops-secondary">
-            Manage expense categories used across all startups
-          </p>
-        </div>
-        <Button
-          onClick={() => setIsCreateOpen(true)}
-          className="ops-btn-primary h-9 gap-2"
-        >
-          <Plus className="h-4 w-4" />
-          Add Category
-        </Button>
-      </div>
+      <AdminPageHeader
+        title="Categories"
+        description="Manage expense categories used across all startups"
+        actionLabel="Add Category"
+        actionIcon={Plus}
+        onActionClick={() => setIsCreateOpen(true)}
+      />
 
       {/* Metric Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <MetricCard
-          title="Total Categories"
-          value={metrics.totalCount}
-          icon={Tag}
-          color="blue"
-          subtitle="All categories"
-        />
-        <MetricCard
-          title="Active"
-          value={metrics.activeCount}
-          icon={CheckCircle2}
-          color="mint"
-          subtitle="Active categories"
-        />
-        <MetricCard
-          title="Inactive"
-          value={metrics.inactiveCount}
-          icon={XCircle}
-          color="rose"
-          subtitle="Inactive categories"
-        />
-        <MetricCard
-          title="Total Expenses"
-          value={metrics.totalExpensesCount}
-          icon={Tag}
-          color="orange"
-          subtitle="Expenses using categories"
-        />
-      </div>
+      <AdminStatsGrid stats={statsConfig} columns={4} />
 
       {/* Filters */}
-      <Card className="ops-card border border-ops">
-        <div className="p-4">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ops-tertiary" />
-              <Input
-                placeholder="Search categories by name or description..."
-                className="ops-input pl-10 h-9"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="ops-input h-9 w-full md:w-[180px]">
-                <SelectValue placeholder="All Status" />
-              </SelectTrigger>
-              <SelectContent className="ops-card">
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="true">Active</SelectItem>
-                <SelectItem value="false">Inactive</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </Card>
+      <AdminFilterBar
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search categories by name or description..."
+        filters={filtersConfig}
+        resultsCount={categories.length}
+        resultsLabel="category"
+      />
 
       {/* Categories Table */}
       <Card className="ops-card border border-ops">

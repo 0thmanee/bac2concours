@@ -2,12 +2,13 @@
 
 import { use } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Trash2, Download, Eye, Star, FileText, BookOpen, User, School, Calendar } from "lucide-react";
+import { Edit, Trash2, Eye, Play, Clock, School, Calendar, ExternalLink } from "lucide-react";
 import { MetricCard } from "@/components/ui/metric-card";
-import { useBook, useDeleteBook, useIncrementBookCounter } from "@/lib/hooks/use-books";
+import { useVideo, useDeleteVideo } from "@/lib/hooks/use-videos";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -27,60 +28,53 @@ import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
 import { format } from "date-fns";
 import { SupabaseImage } from "@/components/ui/supabase-image";
 import { AdminDetailHeader } from "@/components/admin";
+import { getYouTubeThumbnailUrl } from "@/lib/validations/video.validation";
 
-export default function BookDetailPage({ params }: { params: Promise<{ bookId: string }> }) {
-  const { bookId } = use(params);
+export default function VideoDetailPage({ params }: { params: Promise<{ videoId: string }> }) {
+  const { videoId } = use(params);
   const router = useRouter();
-  const { data: bookData, isLoading, error, isError } = useBook(bookId);
-  const deleteMutation = useDeleteBook();
-  const incrementCounter = useIncrementBookCounter(bookId);
+  const { data: videoData, isLoading, error, isError } = useVideo(videoId);
+  const deleteMutation = useDeleteVideo();
 
   if (isLoading) {
-    return <LoadingState message="Chargement du livre..." />;
+    return <LoadingState message="Chargement de la vidéo..." />;
   }
 
   if (isError || error) {
     return (
       <ErrorState
-        message={error instanceof Error ? error.message : "Livre non trouvé"}
-        backHref={ADMIN_ROUTES.BOOKS}
-        backLabel="Retour aux Livres"
+        message={error instanceof Error ? error.message : "Vidéo non trouvée"}
+        backHref={ADMIN_ROUTES.VIDEOS}
+        backLabel="Retour aux Vidéos"
       />
     );
   }
 
-  const book = bookData?.data;
+  const video = videoData?.data;
 
-  if (!book) {
+  if (!video) {
     return (
       <ErrorState
-        message="Livre non trouvé"
-        backHref={ADMIN_ROUTES.BOOKS}
-        backLabel="Retour aux Livres"
+        message="Vidéo non trouvée"
+        backHref={ADMIN_ROUTES.VIDEOS}
+        backLabel="Retour aux Vidéos"
       />
     );
   }
 
   const handleDelete = async () => {
     try {
-      await deleteMutation.mutateAsync(bookId);
-      toast.success(MESSAGES.SUCCESS.BOOK_DELETED);
-      router.push(ADMIN_ROUTES.BOOKS);
+      await deleteMutation.mutateAsync(videoId);
+      toast.success("Vidéo supprimée avec succès");
+      router.push(ADMIN_ROUTES.VIDEOS);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : MESSAGES.ERROR.GENERIC);
     }
   };
 
-  const handleDownload = async () => {
-    if (!book.fileUrl) return;
-    
-    try {
-      await incrementCounter.mutateAsync("download");
-      window.open(book.fileUrl, "_blank");
-    } catch (error) {
-      console.error("Failed to increment download counter:", error);
-      // Still allow download even if counter fails
-      window.open(book.fileUrl, "_blank");
+  const handleWatch = () => {
+    if (video.url) {
+      window.open(video.url, "_blank");
     }
   };
 
@@ -102,34 +96,45 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
     );
   };
 
+  const formatDuration = (seconds?: number | null) => {
+    if (!seconds) return "Non spécifiée";
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  // Get thumbnail URL
+  const thumbnailUrl = video.thumbnailFile?.publicUrl 
+    || (video.youtubeId ? getYouTubeThumbnailUrl(video.youtubeId, "hq") : null);
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <AdminDetailHeader
-        backLabel="Retour aux Livres"
-        backHref={ADMIN_ROUTES.BOOKS}
-        title={book.title}
+        backLabel="Retour aux Vidéos"
+        backHref={ADMIN_ROUTES.VIDEOS}
+        title={video.title}
         badges={
           <>
-            {getStatusBadge(book.status)}
-            {book.isPublic && <Badge variant="outline">Public</Badge>}
+            {getStatusBadge(video.status)}
+            {video.isPublic && <Badge variant="outline">Public</Badge>}
           </>
         }
         subtitle={
           <>
-            <User className="h-4 w-4" />
-            {book.author}
+            <School className="h-4 w-4" />
+            {video.school} • {video.category}
           </>
         }
-        description={book.description || undefined}
+        description={video.description || undefined}
         actions={
           <>
-            <Button onClick={handleDownload} variant="outline" className="ops-btn-secondary h-9 gap-2">
-              <Download className="h-4 w-4" />
-              Télécharger
+            <Button onClick={handleWatch} variant="outline" className="ops-btn-secondary h-9 gap-2">
+              <ExternalLink className="h-4 w-4" />
+              Regarder
             </Button>
             <Button asChild variant="outline" className="ops-btn-secondary h-9 gap-2">
-              <Link href={ADMIN_ROUTES.BOOK_EDIT(bookId)}>
+              <Link href={ADMIN_ROUTES.VIDEO_EDIT(videoId)}>
                 <Edit className="h-4 w-4" />
                 Modifier
               </Link>
@@ -143,9 +148,9 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
               </AlertDialogTrigger>
               <AlertDialogContent className="ops-card">
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Supprimer le Livre</AlertDialogTitle>
+                  <AlertDialogTitle>Supprimer la Vidéo</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Êtes-vous sûr de vouloir supprimer &ldquo;{book.title}&rdquo; ? Cette action est irréversible.
+                    Êtes-vous sûr de vouloir supprimer &ldquo;{video.title}&rdquo; ? Cette action est irréversible.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -163,27 +168,27 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
       {/* Metrics */}
       <div className="grid gap-4 md:grid-cols-4">
         <MetricCard
-          title="Téléchargements"
-          value={book.downloads?.toLocaleString() || "0"}
-          icon={Download}
+          title="Vues"
+          value={video.views?.toLocaleString() || "0"}
+          icon={Eye}
           color="blue"
         />
         <MetricCard
-          title="Vues"
-          value={book.views?.toLocaleString() || "0"}
-          icon={Eye}
+          title="Durée"
+          value={formatDuration(video.duration)}
+          icon={Clock}
           color="orange"
         />
         <MetricCard
-          title="Note Moyenne"
-          value={book.rating?.toFixed(1) || "0.0"}
-          icon={Star}
-          color="yellow"
+          title="Niveau"
+          value={video.level || "Non spécifié"}
+          icon={School}
+          color="blue"
         />
         <MetricCard
-          title="Pages"
-          value={book.totalPages?.toLocaleString() || "0"}
-          icon={FileText}
+          title="Matière"
+          value={video.subject || "Non spécifiée"}
+          icon={Play}
           color="purple"
         />
       </div>
@@ -191,23 +196,36 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Book Preview */}
-          {book.coverFile?.publicUrl && (
+          {/* Video Preview */}
+          {thumbnailUrl && (
             <Card className="ops-card border border-ops">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-ops-primary">
-                  Aperçu de la Couverture
+                  Aperçu de la Vidéo
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex justify-center">
-                  <SupabaseImage
-                    src={book.coverFile.publicUrl}
-                    alt={book.title}
-                    width={300}
-                    height={400}
-                    className="rounded-lg shadow-lg object-cover"
-                  />
+                <div className="relative aspect-video rounded-lg overflow-hidden">
+                  {video.thumbnailFile?.publicUrl ? (
+                    <SupabaseImage
+                      src={video.thumbnailFile.publicUrl}
+                      alt={video.title}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <Image
+                      src={thumbnailUrl}
+                      alt={video.title}
+                      fill
+                      className="object-cover"
+                    />
+                  )}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-colors cursor-pointer" onClick={handleWatch}>
+                    <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center">
+                      <Play className="h-8 w-8 text-ops-primary ml-1" />
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -224,35 +242,29 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm font-medium text-ops-tertiary">Catégorie</p>
-                  <p className="text-base text-ops-primary mt-1">{book.category}</p>
+                  <p className="text-base text-ops-primary mt-1">{video.category}</p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-ops-tertiary">Matière</p>
-                  <p className="text-base text-ops-primary mt-1">{book.subject}</p>
+                  <p className="text-base text-ops-primary mt-1">{video.subject || "Non spécifiée"}</p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-ops-tertiary">École/Filière</p>
                   <p className="text-base text-ops-primary mt-1 flex items-center gap-2">
                     <School className="h-4 w-4" />
-                    {book.school}
+                    {video.school}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-ops-tertiary">Niveau</p>
-                  <p className="text-base text-ops-primary mt-1">{book.level}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-ops-tertiary">Langue</p>
-                  <p className="text-base text-ops-primary mt-1">
-                    {book.language === "fr" ? "Français" : book.language === "ar" ? "Arabe" : book.language === "en" ? "Anglais" : book.language}
-                  </p>
+                  <p className="text-base text-ops-primary mt-1">{video.level}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Tags */}
-          {book.tags && book.tags.length > 0 && (
+          {video.tags && video.tags.length > 0 && (
             <Card className="ops-card border border-ops">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-ops-primary">
@@ -261,7 +273,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {book.tags.map((tag) => (
+                  {video.tags.map((tag) => (
                     <Badge key={tag} variant="secondary">
                       {tag}
                     </Badge>
@@ -274,39 +286,48 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
 
         {/* Sidebar */}
         <div className="space-y-6">
-          {/* File Information */}
+          {/* Video Information */}
           <Card className="ops-card border border-ops">
             <CardHeader>
               <CardTitle className="text-base font-semibold text-ops-primary">
-                Informations du Fichier
+                Informations de la Vidéo
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
-                <p className="text-sm font-medium text-ops-tertiary">Nom du Fichier</p>
-                <p className="text-sm text-ops-primary mt-1 break-all">{book.fileName}</p>
+                <p className="text-sm font-medium text-ops-tertiary">URL YouTube</p>
+                <a 
+                  href={video.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-sm text-brand-500 hover:underline mt-1 break-all block"
+                >
+                  {video.url}
+                </a>
               </div>
+              {video.youtubeId && (
+                <div>
+                  <p className="text-sm font-medium text-ops-tertiary">ID YouTube</p>
+                  <p className="text-sm text-ops-primary mt-1">{video.youtubeId}</p>
+                </div>
+              )}
               <div>
-                <p className="text-sm font-medium text-ops-tertiary">Taille</p>
-                <p className="text-sm text-ops-primary mt-1">{book.fileSize}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-ops-tertiary">Nombre de Pages</p>
+                <p className="text-sm font-medium text-ops-tertiary">Durée</p>
                 <p className="text-sm text-ops-primary mt-1 flex items-center gap-2">
-                  <BookOpen className="h-4 w-4" />
-                  {book.totalPages} pages
+                  <Clock className="h-4 w-4" />
+                  {formatDuration(video.duration)}
                 </p>
               </div>
               <div className="pt-3">
-                <Button onClick={handleDownload} className="ops-btn-primary w-full h-9 gap-2">
-                  <Download className="h-4 w-4" />
-                  Télécharger le PDF
+                <Button onClick={handleWatch} className="ops-btn-primary w-full h-9 gap-2">
+                  <Play className="h-4 w-4" />
+                  Regarder sur YouTube
                 </Button>
               </div>
             </CardContent>
           </Card>
 
-          {/* Upload Information */}
+          {/* Publication Information */}
           <Card className="ops-card border border-ops">
             <CardHeader>
               <CardTitle className="text-base font-semibold text-ops-primary">
@@ -315,28 +336,19 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
-                <p className="text-sm font-medium text-ops-tertiary">Téléchargé par</p>
-                <p className="text-sm text-ops-primary mt-1">
-                  {book.uploadedBy?.name || "Utilisateur inconnu"}
-                </p>
-                {book.uploadedBy?.email && (
-                  <p className="text-xs text-ops-tertiary">{book.uploadedBy.email}</p>
-                )}
-              </div>
-              <div>
                 <p className="text-sm font-medium text-ops-tertiary flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
                   Ajouté le
                 </p>
                 <p className="text-sm text-ops-primary mt-1">
-                  {format(new Date(book.createdAt), "d MMMM yyyy 'à' HH:mm")}
+                  {format(new Date(video.createdAt), "d MMMM yyyy 'à' HH:mm")}
                 </p>
               </div>
-              {book.updatedAt && book.updatedAt !== book.createdAt && (
+              {video.updatedAt && video.updatedAt !== video.createdAt && (
                 <div>
                   <p className="text-sm font-medium text-ops-tertiary">Dernière modification</p>
                   <p className="text-sm text-ops-primary mt-1">
-                    {format(new Date(book.updatedAt), "d MMMM yyyy 'à' HH:mm")}
+                    {format(new Date(video.updatedAt), "d MMMM yyyy 'à' HH:mm")}
                   </p>
                 </div>
               )}
