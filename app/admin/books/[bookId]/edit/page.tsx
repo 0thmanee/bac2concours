@@ -522,31 +522,47 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
                   </Label>
                   <div className="space-y-2">
                     {coverPreview ? (
-                      <div className="relative w-full h-64 rounded-lg overflow-hidden border border-ops">
-                        <SupabaseImage
-                          src={coverPreview}
-                          alt="Aperçu de la couverture"
-                          fill
-                          className="object-contain"
-                        />
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="sm"
-                          className="absolute top-2 right-2"
-                          onClick={removeCover}
-                          disabled={deleteFileMutation.isPending}
+                      <div className="space-y-2">
+                        <div className="relative w-full h-64 rounded-lg overflow-hidden border border-ops">
+                          <SupabaseImage
+                            src={coverPreview}
+                            alt="Aperçu de la couverture"
+                            fill
+                            className="object-contain"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="sm"
+                            className="absolute top-2 right-2"
+                            onClick={removeCover}
+                            disabled={deleteFileMutation.isPending}
+                          >
+                            {deleteFileMutation.isPending ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <X className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </div>
+                        <label
+                          htmlFor="cover"
+                          className="flex items-center justify-center w-full h-10 border border-ops rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                         >
-                          {deleteFileMutation.isPending ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <X className="h-4 w-4" />
-                          )}
-                        </Button>
+                          <Upload className="h-4 w-4 text-ops-secondary mr-2" />
+                          <span className="text-sm text-ops-secondary">Changer l'image</span>
+                          <input
+                            id="cover"
+                            type="file"
+                            className="hidden"
+                            accept="image/jpeg,image/jpg,image/png,image/webp"
+                            onChange={handleCoverChange}
+                          />
+                        </label>
                       </div>
                     ) : (
                       <label
-                        htmlFor="cover"
+                        htmlFor="cover-upload"
                         className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-ops rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] transition-colors"
                       >
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -555,7 +571,7 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
                           <p className="text-xs text-ops-tertiary">PNG, JPG, WEBP (max. 5MB)</p>
                         </div>
                         <input
-                          id="cover"
+                          id="cover-upload"
                           type="file"
                           className="hidden"
                           accept="image/jpeg,image/jpg,image/png,image/webp"

@@ -139,12 +139,12 @@ export default function FounderBooksPage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {books.map((book) => (
             <div 
               key={book.id} 
               onClick={() => router.push(`/founder/books/${book.id}`)}
-              className="ops-card border border-ops group h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-[rgb(var(--brand-500))]/10 hover:-translate-y-1 hover:border-[rgb(var(--brand-400))] dark:hover:border-[rgb(var(--brand-600))] cursor-pointer"
+              className="ops-card border border-ops group h-full flex flex-col overflow-hidden transition-all duration-300 hover:border-[rgb(var(--brand-400))] dark:hover:border-[rgb(var(--brand-600))] cursor-pointer"
             >
               <div className="relative flex-1 flex flex-col p-4 sm:p-5">
                 {/* Book Thumbnail */}
@@ -155,7 +155,7 @@ export default function FounderBooksPage() {
                         src={book.coverFile.publicUrl}
                         alt={book.title}
                         fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="object-cover"
                       />
                       <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </>
