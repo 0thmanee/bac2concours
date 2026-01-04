@@ -14,16 +14,16 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log("📚 Starting books database seed...");
 
-  // Find an admin or founder user to be the uploader
+  // Find an admin or student user to be the uploader
   let uploader = await prisma.user.findFirst({
     where: {
-      OR: [{ role: "ADMIN" }, { role: "FOUNDER" }],
+      OR: [{ role: "ADMIN" }, { role: "STUDENT" }],
     },
   });
 
   // If no user exists, create a default uploader
   if (!uploader) {
-    console.log("⚠️  No admin/founder found, creating default uploader...");
+    console.log("⚠️  No admin/student found, creating default uploader...");
     const { hash } = await import("bcryptjs");
     const password = await hash("admin123456", 12);
     uploader = await prisma.user.create({

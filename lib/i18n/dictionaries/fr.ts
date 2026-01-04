@@ -109,12 +109,12 @@ export const fr: Dictionary = {
       table: {
         name: "Nom",
         industry: "Industrie",
-        founders: "Fondateurs",
+        students: "Étudiants",
         budget: "Budget",
         status: "Statut",
         incubationPeriod: "Période d'Incubation",
-        noFounders: "Aucun fondateur",
-        moreFounders: "de plus",
+        noStudents: "Aucun étudiant",
+        moreStudents: "de plus",
       },
       create: {
         title: "Ajouter une Nouvelle Startup",
@@ -146,13 +146,13 @@ export const fr: Dictionary = {
             placeholder: "50000",
             help: "Budget total alloué à cette startup (en USD)",
           },
-          founders: {
-            label: "Fondateurs",
-            help: "Sélectionnez un ou plusieurs fondateurs pour cette startup",
-            noFounders: "Aucun fondateur disponible",
-            noFoundersDescription:
-              "Veuillez d'abord créer des comptes de fondateurs.",
-            loading: "Chargement des fondateurs...",
+          students: {
+            label: "Étudiants",
+            help: "Sélectionnez un ou plusieurs étudiants pour cette startup",
+            noStudents: "Aucun étudiant disponible",
+            noStudentsDescription:
+              "Veuillez d'abord créer des comptes de étudiants.",
+            loading: "Chargement des étudiants...",
           },
         },
         buttons: {
@@ -273,10 +273,10 @@ export const fr: Dictionary = {
     },
   },
 
-  // Founder Dashboard
-  founder: {
+  // Student Dashboard
+  student: {
     dashboard: {
-      title: "Tableau de bord Fondateur",
+      title: "Tableau de bord Étudiant",
       welcomeBack: "Bon retour",
     },
   },
@@ -313,7 +313,7 @@ export const fr: Dictionary = {
     startups: "Chargement des startups...",
     budgets: "Chargement des budgets...",
     expenses: "Chargement des dépenses...",
-    founders: "Chargement des fondateurs...",
+    students: "Chargement des étudiants...",
     saving: "Enregistrement...",
     creating: "Création...",
     updating: "Mise à jour...",

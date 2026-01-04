@@ -6,7 +6,7 @@
 **Tagline/Description:** A lightweight SaaS platform that helps incubators allocate budgets, track expenses, monitor startup progress, and generate reports without Excel, emails, or manual follow-ups.
 
 **Industry:** B2B SaaS - Startup Incubation & Accelerator Management  
-**Target Audience:** Incubator administrators, program managers, operations managers, and startup founders
+**Target Audience:** Incubator administrators, program managers, operations managers, and startup students
 
 ---
 
@@ -315,7 +315,7 @@ The logo should feel like it belongs alongside brands like Stripe, Linear, Notio
 This logo will be used by:
 
 - Incubator administrators (program managers, operations staff)
-- Startup founders (part of incubation programs)
+- Startup students (part of incubation programs)
 - Potentially shown to investors, stakeholders, and board members
 
 The logo must project competence, reliability, and professionalism - this is enterprise software, not a consumer app.

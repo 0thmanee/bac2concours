@@ -80,7 +80,7 @@ export const expenseService = {
     });
   },
 
-  // Update expense (for founders to edit their pending expenses)
+  // Update expense (for students to edit their pending expenses)
   async update(id: string, data: UpdateExpenseServiceInput) {
     return prisma.expense.update({
       where: { id },
@@ -229,11 +229,11 @@ export const expenseService = {
     return result._sum.amount || 0;
   },
 
-  // Get expenses by founder
-  async findByFounderId(founderId: string) {
+  // Get expenses by student
+  async findByStudentId(studentId: string) {
     return prisma.expense.findMany({
       where: {
-        submittedById: founderId,
+        submittedById: studentId,
       },
       include: {
         category: true,

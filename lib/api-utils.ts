@@ -40,10 +40,10 @@ export async function requireAdmin() {
   return user;
 }
 
-export async function requireFounder() {
+export async function requireStudent() {
   const user = await getAuthenticatedUser();
 
-  if (user.role !== UserRole.FOUNDER) {
+  if (user.role !== UserRole.STUDENT) {
     throw new ApiError(403, MESSAGES.ERROR.FORBIDDEN);
   }
 

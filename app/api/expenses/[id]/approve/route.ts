@@ -35,7 +35,7 @@ export async function PATCH(
       adminComment: validated.adminComment,
     });
 
-    // Notify the founder that their expense was approved
+    // Notify the student that their expense was approved
     notificationService
       .onExpenseApproved(
         {

@@ -37,7 +37,7 @@ This document outlines the comprehensive refactoring of the startup module to fo
 - `formatPercentage()` - Format percentage values
 - `getStatusBadgeClasses()` - Get CSS classes for status badges
 - `formatStatus()` - Format status for display
-- `getFoundersDisplay()` - Format founders list for display
+- `getStudentsDisplay()` - Format students list for display
 - `formatDate()` - Format dates consistently
 - `formatDateForInput()` - Format dates for input fields
 

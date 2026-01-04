@@ -24,8 +24,8 @@ export async function GET(
       throw new ApiError(404, MESSAGES.ERROR.EXPENSE_NOT_FOUND);
     }
 
-    // Founders can only view their own expenses
-    if (user.role === USER_ROLE.FOUNDER && expense.submittedById !== user.id) {
+    // Students can only view their own expenses
+    if (user.role === USER_ROLE.STUDENT && expense.submittedById !== user.id) {
       throw new ApiError(403, MESSAGES.ERROR.FORBIDDEN);
     }
 
@@ -33,7 +33,7 @@ export async function GET(
   });
 }
 
-// PATCH /api/expenses/[id] - Update expense (Founders can only edit their own PENDING expenses)
+// PATCH /api/expenses/[id] - Update expense (Students can only edit their own PENDING expenses)
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -51,8 +51,8 @@ export async function PATCH(
       throw new ApiError(404, MESSAGES.ERROR.EXPENSE_NOT_FOUND);
     }
 
-    // Only the founder who submitted can edit
-    if (user.role === USER_ROLE.FOUNDER && expense.submittedById !== user.id) {
+    // Only the student who submitted can edit
+    if (user.role === USER_ROLE.STUDENT && expense.submittedById !== user.id) {
       throw new ApiError(403, MESSAGES.ERROR.FORBIDDEN);
     }
 

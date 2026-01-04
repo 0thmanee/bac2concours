@@ -14,16 +14,16 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useLogout } from "@/lib/hooks/use-auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { AUTH_ROUTES, FOUNDER_ROUTES } from "@/lib/routes";
+import { AUTH_ROUTES, STUDENT_ROUTES } from "@/lib/routes";
 import { NotificationBell } from "@/components/notifications/notification-bell";
 
-interface FounderHeaderProps {
+interface StudentHeaderProps {
   userName: string;
   userEmail: string;
   startupName?: string;
 }
 
-export function FounderHeader({ userName, userEmail, startupName }: FounderHeaderProps) {
+export function StudentHeader({ userName, userEmail, startupName }: StudentHeaderProps) {
   const logoutMutation = useLogout();
   const router = useRouter();
 
@@ -100,7 +100,7 @@ export function FounderHeader({ userName, userEmail, startupName }: FounderHeade
             </div>
             <DropdownMenuSeparator className="bg-ops-border" />
             <DropdownMenuItem asChild>
-              <Link href={FOUNDER_ROUTES.PROFILE}>Profile</Link>
+              <Link href={STUDENT_ROUTES.PROFILE}>Profile</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-ops-border" />
             <DropdownMenuItem 

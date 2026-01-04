@@ -57,7 +57,7 @@ export async function PATCH(
       incubationEnd,
       totalBudget: validated.totalBudget,
       status: validated.status,
-      founderIds: validated.founderIds,
+      studentIds: validated.studentIds,
     });
 
     return updated;

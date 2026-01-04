@@ -108,10 +108,10 @@ Visit [http://localhost:3000](http://localhost:3000)
 - Email: `admin@incubationos.com`
 - Password: `admin123456`
 
-**Founder Account:**
+**Student Account:**
 
-- Email: `founder@example.com`
-- Password: `founder123456`
+- Email: `student@example.com`
+- Password: `student123456`
 
 ---
 
@@ -309,7 +309,7 @@ After setup, you can:
 - Update incubator name in Settings
 - Configure update frequency (weekly/monthly)
 - Add your own budget categories
-- Invite real founders
+- Invite real students
 
 ---
 

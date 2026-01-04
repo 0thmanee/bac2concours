@@ -5,21 +5,21 @@ import { startupService } from "@/lib/services/startup.service";
 import { USER_ROLE, MESSAGES } from "@/lib/constants";
 
 // GET /api/expenses/metrics - Get expense metrics
-// Admin: all expenses, Founder: expenses for their startup (if startupId provided)
+// Admin: all expenses, Student: expenses for their startup (if startupId provided)
 export async function GET(req: NextRequest) {
   return handleApiRequest(req, async () => {
     const user = await getAuthenticatedUser();
     const { searchParams } = new URL(req.url);
     const startupId = searchParams.get("startupId") || undefined;
 
-    if (user.role === USER_ROLE.FOUNDER) {
-      // Founders can only get metrics for their own startup
+    if (user.role === USER_ROLE.STUDENT) {
+      // Students can only get metrics for their own startup
       if (!startupId) {
-        throw new ApiError(400, "startupId is required for founders");
+        throw new ApiError(400, "startupId is required for students");
       }
       
       // Verify access to startup
-      const hasAccess = await startupService.isFounderOfStartup(startupId, user.id);
+      const hasAccess = await startupService.isStudentOfStartup(startupId, user.id);
       if (!hasAccess) {
         throw new ApiError(403, MESSAGES.ERROR.FORBIDDEN);
       }

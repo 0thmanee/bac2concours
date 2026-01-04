@@ -132,17 +132,17 @@ export function formatStatus(status: string): string {
 // ============================================================
 
 /**
- * Get founders display string
+ * Get students display string
  */
-export function getFoundersDisplay(
-  founders: Array<{ name: string }>,
+export function getStudentsDisplay(
+  students: Array<{ name: string }>,
   maxLength: number = 3
 ): string {
-  if (founders.length === 0) return "No founders assigned";
+  if (students.length === 0) return "No students assigned";
 
-  const names = founders.slice(0, maxLength).map((f) => f.name);
-  if (founders.length > maxLength) {
-    return `${names.join(", ")} +${founders.length - maxLength} more`;
+  const names = students.slice(0, maxLength).map((f) => f.name);
+  if (students.length > maxLength) {
+    return `${names.join(", ")} +${students.length - maxLength} more`;
   }
 
   return names.join(", ");

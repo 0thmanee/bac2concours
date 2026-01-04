@@ -14,8 +14,8 @@ Conducted a comprehensive security audit of the authentication system. Implement
 1. **Session Validation Against Database State**
    - Created `lib/auth-security.ts` with database-backed session validation
    - Prevents JWT replay attacks after user status changes
-   - All layouts now use `requireAuth()`, `requireAdmin()`, `requireFounder()`
-   - API routes use `validateApiSession()`, `requireApiAdmin()`, `requireApiFounder()`
+   - All layouts now use `requireAuth()`, `requireAdmin()`, `requireStudent()`
+   - API routes use `validateApiSession()`, `requireApiAdmin()`, `requireApiStudent()`
 
 2. **Fixed Auth Redirect Bug**
    - Auth layout now properly redirects to role-specific dashboards
@@ -51,11 +51,11 @@ Conducted a comprehensive security audit of the authentication system. Implement
 - **One-Time Tokens**: Consumed after use, cannot be reused
 
 ### ✅ Authorization
-- **Role-Based Access Control**: Admin vs Founder separation
+- **Role-Based Access Control**: Admin vs Student separation
 - **Status Checks**: Active/Inactive enforcement
 - **Email Verification**: Blocked at login, verified in layouts
-- **Payment Verification**: Founders must submit and get approval
-- **Startup Assignment**: Founders need assigned startup to access dashboard
+- **Payment Verification**: Students must submit and get approval
+- **Startup Assignment**: Students need assigned startup to access dashboard
 
 ### ✅ Session Management
 - **JWT Strategy**: Secure, stateless tokens
@@ -137,7 +137,7 @@ Conducted a comprehensive security audit of the authentication system. Implement
 ### 2. Principle of Least Privilege
 - Users can only access their own resources
 - Admins explicitly validated for admin routes
-- Founders cannot access admin endpoints
+- Students cannot access admin endpoints
 
 ### 3. Fail Secure
 - Missing session → redirect to login
@@ -187,7 +187,7 @@ Conducted a comprehensive security audit of the authentication system. Implement
 ### Low Priority
 5. **Two-Factor Authentication** (Enhanced Security)
    - TOTP support for admin accounts
-   - SMS backup for founders
+   - SMS backup for students
    - Estimated effort: 8-12 hours
 
 6. **Audit Logging** (Compliance)
@@ -206,12 +206,12 @@ Conducted a comprehensive security audit of the authentication system. Implement
    - Expected: Redirect to appropriate page
 
 2. **Payment Bypass Test**
-   - Founder with pending payment
-   - Try to access `/founder/expenses`
-   - Expected: Redirect to `/founder/payment`
+   - Student with pending payment
+   - Try to access `/student/expenses`
+   - Expected: Redirect to `/student/payment`
 
 3. **Role Escalation Test**
-   - Founder attempts to access `/admin/users`
+   - Student attempts to access `/admin/users`
    - Expected: 403 Forbidden or redirect
 
 4. **Email Verification Bypass Test**
@@ -254,9 +254,9 @@ Next steps: Implement rate limiting and security headers for production readines
 ### Updated Files
 - `app/(auth)/layout.tsx` - Fixed redirect
 - `app/admin/layout.tsx` - Using requireAdmin()
-- `app/founder/layout.tsx` - Using requireFounder()
-- `app/founder/(dashboard)/layout.tsx` - Using requireFounder()
-- `app/founder/pending/page.tsx` - Using requireFounder()
+- `app/student/layout.tsx` - Using requireStudent()
+- `app/student/(dashboard)/layout.tsx` - Using requireStudent()
+- `app/student/pending/page.tsx` - Using requireStudent()
 - `app/api/payments/*/route.ts` - Using API auth helpers
 - `lib/validations/auth.validation.ts` - Enhanced password validation
 - `lib/routes.ts` - Added public routes
@@ -265,7 +265,7 @@ Next steps: Implement rate limiting and security headers for production readines
 - `getValidatedSession()` - Validate JWT against DB
 - `requireAuth()` - Ensure authenticated with active status
 - `requireAdmin()` - Ensure admin role
-- `requireFounder()` - Ensure founder role  
+- `requireStudent()` - Ensure student role  
 - `validateApiSession()` - API session validation
 - `requireApiAdmin()` - API admin requirement
-- `requireApiFounder()` - API founder requirement
+- `requireApiStudent()` - API student requirement

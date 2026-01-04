@@ -48,7 +48,7 @@ export const openApiSpec = {
           isDeleted: { type: "boolean" },
           createdAt: { type: "string", format: "date-time" },
           updatedAt: { type: "string", format: "date-time" },
-          founders: {
+          students: {
             type: "array",
             items: { $ref: "#/components/schemas/User" },
           },
@@ -124,7 +124,7 @@ export const openApiSpec = {
       post: {
         tags: ["Auth"],
         summary: "Register a new user",
-        description: "Create a new user account with FOUNDER role",
+        description: "Create a new user account with STUDENT role",
         requestBody: {
           required: true,
           content: {
@@ -168,7 +168,7 @@ export const openApiSpec = {
                         id: { type: "string", format: "uuid" },
                         name: { type: "string" },
                         email: { type: "string", format: "email" },
-                        role: { type: "string", enum: ["ADMIN", "FOUNDER"] },
+                        role: { type: "string", enum: ["ADMIN", "STUDENT"] },
                         createdAt: { type: "string", format: "date-time" },
                       },
                     },
@@ -234,7 +234,7 @@ export const openApiSpec = {
                   "incubationStart",
                   "incubationEnd",
                   "totalBudget",
-                  "founderIds",
+                  "studentIds",
                 ],
                 properties: {
                   name: { type: "string", minLength: 2 },
@@ -243,7 +243,7 @@ export const openApiSpec = {
                   incubationStart: { type: "string", format: "date" },
                   incubationEnd: { type: "string", format: "date" },
                   totalBudget: { type: "number", minimum: 0 },
-                  founderIds: {
+                  studentIds: {
                     type: "array",
                     items: { type: "string" },
                     minItems: 1,
@@ -318,7 +318,7 @@ export const openApiSpec = {
                   incubationEnd: { type: "string", format: "date" },
                   totalBudget: { type: "number" },
                   status: { type: "string", enum: ["ACTIVE", "INACTIVE"] },
-                  founderIds: { type: "array", items: { type: "string" } },
+                  studentIds: { type: "array", items: { type: "string" } },
                 },
               },
             },
@@ -485,7 +485,7 @@ export const openApiSpec = {
       get: {
         tags: ["Expenses"],
         summary: "List expenses",
-        description: "Founders see their own, Admins see all",
+        description: "Students see their own, Admins see all",
         security: [{ bearerAuth: [] }],
         parameters: [
           {
@@ -519,7 +519,7 @@ export const openApiSpec = {
       post: {
         tags: ["Expenses"],
         summary: "Create expense",
-        description: "Submit an expense (Founder)",
+        description: "Submit an expense (Student)",
         security: [{ bearerAuth: [] }],
         requestBody: {
           required: true,
@@ -581,7 +581,7 @@ export const openApiSpec = {
       patch: {
         tags: ["Expenses"],
         summary: "Update expense",
-        description: "Founders can only edit their own PENDING expenses",
+        description: "Students can only edit their own PENDING expenses",
         security: [{ bearerAuth: [] }],
         parameters: [
           {
@@ -695,7 +695,7 @@ export const openApiSpec = {
             name: "me",
             in: "query",
             schema: { type: "string" },
-            description: "Set to 'true' for founders to get only their updates",
+            description: "Set to 'true' for students to get only their updates",
           },
         ],
         responses: {

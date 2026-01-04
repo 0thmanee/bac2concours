@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-This document provides a comprehensive audit of the entire authentication and authorization flow from both admin and founder perspectives. The system implements defense-in-depth security with database-validated sessions, role-based access control, and proper type safety.
+This document provides a comprehensive audit of the entire authentication and authorization flow from both admin and student perspectives. The system implements defense-in-depth security with database-validated sessions, role-based access control, and proper type safety.
 
 ---
 
@@ -69,11 +69,11 @@ Hash password (BCrypt, cost 10)
         ↓
 Determine role:
   - First user? → ADMIN (ACTIVE, emailVerified = now)
-  - Other users? → FOUNDER (INACTIVE, emailVerified = null)
+  - Other users? → STUDENT (INACTIVE, emailVerified = null)
         ↓
 Create user in database
         ↓
-If FOUNDER:
+If STUDENT:
   - Generate verification token
   - Send verification email (async, non-blocking)
   - Notify admins (async)
@@ -174,20 +174,20 @@ Redirect to login with success message
 
 ---
 
-## 💳 Payment Verification Flow (Founders Only)
+## 💳 Payment Verification Flow (Students Only)
 
-### Complete Founder Journey
+### Complete Student Journey
 
 ```
 1. REGISTRATION
    ↓
 2. EMAIL VERIFICATION
    ↓
-3. LOGIN → Redirect to /founder (triggers founder layout)
+3. LOGIN → Redirect to /student (triggers student layout)
    ↓
-4. FOUNDER LAYOUT CHECK → Payment NOT_SUBMITTED
+4. STUDENT LAYOUT CHECK → Payment NOT_SUBMITTED
    ↓
-5. REDIRECT TO /founder/payment
+5. REDIRECT TO /student/payment
    ↓
 6. USER UPLOADS PAYMENT PROOF
    ↓
@@ -198,12 +198,12 @@ Redirect to login with success message
 9a. APPROVED:
     - User.status = ACTIVE
     - Email sent with approval notification
-    - User can access /founder (dashboard)
+    - User can access /student (dashboard)
     ↓
 9b. REJECTED:
     - paymentRejectionReason stored
     - Email sent with rejection reason
-    - Redirect to /founder/payment-rejected
+    - Redirect to /student/payment-rejected
     - User can resubmit
 ```
 
@@ -223,24 +223,24 @@ Dashboard    Rejection page → Can resubmit
 
 ### Layout Protection Strategy
 
-- **`/founder/layout.tsx`**: Base founder authentication (requireFounder)
-- **`/founder/payment/layout.tsx`**: Allows NOT_SUBMITTED, PENDING, REJECTED
-- **`/founder/payment-rejected/layout.tsx`**: Only allows REJECTED status
-- **`/founder/(dashboard)/layout.tsx`**: Only allows APPROVED status
+- **`/student/layout.tsx`**: Base student authentication (requireStudent)
+- **`/student/payment/layout.tsx`**: Allows NOT_SUBMITTED, PENDING, REJECTED
+- **`/student/payment-rejected/layout.tsx`**: Only allows REJECTED status
+- **`/student/(dashboard)/layout.tsx`**: Only allows APPROVED status
 
 ### Payment API Routes
 
 | Route | Method | Role | Description |
 |-------|--------|------|-------------|
-| `/api/payments/upload` | POST | Founder | Upload payment proof file |
+| `/api/payments/upload` | POST | Student | Upload payment proof file |
 | `/api/payments/status` | GET | Any Auth | Get current user's payment status |
 | `/api/payments/pending` | GET | Admin | Get all pending payments |
 | `/api/payments/[userId]/review` | POST | Admin | Approve/reject payment |
 
 ### Files Involved
 
-- [app/founder/payment/page.tsx](app/founder/payment/page.tsx) - Upload form
-- [app/founder/payment-rejected/page.tsx](app/founder/payment-rejected/page.tsx) - Rejection notice
+- [app/student/payment/page.tsx](app/student/payment/page.tsx) - Upload form
+- [app/student/payment-rejected/page.tsx](app/student/payment-rejected/page.tsx) - Rejection notice
 - [app/admin/payments/page.tsx](app/admin/payments/page.tsx) - Admin review interface
 - [app/api/payments/upload/route.ts](app/api/payments/upload/route.ts) - Upload endpoint
 - [app/api/payments/[userId]/review/route.ts](app/api/payments/[userId]/review/route.ts) - Review endpoint
@@ -267,10 +267,10 @@ requireAdmin() → User
 // - Validates role === "ADMIN"
 // - Returns admin user or redirects to forbidden
 
-requireFounder() → User
+requireStudent() → User
 // - All checks from requireAuth()
-// - Validates role === "FOUNDER"
-// - Returns founder user or redirects to forbidden
+// - Validates role === "STUDENT"
+// - Returns student user or redirects to forbidden
 ```
 
 #### For API Routes
@@ -287,9 +287,9 @@ requireApiAdmin() → User
 // - Throws ApiAuthError(401) if not authenticated
 // - Throws ApiAuthError(403) if not admin
 
-requireApiFounder() → User
+requireApiStudent() → User
 // - Throws ApiAuthError(401) if not authenticated
-// - Throws ApiAuthError(403) if not founder
+// - Throws ApiAuthError(403) if not student
 ```
 
 ### Database Validation Benefits
@@ -365,30 +365,30 @@ Database (Prisma with type safety)
 | `/verify-email` | ✅ | ❌ | - | - |
 | `/contact` | ✅ | ❌ | - | - |
 | `/admin/*` | ❌ | ✅ | ADMIN | ❌ |
-| `/founder` (dashboard) | ❌ | ✅ | FOUNDER | ✅ APPROVED |
-| `/founder/payment` | ❌ | ✅ | FOUNDER | ❌ |
-| `/founder/payment-rejected` | ❌ | ✅ | FOUNDER | Must be REJECTED |
+| `/student` (dashboard) | ❌ | ✅ | STUDENT | ✅ APPROVED |
+| `/student/payment` | ❌ | ✅ | STUDENT | ❌ |
+| `/student/payment-rejected` | ❌ | ✅ | STUDENT | Must be REJECTED |
 
 ### Redirect Rules
 
 1. **Unauthenticated users** → `/login?callbackUrl={current}`
 2. **Wrong role** → `/forbidden`
 3. **Unverified email** → `/login?error=email_not_verified`
-4. **Founder without payment** → `/founder/payment`
-5. **Founder with rejected payment** → `/founder/payment-rejected`
-6. **Founder with approved payment** → `/founder` (dashboard)
+4. **Student without payment** → `/student/payment`
+5. **Student with rejected payment** → `/student/payment-rejected`
+6. **Student with approved payment** → `/student` (dashboard)
 7. **Logged-in user on homepage** → Role-specific dashboard
 
-### Example Flow: Rejected Founder Accessing Dashboard
+### Example Flow: Rejected Student Accessing Dashboard
 
 ```
-User navigates to /founder
+User navigates to /student
     ↓
-Founder layout checks: requireFounder() ✅
+Student layout checks: requireStudent() ✅
     ↓
 Check payment status: REJECTED
     ↓
-Redirect to /founder/payment-rejected
+Redirect to /student/payment-rejected
     ↓
 Payment-rejected layout validates status is REJECTED ✅
     ↓
@@ -396,7 +396,7 @@ Show rejection page with reason
     ↓
 User clicks "Soumettre à nouveau"
     ↓
-Redirect to /founder/payment
+Redirect to /student/payment
     ↓
 Payment layout allows REJECTED status ✅
     ↓
@@ -411,13 +411,13 @@ Same-page refresh shows waiting message
 
 ## 📊 Complete Role Comparison
 
-| Feature | Admin | Founder (New) | Founder (Email Verified) | Founder (Payment Pending) | Founder (Payment Approved) | Founder (Payment Rejected) |
+| Feature | Admin | Student (New) | Student (Email Verified) | Student (Payment Pending) | Student (Payment Approved) | Student (Payment Rejected) |
 |---------|-------|---------------|--------------------------|---------------------------|----------------------------|----------------------------|
 | **Auto email verified** | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
 | **Can login** | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
 | **Access /admin** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Access /founder** | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
-| **Access /founder/payment** | ❌ | ❌ | ✅ | ✅ | ❌* | ✅ |
+| **Access /student** | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **Access /student/payment** | ❌ | ❌ | ✅ | ✅ | ❌* | ✅ |
 | **Upload payment** | ❌ | ❌ | ✅ | ✅** | ❌ | ✅ |
 | **Receives emails** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **User.status** | ACTIVE | INACTIVE | INACTIVE | INACTIVE | ACTIVE | INACTIVE |
@@ -442,11 +442,11 @@ Same-page refresh shows waiting message
 - [lib/hooks/use-payment.ts](lib/hooks/use-payment.ts) - Updated
 
 ### ✅ Fixed: Inconsistent Auth Checks in Payment Layouts
-**Issue:** Payment layouts used `auth()` directly instead of `requireFounder()`  
-**Fix:** Updated to use `requireFounder()` for database validation consistency  
+**Issue:** Payment layouts used `auth()` directly instead of `requireStudent()`  
+**Fix:** Updated to use `requireStudent()` for database validation consistency  
 **Files:**
-- [app/founder/payment/layout.tsx](app/founder/payment/layout.tsx)
-- [app/founder/payment-rejected/layout.tsx](app/founder/payment-rejected/layout.tsx)
+- [app/student/payment/layout.tsx](app/student/payment/layout.tsx)
+- [app/student/payment-rejected/layout.tsx](app/student/payment-rejected/layout.tsx)
 
 ### ✅ Fixed: Added Missing VerifyEmailRequest Type
 **Issue:** No type export for verify email request schema  
@@ -461,32 +461,32 @@ Same-page refresh shows waiting message
 - [ ] First user registration creates ADMIN
 - [ ] Admin can login immediately (no email verification)
 - [ ] Admin lands on `/admin` dashboard
-- [ ] Admin cannot access `/founder` routes (403)
+- [ ] Admin cannot access `/student` routes (403)
 - [ ] Admin can view pending payments
 - [ ] Admin can approve payments (user receives email)
 - [ ] Admin can reject payments (user receives email with reason)
 
-### Founder Flow - Happy Path
-- [ ] Non-first user registration creates FOUNDER
+### Student Flow - Happy Path
+- [ ] Non-first user registration creates STUDENT
 - [ ] User receives verification email
 - [ ] Email verification link works
 - [ ] User can login after verification
-- [ ] User redirected to `/founder/payment` (first time)
+- [ ] User redirected to `/student/payment` (first time)
 - [ ] File upload validates type and size
 - [ ] Upload succeeds, status = PENDING
 - [ ] User sees waiting message
 - [ ] Admin approves payment
 - [ ] User receives approval email
-- [ ] User redirected to `/founder` dashboard
+- [ ] User redirected to `/student` dashboard
 - [ ] User.status = ACTIVE
 
-### Founder Flow - Rejection Path
+### Student Flow - Rejection Path
 - [ ] Admin rejects payment with reason
 - [ ] User receives rejection email
-- [ ] User redirected to `/founder/payment-rejected`
+- [ ] User redirected to `/student/payment-rejected`
 - [ ] Rejection reason displayed
 - [ ] User can click "Soumettre à nouveau"
-- [ ] User redirected to `/founder/payment`
+- [ ] User redirected to `/student/payment`
 - [ ] User can upload new document
 - [ ] Process repeats from approval step
 
@@ -495,7 +495,7 @@ Same-page refresh shows waiting message
 - [ ] Old JWT token invalid after role change
 - [ ] Unverified user cannot login
 - [ ] Cannot access admin routes without ADMIN role
-- [ ] Cannot access founder routes without FOUNDER role
+- [ ] Cannot access student routes without STUDENT role
 - [ ] Cannot upload payment after approval
 - [ ] Cannot access dashboard without approved payment
 - [ ] API routes return proper 401/403 errors

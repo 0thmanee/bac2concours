@@ -17,7 +17,7 @@ Visit: **https://your-domain.com/api-docs**
 ✅ **Interactive Testing** - Test all endpoints directly from the browser  
 ✅ **Complete Schema Documentation** - All request/response formats documented  
 ✅ **Authentication Support** - JWT bearer token authentication  
-✅ **RBAC Documented** - Admin vs Founder permissions clearly marked
+✅ **RBAC Documented** - Admin vs Student permissions clearly marked
 
 ## Authentication
 
@@ -51,7 +51,7 @@ To test authenticated endpoints:
 - Can manage all startups and budgets
 - Can view all reports
 
-**FOUNDER:**
+**STUDENT:**
 
 - Submit expenses for their startups
 - View their own expenses
@@ -87,11 +87,11 @@ Authorization: Bearer <your-jwt-token>
   "incubationStart": "2025-01-01",
   "incubationEnd": "2025-12-31",
   "totalBudget": 100000,
-  "founderIds": ["founder-uuid-1"]
+  "studentIds": ["student-uuid-1"]
 }
 ```
 
-### Submit Expense (Founder)
+### Submit Expense (Student)
 
 ```bash
 POST /api/expenses

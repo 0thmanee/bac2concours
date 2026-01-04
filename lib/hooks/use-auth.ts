@@ -3,7 +3,7 @@ import { signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
-import { getDefaultDashboard, AUTH_ROUTES, FOUNDER_ROUTES } from "@/lib/routes";
+import { getDefaultDashboard, AUTH_ROUTES, STUDENT_ROUTES } from "@/lib/routes";
 import { USER_ROLE, USER_STATUS, API_ROUTES } from "@/lib/constants";
 import {
   loginSchema,
@@ -105,12 +105,12 @@ export function useLogin() {
              queryClient.invalidateQueries();
              toast.success("Welcome back!");
 
-      // For founders, check if they have startups assigned
+      // For students, check if they have startups assigned
       // If inactive or no startups, redirect to pending page
-      if (data.session.user.role === USER_ROLE.FOUNDER) {
+      if (data.session.user.role === USER_ROLE.STUDENT) {
         // If inactive, redirect to pending page
         if (data.session.user.status === USER_STATUS.INACTIVE) {
-          router.push(FOUNDER_ROUTES.PENDING);
+          router.push(STUDENT_ROUTES.PENDING);
           router.refresh();
           return;
         }
@@ -170,7 +170,7 @@ export function useRegister() {
           const dashboardUrl = getDefaultDashboard(
             response.user.role === USER_ROLE.ADMIN
               ? USER_ROLE.ADMIN
-              : USER_ROLE.FOUNDER
+              : USER_ROLE.STUDENT
           );
           router.push(dashboardUrl);
           router.refresh();

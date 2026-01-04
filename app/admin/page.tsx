@@ -118,8 +118,8 @@ export default async function AdminDashboard() {
       {/* Secondary Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <StatCard
-          title="Total Founders"
-          value={startupMetrics.totalFounders}
+          title="Total Students"
+          value={startupMetrics.totalStudents}
           icon={Users}
           subtitle={`Across ${startupMetrics.totalCount} startups`}
         />
@@ -197,7 +197,7 @@ export default async function AdminDashboard() {
                 className="ops-btn-secondary h-auto flex-col py-4 gap-2"
               >
                 <Users className="h-5 w-5 text-metric-cyan" />
-                <span className="text-sm font-medium">Invite Founder</span>
+                <span className="text-sm font-medium">Invite Student</span>
               </Button>
             </div>
           </ChartCard>

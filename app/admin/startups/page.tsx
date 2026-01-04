@@ -45,7 +45,7 @@ import {
   calculateUtilizationPercent,
   formatCurrency,
   formatPercentage,
-  getFoundersDisplay,
+  getStudentsDisplay,
 } from "@/lib/utils/startup.utils";
 import { ADMIN_ROUTES, MESSAGES, NUMERIC_CONSTANTS } from "@/lib/constants";
 
@@ -63,7 +63,7 @@ export default function StartupsPage() {
     [startupsData]
   );
 
-  const startupMetrics = metricsData?.data || { activeCount: 0, totalBudget: 0, totalSpent: 0, totalCount: 0, totalFounders: 0 };
+  const startupMetrics = metricsData?.data || { activeCount: 0, totalBudget: 0, totalSpent: 0, totalCount: 0, totalStudents: 0 };
   const utilizationPercent = useMemo(
     () => calculateUtilizationPercent(startupMetrics.totalSpent, startupMetrics.totalBudget),
     [startupMetrics.totalSpent, startupMetrics.totalBudget]
@@ -171,7 +171,7 @@ export default function StartupsPage() {
           <TableHeader>
             <TableRow className="border-ops">
               <TableHead className="font-medium text-ops-secondary">Startup</TableHead>
-              <TableHead className="font-medium text-ops-secondary">Founders</TableHead>
+              <TableHead className="font-medium text-ops-secondary">Students</TableHead>
               <TableHead className="font-medium text-ops-secondary">Budget</TableHead>
               <TableHead className="font-medium text-ops-secondary">Spent</TableHead>
               <TableHead className="font-medium text-ops-secondary">Status</TableHead>
@@ -212,7 +212,7 @@ export default function StartupsPage() {
                     </TableCell>
                     <TableCell>
                       <p className="text-sm text-ops-secondary">
-                        {getFoundersDisplay(startup.founders)}
+                        {getStudentsDisplay(startup.students)}
                       </p>
                     </TableCell>
                     <TableCell>

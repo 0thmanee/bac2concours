@@ -100,7 +100,7 @@ Replace the placeholders with your actual values.
 
 2. **Try uploading a file**:
 
-   - Log in as a founder
+   - Log in as a student
    - Go to Payment page
    - Upload a payment proof
    - Should see success message

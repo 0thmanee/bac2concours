@@ -157,7 +157,7 @@ export default function PaymentPage() {
 
   // If payment is approved, redirect (should not happen, but handle it)
   if (paymentStatus?.paymentStatus === "APPROVED") {
-    router.push("/founder");
+    router.push("/student");
     return null;
   }
 

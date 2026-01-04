@@ -70,12 +70,12 @@ export async function requireAuth(): Promise<ValidatedUser> {
 
   // Enforce active status (defense in depth)
   if (user.status === USER_STATUS.INACTIVE) {
-    // Founders with inactive status need to go through payment/approval flow
+    // Students with inactive status need to go through payment/approval flow
     // Admins should never be inactive
     if (user.role === UserRole.ADMIN) {
       redirect(`${AUTH_ROUTES.LOGIN}?error=account_inactive`);
     }
-    // For founders, let layouts handle redirect to payment/pending
+    // For students, let layouts handle redirect to payment/pending
   }
 
   return user;
@@ -100,12 +100,12 @@ export async function requireAdmin(): Promise<ValidatedUser> {
 }
 
 /**
- * Require founder role or redirect
+ * Require student role or redirect
  */
-export async function requireFounder(): Promise<ValidatedUser> {
+export async function requireStudent(): Promise<ValidatedUser> {
   const user = await requireAuth();
 
-  if (user.role !== UserRole.FOUNDER) {
+  if (user.role !== UserRole.STUDENT) {
     redirect(ROOT_ROUTES.FORBIDDEN);
   }
 
@@ -143,17 +143,17 @@ export async function requireApiAdmin(): Promise<ValidatedUser> {
 }
 
 /**
- * Validate API request requires founder role
+ * Validate API request requires student role
  * Returns user or throws error with HTTP status (for API use)
  */
-export async function requireApiFounder(): Promise<ValidatedUser> {
+export async function requireApiStudent(): Promise<ValidatedUser> {
   const user = await validateApiSession();
 
   if (!user) {
     throw new ApiAuthError("Unauthorized", 401);
   }
 
-  if (user.role !== UserRole.FOUNDER) {
+  if (user.role !== UserRole.STUDENT) {
     throw new ApiAuthError("Forbidden", 403);
   }
 

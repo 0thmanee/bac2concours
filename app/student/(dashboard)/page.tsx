@@ -16,7 +16,7 @@ import { ChartCard } from "@/components/ui/chart-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { StatusBadge } from "@/components/shared/status-badge";
-import { getFounderDashboardData } from "@/lib/services/dashboard.service";
+import { getStudentDashboardData } from "@/lib/services/dashboard.service";
 import {
   formatCurrency,
   formatPercentage,
@@ -26,11 +26,11 @@ import {
 import { EXPENSE_STATUS } from "@/lib/constants";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
-import { FOUNDER_ROUTES } from "@/lib/routes";
+import { STUDENT_ROUTES } from "@/lib/routes";
 import { StartupBudgetChart } from "@/components/charts/startup-budget-chart";
 import { ExpenseTrendChart } from "@/components/charts/expense-trend-chart";
 
-export default async function FounderDashboard() {
+export default async function StudentDashboard() {
   const session = await auth();
   
   if (!session?.user) {
@@ -38,7 +38,7 @@ export default async function FounderDashboard() {
   }
   
   // Get dashboard data
-  const dashboardData = await getFounderDashboardData(session.user.id);
+  const dashboardData = await getStudentDashboardData(session.user.id);
   
   if (!dashboardData) {
     return (
@@ -174,17 +174,17 @@ export default async function FounderDashboard() {
                 </p>
               </div>
             </div>
-            {startup.founders.length > 0 && (
+            {startup.students.length > 0 && (
               <div className="pt-2 border-t border-ops">
                 <p className="text-xs text-ops-tertiary mb-2">Team Members</p>
                 <div className="flex flex-wrap gap-2">
-                  {startup.founders.map((founder) => (
+                  {startup.students.map((student) => (
                     <Badge
-                      key={founder.id}
+                      key={student.id}
                       variant="outline"
                       className="text-xs bg-metric-cyan-light text-metric-cyan-dark border-metric-cyan-main"
                     >
-                      {founder.name}
+                      {student.name}
                     </Badge>
                   ))}
                 </div>
@@ -204,7 +204,7 @@ export default async function FounderDashboard() {
               className="ops-btn-secondary h-auto flex-col py-4 gap-2"
               asChild
             >
-              <Link href={FOUNDER_ROUTES.EXPENSES}>
+              <Link href={STUDENT_ROUTES.EXPENSES}>
                 <Receipt className="h-5 w-5 text-metric-orange" />
                 <span className="text-sm font-medium">Submit Expense</span>
               </Link>
@@ -214,7 +214,7 @@ export default async function FounderDashboard() {
               className="ops-btn-secondary h-auto flex-col py-4 gap-2"
               asChild
             >
-              <Link href={FOUNDER_ROUTES.PROGRESS}>
+              <Link href={STUDENT_ROUTES.PROGRESS}>
                 <FileText className="h-5 w-5 text-metric-purple" />
                 <span className="text-sm font-medium">Update Progress</span>
               </Link>
@@ -230,7 +230,7 @@ export default async function FounderDashboard() {
           description="Latest expense submissions"
           action={
             <Button variant="ghost" size="sm" className="h-8 gap-1" asChild>
-              <Link href={FOUNDER_ROUTES.EXPENSES}>
+              <Link href={STUDENT_ROUTES.EXPENSES}>
                 View all
                 <ArrowUpRight className="h-3 w-3" />
               </Link>
@@ -293,7 +293,7 @@ export default async function FounderDashboard() {
           description="Latest progress submissions"
           action={
             <Button variant="ghost" size="sm" className="h-8 gap-1" asChild>
-              <Link href={FOUNDER_ROUTES.PROGRESS}>
+              <Link href={STUDENT_ROUTES.PROGRESS}>
                 View all
                 <ArrowUpRight className="h-3 w-3" />
               </Link>

@@ -7,7 +7,7 @@ import {
 } from "@/lib/validations/category.validation";
 import { MESSAGES } from "@/lib/constants";
 
-// GET /api/categories - List categories (Admin only for management, but active categories can be fetched by founders)
+// GET /api/categories - List categories (Admin only for management, but active categories can be fetched by students)
 export async function GET(req: NextRequest) {
   return handleApiRequest(req, async () => {
     const { searchParams } = new URL(req.url);

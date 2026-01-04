@@ -2,7 +2,7 @@ import { z } from "zod";
 import { USER_ROLE, USER_STATUS } from "@/lib/constants";
 
 // User role enum schema
-export const userRoleSchema = z.enum([USER_ROLE.ADMIN, USER_ROLE.FOUNDER]);
+export const userRoleSchema = z.enum([USER_ROLE.ADMIN, USER_ROLE.STUDENT]);
 
 // User status enum schema
 export const userStatusSchema = z.enum([
@@ -59,7 +59,7 @@ export const updateUserSchema = z
 export const userMetricsSchema = z.object({
   totalCount: z.number(),
   adminCount: z.number(),
-  founderCount: z.number(),
+  studentCount: z.number(),
   activeCount: z.number(),
   verifiedCount: z.number(),
 });

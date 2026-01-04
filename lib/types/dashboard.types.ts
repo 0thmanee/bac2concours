@@ -26,8 +26,8 @@ export interface RecentProgressUpdateItem {
   summary: string;
 }
 
-// Founder dashboard data
-export interface FounderDashboardData {
+// Student dashboard data
+export interface StudentDashboardData {
   startup: StartupWithRelations;
   expenses: ExpenseWithRelations[];
   progressUpdates: ProgressUpdateWithRelations[];

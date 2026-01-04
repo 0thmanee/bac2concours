@@ -7,18 +7,18 @@ import {
 import { startupService } from "@/lib/services/startup.service";
 import { USER_ROLE } from "@/lib/constants";
 
-// GET /api/startups/me - Get founder's startups
+// GET /api/startups/me - Get student's startups
 export async function GET(req: NextRequest) {
   return handleApiRequest(req, async () => {
     const user = await getAuthenticatedUser();
 
-    // Only founders can access this endpoint
-    if (user.role !== USER_ROLE.FOUNDER) {
-      throw new ApiError(403, "Only founders can access their own startups");
+    // Only students can access this endpoint
+    if (user.role !== USER_ROLE.STUDENT) {
+      throw new ApiError(403, "Only students can access their own startups");
     }
 
-    // Get startups where the user is a founder
-    const startups = await startupService.findByFounderId(user.id);
+    // Get startups where the user is a student
+    const startups = await startupService.findByStudentId(user.id);
 
     return startups;
   });

@@ -136,7 +136,7 @@ export const emailService = {
   },
 
   async sendPaymentApprovedEmail(email: string, userName: string) {
-    const dashboardUrl = `${appUrl}/founder`;
+    const dashboardUrl = `${appUrl}/student`;
 
     try {
       const result = await resend.emails.send({
@@ -186,7 +186,7 @@ export const emailService = {
   },
 
   async sendPaymentRejectedEmail(email: string, userName: string, rejectionReason: string) {
-    const paymentUrl = `${appUrl}/founder/payment`;
+    const paymentUrl = `${appUrl}/student/payment`;
 
     try {
       const result = await resend.emails.send({
@@ -299,7 +299,7 @@ export const notificationEmailService = {
           actionText = "View Budgets";
           break;
         case "STARTUP_ASSIGNED":
-          actionUrl = `${appUrl}/founder`;
+          actionUrl = `${appUrl}/student`;
           actionText = "View My Startup";
           break;
         case "NEW_USER_REGISTERED":

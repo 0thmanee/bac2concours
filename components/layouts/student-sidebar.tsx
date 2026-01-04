@@ -21,23 +21,23 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useLogout } from "@/lib/hooks/use-auth";
-import { FOUNDER_ROUTES } from "@/lib/routes";
+import { STUDENT_ROUTES } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
 const navigation = [
   {
     name: "Tableau de bord",
-    href: FOUNDER_ROUTES.DASHBOARD,
+    href: STUDENT_ROUTES.DASHBOARD,
     icon: LayoutDashboard,
   },
   {
     name: "Bibliothèque",
-    href: FOUNDER_ROUTES.BOOKS,
+    href: STUDENT_ROUTES.BOOKS,
     icon: BookOpen,
   },
 ];
 
-export default function FounderSidebar() {
+export default function StudentSidebar() {
   const pathname = usePathname();
   const logoutMutation = useLogout();
 

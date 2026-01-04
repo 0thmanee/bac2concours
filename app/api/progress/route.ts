@@ -13,7 +13,7 @@ import { startupService } from "@/lib/services/startup.service";
 import { notificationService } from "@/lib/services/notification.service";
 import { USER_ROLE, MESSAGES } from "@/lib/constants";
 
-// POST /api/progress - Create progress update (Founder)
+// POST /api/progress - Create progress update (Student)
 export async function POST(req: NextRequest) {
   return handleApiRequest(req, async () => {
     const user = await getAuthenticatedUser();
@@ -21,9 +21,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const validated = createProgressUpdateSchema.parse(body);
 
-    // Verify founder has access to this startup
-    if (user.role === USER_ROLE.FOUNDER) {
-      const hasAccess = await startupService.isFounderOfStartup(
+    // Verify student has access to this startup
+    if (user.role === USER_ROLE.STUDENT) {
+      const hasAccess = await startupService.isStudentOfStartup(
         validated.startupId,
         user.id
       );
@@ -70,15 +70,15 @@ export async function GET(req: NextRequest) {
 
     let updates;
 
-    if (user.role === USER_ROLE.FOUNDER) {
+    if (user.role === USER_ROLE.STUDENT) {
       if (queryParams.me === "true") {
-        // Founder getting their own updates
+        // Student getting their own updates
         updates = await progressService.findAll({
           submittedById: user.id,
         });
       } else if (queryParams.startupId) {
         // Verify access
-        const hasAccess = await startupService.isFounderOfStartup(
+        const hasAccess = await startupService.isStudentOfStartup(
           queryParams.startupId,
           user.id
         );

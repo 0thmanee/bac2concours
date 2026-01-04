@@ -16,7 +16,7 @@ import { notificationService } from "@/lib/services/notification.service";
 import { MESSAGES, EXPENSE_STATUS, USER_ROLE } from "@/lib/constants";
 import { formatCurrency } from "@/lib/utils/startup.utils";
 
-// POST /api/expenses - Create expense (Founder)
+// POST /api/expenses - Create expense (Student)
 export async function POST(req: NextRequest) {
   return handleApiRequest(req, async () => {
     const user = await getAuthenticatedUser();
@@ -24,9 +24,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const validated = createExpenseSchema.parse(body);
 
-    // Verify founder has access to this startup
-    if (user.role === USER_ROLE.FOUNDER) {
-      const hasAccess = await startupService.isFounderOfStartup(
+    // Verify student has access to this startup
+    if (user.role === USER_ROLE.STUDENT) {
+      const hasAccess = await startupService.isStudentOfStartup(
         validated.startupId,
         user.id
       );
@@ -96,11 +96,11 @@ export async function GET(req: NextRequest) {
 
     let expenses;
 
-    // Founders can only see their own expenses
-    if (user.role === USER_ROLE.FOUNDER) {
+    // Students can only see their own expenses
+    if (user.role === USER_ROLE.STUDENT) {
       // Verify access to startup if specified
       if (queryParams.startupId) {
-        const hasAccess = await startupService.isFounderOfStartup(
+        const hasAccess = await startupService.isStudentOfStartup(
           queryParams.startupId,
           user.id
         );

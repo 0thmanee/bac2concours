@@ -1,23 +1,23 @@
 import { redirect } from "next/navigation";
 import { PAYMENT_STATUS } from "@/lib/constants";
-import { FOUNDER_ROUTES } from "@/lib/routes";
+import { STUDENT_ROUTES } from "@/lib/routes";
 import { paymentService } from "@/lib/services/payment.service";
-import { requireFounder } from "@/lib/auth-security";
+import { requireStudent } from "@/lib/auth-security";
 
 export default async function PaymentLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Validate user is founder with verified email (checks DB, not just JWT)
-  const user = await requireFounder();
+  // Validate user is student with verified email (checks DB, not just JWT)
+  const user = await requireStudent();
 
   // Check payment status
   const paymentStatus = await paymentService.getPaymentStatus(user.id);
 
   // If payment is approved, redirect to dashboard
   if (paymentStatus.paymentStatus === PAYMENT_STATUS.APPROVED) {
-    redirect(FOUNDER_ROUTES.DASHBOARD);
+    redirect(STUDENT_ROUTES.DASHBOARD);
   }
 
   return <>{children}</>;

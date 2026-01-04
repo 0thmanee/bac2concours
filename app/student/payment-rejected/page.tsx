@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { XCircle, AlertTriangle, RefreshCw } from "lucide-react";
 import { usePaymentStatus } from "@/lib/hooks/use-payment";
-import { API_ROUTES, FOUNDER_ROUTES } from "@/lib/constants";
+import { API_ROUTES, STUDENT_ROUTES } from "@/lib/constants";
 import Link from "next/link";
 
 export default function PaymentRejectedPage() {
@@ -17,11 +17,11 @@ export default function PaymentRejectedPage() {
   // If not rejected, redirect appropriately
   if (!isLoading && paymentStatus?.paymentStatus !== "REJECTED") {
     if (paymentStatus?.paymentStatus === "NOT_SUBMITTED") {
-      router.push(FOUNDER_ROUTES.PAYMENT);
+      router.push(STUDENT_ROUTES.PAYMENT);
     } else if (paymentStatus?.paymentStatus === "PENDING") {
-      router.push(FOUNDER_ROUTES.PAYMENT);
+      router.push(STUDENT_ROUTES.PAYMENT);
     } else if (paymentStatus?.paymentStatus === "APPROVED") {
-      router.push(FOUNDER_ROUTES.DASHBOARD);
+      router.push(STUDENT_ROUTES.DASHBOARD);
     }
     return null;
   }
@@ -84,7 +84,7 @@ export default function PaymentRejectedPage() {
               className="ops-btn-primary flex-1"
               asChild
             >
-              <Link href={FOUNDER_ROUTES.PAYMENT}>
+              <Link href={STUDENT_ROUTES.PAYMENT}>
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Soumettre à nouveau
               </Link>

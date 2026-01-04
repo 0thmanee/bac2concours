@@ -44,12 +44,12 @@
 
 ### 3. Consistent Auth Protection ✅
 
-**Problem:** Payment layouts used `auth()` directly instead of the centralized `requireFounder()` helper
+**Problem:** Payment layouts used `auth()` directly instead of the centralized `requireStudent()` helper
 
 **Solution:**
-- Updated [app/founder/payment/layout.tsx](../app/founder/payment/layout.tsx) to use `requireFounder()`
-- Updated [app/founder/payment-rejected/layout.tsx](../app/founder/payment-rejected/layout.tsx) to use `requireFounder()`
-- Now all founder routes use database-validated session checks consistently
+- Updated [app/student/payment/layout.tsx](../app/student/payment/layout.tsx) to use `requireStudent()`
+- Updated [app/student/payment-rejected/layout.tsx](../app/student/payment-rejected/layout.tsx) to use `requireStudent()`
+- Now all student routes use database-validated session checks consistently
 
 **Benefits:**
 - Prevents JWT replay attacks (checks database, not just JWT signature)
@@ -116,9 +116,9 @@ lib/hooks/
 | `/` | ✅ | ❌ | - | - |
 | `/login`, `/register` | ✅ | ❌ | - | - |
 | `/admin/*` | ❌ | ✅ | ADMIN | ❌ |
-| `/founder` (dashboard) | ❌ | ✅ | FOUNDER | ✅ APPROVED |
-| `/founder/payment` | ❌ | ✅ | FOUNDER | ❌ |
-| `/founder/payment-rejected` | ❌ | ✅ | FOUNDER | REJECTED |
+| `/student` (dashboard) | ❌ | ✅ | STUDENT | ✅ APPROVED |
+| `/student/payment` | ❌ | ✅ | STUDENT | ❌ |
+| `/student/payment-rejected` | ❌ | ✅ | STUDENT | REJECTED |
 
 ## Files Modified
 
@@ -130,8 +130,8 @@ lib/hooks/
 ### Updated
 - ✅ `lib/hooks/use-payment.ts` - Import types instead of defining inline
 - ✅ `lib/validations/auth.validation.ts` - Fixed type exports
-- ✅ `app/founder/payment/layout.tsx` - Use requireFounder()
-- ✅ `app/founder/payment-rejected/layout.tsx` - Use requireFounder()
+- ✅ `app/student/payment/layout.tsx` - Use requireStudent()
+- ✅ `app/student/payment-rejected/layout.tsx` - Use requireStudent()
 - ✅ `app/admin/payments/page.tsx` - Fixed formatDate type signature
 
 ## Verification
@@ -144,7 +144,7 @@ lib/hooks/
 
 ### Auth Flow: ✅ All Routes Protected
 - ✅ Admin routes require ADMIN role + database validation
-- ✅ Founder routes require FOUNDER role + database validation
+- ✅ Student routes require STUDENT role + database validation
 - ✅ Payment verification flow complete with email notifications
 - ✅ Redirections handle all edge cases
 
@@ -157,10 +157,10 @@ lib/hooks/
 ## Security Highlights
 
 1. **Database-Validated Sessions** - Every protected route/API checks database state, not just JWT
-2. **Role-Based Access Control** - Clear separation between ADMIN and FOUNDER capabilities
+2. **Role-Based Access Control** - Clear separation between ADMIN and STUDENT capabilities
 3. **Email Verification Enforcement** - Users cannot login without verified email
-4. **Payment Status Flow** - Founders cannot access dashboard without approved payment
-5. **Centralized Protection Helpers** - `requireAuth()`, `requireAdmin()`, `requireFounder()`
+4. **Payment Status Flow** - Students cannot access dashboard without approved payment
+5. **Centralized Protection Helpers** - `requireAuth()`, `requireAdmin()`, `requireStudent()`
 6. **Type Safety** - Full TypeScript coverage with Zod runtime validation
 
 ## Next Steps (Optional Enhancements)
@@ -182,15 +182,15 @@ Before deploying to production, manually test:
    - Admin can approve/reject payments
    - Emails sent on approval/rejection
 
-2. **Founder Flow - Happy Path:**
+2. **Student Flow - Happy Path:**
    - Registration → Email verification → Login → Payment upload → Admin approval → Dashboard access
 
-3. **Founder Flow - Rejection:**
+3. **Student Flow - Rejection:**
    - Admin rejects payment → User sees rejection page → User resubmits → Process repeats
 
 4. **Security:**
-   - Try accessing admin routes as founder (should fail)
-   - Try accessing founder routes as admin (should fail)
+   - Try accessing admin routes as student (should fail)
+   - Try accessing student routes as admin (should fail)
    - Try accessing dashboard without payment approval (should redirect)
    - Verify old JWT doesn't work after user deletion
 

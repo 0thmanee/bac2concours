@@ -105,12 +105,12 @@ export const en = {
       table: {
         name: "Name",
         industry: "Industry",
-        founders: "Founders",
+        students: "Students",
         budget: "Budget",
         status: "Status",
         incubationPeriod: "Incubation Period",
-        noFounders: "No founders",
-        moreFounders: "more",
+        noStudents: "No students",
+        moreStudents: "more",
       },
       create: {
         title: "Add New Startup",
@@ -141,12 +141,12 @@ export const en = {
             placeholder: "50000",
             help: "Total budget allocated to this startup (in USD)",
           },
-          founders: {
-            label: "Founders",
-            help: "Select one or more founders for this startup",
-            noFounders: "No founders available",
-            noFoundersDescription: "Please create founder accounts first.",
-            loading: "Loading founders...",
+          students: {
+            label: "Students",
+            help: "Select one or more students for this startup",
+            noStudents: "No students available",
+            noStudentsDescription: "Please create student accounts first.",
+            loading: "Loading students...",
           },
         },
         buttons: {
@@ -263,10 +263,10 @@ export const en = {
     },
   },
 
-  // Founder Dashboard
-  founder: {
+  // Student Dashboard
+  student: {
     dashboard: {
-      title: "Founder Dashboard",
+      title: "Student Dashboard",
       welcomeBack: "Welcome back",
     },
   },
@@ -303,7 +303,7 @@ export const en = {
     startups: "Loading startups...",
     budgets: "Loading budgets...",
     expenses: "Loading expenses...",
-    founders: "Loading founders...",
+    students: "Loading students...",
     saving: "Saving...",
     creating: "Creating...",
     updating: "Updating...",

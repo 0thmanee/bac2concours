@@ -369,7 +369,7 @@ export const notificationService = {
   },
 
   /**
-   * Trigger: Expense approved (notify founder)
+   * Trigger: Expense approved (notify student)
    */
   async onExpenseApproved(
     expense: Expense & {
@@ -402,7 +402,7 @@ export const notificationService = {
   },
 
   /**
-   * Trigger: Expense rejected (notify founder)
+   * Trigger: Expense rejected (notify student)
    */
   async onExpenseRejected(
     expense: Expense & {
@@ -456,14 +456,14 @@ export const notificationService = {
   },
 
   /**
-   * Trigger: Budget threshold reached (notify founders of startup)
+   * Trigger: Budget threshold reached (notify students of startup)
    */
   async onBudgetThresholdReached(
-    startup: Startup & { founders: { id: string }[] },
+    startup: Startup & { students: { id: string }[] },
     categoryName: string,
     percentage: number
   ) {
-    const notifications = startup.founders.map((founder) => ({
+    const notifications = startup.students.map((student) => ({
       type: "BUDGET_THRESHOLD_WARNING" as NotificationType,
       title: "Budget Warning",
       message: `The ${categoryName} budget for ${
@@ -474,7 +474,7 @@ export const notificationService = {
         categoryName,
         percentage,
       },
-      userId: founder.id,
+      userId: student.id,
       channel: "BOTH" as NotificationChannel,
     }));
 
@@ -494,10 +494,10 @@ export const notificationService = {
   },
 
   /**
-   * Trigger: Budget exceeded (notify founders and admins)
+   * Trigger: Budget exceeded (notify students and admins)
    */
   async onBudgetExceeded(
-    startup: Startup & { founders: { id: string }[] },
+    startup: Startup & { students: { id: string }[] },
     categoryName: string,
     overage: number
   ) {
@@ -506,7 +506,7 @@ export const notificationService = {
       currency: "USD",
     }).format(overage);
 
-    const notifications = startup.founders.map((founder) => ({
+    const notifications = startup.students.map((student) => ({
       type: "BUDGET_EXCEEDED" as NotificationType,
       title: "Budget Exceeded",
       message: `The ${categoryName} budget for ${startup.name} has been exceeded by ${formattedOverage}.`,
@@ -515,7 +515,7 @@ export const notificationService = {
         categoryName,
         overage,
       },
-      userId: founder.id,
+      userId: student.id,
       channel: "BOTH" as NotificationChannel,
     }));
 
@@ -572,11 +572,11 @@ export const notificationService = {
   },
 
   /**
-   * Trigger: Startup assigned to founder
+   * Trigger: Startup assigned to student
    */
-  async onStartupAssigned(startup: Startup, founderId: string) {
+  async onStartupAssigned(startup: Startup, studentId: string) {
     await this.notifyUser(
-      founderId,
+      studentId,
       "STARTUP_ASSIGNED",
       "Assigned to Startup",
       `You have been assigned to ${startup.name}. You can now submit expenses and progress updates.`,
@@ -589,10 +589,10 @@ export const notificationService = {
    * Trigger: Incubation ending soon
    */
   async onIncubationEndingSoon(
-    startup: Startup & { founders: { id: string }[] },
+    startup: Startup & { students: { id: string }[] },
     daysRemaining: number
   ) {
-    const notifications = startup.founders.map((founder) => ({
+    const notifications = startup.students.map((student) => ({
       type: "INCUBATION_ENDING_SOON" as NotificationType,
       title: "Incubation Period Ending",
       message: `The incubation period for ${startup.name} will end in ${daysRemaining} days.`,
@@ -601,7 +601,7 @@ export const notificationService = {
         daysRemaining,
         endDate: startup.incubationEnd,
       },
-      userId: founder.id,
+      userId: student.id,
       channel: "BOTH" as NotificationChannel,
     }));
 

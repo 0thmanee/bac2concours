@@ -14,7 +14,7 @@ export const createStartupSchema = z.object({
   incubationStart: z.string().min(1, "Start date required"),
   incubationEnd: z.string().min(1, "End date required"),
   totalBudget: z.number().positive("Budget must be positive"),
-  founderIds: z.array(z.string()).min(1, "At least one founder required"),
+  studentIds: z.array(z.string()).min(1, "At least one student required"),
 });
 
 export const updateStartupSchema = z.object({
@@ -25,7 +25,7 @@ export const updateStartupSchema = z.object({
   incubationEnd: z.string().optional(),
   totalBudget: z.number().positive().optional(),
   status: startupStatusSchema.optional(),
-  founderIds: z.array(z.string()).optional(),
+  studentIds: z.array(z.string()).optional(),
 });
 
 export const startupQueryParamsSchema = z.object({
@@ -62,7 +62,7 @@ export const startupMetricsSchema = z.object({
   totalBudget: z.number(),
   totalSpent: z.number(),
   totalCount: z.number(),
-  totalFounders: z.number(),
+  totalStudents: z.number(),
 });
 
 export const startupQueryOptionsSchema = startupQueryParamsSchema.extend({
@@ -83,8 +83,8 @@ export type UpdateStartupServiceInput = z.infer<
 >;
 export type StartupQueryOptions = z.infer<typeof startupQueryOptionsSchema>;
 
-// Extended form data type that includes required founderIds for editing
-export type StartupEditFormData = UpdateStartupInput & { founderIds: string[] };
+// Extended form data type that includes required studentIds for editing
+export type StartupEditFormData = UpdateStartupInput & { studentIds: string[] };
 
 // Type for startup with optional spentBudget (used in hooks)
 export type StartupWithSpentBudget<T = unknown> = T & { spentBudget?: number };

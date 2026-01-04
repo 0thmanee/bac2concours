@@ -15,7 +15,7 @@ datasource db {
 
 enum UserRole {
   ADMIN
-  FOUNDER
+  STUDENT
 }
 
 enum StartupStatus {
@@ -94,7 +94,7 @@ model User {
   paymentReviewedAt      DateTime? // Date de révision par l'admin
 
   // Relations
-  startups                Startup[]               @relation("StartupFounders")
+  startups                Startup[]               @relation("StartupStudents")
   expenses                Expense[]
   progressUpdates         ProgressUpdate[]
   notifications           Notification[]
@@ -130,7 +130,7 @@ model Startup {
   totalBudget Float @default(0)
 
   // Relations
-  founders         User[]           @relation("StartupFounders")
+  students         User[]           @relation("StartupStudents")
   budgetCategories BudgetCategory[]
   expenses         Expense[]
   progressUpdates  ProgressUpdate[]

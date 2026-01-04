@@ -96,7 +96,7 @@ export function useDeleteStartup() {
   });
 }
 
-// Hook for founders to get their own startups
+// Hook for students to get their own startups
 export function useMyStartups() {
   return useQuery<ApiSuccessResponse<StartupWithRelations[]>>({
     queryKey: [...startupKeys.all, "me"],

@@ -41,16 +41,16 @@ import { useExpenses, useCreateExpense, useExpenseMetrics } from "@/lib/hooks/us
 import { useMyStartups } from "@/lib/hooks/use-startups";
 import { useCategories } from "@/lib/hooks/use-categories";
 import { createExpenseSchema, type CreateExpenseInput } from "@/lib/validations/expense.validation";
-import { FOUNDER_ROUTES } from "@/lib/routes";
+import { STUDENT_ROUTES } from "@/lib/routes";
 import type { StartupWithRelations, ExpenseWithRelations } from "@/lib/types/prisma";
 
-export default function FounderExpensesPage() {
+export default function StudentExpensesPage() {
   const [isCreating, setIsCreating] = useState(false);
   
-  // Get founder's startups using the correct endpoint
+  // Get student's startups using the correct endpoint
   const { data: startupsData, isLoading: isLoadingStartups, error: startupsError } = useMyStartups();
   const startups = (startupsData?.data || []) as StartupWithRelations[];
-  const selectedStartup = startups[0]; // Use first startup (founders typically have one)
+  const selectedStartup = startups[0]; // Use first startup (students typically have one)
   
   // Get global categories (only active ones for selection)
   const { data: categoriesData, isLoading: isLoadingCategories } = useCategories({

@@ -42,12 +42,12 @@ export async function requireAdmin() {
 }
 
 /**
- * Check if user has founder role
+ * Check if user has student role
  */
-export async function requireFounder() {
+export async function requireStudent() {
   const user = await getCurrentUser()
   
-  if (user.role !== UserRole.FOUNDER) {
+  if (user.role !== UserRole.STUDENT) {
     redirect(getDefaultDashboard(user.role))
   }
   

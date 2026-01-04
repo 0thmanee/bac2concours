@@ -74,7 +74,7 @@ export default function UsersPage() {
 
   const { data: usersData, isLoading } = useUsers({
     search: searchQuery || undefined,
-    role: roleFilter !== "all" ? (roleFilter as typeof USER_ROLE.ADMIN | typeof USER_ROLE.FOUNDER) : undefined,
+    role: roleFilter !== "all" ? (roleFilter as typeof USER_ROLE.ADMIN | typeof USER_ROLE.STUDENT) : undefined,
     status: statusFilter !== "all" ? (statusFilter as typeof USER_STATUS.ACTIVE | typeof USER_STATUS.INACTIVE) : undefined,
   });
 
@@ -88,7 +88,7 @@ export default function UsersPage() {
     [usersData]
   );
 
-  const metrics = metricsData?.data || { totalCount: 0, adminCount: 0, founderCount: 0, activeCount: 0, verifiedCount: 0 };
+  const metrics = metricsData?.data || { totalCount: 0, adminCount: 0, studentCount: 0, activeCount: 0, verifiedCount: 0 };
 
   const handleDelete = useCallback(
     async (userId: string, userName: string) => {
@@ -151,11 +151,11 @@ export default function UsersPage() {
           subtitle="Administrators"
         />
         <MetricCard
-          title="Founders"
-          value={metrics.founderCount}
+          title="Students"
+          value={metrics.studentCount}
           icon={User}
           color="cyan"
-          subtitle="Startup founders"
+          subtitle="Startup students"
         />
         <MetricCard
           title="Active"
@@ -193,7 +193,7 @@ export default function UsersPage() {
               <SelectContent className="ops-card">
                 <SelectItem value="all">All Roles</SelectItem>
                 <SelectItem value={USER_ROLE.ADMIN}>Admin</SelectItem>
-                <SelectItem value={USER_ROLE.FOUNDER}>Founder</SelectItem>
+                <SelectItem value={USER_ROLE.STUDENT}>Student</SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -372,7 +372,7 @@ function CreateUserDialog({
   } = useForm<CreateUserInput>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
-      role: USER_ROLE.FOUNDER,
+      role: USER_ROLE.STUDENT,
       status: USER_STATUS.INACTIVE,
     },
   });
@@ -446,14 +446,14 @@ function CreateUserDialog({
               <Label htmlFor="role">Role</Label>
               <Select
                 value={selectedRole}
-                onValueChange={(value) => setValue("role", value as typeof USER_ROLE.ADMIN | typeof USER_ROLE.FOUNDER)}
+                onValueChange={(value) => setValue("role", value as typeof USER_ROLE.ADMIN | typeof USER_ROLE.STUDENT)}
               >
                 <SelectTrigger id="role" className="ops-input h-9">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="ops-card">
                   <SelectItem value={USER_ROLE.ADMIN}>Admin</SelectItem>
-                  <SelectItem value={USER_ROLE.FOUNDER}>Founder</SelectItem>
+                  <SelectItem value={USER_ROLE.STUDENT}>Student</SelectItem>
                 </SelectContent>
               </Select>
               {errors.role && (
@@ -530,7 +530,7 @@ function EditUserDialog({
     defaultValues: {
       name: user.name,
       email: user.email,
-      role: user.role as typeof USER_ROLE.ADMIN | typeof USER_ROLE.FOUNDER,
+      role: user.role as typeof USER_ROLE.ADMIN | typeof USER_ROLE.STUDENT,
       status: user.status as typeof USER_STATUS.ACTIVE | typeof USER_STATUS.INACTIVE,
     },
   });
@@ -602,14 +602,14 @@ function EditUserDialog({
               <Label htmlFor="edit-role">Role</Label>
               <Select
                 value={selectedRole}
-                onValueChange={(value) => setValue("role", value as typeof USER_ROLE.ADMIN | typeof USER_ROLE.FOUNDER)}
+                onValueChange={(value) => setValue("role", value as typeof USER_ROLE.ADMIN | typeof USER_ROLE.STUDENT)}
               >
                 <SelectTrigger id="edit-role" className="ops-input h-9">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="ops-card">
                   <SelectItem value={USER_ROLE.ADMIN}>Admin</SelectItem>
-                  <SelectItem value={USER_ROLE.FOUNDER}>Founder</SelectItem>
+                  <SelectItem value={USER_ROLE.STUDENT}>Student</SelectItem>
                 </SelectContent>
               </Select>
               {errors.role && (

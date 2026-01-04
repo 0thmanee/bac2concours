@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fileService } from "@/lib/services/file.service";
 import { paymentService } from "@/lib/services/payment.service";
-import { requireApiFounder, ApiAuthError } from "@/lib/auth-security";
+import { requireApiStudent, ApiAuthError } from "@/lib/auth-security";
 import {
   validateFileSize,
   isAllowedMimeType,
@@ -14,8 +14,8 @@ import { MESSAGES } from "@/lib/constants";
 // POST /api/payments/upload - Upload payment proof
 export async function POST(req: NextRequest) {
   try {
-    // Validate user is authenticated founder
-    const user = await requireApiFounder();
+    // Validate user is authenticated student
+    const user = await requireApiStudent();
 
     const formData = await req.formData();
     const file = formData.get("file") as File | null;

@@ -21,7 +21,7 @@ export const reportService = {
       },
       include: {
         budgetCategories: true,
-        founders: {
+        students: {
           select: {
             id: true,
             name: true,
@@ -91,7 +91,7 @@ export const reportService = {
         startup: {
           id: startup.id,
           name: startup.name,
-          founders: startup.founders,
+          students: startup.students,
           incubationStart: startup.incubationStart,
           incubationEnd: startup.incubationEnd,
           status: startup.status,

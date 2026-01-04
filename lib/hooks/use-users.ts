@@ -90,7 +90,7 @@ export function useUserMetrics() {
     ApiSuccessResponse<{
       totalCount: number;
       adminCount: number;
-      founderCount: number;
+      studentCount: number;
       activeCount: number;
       verifiedCount: number;
     }>
@@ -101,7 +101,7 @@ export function useUserMetrics() {
         ApiSuccessResponse<{
           totalCount: number;
           adminCount: number;
-          founderCount: number;
+          studentCount: number;
           activeCount: number;
           verifiedCount: number;
         }>

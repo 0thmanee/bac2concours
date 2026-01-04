@@ -21,7 +21,7 @@ const DEFAULT_FILTERS = bookUIFiltersSchema.parse({});
 const ALL_CATEGORIES = "Toutes";
 const ALL_LEVELS = "Tous";
 
-export default function FounderBooksPage() {
+export default function StudentBooksPage() {
   const router = useRouter();
   const [uiFilters, setUIFilters] = useState<BookUIFilters>(DEFAULT_FILTERS);
 
@@ -143,7 +143,7 @@ export default function FounderBooksPage() {
           {books.map((book) => (
             <div 
               key={book.id} 
-              onClick={() => router.push(`/founder/books/${book.id}`)}
+              onClick={() => router.push(`/student/books/${book.id}`)}
               className="ops-card border border-ops group h-full flex flex-col overflow-hidden transition-all duration-300 hover:border-[rgb(var(--brand-400))] dark:hover:border-[rgb(var(--brand-600))] cursor-pointer"
             >
               <div className="relative flex-1 flex flex-col p-4 sm:p-5">

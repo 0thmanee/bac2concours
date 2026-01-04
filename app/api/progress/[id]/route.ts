@@ -22,8 +22,8 @@ export async function GET(
       throw new ApiError(404, MESSAGES.ERROR.PROGRESS_NOT_FOUND);
     }
 
-    // Founders can only view their own progress updates
-    if (user.role === USER_ROLE.FOUNDER && update.submittedById !== user.id) {
+    // Students can only view their own progress updates
+    if (user.role === USER_ROLE.STUDENT && update.submittedById !== user.id) {
       throw new ApiError(403, MESSAGES.ERROR.FORBIDDEN);
     }
 

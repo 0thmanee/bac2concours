@@ -196,14 +196,14 @@ export const userService = {
 
   // Get user metrics
   async getMetrics() {
-    const [totalCount, adminCount, founderCount, activeCount, verifiedCount] =
+    const [totalCount, adminCount, studentCount, activeCount, verifiedCount] =
       await Promise.all([
         prisma.user.count(),
         prisma.user.count({
           where: { role: USER_ROLE.ADMIN },
         }),
         prisma.user.count({
-          where: { role: USER_ROLE.FOUNDER },
+          where: { role: USER_ROLE.STUDENT },
         }),
         prisma.user.count({
           where: { status: USER_STATUS.ACTIVE },
@@ -216,7 +216,7 @@ export const userService = {
     return {
       totalCount,
       adminCount,
-      founderCount,
+      studentCount,
       activeCount,
       verifiedCount,
     };

@@ -36,13 +36,13 @@ export async function POST(request: NextRequest) {
 
     // Create user
     // First user = ADMIN with ACTIVE status and auto-verified email
-    // Others = FOUNDER with INACTIVE status (until assigned to startup) and unverified email
+    // Others = STUDENT with INACTIVE status (until assigned to startup) and unverified email
     const user = await prisma.user.create({
       data: {
         name: validated.name,
         email: validated.email,
         password: hashedPassword,
-        role: isFirstUser ? USER_ROLE.ADMIN : USER_ROLE.FOUNDER,
+        role: isFirstUser ? USER_ROLE.ADMIN : USER_ROLE.STUDENT,
         status: isFirstUser ? USER_STATUS.ACTIVE : USER_STATUS.INACTIVE,
         emailVerified: isFirstUser ? new Date() : null, // First user is auto-verified
       },

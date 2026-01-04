@@ -162,7 +162,7 @@ const uploadPdf = async (file: File) => {
 The payment upload is already using the new system:
 
 ```typescript
-// In app/founder/payment/page.tsx
+// In app/student/payment/page.tsx
 const uploadMutation = useUploadPaymentProof();
 
 await uploadMutation.mutateAsync(selectedFile);

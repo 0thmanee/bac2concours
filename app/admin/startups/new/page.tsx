@@ -29,15 +29,15 @@ import { ADMIN_ROUTES, MESSAGES, QUERY_KEYS, API_ROUTES, USER_ROLE } from "@/lib
 export default function NewStartupPage() {
   const router = useRouter();
   const createMutation = useCreateStartup();
-  const [founderSelectValue, setFounderSelectValue] = useState<string>("");
+  const [studentSelectValue, setStudentSelectValue] = useState<string>("");
   
-  // Fetch users for founder selection
+  // Fetch users for student selection
   const { data: usersData } = useQuery<ApiSuccessResponse<UserSelect[]>>({
-    queryKey: QUERY_KEYS.USERS.BY_ROLE(USER_ROLE.FOUNDER),
-    queryFn: () => apiClient.get<ApiSuccessResponse<UserSelect[]>>(`${API_ROUTES.USERS}?role=${USER_ROLE.FOUNDER}`),
+    queryKey: QUERY_KEYS.USERS.BY_ROLE(USER_ROLE.STUDENT),
+    queryFn: () => apiClient.get<ApiSuccessResponse<UserSelect[]>>(`${API_ROUTES.USERS}?role=${USER_ROLE.STUDENT}`),
   });
   
-  const founders = usersData?.data || [];
+  const students = usersData?.data || [];
   
   const {
     register,
@@ -45,29 +45,29 @@ export default function NewStartupPage() {
     formState: { errors, isSubmitting },
     setValue,
     watch,
-  } = useForm<CreateStartupInput & { founderIds: string[] }>({
+  } = useForm<CreateStartupInput & { studentIds: string[] }>({
     resolver: zodResolver(createStartupSchema),
     defaultValues: {
-      founderIds: [],
+      studentIds: [],
     },
   });
   
-  const selectedFounderIds = watch("founderIds") || [];
+  const selectedStudentIds = watch("studentIds") || [];
 
-  const addFounder = (founderId: string) => {
-    if (!selectedFounderIds.includes(founderId)) {
-      setValue("founderIds", [...selectedFounderIds, founderId]);
-      setFounderSelectValue(""); // Reset select after adding
+  const addStudent = (studentId: string) => {
+    if (!selectedStudentIds.includes(studentId)) {
+      setValue("studentIds", [...selectedStudentIds, studentId]);
+      setStudentSelectValue(""); // Reset select after adding
     }
   };
 
-  const removeFounder = (founderId: string) => {
-    setValue("founderIds", selectedFounderIds.filter((id) => id !== founderId));
+  const removeStudent = (studentId: string) => {
+    setValue("studentIds", selectedStudentIds.filter((id) => id !== studentId));
   };
 
-  const onSubmit = async (data: CreateStartupInput & { founderIds: string[] }) => {
+  const onSubmit = async (data: CreateStartupInput & { studentIds: string[] }) => {
     try {
-      // Ensure founderIds is set from form state
+      // Ensure studentIds is set from form state
       const submitData: CreateStartupInput = {
         name: data.name,
         description: data.description,
@@ -75,7 +75,7 @@ export default function NewStartupPage() {
         incubationStart: data.incubationStart,
         incubationEnd: data.incubationEnd,
         totalBudget: data.totalBudget,
-        founderIds: selectedFounderIds.length > 0 ? selectedFounderIds : data.founderIds,
+        studentIds: selectedStudentIds.length > 0 ? selectedStudentIds : data.studentIds,
       };
       
       await createMutation.mutateAsync(submitData);
@@ -175,72 +175,72 @@ export default function NewStartupPage() {
               </CardContent>
             </Card>
 
-            {/* Founders */}
+            {/* Students */}
             <Card className="ops-card border border-ops">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="text-lg font-semibold text-ops-primary">
-                      Founders
+                      Students
                     </CardTitle>
                     <CardDescription className="text-ops-secondary">
-                      Assign founders to this startup
+                      Assign students to this startup
                     </CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
-                {/* Add Founder Selector */}
+                {/* Add Student Selector */}
                 <div className="space-y-2">
-                  <Label htmlFor="add-founder" className="text-sm font-medium">
-                    Add Founder
+                  <Label htmlFor="add-student" className="text-sm font-medium">
+                    Add Student
                   </Label>
                   <Select
-                    value={founderSelectValue}
+                    value={studentSelectValue}
                     onValueChange={(value) => {
                       if (value && value !== "") {
-                        addFounder(value);
+                        addStudent(value);
                       }
                     }}
                   >
-                    <SelectTrigger id="add-founder" className="ops-input h-9">
-                      <SelectValue placeholder="Select a founder to add" />
+                    <SelectTrigger id="add-student" className="ops-input h-9">
+                      <SelectValue placeholder="Select a student to add" />
                     </SelectTrigger>
                     <SelectContent className="ops-card">
-                      {founders
-                        .filter((f) => !selectedFounderIds.includes(f.id))
-                        .map((founder) => (
-                          <SelectItem key={founder.id} value={founder.id}>
-                            {founder.name} ({founder.email})
+                      {students
+                        .filter((f) => !selectedStudentIds.includes(f.id))
+                        .map((student) => (
+                          <SelectItem key={student.id} value={student.id}>
+                            {student.name} ({student.email})
                           </SelectItem>
                         ))}
-                      {founders.filter((f) => !selectedFounderIds.includes(f.id)).length === 0 && (
-                        <SelectItem value="no-founders" disabled>
-                          No available founders
+                      {students.filter((f) => !selectedStudentIds.includes(f.id)).length === 0 && (
+                        <SelectItem value="no-students" disabled>
+                          No available students
                         </SelectItem>
                       )}
                     </SelectContent>
                   </Select>
                 </div>
 
-                {/* Selected Founders */}
-                {selectedFounderIds.length > 0 && (
+                {/* Selected Students */}
+                {selectedStudentIds.length > 0 && (
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium">Selected Founders</Label>
-                    {selectedFounderIds.map((founderId) => {
-                      const founder = founders.find((f) => f.id === founderId);
-                      if (!founder) return null;
+                    <Label className="text-sm font-medium">Selected Students</Label>
+                    {selectedStudentIds.map((studentId) => {
+                      const student = students.find((f) => f.id === studentId);
+                      if (!student) return null;
                       return (
-                        <div key={founderId} className="flex items-center justify-between p-2 rounded bg-neutral-50">
+                        <div key={studentId} className="flex items-center justify-between p-2 rounded bg-neutral-50">
                           <div>
-                            <p className="text-sm font-medium text-ops-primary">{founder.name}</p>
-                            <p className="text-xs text-ops-tertiary">{founder.email}</p>
+                            <p className="text-sm font-medium text-ops-primary">{student.name}</p>
+                            <p className="text-xs text-ops-tertiary">{student.email}</p>
                           </div>
                           <Button
                             type="button"
                             variant="ghost"
                             size="sm"
-                            onClick={() => removeFounder(founderId)}
+                            onClick={() => removeStudent(studentId)}
                             className="h-8 w-8 p-0 text-ops-tertiary"
                           >
                             <X className="h-4 w-4" />
@@ -251,11 +251,11 @@ export default function NewStartupPage() {
                   </div>
                 )}
 
-                {errors.founderIds && (
-                  <p className="text-xs text-destructive">{errors.founderIds.message}</p>
+                {errors.studentIds && (
+                  <p className="text-xs text-destructive">{errors.studentIds.message}</p>
                 )}
                 <p className="text-xs text-ops-tertiary">
-                  Select founders from existing users. At least one founder is required.
+                  Select students from existing users. At least one student is required.
                 </p>
               </CardContent>
             </Card>
@@ -385,7 +385,7 @@ export default function NewStartupPage() {
                       Need Help?
                     </p>
                     <p className="text-xs">
-                      After creating the startup, you can allocate budget to specific categories and invite founders to the platform.
+                      After creating the startup, you can allocate budget to specific categories and invite students to the platform.
                     </p>
                   </div>
                 </div>

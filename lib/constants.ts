@@ -29,7 +29,7 @@ export const EXPENSE_STATUS = {
 
 export const USER_ROLE = {
   ADMIN: "ADMIN" as UserRole,
-  FOUNDER: "FOUNDER" as UserRole,
+  STUDENT: "STUDENT" as UserRole,
 } as const;
 
 export const USER_STATUS = {
@@ -53,7 +53,7 @@ export const UPDATE_FREQUENCY = {
 // FRONTEND ROUTES (re-export from routes.ts for convenience)
 // ============================================================
 
-export { ADMIN_ROUTES, FOUNDER_ROUTES, AUTH_ROUTES } from "@/lib/routes";
+export { ADMIN_ROUTES, STUDENT_ROUTES, AUTH_ROUTES } from "@/lib/routes";
 
 // ============================================================
 // API ROUTES

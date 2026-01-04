@@ -6,32 +6,32 @@ import { Clock, Mail, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { RefreshButton } from "./refresh-button";
-import { FOUNDER_ROUTES, AUTH_ROUTES } from "@/lib/routes";
+import { STUDENT_ROUTES, AUTH_ROUTES } from "@/lib/routes";
 import { USER_STATUS, PAYMENT_STATUS } from "@/lib/constants";
-import { requireFounder } from "@/lib/auth-security";
+import { requireStudent } from "@/lib/auth-security";
 
 export default async function PendingPage() {
-  // Validate user is founder - checks database state
-  const user = await requireFounder();
+  // Validate user is student - checks database state
+  const user = await requireStudent();
 
   // Check payment status first
   const paymentStatus = await paymentService.getPaymentStatus(user.id);
   
   if (paymentStatus.paymentStatus === PAYMENT_STATUS.NOT_SUBMITTED ||
       paymentStatus.paymentStatus === PAYMENT_STATUS.PENDING) {
-    redirect(FOUNDER_ROUTES.PAYMENT);
+    redirect(STUDENT_ROUTES.PAYMENT);
   }
   
   if (paymentStatus.paymentStatus === PAYMENT_STATUS.REJECTED) {
-    redirect(FOUNDER_ROUTES.PAYMENT_REJECTED);
+    redirect(STUDENT_ROUTES.PAYMENT_REJECTED);
   }
 
   // Check if user has been assigned to any startup and is active
-  const startups = await startupService.findByFounderId(user.id);
+  const startups = await startupService.findByStudentId(user.id);
 
   // If user is active and has startups, redirect to dashboard
   if (user.status === USER_STATUS.ACTIVE && startups.length > 0) {
-    redirect(FOUNDER_ROUTES.DASHBOARD);
+    redirect(STUDENT_ROUTES.DASHBOARD);
   }
 
   return (

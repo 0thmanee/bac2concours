@@ -178,7 +178,7 @@ const createStartup = useCreateStartup();
 createStartup.mutate({
   name: "Acme Corp",
   industry: "Technology",
-  founderId: "user-id",
+  studentId: "user-id",
   description: "Innovative solutions",
   website: "https://acme.com",
 });
@@ -418,7 +418,7 @@ const { data: update } = useProgressUpdate("update-id");
 
 #### `useCreateProgressUpdate()`
 
-Submit progress update (Founder only).
+Submit progress update (Student only).
 
 ```tsx
 import { useCreateProgressUpdate } from "@/lib/hooks";

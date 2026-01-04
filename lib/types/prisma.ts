@@ -18,7 +18,7 @@ export type ExpenseWithRelations = Expense & {
 
 // Startup with relations (as returned by startupService.findAll)
 export type StartupWithRelations = Startup & {
-  founders: Pick<User, "id" | "name" | "email">[];
+  students: Pick<User, "id" | "name" | "email">[];
   budgetCategories: (BudgetCategory & {
     expenses?: Expense[];
   })[];
@@ -36,7 +36,7 @@ export type ExpenseWithSimpleRelations = Expense & {
 
 // Startup with full relations (as returned by startupService.findById)
 export type StartupWithFullRelations = Startup & {
-  founders: Pick<User, "id" | "name" | "email">[];
+  students: Pick<User, "id" | "name" | "email">[];
   budgetCategories: (BudgetCategory & {
     expenses: Expense[];
   })[];

@@ -106,67 +106,67 @@ async function main() {
   ]);
   console.log("✅ Created global categories:", categories.length);
 
-  // Create multiple founders
-  const founderPassword = await hash("founder123456", 12);
-  const founders = await Promise.all([
-    // Founder 1 - Active, assigned to startup, verified
+  // Create multiple students
+  const studentPassword = await hash("student123456", 12);
+  const students = await Promise.all([
+    // Student 1 - Active, assigned to startup, verified
     prisma.user.create({
       data: {
         email: "john@techstartup.com",
-        password: founderPassword,
+        password: studentPassword,
         name: "John Doe",
-        role: USER_ROLE.FOUNDER,
+        role: USER_ROLE.STUDENT,
         status: USER_STATUS.ACTIVE,
         emailVerified: new Date(), // Verified for seed data
       },
     }),
-    // Founder 2 - Active, assigned to startup, verified
+    // Student 2 - Active, assigned to startup, verified
     prisma.user.create({
       data: {
         email: "sarah@fintech.io",
-        password: founderPassword,
+        password: studentPassword,
         name: "Sarah Johnson",
-        role: USER_ROLE.FOUNDER,
+        role: USER_ROLE.STUDENT,
         status: USER_STATUS.ACTIVE,
         emailVerified: new Date(), // Verified for seed data
       },
     }),
-    // Founder 3 - Active, assigned to startup, verified
+    // Student 3 - Active, assigned to startup, verified
     prisma.user.create({
       data: {
         email: "mike@healthtech.com",
-        password: founderPassword,
+        password: studentPassword,
         name: "Mike Chen",
-        role: USER_ROLE.FOUNDER,
+        role: USER_ROLE.STUDENT,
         status: USER_STATUS.ACTIVE,
         emailVerified: new Date(), // Verified for seed data
       },
     }),
-    // Founder 4 - Active, assigned to startup, verified
+    // Student 4 - Active, assigned to startup, verified
     prisma.user.create({
       data: {
         email: "emma@edtech.com",
-        password: founderPassword,
+        password: studentPassword,
         name: "Emma Wilson",
-        role: USER_ROLE.FOUNDER,
+        role: USER_ROLE.STUDENT,
         status: USER_STATUS.ACTIVE,
         emailVerified: new Date(), // Verified for seed data
       },
     }),
-    // Founder 5 - Inactive (not assigned to any startup - for testing pending page)
+    // Student 5 - Inactive (not assigned to any startup - for testing pending page)
     // Also unverified to test verification requirement
     prisma.user.create({
       data: {
         email: "inactive@example.com",
-        password: founderPassword,
-        name: "Inactive Founder",
-        role: USER_ROLE.FOUNDER,
+        password: studentPassword,
+        name: "Inactive Student",
+        role: USER_ROLE.STUDENT,
         status: USER_STATUS.INACTIVE,
         emailVerified: null, // Unverified
       },
     }),
   ]);
-  console.log("✅ Created founders:", founders.length);
+  console.log("✅ Created students:", students.length);
 
   // Create multiple startups
   const startups = await Promise.all([
@@ -181,8 +181,8 @@ async function main() {
         incubationEnd: new Date("2024-12-31"),
         status: STARTUP_STATUS.ACTIVE,
         totalBudget: 100000,
-        founders: {
-          connect: [{ id: founders[0].id }],
+        students: {
+          connect: [{ id: students[0].id }],
         },
       },
     }),
@@ -196,8 +196,8 @@ async function main() {
         incubationEnd: new Date("2025-01-31"),
         status: STARTUP_STATUS.ACTIVE,
         totalBudget: 75000,
-        founders: {
-          connect: [{ id: founders[1].id }],
+        students: {
+          connect: [{ id: students[1].id }],
         },
       },
     }),
@@ -211,8 +211,8 @@ async function main() {
         incubationEnd: new Date("2025-02-28"),
         status: STARTUP_STATUS.ACTIVE,
         totalBudget: 60000,
-        founders: {
-          connect: [{ id: founders[2].id }],
+        students: {
+          connect: [{ id: students[2].id }],
         },
       },
     }),
@@ -226,8 +226,8 @@ async function main() {
         incubationEnd: new Date("2024-05-31"),
         status: STARTUP_STATUS.INACTIVE,
         totalBudget: 50000,
-        founders: {
-          connect: [{ id: founders[3].id }],
+        students: {
+          connect: [{ id: students[3].id }],
         },
       },
     }),
@@ -382,7 +382,7 @@ async function main() {
         status: EXPENSE_STATUS.APPROVED,
         categoryId: categories[0].id, // Marketing
         startupId: startups[0].id,
-        submittedById: founders[0].id,
+        submittedById: students[0].id,
       },
     }),
     prisma.expense.create({
@@ -393,7 +393,7 @@ async function main() {
         status: EXPENSE_STATUS.APPROVED,
         categoryId: categories[1].id, // Development
         startupId: startups[0].id,
-        submittedById: founders[0].id,
+        submittedById: students[0].id,
       },
     }),
     prisma.expense.create({
@@ -404,7 +404,7 @@ async function main() {
         status: EXPENSE_STATUS.APPROVED,
         categoryId: categories[0].id, // Marketing
         startupId: startups[0].id,
-        submittedById: founders[0].id,
+        submittedById: students[0].id,
       },
     }),
     prisma.expense.create({
@@ -415,7 +415,7 @@ async function main() {
         status: EXPENSE_STATUS.APPROVED,
         categoryId: categories[1].id, // Development
         startupId: startups[0].id,
-        submittedById: founders[0].id,
+        submittedById: students[0].id,
       },
     }),
     prisma.expense.create({
@@ -426,7 +426,7 @@ async function main() {
         status: EXPENSE_STATUS.APPROVED,
         categoryId: categories[2].id, // Legal
         startupId: startups[0].id,
-        submittedById: founders[0].id,
+        submittedById: students[0].id,
       },
     }),
     // Pending expenses
@@ -438,7 +438,7 @@ async function main() {
         status: EXPENSE_STATUS.PENDING,
         categoryId: categories[0].id, // Marketing
         startupId: startups[0].id,
-        submittedById: founders[0].id,
+        submittedById: students[0].id,
       },
     }),
     prisma.expense.create({
@@ -449,7 +449,7 @@ async function main() {
         status: EXPENSE_STATUS.PENDING,
         categoryId: categories[1].id, // Development
         startupId: startups[0].id,
-        submittedById: founders[0].id,
+        submittedById: students[0].id,
       },
     }),
     // Rejected expense
@@ -461,7 +461,7 @@ async function main() {
         status: EXPENSE_STATUS.REJECTED,
         categoryId: categories[3].id, // Operations
         startupId: startups[0].id,
-        submittedById: founders[0].id,
+        submittedById: students[0].id,
         adminComment: "Budget exceeded. Consider co-working space instead.",
       },
     }),
@@ -477,7 +477,7 @@ async function main() {
         status: EXPENSE_STATUS.APPROVED,
         categoryId: categories[1].id, // Development
         startupId: startups[1].id,
-        submittedById: founders[1].id,
+        submittedById: students[1].id,
       },
     }),
     prisma.expense.create({
@@ -488,7 +488,7 @@ async function main() {
         status: EXPENSE_STATUS.APPROVED,
         categoryId: categories[2].id, // Legal
         startupId: startups[1].id,
-        submittedById: founders[1].id,
+        submittedById: students[1].id,
       },
     }),
     prisma.expense.create({
@@ -499,7 +499,7 @@ async function main() {
         status: EXPENSE_STATUS.PENDING,
         categoryId: categories[0].id, // Marketing
         startupId: startups[1].id,
-        submittedById: founders[1].id,
+        submittedById: students[1].id,
       },
     }),
     prisma.expense.create({
@@ -510,7 +510,7 @@ async function main() {
         status: EXPENSE_STATUS.REJECTED,
         categoryId: categories[3].id, // Operations
         startupId: startups[1].id,
-        submittedById: founders[1].id,
+        submittedById: students[1].id,
         adminComment:
           "Exceeds budget allocation. Please find more cost-effective options.",
       },
@@ -527,7 +527,7 @@ async function main() {
         status: EXPENSE_STATUS.APPROVED,
         categoryId: categories[1].id, // Development
         startupId: startups[2].id,
-        submittedById: founders[2].id,
+        submittedById: students[2].id,
       },
     }),
     prisma.expense.create({
@@ -538,7 +538,7 @@ async function main() {
         status: EXPENSE_STATUS.APPROVED,
         categoryId: categories[2].id, // Legal
         startupId: startups[2].id,
-        submittedById: founders[2].id,
+        submittedById: students[2].id,
       },
     }),
     prisma.expense.create({
@@ -549,7 +549,7 @@ async function main() {
         status: EXPENSE_STATUS.PENDING,
         categoryId: categories[0].id, // Marketing
         startupId: startups[2].id,
-        submittedById: founders[2].id,
+        submittedById: students[2].id,
       },
     }),
   ]);
@@ -564,7 +564,7 @@ async function main() {
         status: EXPENSE_STATUS.APPROVED,
         categoryId: categories[1].id, // Development
         startupId: startups[3].id,
-        submittedById: founders[3].id,
+        submittedById: students[3].id,
       },
     }),
     prisma.expense.create({
@@ -575,7 +575,7 @@ async function main() {
         status: EXPENSE_STATUS.APPROVED,
         categoryId: categories[0].id, // Marketing
         startupId: startups[3].id,
-        submittedById: founders[3].id,
+        submittedById: students[3].id,
       },
     }),
   ]);
@@ -595,7 +595,7 @@ async function main() {
         whatIsNext:
           "Launch beta testing program with 50 selected users and gather feedback",
         startupId: startups[0].id,
-        submittedById: founders[0].id,
+        submittedById: students[0].id,
         createdAt: new Date("2024-01-15"),
       },
     }),
@@ -608,7 +608,7 @@ async function main() {
         whatIsNext:
           "Complete payment integration and prepare for public launch in Q2",
         startupId: startups[0].id,
-        submittedById: founders[0].id,
+        submittedById: students[0].id,
         createdAt: new Date("2024-02-15"),
       },
     }),
@@ -620,7 +620,7 @@ async function main() {
         whatIsNext:
           "Launch public beta and scale marketing efforts to reach 1000 users",
         startupId: startups[0].id,
-        submittedById: founders[0].id,
+        submittedById: students[0].id,
         createdAt: new Date("2024-03-01"),
       },
     }),
@@ -634,7 +634,7 @@ async function main() {
         whatIsNext:
           "Complete banking integration and start pilot program with 10 small businesses",
         startupId: startups[1].id,
-        submittedById: founders[1].id,
+        submittedById: students[1].id,
         createdAt: new Date("2024-02-20"),
       },
     }),
@@ -646,7 +646,7 @@ async function main() {
         whatIsNext:
           "Scale to 50 businesses and improve transaction processing speed",
         startupId: startups[1].id,
-        submittedById: founders[1].id,
+        submittedById: students[1].id,
         createdAt: new Date("2024-03-10"),
       },
     }),
@@ -660,7 +660,7 @@ async function main() {
         whatIsNext:
           "Complete compliance certification and begin clinical trials with partner hospital",
         startupId: startups[2].id,
-        submittedById: founders[2].id,
+        submittedById: students[2].id,
         createdAt: new Date("2024-03-05"),
       },
     }),
@@ -673,7 +673,7 @@ async function main() {
         whatIsNext:
           "Expand course library to 50 courses and partner with industry experts",
         startupId: startups[3].id,
-        submittedById: founders[3].id,
+        submittedById: students[3].id,
         createdAt: new Date("2023-07-01"),
       },
     }),
@@ -705,7 +705,7 @@ async function main() {
         type: "NEW_USER_REGISTERED",
         title: "New User Registration",
         message:
-          "A new founder Sarah Johnson has registered and is pending approval",
+          "A new student Sarah Johnson has registered and is pending approval",
         data: { userName: "Sarah Johnson", userEmail: "sarah@fintech.io" },
         isRead: false,
         channel: "IN_APP",
@@ -721,7 +721,7 @@ async function main() {
           "Mike Chen submitted a progress update for HealthTech Innovations",
         data: {
           startupName: "HealthTech Innovations",
-          founderName: "Mike Chen",
+          studentName: "Mike Chen",
         },
         isRead: false,
         channel: "IN_APP",
@@ -780,26 +780,26 @@ async function main() {
   console.log("Admin:");
   console.log("  Email: admin@incubationos.com");
   console.log("  Password: admin123456");
-  console.log("\nActive Founders (with startups assigned):");
+  console.log("\nActive Students (with startups assigned):");
   console.log("  1. John Doe (TechStartup Inc)");
   console.log("     Email: john@techstartup.com");
-  console.log("     Password: founder123456");
+  console.log("     Password: student123456");
   console.log("  2. Sarah Johnson (FinTech Solutions)");
   console.log("     Email: sarah@fintech.io");
-  console.log("     Password: founder123456");
+  console.log("     Password: student123456");
   console.log("  3. Mike Chen (HealthTech Innovations)");
   console.log("     Email: mike@healthtech.com");
-  console.log("     Password: founder123456");
+  console.log("     Password: student123456");
   console.log("  4. Emma Wilson (EduTech Platform)");
   console.log("     Email: emma@edtech.com");
-  console.log("     Password: founder123456");
-  console.log("\nInactive Founder (for testing pending page):");
+  console.log("     Password: student123456");
+  console.log("\nInactive Student (for testing pending page):");
   console.log("  Email: inactive@example.com");
-  console.log("  Password: founder123456");
+  console.log("  Password: student123456");
   console.log("  (Cannot login - account is inactive)");
   console.log("\n📊 Seed Summary:");
   console.log(`  - Startups: ${startups.length} (3 active, 1 inactive)`);
-  console.log(`  - Founders: ${founders.length} (4 active, 1 inactive)`);
+  console.log(`  - Students: ${students.length} (4 active, 1 inactive)`);
   console.log(`  - Budget Categories: ${budgetCategories.length}`);
   console.log(`  - Expenses: ${allExpenses.length} (mixed statuses)`);
   console.log(`  - Progress Updates: ${progressUpdates.length}`);

@@ -38,17 +38,17 @@ export const ADMIN_ROUTES = {
   PROFILE: "/admin/profile",
 } as const;
 
-export const FOUNDER_ROUTES = {
-  DASHBOARD: "/founder",
-  PENDING: "/founder/pending",
-  PAYMENT: "/founder/payment",
-  PAYMENT_REJECTED: "/founder/payment-rejected",
-  EXPENSES: "/founder/expenses",
-  EXPENSE_NEW: "/founder/expenses/new",
-  PROGRESS: "/founder/progress",
-  PROGRESS_NEW: "/founder/progress/new",
-  BOOKS: "/founder/books",
-  PROFILE: "/founder/profile",
+export const STUDENT_ROUTES = {
+  DASHBOARD: "/student",
+  PENDING: "/student/pending",
+  PAYMENT: "/student/payment",
+  PAYMENT_REJECTED: "/student/payment-rejected",
+  EXPENSES: "/student/expenses",
+  EXPENSE_NEW: "/student/expenses/new",
+  PROGRESS: "/student/progress",
+  PROGRESS_NEW: "/student/progress/new",
+  BOOKS: "/student/books",
+  PROFILE: "/student/profile",
 } as const;
 
 export const PUBLIC_ROUTES = [
@@ -67,11 +67,11 @@ export const PUBLIC_ROUTES = [
 export type PublicRoute = (typeof PUBLIC_ROUTES)[number];
 
 // Routes that require authentication but no specific role
-export const PROTECTED_ROUTES = ["/admin", "/founder"];
+export const PROTECTED_ROUTES = ["/admin", "/student"];
 
 // Role-based route patterns
 export const ADMIN_ROUTE_PATTERN = /^\/admin/;
-export const FOUNDER_ROUTE_PATTERN = /^\/founder/;
+export const STUDENT_ROUTE_PATTERN = /^\/student/;
 
 /**
  * Check if a route is public (doesn't require authentication)
@@ -90,17 +90,17 @@ export function isAdminRoute(pathname: string): boolean {
 }
 
 /**
- * Check if a route requires founder role
+ * Check if a route requires student role
  */
-export function isFounderRoute(pathname: string): boolean {
-  return FOUNDER_ROUTE_PATTERN.test(pathname);
+export function isStudentRoute(pathname: string): boolean {
+  return STUDENT_ROUTE_PATTERN.test(pathname);
 }
 
 /**
  * Get the default dashboard route for a user role
  */
 export function getDefaultDashboard(
-  role: "ADMIN" | "FOUNDER" | import("@prisma/client").UserRole
+  role: "ADMIN" | "STUDENT" | import("@prisma/client").UserRole
 ): string {
-  return role === "ADMIN" ? ADMIN_ROUTES.DASHBOARD : FOUNDER_ROUTES.DASHBOARD;
+  return role === "ADMIN" ? ADMIN_ROUTES.DASHBOARD : STUDENT_ROUTES.DASHBOARD;
 }

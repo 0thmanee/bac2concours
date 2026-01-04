@@ -12,7 +12,7 @@ import {
   getCurrentMonthStart,
 } from "@/lib/utils/startup.utils";
 import { EXPENSE_STATUS, NUMERIC_CONSTANTS } from "@/lib/constants";
-import type { FounderDashboardData } from "@/lib/types/dashboard.types";
+import type { StudentDashboardData } from "@/lib/types/dashboard.types";
 import type {
   StartupWithRelations,
   ExpenseWithRelations,
@@ -20,19 +20,19 @@ import type {
 } from "@/lib/types/prisma";
 
 /**
- * Get founder dashboard data
+ * Get student dashboard data
  */
-export async function getFounderDashboardData(
+export async function getStudentDashboardData(
   userId: string
-): Promise<FounderDashboardData | null> {
-  // Get founder's startups
-  const startups = await startupService.findByFounderId(userId);
+): Promise<StudentDashboardData | null> {
+  // Get student's startups
+  const startups = await startupService.findByStudentId(userId);
 
   if (startups.length === 0) {
     return null;
   }
 
-  // Use the first startup (founders typically have one)
+  // Use the first startup (students typically have one)
   const startup = startups[0] as StartupWithRelations;
 
   // Get expenses for this startup

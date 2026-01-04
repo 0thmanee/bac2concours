@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
       incubationStart: new Date(validated.incubationStart),
       incubationEnd: new Date(validated.incubationEnd),
       totalBudget: validated.totalBudget,
-      founderIds: validated.founderIds,
+      studentIds: validated.studentIds,
     });
 
     return startup;

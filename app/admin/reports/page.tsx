@@ -189,7 +189,7 @@ export default function ReportsPage() {
 
   // Metrics from services
   const metrics = useMemo(() => {
-    const startupMetrics = startupMetricsData?.data || { activeCount: 0, totalBudget: 0, totalCount: 0, totalFounders: 0 };
+    const startupMetrics = startupMetricsData?.data || { activeCount: 0, totalBudget: 0, totalCount: 0, totalStudents: 0 };
     const expenseMetrics = expenseMetricsData?.data || { pendingCount: 0, pendingTotal: 0, approvedCount: 0, totalCount: 0 };
     
     return {

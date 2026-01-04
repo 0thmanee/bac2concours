@@ -15,7 +15,7 @@ export interface BudgetReportCategory {
 export interface BudgetReportStartup {
   id: string;
   name: string;
-  founders: Array<{
+  students: Array<{
     id: string;
     name: string;
     email: string;

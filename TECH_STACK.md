@@ -20,7 +20,7 @@ IncubationOS is a lightweight SaaS platform that helps incubators allocate budge
 ### Authentication
 - **Auth.js (NextAuth v5)** - Authentication with JWT sessions
 - **bcryptjs** - Password hashing
-- **RBAC** - Role-based access control (ADMIN, FOUNDER)
+- **RBAC** - Role-based access control (ADMIN, STUDENT)
 
 ### Forms & Validation
 - **React Hook Form** - Performant form handling
@@ -77,7 +77,7 @@ IncubationOS/
 ## 🗄️ Database Schema
 
 ### Key Models:
-- **User** - Admin & Founder accounts with role-based access
+- **User** - Admin & Student accounts with role-based access
 - **Startup** - Incubator startups with budget allocation
 - **BudgetCategory** - Categorized budget allocation (Marketing, Development, etc.)
 - **Expense** - Expense submissions with approval workflow
@@ -88,7 +88,7 @@ IncubationOS/
 - One-to-many: Startup → BudgetCategories
 - One-to-many: Startup → Expenses
 - One-to-many: Startup → ProgressUpdates
-- Many-to-many: Startup ↔ Founders (User)
+- Many-to-many: Startup ↔ Students (User)
 
 ## 🔐 Authentication Flow
 

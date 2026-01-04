@@ -10,8 +10,8 @@ Complete role-based access control (RBAC) system with secure server-side authent
 
 - **AUTH_ROUTES**: Login, Register, Verify Email, Forgot/Reset Password
 - **ADMIN_ROUTES**: Dashboard, Startups, Budgets, Expenses, Settings, Reports
-- **FOUNDER_ROUTES**: Dashboard, Expenses, Progress Updates
-- **Helper Functions**: `isPublicRoute()`, `isAdminRoute()`, `isFounderRoute()`, `getDefaultDashboard()`
+- **STUDENT_ROUTES**: Dashboard, Expenses, Progress Updates
+- **Helper Functions**: `isPublicRoute()`, `isAdminRoute()`, `isStudentRoute()`, `getDefaultDashboard()`
 
 ### 2. Middleware (`/middleware.ts`)
 
@@ -19,7 +19,7 @@ Server-side route protection:
 
 - Allows public routes (auth pages)
 - Redirects unauthenticated users to `/login`
-- Enforces role-based access (ADMIN → `/admin/*`, FOUNDER → `/founder/*`)
+- Enforces role-based access (ADMIN → `/admin/*`, STUDENT → `/student/*`)
 - Redirects unauthorized access to `/forbidden`
 - Redirects root path (`/`) to role-specific dashboard
 
@@ -32,11 +32,11 @@ Server-side route protection:
 - Renders `AdminSidebar` + children
 - Automatic redirects for unauthorized access
 
-#### Founder Layout (`/app/founder/layout.tsx`)
+#### Student Layout (`/app/student/layout.tsx`)
 
 - Server component with `auth()` check
-- Verifies FOUNDER role
-- Renders `FounderSidebar` + children
+- Verifies STUDENT role
+- Renders `StudentSidebar` + children
 - Automatic redirects for unauthorized access
 
 ### 4. Sidebars
@@ -53,13 +53,13 @@ Navigation items:
 - Settings (`/admin/settings`)
 - Logout button
 
-#### Founder Sidebar (`/components/layouts/founder-sidebar.tsx`)
+#### Student Sidebar (`/components/layouts/student-sidebar.tsx`)
 
 Navigation items:
 
-- Dashboard (`/founder`)
-- Expenses (`/founder/expenses`)
-- Progress Updates (`/founder/progress`)
+- Dashboard (`/student`)
+- Expenses (`/student/expenses`)
+- Progress Updates (`/student/progress`)
 - Logout button
 
 ### 5. Dashboard Pages
@@ -70,7 +70,7 @@ Navigation items:
 - Stats grid: Total Startups, Budget Allocated, Total Expenses, Active Programs
 - Quick actions: Add New Startup, Review Expenses, Generate Report
 
-#### Founder Dashboard (`/app/founder/page.tsx`)
+#### Student Dashboard (`/app/student/page.tsx`)
 
 - Welcome message with user name
 - Startup info card
@@ -88,10 +88,10 @@ Navigation items:
 - `/app/admin/settings/page.tsx` - System settings
 - `/app/admin/reports/page.tsx` - Report generation
 
-#### Founder Pages
+#### Student Pages
 
-- `/app/founder/expenses/page.tsx` - Expense tracking
-- `/app/founder/progress/page.tsx` - Progress updates
+- `/app/student/expenses/page.tsx` - Expense tracking
+- `/app/student/progress/page.tsx` - Progress updates
 
 ### 7. Error Page
 
@@ -116,7 +116,7 @@ Navigation items:
 ### Role-Based Access
 
 - ADMIN can only access `/admin/*` routes
-- FOUNDER can only access `/founder/*` routes
+- STUDENT can only access `/student/*` routes
 - Cross-role access blocked with `/forbidden` redirect
 
 ## User Flow
@@ -127,14 +127,14 @@ Navigation items:
 2. Redirected to `/admin` (dashboard)
 3. Sidebar navigation available
 4. All admin routes accessible
-5. Founder routes blocked (→ `/forbidden`)
+5. Student routes blocked (→ `/forbidden`)
 
-### Founder Login
+### Student Login
 
-1. User logs in with FOUNDER role
-2. Redirected to `/founder` (dashboard)
+1. User logs in with STUDENT role
+2. Redirected to `/student` (dashboard)
 3. Sidebar navigation available
-4. All founder routes accessible
+4. All student routes accessible
 5. Admin routes blocked (→ `/forbidden`)
 
 ### Unauthenticated Access
@@ -158,15 +158,15 @@ Navigation items:
 │   ├── expenses/page.tsx
 │   ├── settings/page.tsx
 │   └── reports/page.tsx
-└── founder/
-    ├── layout.tsx (founder layout + auth)
-    ├── page.tsx (founder dashboard)
+└── student/
+    ├── layout.tsx (student layout + auth)
+    ├── page.tsx (student dashboard)
     ├── expenses/page.tsx
     └── progress/page.tsx
 
 /components/layouts
 ├── admin-sidebar.tsx
-└── founder-sidebar.tsx
+└── student-sidebar.tsx
 
 /lib
 ├── routes.ts (route definitions + helpers)
@@ -188,7 +188,7 @@ middleware.ts (route protection)
 1. **Startup Management** (Admin)
 
    - CRUD operations for startups
-   - Assign founders to startups
+   - Assign students to startups
    - Track startup status
 
 2. **Budget Allocation** (Admin)
@@ -197,14 +197,14 @@ middleware.ts (route protection)
    - Track budget usage
    - Budget approval workflow
 
-3. **Expense Tracking** (Founder + Admin)
+3. **Expense Tracking** (Student + Admin)
 
-   - Submit expenses (Founder)
+   - Submit expenses (Student)
    - Review/approve expenses (Admin)
    - Upload receipts
    - Track expense status
 
-4. **Progress Updates** (Founder)
+4. **Progress Updates** (Student)
 
    - Submit progress reports
    - Milestone tracking
@@ -224,9 +224,9 @@ middleware.ts (route protection)
 ## Testing Checklist
 
 - [ ] Admin can access all `/admin/*` routes
-- [ ] Admin cannot access `/founder/*` routes
-- [ ] Founder can access all `/founder/*` routes
-- [ ] Founder cannot access `/admin/*` routes
+- [ ] Admin cannot access `/student/*` routes
+- [ ] Student can access all `/student/*` routes
+- [ ] Student cannot access `/admin/*` routes
 - [ ] Unauthenticated users redirected to `/login`
 - [ ] Root path (`/`) redirects to correct dashboard
 - [ ] Forbidden page shows for unauthorized access

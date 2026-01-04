@@ -83,7 +83,7 @@
   - Complete startup information
   - Submit expenses
   - Track progress
-- Call-to-action button → `/founder` dashboard
+- Call-to-action button → `/student` dashboard
 - Professional branding with company colors
 
 #### Rejection Email: `sendPaymentRejectedEmail()`
@@ -98,7 +98,7 @@
   - Verify all information is visible
   - Accepted formats (JPG, PNG, WebP, PDF)
   - Max file size (5 MB)
-- Call-to-action button → `/founder/payment` page
+- Call-to-action button → `/student/payment` page
 - Support contact information
 
 **Email Design**:
@@ -120,9 +120,9 @@
 3. User receives email:
    "Excellente nouvelle ! Votre preuve de paiement a été vérifiée..."
 4. User clicks "Accéder au tableau de bord"
-5. User is redirected to /founder dashboard
+5. User is redirected to /student dashboard
 6. User can now:
-   - Access all founder features
+   - Access all student features
    - Submit expenses
    - Track progress
    - View startup info
@@ -140,7 +140,7 @@
    "Votre preuve de paiement a été examinée..."
    "Raison: [Admin's reason]"
 6. User clicks "Soumettre une nouvelle preuve"
-7. User is redirected to /founder/payment page
+7. User is redirected to /student/payment page
 8. User can upload new document
 9. Process repeats
 ```
@@ -209,10 +209,10 @@
 #### Email Tests:
 - [ ] Approval email sent to correct address
 - [ ] Approval email contains correct user name
-- [ ] Approval email links to `/founder`
+- [ ] Approval email links to `/student`
 - [ ] Rejection email sent to correct address
 - [ ] Rejection email displays admin's reason
-- [ ] Rejection email links to `/founder/payment`
+- [ ] Rejection email links to `/student/payment`
 - [ ] Emails render correctly on mobile
 - [ ] Emails render correctly in different clients
 

@@ -32,7 +32,7 @@ Everything has been configured according to your specifications. Here's what's b
 - ✅ Auth.js (NextAuth v5)
 - ✅ Email/password authentication
 - ✅ bcryptjs password hashing
-- ✅ RBAC (ADMIN, FOUNDER roles)
+- ✅ RBAC (ADMIN, STUDENT roles)
 - ✅ JWT sessions
 - ✅ Protected routes middleware
 
@@ -111,7 +111,7 @@ npm run dev
 ### 3. Login with Demo Accounts
 
 - **Admin**: `admin@incubationos.com` / `admin123456`
-- **Founder**: `founder@example.com` / `founder123456`
+- **Student**: `student@example.com` / `student123456`
 
 ---
 
@@ -161,7 +161,7 @@ npm run db:studio        # Open visual database editor
 - ✅ JWT sessions (httpOnly cookies)
 - ✅ CSRF protection (built into Auth.js)
 - ✅ Input validation (Zod schemas)
-- ✅ Role-based authorization (ADMIN/FOUNDER)
+- ✅ Role-based authorization (ADMIN/STUDENT)
 - ✅ Route protection (middleware)
 - ✅ Soft deletes on critical data
 

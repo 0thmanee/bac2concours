@@ -184,7 +184,7 @@ const languageFlags: Record<Locale, string> = {
     settings: { /* Settings */ },
     reports: { /* Reports */ },
   },
-  founder: { /* Founder-specific content */ },
+  student: { /* Student-specific content */ },
   errors: { /* Error messages */ },
   validation: { /* Form validation messages */ },
   loading: { /* Loading states */ },

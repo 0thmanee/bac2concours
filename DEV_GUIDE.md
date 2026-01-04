@@ -148,7 +148,7 @@ npm run db:studio        # Open Prisma Studio (GUI)
 // lib/auth-utils.ts provides helpers:
 await getCurrentUser(); // Get user or redirect
 await requireAdmin(); // Admin only
-await requireFounder(); // Founder only
+await requireStudent(); // Student only
 ```
 
 ---

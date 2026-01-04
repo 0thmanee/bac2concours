@@ -32,7 +32,7 @@ export const startupService = {
         }),
       },
       include: {
-        founders: {
+        students: {
           select: {
             id: true,
             name: true,
@@ -58,7 +58,7 @@ export const startupService = {
     return prisma.startup.findUnique({
       where: { id },
       include: {
-        founders: {
+        students: {
           select: {
             id: true,
             name: true,
@@ -100,7 +100,7 @@ export const startupService = {
 
   // Create new startup
   async create(data: CreateStartupServiceInput) {
-    // Use transaction to create startup and activate founders
+    // Use transaction to create startup and activate students
     return prisma.$transaction(async (tx) => {
       // Create startup
       const startup = await tx.startup.create({
@@ -111,12 +111,12 @@ export const startupService = {
           incubationStart: data.incubationStart,
           incubationEnd: data.incubationEnd,
           totalBudget: data.totalBudget,
-          founders: {
-            connect: data.founderIds.map((id) => ({ id })),
+          students: {
+            connect: data.studentIds.map((id) => ({ id })),
           },
         },
         include: {
-          founders: {
+          students: {
             select: {
               id: true,
               name: true,
@@ -126,11 +126,11 @@ export const startupService = {
         },
       });
 
-      // Activate all assigned founders (set status to ACTIVE)
+      // Activate all assigned students (set status to ACTIVE)
       await tx.user.updateMany({
         where: {
-          id: { in: data.founderIds },
-          role: USER_ROLE.FOUNDER,
+          id: { in: data.studentIds },
+          role: USER_ROLE.STUDENT,
         },
         data: {
           status: USER_STATUS.ACTIVE,
@@ -157,20 +157,20 @@ export const startupService = {
       updateData.totalBudget = data.totalBudget;
     if (data.status !== undefined) updateData.status = data.status;
 
-    if (data.founderIds) {
-      updateData.founders = {
-        set: data.founderIds.map((id) => ({ id })),
+    if (data.studentIds) {
+      updateData.students = {
+        set: data.studentIds.map((id) => ({ id })),
       };
     }
 
-    // Use transaction to update startup and activate newly assigned founders
+    // Use transaction to update startup and activate newly assigned students
     return prisma.$transaction(async (tx) => {
       // Update startup
       const startup = await tx.startup.update({
         where: { id },
         data: updateData,
         include: {
-          founders: {
+          students: {
             select: {
               id: true,
               name: true,
@@ -180,12 +180,12 @@ export const startupService = {
         },
       });
 
-      // If founders were updated, activate all assigned founders
-      if (data.founderIds) {
+      // If students were updated, activate all assigned students
+      if (data.studentIds) {
         await tx.user.updateMany({
           where: {
-            id: { in: data.founderIds },
-            role: USER_ROLE.FOUNDER,
+            id: { in: data.studentIds },
+            role: USER_ROLE.STUDENT,
           },
           data: {
             status: USER_STATUS.ACTIVE,
@@ -208,19 +208,19 @@ export const startupService = {
     });
   },
 
-  // Get startups by founder ID
-  async findByFounderId(founderId: string) {
+  // Get startups by student ID
+  async findByStudentId(studentId: string) {
     return prisma.startup.findMany({
       where: {
-        founders: {
+        students: {
           some: {
-            id: founderId,
+            id: studentId,
           },
         },
         isDeleted: false,
       },
       include: {
-        founders: {
+        students: {
           select: {
             id: true,
             name: true,
@@ -232,15 +232,15 @@ export const startupService = {
     });
   },
 
-  // Check if user is founder of startup
-  async isFounderOfStartup(
+  // Check if user is student of startup
+  async isStudentOfStartup(
     startupId: string,
     userId: string
   ): Promise<boolean> {
     const startup = await prisma.startup.findFirst({
       where: {
         id: startupId,
-        founders: {
+        students: {
           some: {
             id: userId,
           },
@@ -269,16 +269,16 @@ export const startupService = {
       prisma.startup.findMany({
         where: { isDeleted: false },
         include: {
-          founders: {
+          students: {
             select: { id: true },
           },
         },
       }),
     ]);
 
-    // Calculate unique founders count
-    const uniqueFounderIds = new Set(
-      allStartups.flatMap((s) => s.founders.map((f) => f.id))
+    // Calculate unique students count
+    const uniqueStudentIds = new Set(
+      allStartups.flatMap((s) => s.students.map((f) => f.id))
     );
 
     // Calculate total spent from approved expenses
@@ -299,7 +299,7 @@ export const startupService = {
       totalBudget: totalBudget._sum.totalBudget || 0,
       totalSpent: totalSpentResult._sum.amount || 0,
       totalCount,
-      totalFounders: uniqueFounderIds.size,
+      totalStudents: uniqueStudentIds.size,
     };
   },
 
@@ -320,7 +320,7 @@ export const startupService = {
         }),
       },
       include: {
-        founders: {
+        students: {
           select: {
             id: true,
             name: true,

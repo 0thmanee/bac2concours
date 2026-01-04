@@ -18,14 +18,14 @@
    - All admin features
 ```
 
-### FOUNDER Journey (Subsequent Users)
+### STUDENT Journey (Subsequent Users)
 
 ```
 1. Register
    ↓
 2. Email sent → Verify email
    ↓
-3. Login → Redirect to /founder/payment
+3. Login → Redirect to /student/payment
    ↓
 4. Upload payment proof
    ↓
@@ -39,7 +39,7 @@
    - User.status = ACTIVE       - Rejection reason stored
    - Email: Approval notice     - Email: Rejection + reason
    - Redirect to dashboard      - Redirect to rejection page
-   - Full founder access        - Can resubmit (back to step 4)
+   - Full student access        - Can resubmit (back to step 4)
 ```
 
 ## 🛡️ Protection Helpers Reference
@@ -59,11 +59,11 @@ const admin = await requireAdmin();
 // → Redirects to /forbidden if not ADMIN
 // → Returns User object (role: ADMIN)
 
-// Founder only
-const founder = await requireFounder();
+// Student only
+const student = await requireStudent();
 // → All checks from requireAuth()
-// → Redirects to /forbidden if not FOUNDER
-// → Returns User object (role: FOUNDER)
+// → Redirects to /forbidden if not STUDENT
+// → Returns User object (role: STUDENT)
 ```
 
 ### API Routes
@@ -83,10 +83,10 @@ const admin = await requireApiAdmin();
 // → Throws ApiAuthError(403) if not ADMIN
 // → Returns User object
 
-// Founder only
-const founder = await requireApiFounder();
+// Student only
+const student = await requireApiStudent();
 // → Throws ApiAuthError(401) if not authenticated
-// → Throws ApiAuthError(403) if not FOUNDER
+// → Throws ApiAuthError(403) if not STUDENT
 // → Returns User object
 ```
 
@@ -112,8 +112,8 @@ const founder = await requireApiFounder();
 | Payment hooks | `lib/hooks/use-payment.ts` |
 | Payment service | `lib/services/payment.service.ts` |
 | Payment validation | `lib/validations/payment.validation.ts` |
-| Upload page | `app/founder/payment/page.tsx` |
-| Rejection page | `app/founder/payment-rejected/page.tsx` |
+| Upload page | `app/student/payment/page.tsx` |
+| Rejection page | `app/student/payment-rejected/page.tsx` |
 | Admin review page | `app/admin/payments/page.tsx` |
 | Upload API | `app/api/payments/upload/route.ts` |
 | Review API | `app/api/payments/[userId]/review/route.ts` |
@@ -125,10 +125,10 @@ const founder = await requireApiFounder();
 | Route Pattern | Layout File |
 |--------------|-------------|
 | `/admin/*` | `app/admin/layout.tsx` |
-| `/founder` | `app/founder/layout.tsx` |
-| `/founder/(dashboard)/*` | `app/founder/(dashboard)/layout.tsx` |
-| `/founder/payment` | `app/founder/payment/layout.tsx` |
-| `/founder/payment-rejected` | `app/founder/payment-rejected/layout.tsx` |
+| `/student` | `app/student/layout.tsx` |
+| `/student/(dashboard)/*` | `app/student/(dashboard)/layout.tsx` |
+| `/student/payment` | `app/student/payment/layout.tsx` |
+| `/student/payment-rejected` | `app/student/payment-rejected/layout.tsx` |
 
 ## 🔐 Validation Schemas
 
@@ -180,23 +180,23 @@ enum PaymentStatus {
 - Any protected route → `/login?callbackUrl={route}`
 
 ### Wrong Role
-- Founder accessing admin → `/forbidden`
-- Admin accessing founder → `/forbidden`
+- Student accessing admin → `/forbidden`
+- Admin accessing student → `/forbidden`
 
 ### Email Not Verified
 - Try to login → `/login?error=email_not_verified`
 
-### Payment Status (Founders)
+### Payment Status (Students)
 
-| Current Status | Accessing `/founder` | Result |
+| Current Status | Accessing `/student` | Result |
 |----------------|---------------------|--------|
-| NOT_SUBMITTED | Dashboard | Redirect to `/founder/payment` |
-| PENDING | Dashboard | Redirect to `/founder/payment` |
-| REJECTED | Dashboard | Redirect to `/founder/payment-rejected` |
+| NOT_SUBMITTED | Dashboard | Redirect to `/student/payment` |
+| PENDING | Dashboard | Redirect to `/student/payment` |
+| REJECTED | Dashboard | Redirect to `/student/payment-rejected` |
 | APPROVED | Dashboard | ✅ Access granted |
-| APPROVED | Payment page | Redirect to `/founder` |
-| REJECTED | Payment page | Redirect to `/founder/payment-rejected` |
-| NOT_SUBMITTED/PENDING | Rejection page | Redirect to `/founder/payment` |
+| APPROVED | Payment page | Redirect to `/student` |
+| REJECTED | Payment page | Redirect to `/student/payment-rejected` |
+| NOT_SUBMITTED/PENDING | Rejection page | Redirect to `/student/payment` |
 
 ## 📧 Email Notifications
 
@@ -205,8 +205,8 @@ enum PaymentStatus {
 | New user registration | User | Verification email with link |
 | New user registration | All admins | New user notification |
 | Payment uploaded | All admins | New payment notification |
-| Payment approved | Founder | Approval notice + dashboard link |
-| Payment rejected | Founder | Rejection notice + reason + resubmit link |
+| Payment approved | Student | Approval notice + dashboard link |
+| Payment rejected | Student | Rejection notice + reason + resubmit link |
 
 ## 🧪 Quick Test Scenarios
 
@@ -218,34 +218,34 @@ enum PaymentStatus {
 4. Should see all admin features
 ```
 
-### Test Founder Happy Path
+### Test Student Happy Path
 ```bash
 1. Register (not first user)
 2. Verify email via link
-3. Login → should redirect to /founder/payment
+3. Login → should redirect to /student/payment
 4. Upload payment proof
 5. Should show "waiting" message
 6. Admin approves
 7. Should receive email
-8. Should access /founder dashboard
+8. Should access /student dashboard
 ```
 
 ### Test Rejection Flow
 ```bash
 1. Admin rejects payment with reason
-2. Founder receives email with reason
-3. Founder redirected to /founder/payment-rejected
-4. Founder sees rejection reason
-5. Founder clicks "Soumettre à nouveau"
-6. Founder uploads new file
+2. Student receives email with reason
+3. Student redirected to /student/payment-rejected
+4. Student sees rejection reason
+5. Student clicks "Soumettre à nouveau"
+6. Student uploads new file
 7. Process continues from step 5 of happy path
 ```
 
 ### Test Security
 ```bash
-1. Try /admin as founder → should see 403 forbidden
-2. Try /founder as admin → should see 403 forbidden
-3. Try /founder without payment approval → redirect to payment page
+1. Try /admin as student → should see 403 forbidden
+2. Try /student as admin → should see 403 forbidden
+3. Try /student without payment approval → redirect to payment page
 4. Delete user while logged in → next request should fail auth
 ```
 
@@ -254,7 +254,7 @@ enum PaymentStatus {
 ```typescript
 // Roles
 USER_ROLE.ADMIN = "ADMIN"
-USER_ROLE.FOUNDER = "FOUNDER"
+USER_ROLE.STUDENT = "STUDENT"
 
 // Status
 USER_STATUS.ACTIVE = "ACTIVE"
@@ -269,9 +269,9 @@ PAYMENT_STATUS.REJECTED = "REJECTED"
 // Routes
 AUTH_ROUTES.LOGIN = "/login"
 AUTH_ROUTES.REGISTER = "/register"
-FOUNDER_ROUTES.DASHBOARD = "/founder"
-FOUNDER_ROUTES.PAYMENT = "/founder/payment"
-FOUNDER_ROUTES.PAYMENT_REJECTED = "/founder/payment-rejected"
+STUDENT_ROUTES.DASHBOARD = "/student"
+STUDENT_ROUTES.PAYMENT = "/student/payment"
+STUDENT_ROUTES.PAYMENT_REJECTED = "/student/payment-rejected"
 ADMIN_ROUTES.DASHBOARD = "/admin"
 ADMIN_ROUTES.PAYMENTS = "/admin/payments"
 ```

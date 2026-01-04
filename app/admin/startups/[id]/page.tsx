@@ -174,11 +174,11 @@ export default function StartupDetailPage({ params }: { params: Promise<{ id: st
           subtitle={formatPercentage(NUMERIC_CONSTANTS.PERCENTAGE_MAX - utilizationPercent)}
         />
         <MetricCard
-          title="Founders"
-          value={startup.founders.length}
+          title="Students"
+          value={startup.students.length}
           icon={Users}
           color="cyan"
-          subtitle="Assigned founders"
+          subtitle="Assigned students"
         />
       </div>
 
@@ -218,29 +218,29 @@ export default function StartupDetailPage({ params }: { params: Promise<{ id: st
         </Card>
       </div>
 
-      {/* Founders */}
+      {/* Students */}
       <Card className="ops-card border border-ops">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-ops-primary">Founders</CardTitle>
-          <CardDescription className="text-ops-secondary">Assigned founders for this startup</CardDescription>
+          <CardTitle className="text-lg font-semibold text-ops-primary">Students</CardTitle>
+          <CardDescription className="text-ops-secondary">Assigned students for this startup</CardDescription>
         </CardHeader>
         <CardContent>
-          {startup.founders.length > 0 ? (
+          {startup.students.length > 0 ? (
             <div className="grid gap-3 md:grid-cols-2">
-              {startup.founders.map((founder) => (
-                <div key={founder.id} className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50">
+              {startup.students.map((student) => (
+                <div key={student.id} className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50">
                   <div className="h-10 w-10 rounded-full bg-metric-blue-light flex items-center justify-center">
                     <Users className="h-5 w-5 text-metric-blue-dark" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-ops-primary">{founder.name}</p>
-                    <p className="text-xs text-ops-tertiary">{founder.email}</p>
+                    <p className="text-sm font-medium text-ops-primary">{student.name}</p>
+                    <p className="text-xs text-ops-tertiary">{student.email}</p>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-ops-tertiary">No founders assigned</p>
+            <p className="text-sm text-ops-tertiary">No students assigned</p>
           )}
         </CardContent>
       </Card>
