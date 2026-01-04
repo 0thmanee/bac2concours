@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Eye, Star, Calendar, Clock, Play, Video as VideoIcon } from "lucide-react";
+import { formatDuration } from "@/lib/utils/filter.utils";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -76,14 +77,6 @@ export default function StudentVideoDetailPage() {
   const thumbnailUrl =
     video.thumbnailFile?.publicUrl ||
     (video.youtubeId ? getYouTubeThumbnailUrl(video.youtubeId) : null);
-
-  // Format duration for display
-  const formatDuration = (seconds?: number | null) => {
-    if (!seconds) return null;
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${String(secs).padStart(2, "0")}`;
-  };
 
   // Prepare header metrics
   const headerMetrics: { icon: typeof Calendar; value: React.ReactNode }[] = [

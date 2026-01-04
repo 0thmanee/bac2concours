@@ -53,11 +53,29 @@ import {
   getStudentsDisplay,
 } from "@/lib/utils/startup.utils";
 import { ADMIN_ROUTES, MESSAGES, NUMERIC_CONSTANTS } from "@/lib/constants";
+import { toApiParam } from "@/lib/utils/filter.utils";
+
+// UI filter type for startups
+interface StartupUIFilters {
+  search: string;
+}
+
+// Default filter values
+const DEFAULT_FILTERS: StartupUIFilters = {
+  search: "",
+};
 
 export default function StartupsPage() {
-  const [searchQuery, setSearchQuery] = useState("");
+  // Filter state using proper types
+  const [filters, setFilters] = useState<StartupUIFilters>(DEFAULT_FILTERS);
+  
+  // Filter change handler
+  const updateFilter = useCallback(<K extends keyof StartupUIFilters>(key: K, value: StartupUIFilters[K]) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  }, []);
+
   const { data: startupsData, isLoading } = useStartups({
-    search: searchQuery || undefined,
+    search: toApiParam(filters.search),
     includeSpentBudgets: true,
   });
   const { data: metricsData } = useStartupMetrics();
@@ -151,8 +169,8 @@ export default function StartupsPage() {
 
       {/* Search */}
       <AdminFilterBar
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
+        searchValue={filters.search}
+        onSearchChange={(value) => updateFilter("search", value)}
         searchPlaceholder="Search startups..."
         filters={[]}
         resultsCount={startups.length}

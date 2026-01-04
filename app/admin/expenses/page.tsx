@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { ExpenseWithRelations } from "@/lib/types/prisma";
 import { useExpenses, useApproveExpense, useRejectExpense, useExpenseMetrics } from "@/lib/hooks/use-expenses";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,7 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { formatCurrency, formatDate } from "@/lib/utils/startup.utils";
 import { EXPENSE_STATUS, MESSAGES } from "@/lib/constants";
 import { toast } from "sonner";
+import { toApiParam } from "@/lib/utils/filter.utils";
 import {
   Table,
   TableBody,
@@ -47,14 +48,32 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
+// UI filter type for expenses
+interface ExpenseUIFilters {
+  search: string;
+  status: string;
+}
+
+// Default filter values
+const DEFAULT_FILTERS: ExpenseUIFilters = {
+  search: "",
+  status: "",
+};
+
 export default function ExpensesPage() {
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  // Filter state using proper types
+  const [filters, setFilters] = useState<ExpenseUIFilters>(DEFAULT_FILTERS);
   const [selectedExpense, setSelectedExpense] = useState<ExpenseWithRelations | null>(null);
   const [comment, setComment] = useState("");
 
+  // Filter change handler
+  const updateFilter = useCallback(<K extends keyof ExpenseUIFilters>(key: K, value: ExpenseUIFilters[K]) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  }, []);
+
   // Use React Query hooks - filtering is done in backend
   const { data: expensesData, isLoading } = useExpenses({
-    status: statusFilter !== "all" ? (statusFilter as typeof EXPENSE_STATUS.PENDING | typeof EXPENSE_STATUS.APPROVED | typeof EXPENSE_STATUS.REJECTED) : undefined,
+    status: toApiParam(filters.status) as typeof EXPENSE_STATUS.PENDING | typeof EXPENSE_STATUS.APPROVED | typeof EXPENSE_STATUS.REJECTED | undefined,
   });
   
   // Get metrics from service
@@ -134,8 +153,8 @@ export default function ExpensesPage() {
   // Filters configuration
   const filtersConfig: FilterConfig[] = [
     {
-      value: statusFilter,
-      onChange: setStatusFilter,
+      value: filters.status || "all",
+      onChange: (value) => updateFilter("status", value === "all" ? "" : value),
       options: [
         { value: "all", label: "All Status" },
         { value: EXPENSE_STATUS.PENDING, label: "Pending" },
@@ -158,8 +177,8 @@ export default function ExpensesPage() {
 
       {/* Filters & Search */}
       <AdminFilterBar
-        searchValue=""
-        onSearchChange={() => {}}
+        searchValue={filters.search}
+        onSearchChange={(value) => updateFilter("search", value)}
         searchPlaceholder="Search expenses..."
         filters={filtersConfig}
         resultsCount={expenses.length}

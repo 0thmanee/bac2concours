@@ -1,18 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Play, Eye, Video as VideoIcon, Clock } from "lucide-react";
-import { useVideos } from "@/lib/hooks/use-videos";
-import type {
-  VideoFilters,
-  VideoUIFilters,
-  VideoWithRelations,
-} from "@/lib/validations/video.validation";
-import {
-  videoUIFiltersSchema,
-  getYouTubeThumbnailUrl,
-} from "@/lib/validations/video.validation";
+import { useVideos, useVideoFilterOptions } from "@/lib/hooks/use-videos";
+import { formatDuration, toApiParam } from "@/lib/utils/filter.utils";
+import type { VideoUIFilters, VideoWithRelations } from "@/lib/validations/video.validation";
+import { getYouTubeThumbnailUrl } from "@/lib/validations/video.validation";
 import { VideoStatus } from "@prisma/client";
 import { LoadingState } from "@/components/shared/loading-state";
 import { SearchInput } from "@/components/ui/search-input";
@@ -25,61 +19,51 @@ import {
   StudentMediaCard,
 } from "@/components/student";
 
-const DEFAULT_FILTERS = videoUIFiltersSchema.parse({});
-const ALL_CATEGORIES = "Toutes";
-const ALL_LEVELS = "Tous";
+// Default filter values
+const DEFAULT_FILTERS: VideoUIFilters = {
+  search: "",
+  category: "",
+  level: "",
+};
 
 export default function StudentVideosPage() {
   const router = useRouter();
-  const [uiFilters, setUIFilters] = useState<VideoUIFilters>(DEFAULT_FILTERS);
+  
+  // Filter state using proper types
+  const [filters, setFilters] = useState<VideoUIFilters>(DEFAULT_FILTERS);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 12;
 
-  // Convert UI filters to API filters
-  const apiFilters: Partial<VideoFilters> = useMemo(
-    () => ({
-      search: uiFilters.search || undefined,
-      category:
-        uiFilters.category && uiFilters.category !== ALL_CATEGORIES
-          ? uiFilters.category
-          : undefined,
-      level:
-        uiFilters.level && uiFilters.level !== ALL_LEVELS
-          ? uiFilters.level
-          : undefined,
-      status: VideoStatus.ACTIVE,
-      isPublic: true,
-      page: 1,
-      limit: 50,
-      sortBy: "createdAt" as const,
-      sortOrder: "desc" as const,
-    }),
-    [uiFilters]
-  );
+  // API calls with proper params
+  const { data: videosData, isLoading } = useVideos({
+    search: toApiParam(filters.search),
+    category: toApiParam(filters.category),
+    level: toApiParam(filters.level),
+    status: VideoStatus.ACTIVE,
+    isPublic: true,
+    page: currentPage,
+    limit: pageSize,
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  });
 
-  const { data: videosData, isLoading } = useVideos(apiFilters);
+  const { data: filtersData } = useVideoFilterOptions();
 
-  const videos = useMemo(
-    () => (videosData?.data?.videos as VideoWithRelations[]) || [],
-    [videosData]
-  );
-
-  const categories = useMemo(() => {
-    const cats = new Set<string>();
-    videos.forEach((video) => video.category && cats.add(video.category));
-    return [ALL_CATEGORIES, ...Array.from(cats)];
-  }, [videos]);
-
-  const levels = useMemo(() => {
-    const lvls = new Set<string>();
-    videos.forEach((video) => video.level && lvls.add(video.level));
-    return [ALL_LEVELS, ...Array.from(lvls)];
-  }, [videos]);
-
-  const formatDuration = (seconds?: number | null) => {
-    if (!seconds) return null;
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${String(secs).padStart(2, "0")}`;
+  // Extract data from response
+  const videos = (videosData?.data?.videos as VideoWithRelations[]) || [];
+  const paginationData = videosData?.data;
+  const filterOptions = filtersData?.data || {
+    categories: [],
+    schools: [],
+    levels: [],
+    subjects: [],
   };
+
+  // Filter change handler - resets pagination
+  const updateFilter = useCallback(<K extends keyof VideoUIFilters>(key: K, value: VideoUIFilters[K]) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setCurrentPage(1);
+  }, []);
 
   if (isLoading) {
     return <LoadingState message="Chargement des vidéos..." />;
@@ -90,7 +74,7 @@ export default function StudentVideosPage() {
       {/* Header */}
       <StudentPageHeader
         title="Bibliothèque de Vidéos"
-        count={videos.length}
+        count={paginationData?.total || videos.length}
         countLabel="vidéos"
         countLabelSingular="vidéo"
       />
@@ -99,30 +83,24 @@ export default function StudentVideosPage() {
       <FilterPanel>
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:flex-nowrap">
           <SearchInput
-            value={uiFilters.search}
-            onChange={(value) =>
-              setUIFilters((prev) => ({ ...prev, search: value }))
-            }
+            value={filters.search}
+            onChange={(value) => updateFilter("search", value)}
             placeholder="Rechercher une vidéo..."
             containerClassName="flex-1 min-w-full sm:min-w-[250px]"
           />
 
           <FilterSelect
-            value={uiFilters.category || ALL_CATEGORIES}
-            onChange={(value) =>
-              setUIFilters((prev) => ({ ...prev, category: value }))
-            }
-            options={categories}
+            value={filters.category || "all"}
+            onChange={(value) => updateFilter("category", value === "all" ? "" : value)}
+            options={["Toutes", ...filterOptions.categories]}
             placeholder="Catégorie"
             className="w-full sm:w-45"
           />
 
           <FilterSelect
-            value={uiFilters.level || ALL_LEVELS}
-            onChange={(value) =>
-              setUIFilters((prev) => ({ ...prev, level: value }))
-            }
-            options={levels}
+            value={filters.level || "all"}
+            onChange={(value) => updateFilter("level", value === "all" ? "" : value)}
+            options={["Tous", ...filterOptions.levels]}
             placeholder="Niveau"
             className="w-full sm:w-45"
           />

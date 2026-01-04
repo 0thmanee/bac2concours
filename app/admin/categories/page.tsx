@@ -71,17 +71,35 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { toApiParam } from "@/lib/utils/filter.utils";
+
+// UI filter type for categories
+interface CategoryUIFilters {
+  search: string;
+  status: string;
+}
+
+// Default filter values
+const DEFAULT_FILTERS: CategoryUIFilters = {
+  search: "",
+  status: "",
+};
 
 export default function CategoriesPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  // Filter state using proper types
+  const [filters, setFilters] = useState<CategoryUIFilters>(DEFAULT_FILTERS);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<CategoryWithCount | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
+  // Filter change handler
+  const updateFilter = useCallback(<K extends keyof CategoryUIFilters>(key: K, value: CategoryUIFilters[K]) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  }, []);
+
   const { data: categoriesData, isLoading } = useCategories({
-    search: searchQuery || undefined,
-    isActive: statusFilter !== "all" ? statusFilter === "true" : undefined,
+    search: toApiParam(filters.search),
+    isActive: filters.status ? filters.status === "true" : undefined,
   });
 
   const { data: metricsData } = useCategoryMetrics();
@@ -154,8 +172,8 @@ export default function CategoriesPage() {
   // Filters configuration
   const filtersConfig: FilterConfig[] = [
     {
-      value: statusFilter,
-      onChange: setStatusFilter,
+      value: filters.status || "all",
+      onChange: (value) => updateFilter("status", value === "all" ? "" : value),
       options: [
         { value: "all", label: "All Status" },
         { value: "true", label: "Active" },
@@ -180,8 +198,8 @@ export default function CategoriesPage() {
 
       {/* Filters */}
       <AdminFilterBar
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
+        searchValue={filters.search}
+        onSearchChange={(value) => updateFilter("search", value)}
         searchPlaceholder="Search categories by name or description..."
         filters={filtersConfig}
         resultsCount={categories.length}

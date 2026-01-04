@@ -1,73 +1,70 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Download, Eye, BookOpen, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useBooks } from "@/lib/hooks/use-books";
+import { useBooks, useBookFilters } from "@/lib/hooks/use-books";
 import { BookWithRelations } from "@/lib/types/prisma";
-import type { BookFilters, BookUIFilters } from "@/lib/validations/book.validation";
-import { bookUIFiltersSchema } from "@/lib/validations/book.validation";
+import type { BookUIFilters } from "@/lib/validations/book.validation";
 import { BookStatus } from "@prisma/client";
 import { LoadingState } from "@/components/shared/loading-state";
 import { SearchInput } from "@/components/ui/search-input";
 import { FilterSelect } from "@/components/ui/filter-select";
 import { FilterPanel } from "@/components/ui/filter-panel";
 import { toast } from "sonner";
+import { toApiParam } from "@/lib/utils/filter.utils";
 import {
   StudentPageHeader,
   StudentEmptyState,
   StudentMediaCard,
 } from "@/components/student";
 
-const DEFAULT_FILTERS = bookUIFiltersSchema.parse({});
-const ALL_CATEGORIES = "Toutes";
-const ALL_LEVELS = "Tous";
+// Default filter values
+const DEFAULT_FILTERS: BookUIFilters = {
+  search: "",
+  category: "",
+  level: "",
+};
 
 export default function StudentBooksPage() {
   const router = useRouter();
-  const [uiFilters, setUIFilters] = useState<BookUIFilters>(DEFAULT_FILTERS);
+  
+  // Filter state using proper types
+  const [filters, setFilters] = useState<BookUIFilters>(DEFAULT_FILTERS);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 12;
 
-  // Convert UI filters to API filters
-  const apiFilters: Partial<BookFilters> = useMemo(
-    () => ({
-      search: uiFilters.search || undefined,
-      category:
-        uiFilters.category && uiFilters.category !== ALL_CATEGORIES
-          ? uiFilters.category
-          : undefined,
-      level:
-        uiFilters.level && uiFilters.level !== ALL_LEVELS
-          ? uiFilters.level
-          : undefined,
-      status: BookStatus.ACTIVE,
-      isPublic: true,
-      page: 1,
-      limit: 50,
-      sortBy: "createdAt" as const,
-      sortOrder: "desc" as const,
-    }),
-    [uiFilters]
-  );
+  // API calls with proper params
+  const { data: booksData, isLoading } = useBooks({
+    search: toApiParam(filters.search),
+    category: toApiParam(filters.category),
+    level: toApiParam(filters.level),
+    status: BookStatus.ACTIVE,
+    isPublic: true,
+    page: currentPage,
+    limit: pageSize,
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  });
 
-  const { data: booksData, isLoading } = useBooks(apiFilters);
+  const { data: filtersData } = useBookFilters();
 
-  const books = useMemo(
-    () => (booksData?.data?.books as BookWithRelations[]) || [],
-    [booksData]
-  );
+  // Extract data from response
+  const books = (booksData?.data?.books as BookWithRelations[]) || [];
+  const paginationData = booksData?.data;
+  const filterOptions = filtersData?.data || {
+    categories: [],
+    schools: [],
+    levels: [],
+    subjects: [],
+  };
 
-  const categories = useMemo(() => {
-    const cats = new Set<string>();
-    books.forEach((book) => book.category && cats.add(book.category));
-    return [ALL_CATEGORIES, ...Array.from(cats)];
-  }, [books]);
-
-  const levels = useMemo(() => {
-    const lvls = new Set<string>();
-    books.forEach((book) => book.level && lvls.add(book.level));
-    return [ALL_LEVELS, ...Array.from(lvls)];
-  }, [books]);
+  // Filter change handler - resets pagination
+  const updateFilter = useCallback(<K extends keyof BookUIFilters>(key: K, value: BookUIFilters[K]) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setCurrentPage(1);
+  }, []);
 
   const handleDownload = (
     e: React.MouseEvent,
@@ -99,7 +96,7 @@ export default function StudentBooksPage() {
       {/* Header */}
       <StudentPageHeader
         title="Bibliothèque de Livres"
-        count={books.length}
+        count={paginationData?.total || books.length}
         countLabel="livres"
         countLabelSingular="livre"
       />
@@ -108,30 +105,24 @@ export default function StudentBooksPage() {
       <FilterPanel>
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:flex-nowrap">
           <SearchInput
-            value={uiFilters.search}
-            onChange={(value) =>
-              setUIFilters((prev) => ({ ...prev, search: value }))
-            }
+            value={filters.search}
+            onChange={(value) => updateFilter("search", value)}
             placeholder="Rechercher un livre..."
             containerClassName="flex-1 min-w-full sm:min-w-[250px]"
           />
 
           <FilterSelect
-            value={uiFilters.category || ALL_CATEGORIES}
-            onChange={(value) =>
-              setUIFilters((prev) => ({ ...prev, category: value }))
-            }
-            options={categories}
+            value={filters.category || "all"}
+            onChange={(value) => updateFilter("category", value === "all" ? "" : value)}
+            options={["Toutes", ...filterOptions.categories]}
             placeholder="Catégorie"
             className="w-full sm:w-45"
           />
 
           <FilterSelect
-            value={uiFilters.level || ALL_LEVELS}
-            onChange={(value) =>
-              setUIFilters((prev) => ({ ...prev, level: value }))
-            }
-            options={levels}
+            value={filters.level || "all"}
+            onChange={(value) => updateFilter("level", value === "all" ? "" : value)}
+            options={["Tous", ...filterOptions.levels]}
             placeholder="Niveau"
             className="w-full sm:w-45"
           />

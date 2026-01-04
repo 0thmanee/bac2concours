@@ -25,6 +25,7 @@ import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
 import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
 import { format } from "date-fns";
+import { formatDuration } from "@/lib/utils/filter.utils";
 import { SupabaseImage } from "@/components/ui/supabase-image";
 import { AdminDetailHeader } from "@/components/admin";
 import { getYouTubeThumbnailUrl } from "@/lib/validations/video.validation";
@@ -93,13 +94,6 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
         {labels[status] || status}
       </span>
     );
-  };
-
-  const formatDuration = (seconds?: number | null) => {
-    if (!seconds) return "Non spécifiée";
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   // Get thumbnail URL
