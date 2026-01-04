@@ -10,6 +10,7 @@ import type {
 } from "@/lib/validations/video.validation";
 import type { ApiSuccessResponse } from "@/lib/types/prisma";
 import { QUERY_KEYS, QUERY_CONFIG, API_ROUTES } from "@/lib/constants";
+import { buildSearchParams } from "@/lib/utils/filter.utils";
 
 // Re-export query keys for convenience
 export const videoKeys = {
@@ -23,43 +24,40 @@ export const videoKeys = {
   related: QUERY_KEYS.VIDEOS.RELATED,
 };
 
+// Paginated videos response type
+export interface VideosResponse {
+  videos: VideoWithRelations[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 /**
  * Get all videos with optional filtering and pagination
  */
 export function useVideos(filters?: Partial<VideoFilters>) {
-  return useQuery<
-    ApiSuccessResponse<{
-      videos: VideoWithRelations[];
-      total: number;
-      page: number;
-      limit: number;
-      totalPages: number;
-    }>
-  >({
+  return useQuery<ApiSuccessResponse<VideosResponse>>({
     queryKey: videoKeys.list(filters),
     queryFn: () => {
-      const params = new URLSearchParams();
-      if (filters) {
-        Object.entries(filters).forEach(([key, value]) => {
-          if (value !== undefined && value !== null) {
-            if (Array.isArray(value)) {
-              params.append(key, value.join(","));
-            } else {
-              params.append(key, String(value));
-            }
-          }
-        });
-      }
-
-      return apiClient.get<
-        ApiSuccessResponse<{
-          videos: VideoWithRelations[];
-          total: number;
-          page: number;
-          limit: number;
-          totalPages: number;
-        }>
-      >(`${API_ROUTES.VIDEOS}?${params.toString()}`);
+      const params = buildSearchParams(
+        {
+          search: filters?.search,
+          category: filters?.category,
+          school: filters?.school,
+          level: filters?.level,
+          subject: filters?.subject,
+          status: filters?.status,
+          isPublic: filters?.isPublic,
+          tags: filters?.tags,
+          sortBy: filters?.sortBy,
+          sortOrder: filters?.sortOrder,
+        },
+        { page: filters?.page || 1, limit: filters?.limit || 10 }
+      );
+      return apiClient.get<ApiSuccessResponse<VideosResponse>>(
+        `${API_ROUTES.VIDEOS}?${params.toString()}`
+      );
     },
     staleTime: QUERY_CONFIG.STALE_TIME.MEDIUM,
     gcTime: QUERY_CONFIG.CACHE_TIME.MEDIUM,

@@ -10,11 +10,20 @@ export const userStatusSchema = z.enum([
   USER_STATUS.INACTIVE,
 ]);
 
-// User query params schema
+// User query params schema (with pagination)
 export const userQueryParamsSchema = z.object({
   role: userRoleSchema.optional(),
   status: userStatusSchema.optional(),
   search: z.string().optional(),
+  page: z.number().int().positive().default(1),
+  limit: z.number().int().positive().max(100).default(10),
+});
+
+// UI Filter state schema (for frontend state)
+export const userUIFiltersSchema = z.object({
+  search: z.string().default(""),
+  role: z.string().default(""),
+  status: z.string().default(""),
 });
 
 // Create user schema
@@ -114,6 +123,7 @@ export const userWithCountSchema = z.object({
 export type UserRoleInput = z.infer<typeof userRoleSchema>;
 export type UserStatusInput = z.infer<typeof userStatusSchema>;
 export type UserQueryParams = z.infer<typeof userQueryParamsSchema>;
+export type UserUIFilters = z.infer<typeof userUIFiltersSchema>;
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Users, Plus, MoreHorizontal, UserPlus, Shield, User } from "lucide-react";
@@ -8,7 +8,6 @@ import {
   AdminPageHeader,
   AdminStatsGrid,
   AdminFilterBar,
-  AdminEmptyState,
   type AdminStatItem,
   type FilterConfig,
 } from "@/components/admin";
@@ -68,21 +67,37 @@ import {
   type CreateUserInput,
   type UpdateUserInput,
   type UserWithCount,
+  type UserUIFilters,
 } from "@/lib/validations/user.validation";
 import { Label } from "@/components/ui/label";
+import { TablePagination, type PaginationConfig } from "@/components/ui/data-table";
+import { toApiParam } from "@/lib/utils/filter.utils";
+
+// Default filter values
+const DEFAULT_FILTERS: UserUIFilters = {
+  search: "",
+  role: "",
+  status: "",
+};
 
 export default function UsersPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [roleFilter, setRoleFilter] = useState<string>("all");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  // Filter state using proper types
+  const [filters, setFilters] = useState<UserUIFilters>(DEFAULT_FILTERS);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+
+  // Dialog state
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<UserWithCount | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
+  // API calls with proper params
   const { data: usersData, isLoading } = useUsers({
-    search: searchQuery || undefined,
-    role: roleFilter !== "all" ? (roleFilter as typeof USER_ROLE.ADMIN | typeof USER_ROLE.STUDENT) : undefined,
-    status: statusFilter !== "all" ? (statusFilter as typeof USER_STATUS.ACTIVE | typeof USER_STATUS.INACTIVE) : undefined,
+    search: toApiParam(filters.search),
+    role: toApiParam(filters.role) as typeof USER_ROLE.ADMIN | typeof USER_ROLE.STUDENT | undefined,
+    status: toApiParam(filters.status) as typeof USER_STATUS.ACTIVE | typeof USER_STATUS.INACTIVE | undefined,
+    page: currentPage,
+    limit: pageSize,
   });
 
   const { data: metricsData } = useUserMetrics();
@@ -90,12 +105,33 @@ export default function UsersPage() {
   const updateMutation = useUpdateUser(editingUser?.id || "");
   const deleteMutation = useDeleteUser();
 
-  const users = useMemo(
-    () => (usersData?.data as UserWithCount[]) || [],
-    [usersData]
-  );
+  // Extract data from response
+  const users = usersData?.data?.users || [];
+  const paginationData = usersData?.data;
+  const metrics = metricsData?.data || {
+    totalCount: 0,
+    adminCount: 0,
+    studentCount: 0,
+    activeCount: 0,
+    verifiedCount: 0,
+  };
 
-  const metrics = metricsData?.data || { totalCount: 0, adminCount: 0, studentCount: 0, activeCount: 0, verifiedCount: 0 };
+  // Pagination config
+  const pagination: PaginationConfig | undefined = paginationData
+    ? {
+        currentPage: paginationData.page,
+        totalPages: paginationData.totalPages,
+        totalItems: paginationData.total,
+        pageSize: paginationData.limit,
+        onPageChange: setCurrentPage,
+      }
+    : undefined;
+
+  // Filter change handler - resets pagination
+  const updateFilter = useCallback(<K extends keyof UserUIFilters>(key: K, value: UserUIFilters[K]) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setCurrentPage(1);
+  }, []);
 
   const handleDelete = useCallback(
     async (userId: string, userName: string) => {
@@ -162,8 +198,8 @@ export default function UsersPage() {
   // Filters configuration
   const filtersConfig: FilterConfig[] = [
     {
-      value: roleFilter,
-      onChange: setRoleFilter,
+      value: filters.role || "all",
+      onChange: (value) => updateFilter("role", value === "all" ? "" : value),
       options: [
         { value: "all", label: "All Roles" },
         { value: USER_ROLE.ADMIN, label: "Admin" },
@@ -171,8 +207,8 @@ export default function UsersPage() {
       ],
     },
     {
-      value: statusFilter,
-      onChange: setStatusFilter,
+      value: filters.status || "all",
+      onChange: (value) => updateFilter("status", value === "all" ? "" : value),
       options: [
         { value: "all", label: "All Status" },
         { value: USER_STATUS.ACTIVE, label: "Active" },
@@ -197,11 +233,11 @@ export default function UsersPage() {
 
       {/* Filters */}
       <AdminFilterBar
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
+        searchValue={filters.search}
+        onSearchChange={(value) => updateFilter("search", value)}
         searchPlaceholder="Search users by name or email..."
         filters={filtersConfig}
-        resultsCount={users.length}
+        resultsCount={paginationData?.total || users.length}
         resultsLabel="user"
       />
 
@@ -325,6 +361,11 @@ export default function UsersPage() {
             )}
           </TableBody>
         </Table>
+        
+        {/* Pagination */}
+        {pagination && pagination.totalPages > 1 && (
+          <TablePagination {...pagination} />
+        )}
       </Card>
 
       {/* Create User Dialog */}

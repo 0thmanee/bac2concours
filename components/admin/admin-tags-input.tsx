@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Plus, X } from "lucide-react";
 import { AdminFormCard } from "./admin-form-card";
 
@@ -94,20 +93,19 @@ export function AdminTagsInput({
           <Label className="text-sm font-medium">Étiquettes Ajoutées</Label>
           <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
-              <Badge
+              <span
                 key={tag}
-                variant="secondary"
-                className="flex items-center gap-1 px-3 py-1"
+                className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-[rgb(var(--brand-700))] border border-[rgb(var(--brand-200))]"
               >
                 {tag}
                 <button
                   type="button"
                   onClick={() => removeTag(tag)}
-                  className="ml-1 hover:text-destructive"
+                  className="ml-1 hover:text-red-500 transition-colors"
                 >
                   <X className="h-3 w-3" />
                 </button>
-              </Badge>
+              </span>
             ))}
           </div>
         </div>

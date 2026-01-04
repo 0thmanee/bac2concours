@@ -17,11 +17,15 @@ export async function GET(req: NextRequest) {
       role: searchParams.get("role") || undefined,
       status: searchParams.get("status") || undefined,
       search: searchParams.get("search") || undefined,
+      page: searchParams.get("page") ? parseInt(searchParams.get("page")!) : 1,
+      limit: searchParams.get("limit")
+        ? parseInt(searchParams.get("limit")!)
+        : 10,
     });
 
-    const users = await userService.findAll(queryParams);
+    const result = await userService.findAll(queryParams);
 
-    return users;
+    return result;
   });
 }
 
@@ -38,7 +42,10 @@ export async function POST(req: NextRequest) {
       return user;
     } catch (error) {
       if (error instanceof Error && error.message.includes("already exists")) {
-        throw new ApiError(400, MESSAGES.ERROR.EMAIL_ALREADY_EXISTS || "Email already exists");
+        throw new ApiError(
+          400,
+          MESSAGES.ERROR.EMAIL_ALREADY_EXISTS || "Email already exists"
+        );
       }
       throw error;
     }

@@ -9,21 +9,28 @@ import type {
 import type { UserRole, UserStatus, PaymentStatus } from "@prisma/client";
 
 export const userService = {
-  // Get all users with filters
-  async findAll(options?: UserQueryParams) {
-    const { role, status, search } = options || {};
+  // Get all users with filters and pagination
+  async findAll(options: UserQueryParams) {
+    const { role, status, search, page = 1, limit = 10 } = options;
 
-    return prisma.user.findMany({
-      where: {
-        ...(role && { role: role as UserRole }),
-        ...(status && { status: status as UserStatus }),
-        ...(search && {
-          OR: [
-            { name: { contains: search, mode: "insensitive" } },
-            { email: { contains: search, mode: "insensitive" } },
-          ],
-        }),
-      },
+    // Build where clause
+    const where = {
+      ...(role && { role: role as UserRole }),
+      ...(status && { status: status as UserStatus }),
+      ...(search && {
+        OR: [
+          { name: { contains: search, mode: "insensitive" as const } },
+          { email: { contains: search, mode: "insensitive" as const } },
+        ],
+      }),
+    };
+
+    // Get total count
+    const total = await prisma.user.count({ where });
+
+    // Get paginated users
+    const users = await prisma.user.findMany({
+      where,
       select: {
         id: true,
         name: true,
@@ -46,7 +53,17 @@ export const userService = {
         },
       },
       orderBy: { createdAt: "desc" },
+      skip: (page - 1) * limit,
+      take: limit,
     });
+
+    return {
+      users,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   },
 
   // Get single user by ID

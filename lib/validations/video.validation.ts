@@ -141,6 +141,7 @@ export type VideoFilters = z.infer<typeof videoFiltersSchema>;
 export type VideoUIFilters = z.infer<typeof videoUIFiltersSchema>;
 export type VideoQueryParams = z.infer<typeof videoQueryParamsSchema>;
 export type VideoResponse = z.infer<typeof videoResponseSchema>;
+export type VideoStatusType = z.infer<typeof videoStatusSchema>;
 
 // Filter options for dropdowns (populated from database)
 export type VideoFilterOptions = {

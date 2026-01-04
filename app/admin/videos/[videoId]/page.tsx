@@ -23,7 +23,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
-import { Badge } from "@/components/ui/badge";
 import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
 import { format } from "date-fns";
 import { SupabaseImage } from "@/components/ui/supabase-image";
@@ -79,10 +78,10 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
   };
 
   const getStatusBadge = (status: string) => {
-    const variants: Record<string, "default" | "secondary" | "destructive"> = {
-      ACTIVE: "default",
-      INACTIVE: "secondary",
-      PROCESSING: "destructive",
+    const styles: Record<string, string> = {
+      ACTIVE: "bg-linear-to-r from-emerald-50 to-emerald-100 text-emerald-700 border-emerald-200",
+      INACTIVE: "bg-linear-to-r from-gray-50 to-gray-100 text-gray-600 border-gray-200",
+      PROCESSING: "bg-linear-to-r from-amber-50 to-amber-100 text-amber-700 border-amber-200",
     };
     const labels: Record<string, string> = {
       ACTIVE: "Actif",
@@ -90,9 +89,9 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
       PROCESSING: "En traitement",
     };
     return (
-      <Badge variant={variants[status] || "default"}>
+      <span className={`inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg border ${styles[status] || styles.ACTIVE}`}>
         {labels[status] || status}
-      </Badge>
+      </span>
     );
   };
 
@@ -117,7 +116,7 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
         badges={
           <>
             {getStatusBadge(video.status)}
-            {video.isPublic && <Badge variant="outline">Public</Badge>}
+            {video.isPublic && <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-[rgb(var(--brand-700))] border border-[rgb(var(--brand-200))]">Public</span>}
           </>
         }
         subtitle={
@@ -274,9 +273,9 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   {video.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary">
+                    <span key={tag} className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-[rgb(var(--brand-700))] border border-[rgb(var(--brand-200))]">
                       {tag}
-                    </Badge>
+                    </span>
                   ))}
                 </div>
               </CardContent>

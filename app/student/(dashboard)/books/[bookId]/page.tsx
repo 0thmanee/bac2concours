@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { SupabaseImage } from "@/components/ui/supabase-image";
 import { LoadingState } from "@/components/shared/loading-state";
@@ -183,18 +182,19 @@ export default function StudentBookDetailPage() {
 
                   <div className="flex flex-wrap gap-2">
                     {book.category && (
-                      <Badge
-                        variant="secondary"
-                        className="bg-linear-to-r from-brand-400/10 to-brand-600/10 text-brand-700 dark:text-brand-300"
-                      >
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-[rgb(var(--brand-700))] dark:from-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 dark:text-[rgb(var(--brand-400))] border border-[rgb(var(--brand-200))] dark:border-[rgb(var(--brand-800))]">
                         {book.category}
-                      </Badge>
+                      </span>
                     )}
                     {book.level && (
-                      <Badge variant="outline">{book.level}</Badge>
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-linear-to-r from-purple-50 to-purple-100 text-purple-700 dark:from-purple-900/30 dark:to-purple-800/20 dark:text-purple-400 border border-purple-200 dark:border-purple-800">
+                        {book.level}
+                      </span>
                     )}
                     {book.totalPages && (
-                      <Badge variant="outline">{book.totalPages} pages</Badge>
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-gray-100 text-gray-700 dark:bg-gray-800/50 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+                        {book.totalPages} pages
+                      </span>
                     )}
                   </div>
 
@@ -241,13 +241,12 @@ export default function StudentBookDetailPage() {
             <StudentDetailCard title="Étiquettes">
               <div className="flex flex-wrap gap-2">
                 {book.tags.map((tag) => (
-                  <Badge
+                  <span
                     key={tag}
-                    variant="secondary"
-                    className="px-3 py-1 bg-linear-to-r from-brand-400/10 to-brand-600/10 text-brand-700 dark:text-brand-300 border-brand-500/20"
+                    className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-[rgb(var(--brand-700))] dark:from-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 dark:text-[rgb(var(--brand-400))] border border-[rgb(var(--brand-200))] dark:border-[rgb(var(--brand-800))]"
                   >
                     {tag}
-                  </Badge>
+                  </span>
                 ))}
               </div>
             </StudentDetailCard>

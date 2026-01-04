@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useCallback } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Plus, Download, Eye, Star } from "lucide-react";
-import { DataTable, Column } from "@/components/ui/data-table";
+import { DataTable, Column, type PaginationConfig } from "@/components/ui/data-table";
 import {
   AdminPageHeader,
   AdminStatsGrid,
@@ -15,7 +15,7 @@ import {
 } from "@/components/admin";
 import { useBooks, useDeleteBook, useBookStats, useBookFilters } from "@/lib/hooks/use-books";
 import { BookWithRelations } from "@/lib/types/prisma";
-import type { BookStatusType } from "@/lib/validations/book.validation";
+import type { BookUIFilters, BookStatusType } from "@/lib/validations/book.validation";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -29,7 +29,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { LoadingState } from "@/components/shared/loading-state";
-import { Badge } from "@/components/ui/badge";
 import { SupabaseImage } from "@/components/ui/supabase-image";
 import {
   DropdownMenu,
@@ -40,32 +39,70 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { MESSAGES, ADMIN_ROUTES } from "@/lib/constants";
 import { format } from "date-fns";
+import { toApiParam } from "@/lib/utils/filter.utils";
+
+// Extended UI filters for books (includes additional admin filters)
+interface BookAdminFilters extends BookUIFilters {
+  school: string;
+  status: string;
+}
+
+// Default filter values
+const DEFAULT_FILTERS: BookAdminFilters = {
+  search: "",
+  category: "",
+  level: "",
+  school: "",
+  status: "",
+};
 
 export default function AdminBooksPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedSchool, setSelectedSchool] = useState("");
-  const [selectedLevel, setSelectedLevel] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState<BookStatusType | "">("");
+  // Filter state using proper types
+  const [filters, setFilters] = useState<BookAdminFilters>(DEFAULT_FILTERS);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
+  // API calls with proper params
   const { data: booksData, isLoading } = useBooks({
-    search: searchQuery || undefined,
-    category: selectedCategory || undefined,
-    school: selectedSchool || undefined,
-    level: selectedLevel || undefined,
-    status: selectedStatus || undefined,
-    page: 1,
-    limit: 50,
+    search: toApiParam(filters.search),
+    category: toApiParam(filters.category),
+    school: toApiParam(filters.school),
+    level: toApiParam(filters.level),
+    status: toApiParam(filters.status) as BookStatusType | undefined,
+    page: currentPage,
+    limit: pageSize,
   });
 
   const { data: statsData } = useBookStats();
   const { data: filtersData } = useBookFilters();
   const deleteMutation = useDeleteBook();
 
-  const books = useMemo(
-    () => (booksData?.data?.books as BookWithRelations[]) || [],
-    [booksData]
-  );
+  // Extract data from response
+  const books = booksData?.data?.books || [];
+  const paginationData = booksData?.data;
+  const filterOptions = filtersData?.data || {
+    categories: [],
+    schools: [],
+    levels: [],
+    subjects: [],
+  };
+
+  // Pagination config
+  const pagination: PaginationConfig | undefined = paginationData
+    ? {
+        currentPage: paginationData.page,
+        totalPages: paginationData.totalPages,
+        totalItems: paginationData.total,
+        pageSize: paginationData.limit,
+        onPageChange: setCurrentPage,
+      }
+    : undefined;
+
+  // Filter change handler - resets pagination
+  const updateFilter = useCallback(<K extends keyof BookAdminFilters>(key: K, value: BookAdminFilters[K]) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setCurrentPage(1);
+  }, []);
 
   const stats = statsData?.data || {
     totalBooks: 0,
@@ -75,13 +112,6 @@ export default function AdminBooksPage() {
     averageRating: 0,
     booksByCategory: {},
     booksByLevel: {},
-  };
-
-  const filters = filtersData?.data || {
-    categories: [],
-    schools: [],
-    levels: [],
-    subjects: [],
   };
 
   const handleDelete = useCallback(
@@ -99,15 +129,20 @@ export default function AdminBooksPage() {
   );
 
   const getStatusBadge = (status: string) => {
-    const variants: Record<string, "default" | "secondary" | "destructive"> = {
-      ACTIVE: "default",
-      INACTIVE: "secondary",
-      PROCESSING: "destructive",
+    const styles: Record<string, string> = {
+      ACTIVE: "bg-linear-to-r from-emerald-50 to-emerald-100 text-emerald-700 border-emerald-200",
+      INACTIVE: "bg-linear-to-r from-gray-50 to-gray-100 text-gray-600 border-gray-200",
+      PROCESSING: "bg-linear-to-r from-amber-50 to-amber-100 text-amber-700 border-amber-200",
+    };
+    const labels: Record<string, string> = {
+      ACTIVE: "Actif",
+      INACTIVE: "Inactif",
+      PROCESSING: "En traitement",
     };
     return (
-      <Badge variant={variants[status] || "default"}>
-        {status}
-      </Badge>
+      <span className={`inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-md border ${styles[status] || styles.ACTIVE}`}>
+        {labels[status] || status}
+      </span>
     );
   };
 
@@ -146,32 +181,32 @@ export default function AdminBooksPage() {
   // Filters configuration
   const filtersConfig: FilterConfig[] = [
     {
-      value: selectedCategory || "all",
-      onChange: setSelectedCategory,
+      value: filters.category || "all",
+      onChange: (value) => updateFilter("category", value === "all" ? "" : value),
       options: [
         { value: "all", label: "Toutes catégories" },
-        ...filters.categories.map((cat) => ({ value: cat, label: cat })),
+        ...filterOptions.categories.map((cat) => ({ value: cat, label: cat })),
       ],
     },
     {
-      value: selectedSchool || "all",
-      onChange: setSelectedSchool,
+      value: filters.school || "all",
+      onChange: (value) => updateFilter("school", value === "all" ? "" : value),
       options: [
         { value: "all", label: "Toutes écoles" },
-        ...filters.schools.map((school) => ({ value: school, label: school })),
+        ...filterOptions.schools.map((school) => ({ value: school, label: school })),
       ],
     },
     {
-      value: selectedLevel || "all",
-      onChange: setSelectedLevel,
+      value: filters.level || "all",
+      onChange: (value) => updateFilter("level", value === "all" ? "" : value),
       options: [
         { value: "all", label: "Tous niveaux" },
-        ...filters.levels.map((level) => ({ value: level, label: level })),
+        ...filterOptions.levels.map((level) => ({ value: level, label: level })),
       ],
     },
     {
-      value: selectedStatus || "all",
-      onChange: (val) => setSelectedStatus(val as BookStatusType | ""),
+      value: filters.status || "all",
+      onChange: (value) => updateFilter("status", value === "all" ? "" : value),
       options: [
         { value: "all", label: "Tous statuts" },
         { value: "ACTIVE", label: "Actif" },
@@ -258,7 +293,7 @@ export default function AdminBooksPage() {
         <div className="flex items-center gap-1 flex-wrap">
           {getStatusBadge(book.status)}
           {book.isPublic && (
-            <Badge variant="outline" className="text-xs">Publique</Badge>
+            <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-md bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-[rgb(var(--brand-700))] border border-[rgb(var(--brand-200))]">Publique</span>
           )}
         </div>
       ),
@@ -282,18 +317,18 @@ export default function AdminBooksPage() {
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuItem asChild>
+          <DropdownMenuContent align="end" className="ops-card">
+            <DropdownMenuItem asChild className="text-sm">
               <Link href={ADMIN_ROUTES.BOOK(book.id)} className="cursor-pointer">
                 Voir détails
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
+            <DropdownMenuItem asChild className="text-sm">
               <Link href={ADMIN_ROUTES.BOOK_EDIT(book.id)} className="cursor-pointer">
                 Modifier
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
+            <DropdownMenuItem asChild className="text-sm">
               <a href={book.fileUrl || undefined} download target="_blank" rel="noopener noreferrer" className="cursor-pointer">
                 Télécharger
               </a>
@@ -301,13 +336,13 @@ export default function AdminBooksPage() {
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <DropdownMenuItem
-                  className="text-destructive cursor-pointer"
+                  className="text-sm text-destructive cursor-pointer"
                   onSelect={(e) => e.preventDefault()}
                 >
                   Supprimer
                 </DropdownMenuItem>
               </AlertDialogTrigger>
-              <AlertDialogContent>
+              <AlertDialogContent className="ops-card">
                 <AlertDialogHeader>
                   <AlertDialogTitle>Supprimer le livre</AlertDialogTitle>
                   <AlertDialogDescription>
@@ -352,11 +387,11 @@ export default function AdminBooksPage() {
 
       {/* Filters */}
       <AdminFilterBar
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
+        searchValue={filters.search}
+        onSearchChange={(value) => updateFilter("search", value)}
         searchPlaceholder="Rechercher des livres..."
         filters={filtersConfig}
-        resultsCount={books.length}
+        resultsCount={paginationData?.total || books.length}
         resultsLabel="résultat"
       />
 
@@ -366,6 +401,7 @@ export default function AdminBooksPage() {
         columns={columns}
         keyExtractor={(book) => book.id}
         isLoading={isLoading}
+        pagination={pagination}
         emptyState={
           <AdminEmptyState
             icon={BookOpen}

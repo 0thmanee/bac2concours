@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useCallback } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Video, Plus, Eye, Star } from "lucide-react";
-import { DataTable, Column } from "@/components/ui/data-table";
+import { DataTable, Column, type PaginationConfig } from "@/components/ui/data-table";
 import {
   AdminPageHeader,
   AdminStatsGrid,
@@ -26,7 +26,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { LoadingState } from "@/components/shared/loading-state";
-import { Badge } from "@/components/ui/badge";
 import { SupabaseImage } from "@/components/ui/supabase-image";
 import {
   DropdownMenu,
@@ -43,35 +42,71 @@ import {
   useVideoFilterOptions,
   useDeleteVideo,
 } from "@/lib/hooks/use-videos";
-import type { VideoStatus } from "@prisma/client";
-import type { VideoWithRelations } from "@/lib/validations/video.validation";
+import type { VideoUIFilters, VideoStatusType, VideoWithRelations } from "@/lib/validations/video.validation";
+import { toApiParam, formatDuration } from "@/lib/utils/filter.utils";
+
+// Extended UI filters for videos (includes additional admin filters)
+interface VideoAdminFilters extends VideoUIFilters {
+  school: string;
+  status: string;
+}
+
+// Default filter values
+const DEFAULT_FILTERS: VideoAdminFilters = {
+  search: "",
+  category: "",
+  level: "",
+  school: "",
+  status: "",
+};
 
 export default function AdminVideosPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedSchool, setSelectedSchool] = useState("");
-  const [selectedLevel, setSelectedLevel] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState<VideoStatus | "">("");
+  // Filter state using proper types
+  const [filters, setFilters] = useState<VideoAdminFilters>(DEFAULT_FILTERS);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
-  // Use centralized hooks
+  // API calls with proper params
   const { data: videosData, isLoading } = useVideos({
-    search: searchQuery || undefined,
-    category: selectedCategory || undefined,
-    school: selectedSchool || undefined,
-    level: selectedLevel || undefined,
-    status: selectedStatus || undefined,
-    page: 1,
-    limit: 50,
+    search: toApiParam(filters.search),
+    category: toApiParam(filters.category),
+    school: toApiParam(filters.school),
+    level: toApiParam(filters.level),
+    status: toApiParam(filters.status) as VideoStatusType | undefined,
+    page: currentPage,
+    limit: pageSize,
   });
 
   const { data: statsData } = useVideoStats();
   const { data: filtersData } = useVideoFilterOptions();
   const deleteMutation = useDeleteVideo();
 
-  const videos = useMemo(
-    () => (videosData?.data?.videos as VideoWithRelations[]) || [],
-    [videosData]
-  );
+  // Extract data from response
+  const videos = (videosData?.data?.videos as VideoWithRelations[]) || [];
+  const paginationData = videosData?.data;
+  const filterOptions = filtersData?.data || {
+    categories: [],
+    schools: [],
+    levels: [],
+    subjects: [],
+  };
+
+  // Pagination config
+  const pagination: PaginationConfig | undefined = paginationData
+    ? {
+        currentPage: paginationData.page,
+        totalPages: paginationData.totalPages,
+        totalItems: paginationData.total,
+        pageSize: paginationData.limit,
+        onPageChange: setCurrentPage,
+      }
+    : undefined;
+
+  // Filter change handler - resets pagination
+  const updateFilter = useCallback(<K extends keyof VideoAdminFilters>(key: K, value: VideoAdminFilters[K]) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setCurrentPage(1);
+  }, []);
 
   const stats = statsData?.data || {
     total: 0,
@@ -79,13 +114,6 @@ export default function AdminVideosPage() {
     inactive: 0,
     totalViews: 0,
     averageRating: 0,
-  };
-
-  const filters = filtersData?.data || {
-    categories: [],
-    schools: [],
-    levels: [],
-    subjects: [],
   };
 
   const handleDelete = useCallback(
@@ -103,19 +131,21 @@ export default function AdminVideosPage() {
   );
 
   const getStatusBadge = (status: string) => {
-    const variants: Record<string, "default" | "secondary" | "destructive"> = {
-      ACTIVE: "default",
-      INACTIVE: "secondary",
-      PROCESSING: "destructive",
+    const styles: Record<string, string> = {
+      ACTIVE: "bg-linear-to-r from-emerald-50 to-emerald-100 text-emerald-700 border-emerald-200",
+      INACTIVE: "bg-linear-to-r from-gray-50 to-gray-100 text-gray-600 border-gray-200",
+      PROCESSING: "bg-linear-to-r from-amber-50 to-amber-100 text-amber-700 border-amber-200",
     };
-    return <Badge variant={variants[status] || "default"}>{status}</Badge>;
-  };
-
-  const formatDuration = (seconds: number | null) => {
-    if (!seconds) return "-";
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${secs.toString().padStart(2, "0")}`;
+    const labels: Record<string, string> = {
+      ACTIVE: "Actif",
+      INACTIVE: "Inactif",
+      PROCESSING: "En traitement",
+    };
+    return (
+      <span className={`inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-md border ${styles[status] || styles.ACTIVE}`}>
+        {labels[status] || status}
+      </span>
+    );
   };
 
   // Stats configuration
@@ -153,32 +183,32 @@ export default function AdminVideosPage() {
   // Filters configuration
   const filtersConfig: FilterConfig[] = [
     {
-      value: selectedCategory || "all",
-      onChange: setSelectedCategory,
+      value: filters.category || "all",
+      onChange: (value) => updateFilter("category", value === "all" ? "" : value),
       options: [
         { value: "all", label: "Toutes catégories" },
-        ...filters.categories.map((cat) => ({ value: cat, label: cat })),
+        ...filterOptions.categories.map((cat) => ({ value: cat, label: cat })),
       ],
     },
     {
-      value: selectedSchool || "all",
-      onChange: setSelectedSchool,
+      value: filters.school || "all",
+      onChange: (value) => updateFilter("school", value === "all" ? "" : value),
       options: [
         { value: "all", label: "Toutes écoles" },
-        ...filters.schools.map((school) => ({ value: school, label: school })),
+        ...filterOptions.schools.map((school) => ({ value: school, label: school })),
       ],
     },
     {
-      value: selectedLevel || "all",
-      onChange: setSelectedLevel,
+      value: filters.level || "all",
+      onChange: (value) => updateFilter("level", value === "all" ? "" : value),
       options: [
         { value: "all", label: "Tous niveaux" },
-        ...filters.levels.map((level) => ({ value: level, label: level })),
+        ...filterOptions.levels.map((level) => ({ value: level, label: level })),
       ],
     },
     {
-      value: selectedStatus || "all",
-      onChange: (val) => setSelectedStatus(val as VideoStatus | ""),
+      value: filters.status || "all",
+      onChange: (value) => updateFilter("status", value === "all" ? "" : value),
       options: [
         { value: "all", label: "Tous statuts" },
         { value: "ACTIVE", label: "Actif" },
@@ -270,9 +300,7 @@ export default function AdminVideosPage() {
         <div className="flex items-center gap-1 flex-wrap">
           {getStatusBadge(video.status)}
           {video.isPublic && (
-            <Badge variant="outline" className="text-xs">
-              Publique
-            </Badge>
+            <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-md bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-[rgb(var(--brand-700))] border border-[rgb(var(--brand-200))]">Publique</span>
           )}
         </div>
       ),
@@ -296,8 +324,8 @@ export default function AdminVideosPage() {
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuItem asChild>
+          <DropdownMenuContent align="end" className="ops-card">
+            <DropdownMenuItem asChild className="text-sm">
               <Link
                 href={ADMIN_ROUTES.VIDEO_EDIT(video.id)}
                 className="cursor-pointer"
@@ -305,7 +333,7 @@ export default function AdminVideosPage() {
                 Modifier
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
+            <DropdownMenuItem asChild className="text-sm">
               <a
                 href={video.url}
                 target="_blank"
@@ -318,13 +346,13 @@ export default function AdminVideosPage() {
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <DropdownMenuItem
-                  className="text-destructive cursor-pointer"
+                  className="text-sm text-destructive cursor-pointer"
                   onSelect={(e) => e.preventDefault()}
                 >
                   Supprimer
                 </DropdownMenuItem>
               </AlertDialogTrigger>
-              <AlertDialogContent>
+              <AlertDialogContent className="ops-card">
                 <AlertDialogHeader>
                   <AlertDialogTitle>Supprimer la vidéo</AlertDialogTitle>
                   <AlertDialogDescription>
@@ -369,11 +397,11 @@ export default function AdminVideosPage() {
 
       {/* Filters */}
       <AdminFilterBar
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
+        searchValue={filters.search}
+        onSearchChange={(value) => updateFilter("search", value)}
         searchPlaceholder="Rechercher des vidéos..."
         filters={filtersConfig}
-        resultsCount={videos.length}
+        resultsCount={paginationData?.total || videos.length}
         resultsLabel="résultat"
       />
 
@@ -383,6 +411,7 @@ export default function AdminVideosPage() {
         columns={columns}
         keyExtractor={(video) => video.id}
         isLoading={isLoading}
+        pagination={pagination}
         emptyState={
           <AdminEmptyState
             icon={Video}

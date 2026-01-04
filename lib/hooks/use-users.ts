@@ -4,9 +4,12 @@ import type {
   CreateUserInput,
   UpdateUserInput,
   UserQueryParams,
+  UserWithCount,
+  UserMetrics,
 } from "@/lib/validations/user.validation";
 import type { ApiSuccessResponse } from "@/lib/types/prisma";
 import { QUERY_KEYS, QUERY_CONFIG, API_ROUTES } from "@/lib/constants";
+import { buildSearchParams } from "@/lib/utils/filter.utils";
 
 // Re-export query keys for convenience
 export const userKeys = {
@@ -18,18 +21,30 @@ export const userKeys = {
   metrics: QUERY_KEYS.USERS.METRICS,
 };
 
+// Paginated users response type
+export interface UsersResponse {
+  users: UserWithCount[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 // Hooks
-export function useUsers(filters?: UserQueryParams) {
-  return useQuery<ApiSuccessResponse<unknown[]>>({
+export function useUsers(filters?: Partial<UserQueryParams>) {
+  return useQuery<ApiSuccessResponse<UsersResponse>>({
     queryKey: userKeys.list(filters),
     queryFn: () => {
-      const params = new URLSearchParams();
-      if (filters?.role) params.append("role", filters.role);
-      if (filters?.status) params.append("status", filters.status);
-      if (filters?.search) params.append("search", filters.search);
-      const queryString = params.toString();
-      return apiClient.get<ApiSuccessResponse<unknown[]>>(
-        `${API_ROUTES.USERS}${queryString ? `?${queryString}` : ""}`
+      const params = buildSearchParams(
+        {
+          role: filters?.role,
+          status: filters?.status,
+          search: filters?.search,
+        },
+        { page: filters?.page || 1, limit: filters?.limit || 10 }
+      );
+      return apiClient.get<ApiSuccessResponse<UsersResponse>>(
+        `${API_ROUTES.USERS}?${params.toString()}`
       );
     },
     staleTime: QUERY_CONFIG.STALE_TIME.MEDIUM,
@@ -86,26 +101,10 @@ export function useDeleteUser() {
 }
 
 export function useUserMetrics() {
-  return useQuery<
-    ApiSuccessResponse<{
-      totalCount: number;
-      adminCount: number;
-      studentCount: number;
-      activeCount: number;
-      verifiedCount: number;
-    }>
-  >({
+  return useQuery<ApiSuccessResponse<UserMetrics>>({
     queryKey: userKeys.metrics(),
     queryFn: () =>
-      apiClient.get<
-        ApiSuccessResponse<{
-          totalCount: number;
-          adminCount: number;
-          studentCount: number;
-          activeCount: number;
-          verifiedCount: number;
-        }>
-      >(API_ROUTES.USERS_METRICS),
+      apiClient.get<ApiSuccessResponse<UserMetrics>>(API_ROUTES.USERS_METRICS),
     staleTime: QUERY_CONFIG.STALE_TIME.SHORT,
     gcTime: QUERY_CONFIG.CACHE_TIME.SHORT,
   });

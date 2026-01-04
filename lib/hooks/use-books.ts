@@ -9,6 +9,7 @@ import type {
 } from "@/lib/validations/book.validation";
 import type { BookWithRelations, ApiSuccessResponse } from "@/lib/types/prisma";
 import { QUERY_KEYS, QUERY_CONFIG, API_ROUTES } from "@/lib/constants";
+import { buildSearchParams } from "@/lib/utils/filter.utils";
 
 // Re-export query keys for convenience
 export const bookKeys = {
@@ -21,46 +22,40 @@ export const bookKeys = {
   filters: QUERY_KEYS.BOOKS.FILTERS,
 };
 
+// Paginated books response type
+export interface BooksResponse {
+  books: BookWithRelations[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 /**
  * Get all books with optional filtering and pagination
  */
 export function useBooks(filters?: Partial<BookFilters>) {
-  return useQuery<
-    ApiSuccessResponse<{
-      books: BookWithRelations[];
-      total: number;
-      page: number;
-      limit: number;
-      totalPages: number;
-    }>
-  >({
+  return useQuery<ApiSuccessResponse<BooksResponse>>({
     queryKey: bookKeys.list(filters),
     queryFn: () => {
-      const params = new URLSearchParams();
-      if (filters) {
-        Object.entries(filters).forEach(([key, value]) => {
-          if (value !== undefined && value !== null) {
-            if (Array.isArray(value)) {
-              params.append(key, value.join(","));
-            } else {
-              params.append(key, String(value));
-            }
-          }
-        });
-      }
-      const queryString = params.toString();
-      const url = queryString
-        ? `${API_ROUTES.BOOKS}?${queryString}`
-        : API_ROUTES.BOOKS;
-      return apiClient.get<
-        ApiSuccessResponse<{
-          books: BookWithRelations[];
-          total: number;
-          page: number;
-          limit: number;
-          totalPages: number;
-        }>
-      >(url);
+      const params = buildSearchParams(
+        {
+          search: filters?.search,
+          category: filters?.category,
+          school: filters?.school,
+          level: filters?.level,
+          subject: filters?.subject,
+          status: filters?.status,
+          isPublic: filters?.isPublic,
+          tags: filters?.tags,
+          sortBy: filters?.sortBy,
+          sortOrder: filters?.sortOrder,
+        },
+        { page: filters?.page || 1, limit: filters?.limit || 10 }
+      );
+      return apiClient.get<ApiSuccessResponse<BooksResponse>>(
+        `${API_ROUTES.BOOKS}?${params.toString()}`
+      );
     },
     staleTime: QUERY_CONFIG.STALE_TIME.MEDIUM,
     gcTime: QUERY_CONFIG.CACHE_TIME.MEDIUM,

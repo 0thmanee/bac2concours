@@ -2,7 +2,6 @@
 
 import { ReactNode } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 interface DetailInfoItem {
   label: string;
@@ -29,16 +28,15 @@ export function StudentDetailInfo({ title, items }: StudentDetailInfoProps) {
           <div key={index} className="space-y-1">
             <p className="text-xs font-medium text-ops-tertiary">{item.label}</p>
             {item.isBadge ? (
-              <Badge
-                variant={item.badgeVariant === "outline" ? "outline" : "secondary"}
+              <span
                 className={
                   item.badgeVariant === "outline"
-                    ? "border-ops-border text-ops-secondary"
-                    : "bg-linear-to-r from-brand-400/10 to-brand-600/10 text-brand-700 dark:text-brand-300 border-brand-500/20"
+                    ? "inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-linear-to-r from-purple-50 to-purple-100 text-purple-700 dark:from-purple-900/30 dark:to-purple-800/20 dark:text-purple-400 border border-purple-200 dark:border-purple-800"
+                    : "inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-[rgb(var(--brand-700))] dark:from-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 dark:text-[rgb(var(--brand-400))] border border-[rgb(var(--brand-200))] dark:border-[rgb(var(--brand-800))]"
                 }
               >
                 {item.value}
-              </Badge>
+              </span>
             ) : (
               <p className="text-sm text-ops-primary">{item.value}</p>
             )}
