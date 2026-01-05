@@ -183,8 +183,6 @@ export default function NewQuestionPage() {
     }
   };
 
-  const categories = dropdownData?.data?.categories || [];
-  const levels = dropdownData?.data?.levels || [];
   const matieres = dropdownData?.data?.matieres || [];
   const schools = schoolsData?.data?.schools?.map(s => s.name) || [];
 
