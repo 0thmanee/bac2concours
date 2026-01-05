@@ -16,6 +16,7 @@ import {
   CreditCard,
   BookOpen,
   Video,
+  HelpCircle,
 } from "lucide-react";
 import {
   Sidebar,
@@ -63,6 +64,11 @@ const navigation = [
     name: "Vidéos",
     href: ADMIN_ROUTES.VIDEOS,
     icon: Video,
+  },
+  {
+    name: "QCM",
+    href: ADMIN_ROUTES.QCM,
+    icon: HelpCircle,
   },
 ];
 

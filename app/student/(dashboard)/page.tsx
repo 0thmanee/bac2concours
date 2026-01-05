@@ -3,6 +3,7 @@ import {
   Video,
   GraduationCap,
   Clock,
+  HelpCircle,
 } from "lucide-react";
 import { MetricCard } from "@/components/ui/metric-card";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +12,7 @@ import Link from "next/link";
 import { STUDENT_ROUTES } from "@/lib/routes";
 import { bookService } from "@/lib/services/book.service";
 import { videoService } from "@/lib/services/video.service";
+import { qcmService } from "@/lib/services/qcm.service";
 
 export default async function StudentDashboard() {
   const session = await auth();
@@ -20,9 +22,10 @@ export default async function StudentDashboard() {
   }
   
   // Get available content stats
-  const [bookStats, videoStats] = await Promise.all([
+  const [bookStats, videoStats, qcmStats] = await Promise.all([
     bookService.getStats(),
     videoService.getStats(),
+    qcmService.getQuestionStats(),
   ]);
 
   // Get recent books
@@ -74,18 +77,18 @@ export default async function StudentDashboard() {
           subtitle={`${videoStats.total} total`}
         />
         <MetricCard
-          title="Votre Progression"
-          value="0%"
-          icon={GraduationCap}
-          color="mint"
-          subtitle="Continuer à apprendre"
+          title="Questions QCM"
+          value={qcmStats.activeQuestions}
+          icon={HelpCircle}
+          color="purple"
+          subtitle="Testez vos connaissances"
         />
         <MetricCard
-          title="Temps d'étude"
-          value="0h"
-          icon={Clock}
-          color="rose"
-          subtitle="Cette semaine"
+          title="Taux de Réussite"
+          value={`${qcmStats.averageSuccessRate}%`}
+          icon={GraduationCap}
+          color="mint"
+          subtitle="Performance globale"
         />
       </div>
 
@@ -205,18 +208,18 @@ export default async function StudentDashboard() {
               <span className="text-sm font-medium">Toutes les Vidéos</span>
             </Link>
             <Link 
-              href={STUDENT_ROUTES.PROFILE}
+              href={STUDENT_ROUTES.QUIZ}
               className="flex flex-col items-center justify-center rounded-lg border border-ops bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover"
             >
-              <GraduationCap className="h-8 w-8 text-metric-mint mb-3" />
-              <span className="text-sm font-medium">Mon Profil</span>
+              <HelpCircle className="h-8 w-8 text-metric-purple mb-3" />
+              <span className="text-sm font-medium">Quiz QCM</span>
             </Link>
             <Link 
               href={STUDENT_ROUTES.PROFILE}
               className="flex flex-col items-center justify-center rounded-lg border border-ops bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover"
             >
-              <Clock className="h-8 w-8 text-metric-purple mb-3" />
-              <span className="text-sm font-medium">Historique</span>
+              <GraduationCap className="h-8 w-8 text-metric-mint mb-3" />
+              <span className="text-sm font-medium">Mon Profil</span>
             </Link>
           </div>
         </CardContent>

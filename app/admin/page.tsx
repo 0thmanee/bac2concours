@@ -6,6 +6,7 @@ import {
   UserCheck,
   Clock,
   CheckCircle2,
+  HelpCircle,
 } from "lucide-react";
 import { MetricCard } from "@/components/ui/metric-card";
 import { StatCard } from "@/components/ui/stat-card";
@@ -13,6 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { userService } from "@/lib/services/user.service";
 import { bookService } from "@/lib/services/book.service";
 import { videoService } from "@/lib/services/video.service";
+import { qcmService } from "@/lib/services/qcm.service";
 import prisma from "@/lib/prisma";
 import { PAYMENT_STATUS } from "@/lib/constants";
 import Link from "next/link";
@@ -20,11 +22,12 @@ import { ADMIN_ROUTES } from "@/lib/routes";
 
 export default async function AdminDashboard() {
   // Fetch metrics
-  const [userMetrics, bookStats, videoStats, paymentMetrics] = await Promise.all([
+  const [userMetrics, bookStats, videoStats, paymentMetrics, qcmStats] = await Promise.all([
     userService.getMetrics(),
     bookService.getStats(),
     videoService.getStats(),
     getPaymentMetrics(),
+    qcmService.getQuestionStats(),
   ]);
   
   // Get recent users
@@ -56,7 +59,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Main Metric Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         <MetricCard
           title="Total Étudiants"
           value={userMetrics.studentCount}
@@ -77,6 +80,13 @@ export default async function AdminDashboard() {
           icon={Video}
           color="mint"
           subtitle={`${videoStats.active} publiées`}
+        />
+        <MetricCard
+          title="Questions QCM"
+          value={qcmStats.totalQuestions}
+          icon={HelpCircle}
+          color="purple"
+          subtitle={`${qcmStats.activeQuestions} actives`}
         />
         <MetricCard
           title="Paiements en attente"
@@ -141,10 +151,17 @@ export default async function AdminDashboard() {
                 <span className="text-sm font-medium">Gérer Vidéos</span>
               </Link>
               <Link 
-                href="/admin/payments"
+                href={ADMIN_ROUTES.QCM}
                 className="flex flex-col items-center justify-center rounded-lg border border-ops bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover"
               >
-                <CreditCard className="h-6 w-6 text-metric-purple mb-2" />
+                <HelpCircle className="h-6 w-6 text-metric-purple mb-2" />
+                <span className="text-sm font-medium">Gérer QCM</span>
+              </Link>
+              <Link 
+                href="/admin/payments"
+                className="flex flex-col items-center justify-center rounded-lg border border-ops bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover col-span-2"
+              >
+                <CreditCard className="h-6 w-6 text-metric-rose mb-2" />
                 <span className="text-sm font-medium">Paiements</span>
               </Link>
             </div>

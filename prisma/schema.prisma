@@ -105,6 +105,8 @@ model User {
   schools                 School[] // Schools uploaded by this user (admin)
   uploadedFiles           File[] // Files uploaded by this user
   reviews                 Review[] // Reviews written by this user
+  questions               Question[] // Questions uploaded by this user (admin)
+  quizAttempts            QuizAttempt[] // Quiz attempts by this user (student)
 
   // Audit fields
   createdAt DateTime @default(now())
@@ -333,11 +335,12 @@ model File {
   uploadedById String
   uploadedBy   User   @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
 
-  // Reverse relations for books, videos, and schools
-  bookCovers      Book[]   @relation("BookCoverFile")
-  videoThumbnails Video[]  @relation("VideoThumbnailFile")
-  schoolImages    School[] @relation("SchoolImageFile")
-  schoolLogos     School[] @relation("SchoolLogoFile")
+  // Reverse relations for books, videos, schools, and questions
+  bookCovers      Book[]     @relation("BookCoverFile")
+  videoThumbnails Video[]    @relation("VideoThumbnailFile")
+  schoolImages    School[]   @relation("SchoolImageFile")
+  schoolLogos     School[]   @relation("SchoolLogoFile")
+  questionImages  Question[] @relation("QuestionImageFile")
 
   // Metadata
   metadata Json? // Additional file-specific metadata
@@ -469,4 +472,125 @@ model School {
   @@index([featured])
   @@index([uploadedById])
   @@map("schools")
+}
+
+// ============================================================
+// QCM - QUESTIONS & QUIZZES
+// ============================================================
+
+enum QuestionDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum QuestionStatus {
+  ACTIVE
+  INACTIVE
+  DRAFT
+}
+
+model Question {
+  id          String   @id @default(cuid())
+  text        String   @db.Text // Question text (supports HTML/Markdown for math)
+  options     Json // Array of options: [{id, text, imageUrl?}]
+  correctIds  String[] // Array of correct option IDs (supports multiple correct answers)
+  explanation String?  @db.Text // Explanation shown after answering
+
+  // Categorization
+  school     String // e.g., "Sciences Mathématiques", "Sciences Physiques"  
+  matiere    String // e.g., "Mathématiques", "Physique"
+  chapter    String? // Optional chapter/topic
+  difficulty QuestionDifficulty @default(MEDIUM)
+
+  // Media support
+  imageFileId String? // Optional image for the question
+  imageFile   File?   @relation("QuestionImageFile", fields: [imageFileId], references: [id], onDelete: SetNull)
+
+  // Metadata
+  tags      String[]
+  points    Int            @default(1) // Points for this question
+  timeLimit Int? // Optional time limit in seconds
+  status    QuestionStatus @default(ACTIVE)
+  isPublic  Boolean        @default(true)
+
+  // Stats
+  timesAnswered Int @default(0)
+  timesCorrect  Int @default(0)
+
+  // Relations
+  uploadedById String
+  uploadedBy   User         @relation(fields: [uploadedById], references: [id])
+  quizAnswers  QuizAnswer[]
+
+  // Audit fields
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([school])
+  @@index([matiere])
+  @@index([difficulty])
+  @@index([status])
+  @@index([isPublic])
+  @@index([uploadedById])
+  @@map("questions")
+}
+
+model QuizAttempt {
+  id String @id @default(cuid())
+
+  // Quiz configuration
+  school         String // Filter used for this quiz
+  matiere        String // Filter used for this quiz
+  totalQuestions Int
+
+  // Results
+  score       Int   @default(0) // Number of correct answers
+  totalPoints Int   @default(0) // Total points earned
+  maxPoints   Int   @default(0) // Maximum possible points
+  percentage  Float @default(0) // Score percentage
+  timeSpent   Int? // Total time in seconds
+
+  // Status
+  completedAt DateTime?
+
+  // Relations
+  userId  String
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers QuizAnswer[]
+
+  // Audit fields
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([school])
+  @@index([matiere])
+  @@index([completedAt])
+  @@index([createdAt])
+  @@map("quiz_attempts")
+}
+
+model QuizAnswer {
+  id String @id @default(cuid())
+
+  // Answer data
+  selectedIds  String[] // IDs of selected options
+  isCorrect    Boolean
+  pointsEarned Int      @default(0)
+  timeSpent    Int? // Time spent on this question in seconds
+
+  // Relations
+  attemptId  String
+  attempt    QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId String
+  question   Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  // Audit
+  createdAt DateTime @default(now())
+
+  @@unique([attemptId, questionId])
+  @@index([attemptId])
+  @@index([questionId])
+  @@map("quiz_answers")
 }

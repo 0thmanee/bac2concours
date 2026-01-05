@@ -8,6 +8,7 @@ import {
   LogOut,
   BookOpen,
   Video,
+  HelpCircle,
 } from "lucide-react";
 import {
   Sidebar,
@@ -45,6 +46,11 @@ const navigation = [
     name: "Vidéos",
     href: STUDENT_ROUTES.VIDEOS,
     icon: Video,
+  },
+  {
+    name: "Quiz QCM",
+    href: STUDENT_ROUTES.QUIZ,
+    icon: HelpCircle,
   },
 ];
 

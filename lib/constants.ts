@@ -81,6 +81,23 @@ export const API_ROUTES = {
   SCHOOL_RELATED: (id: string) => `/api/schools/${id}/related`,
   SCHOOLS_STATS: "/api/schools/stats",
   SCHOOLS_FILTERS: "/api/schools/filters",
+  // QCM - Questions
+  QUESTIONS: "/api/questions",
+  QUESTION: (id: string) => `/api/questions/${id}`,
+  QUESTIONS_STATS: "/api/questions/stats",
+  QUESTIONS_FILTERS: "/api/questions/filter-options",
+  // QCM - Quiz
+  QUIZ_START: "/api/quiz/start",
+  QUIZ_SUBMIT: "/api/quiz/submit",
+  QUIZ_HISTORY: "/api/quiz/history",
+  QUIZ_ATTEMPT: (id: string) => `/api/quiz/${id}`,
+  QUIZ_FILTERS: "/api/quiz/filter-options",
+  QUIZ_MATIERES: (school: string) =>
+    `/api/quiz/matieres?school=${encodeURIComponent(school)}`,
+  QUIZ_COUNT: (school: string, matiere: string) =>
+    `/api/quiz/count?school=${encodeURIComponent(
+      school
+    )}&matiere=${encodeURIComponent(matiere)}`,
 } as const;
 
 // ============================================================
@@ -142,6 +159,30 @@ export const QUERY_KEYS = {
     DETAIL: (id: string) => [...QUERY_KEYS.SCHOOLS.DETAILS(), id] as const,
     STATS: () => [...QUERY_KEYS.SCHOOLS.ALL, "stats"] as const,
     FILTERS: () => [...QUERY_KEYS.SCHOOLS.ALL, "filters"] as const,
+  },
+  QUESTIONS: {
+    ALL: ["questions"] as const,
+    LISTS: () => [...QUERY_KEYS.QUESTIONS.ALL, "list"] as const,
+    LIST: (filters?: Record<string, unknown>) =>
+      [...QUERY_KEYS.QUESTIONS.LISTS(), filters] as const,
+    DETAILS: () => [...QUERY_KEYS.QUESTIONS.ALL, "detail"] as const,
+    DETAIL: (id: string) => [...QUERY_KEYS.QUESTIONS.DETAILS(), id] as const,
+    STATS: () => [...QUERY_KEYS.QUESTIONS.ALL, "stats"] as const,
+    FILTERS: () => [...QUERY_KEYS.QUESTIONS.ALL, "filters"] as const,
+  },
+  QUIZ: {
+    ALL: ["quiz"] as const,
+    RANDOM: (school: string, matiere: string) =>
+      [...QUERY_KEYS.QUIZ.ALL, "random", school, matiere] as const,
+    HISTORY: () => [...QUERY_KEYS.QUIZ.ALL, "history"] as const,
+    HISTORY_LIST: (filters?: Record<string, unknown>) =>
+      [...QUERY_KEYS.QUIZ.HISTORY(), filters] as const,
+    ATTEMPT: (id: string) => [...QUERY_KEYS.QUIZ.ALL, "attempt", id] as const,
+    FILTERS: () => [...QUERY_KEYS.QUIZ.ALL, "filters"] as const,
+    MATIERES: (school: string) =>
+      [...QUERY_KEYS.QUIZ.ALL, "matieres", school] as const,
+    COUNT: (school: string, matiere: string) =>
+      [...QUERY_KEYS.QUIZ.ALL, "count", school, matiere] as const,
   },
   PAYMENTS: {
     ALL: ["payments"] as const,
