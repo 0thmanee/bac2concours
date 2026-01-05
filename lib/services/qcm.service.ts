@@ -17,6 +17,7 @@ import type {
   QuizResult,
   QuestionOption,
 } from "@/lib/validations/qcm.validation";
+import { notificationService } from "@/lib/services/notification.service";
 
 export const qcmService = {
   // ============================================================
@@ -124,7 +125,7 @@ export const qcmService = {
    * Create a new question
    */
   async createQuestion(data: CreateQuestionInput, uploadedById: string) {
-    return prisma.question.create({
+    const question = await prisma.question.create({
       data: {
         ...data,
         uploadedById,
@@ -140,6 +141,15 @@ export const qcmService = {
         imageFile: true,
       },
     });
+
+    // Notify students about the new question if it's active and public
+    if (data.status === "ACTIVE" && data.isPublic !== false) {
+      notificationService
+        .onNewResourcePublished("QCM", `Question: ${data.matiere}`, question.id)
+        .catch(console.error);
+    }
+
+    return question;
   },
 
   /**

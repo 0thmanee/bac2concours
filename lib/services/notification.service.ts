@@ -281,6 +281,10 @@ export const notificationService = {
       case "USER_DEACTIVATED":
       case "NEW_USER_REGISTERED":
       case "SYSTEM_ANNOUNCEMENT":
+      case "PAYMENT_SUBMITTED":
+      case "PAYMENT_APPROVED":
+      case "PAYMENT_REJECTED":
+      case "NEW_RESOURCE":
         return preferences.systemAnnouncements;
       default:
         return defaultChannel;
@@ -327,8 +331,8 @@ export const notificationService = {
     await this.notifyUser(
       user.id,
       "USER_ACTIVATED",
-      "Account Activated",
-      "Your account has been activated by an administrator. You can now access all features.",
+      "Compte activé",
+      "Votre compte a été activé par un administrateur. Vous pouvez maintenant accéder à toutes les fonctionnalités.",
       { userId: user.id },
       "BOTH"
     );
@@ -342,8 +346,8 @@ export const notificationService = {
     await notificationEmailService.sendNotificationEmail(
       user.email,
       user.name,
-      "Account Deactivated",
-      "Your account has been deactivated. Please contact an administrator for more information.",
+      "Compte désactivé",
+      "Votre compte a été désactivé. Veuillez contacter un administrateur pour plus d'informations.",
       "USER_DEACTIVATED",
       { userId: user.id }
     );
@@ -355,9 +359,90 @@ export const notificationService = {
   async onNewUserRegistered(user: User) {
     await this.notifyAdmins(
       "NEW_USER_REGISTERED",
-      "New User Registration",
-      `${user.name} (${user.email}) has registered and is awaiting account activation.`,
+      "Nouvelle inscription",
+      `${user.name} (${user.email}) s'est inscrit et attend l'activation de son compte.`,
       { userId: user.id, email: user.email }
     );
+  },
+
+  /**
+   * Trigger: Payment proof submitted (notify admins)
+   */
+  async onPaymentSubmitted(user: User) {
+    await this.notifyAdmins(
+      "PAYMENT_SUBMITTED",
+      "Nouveau paiement soumis",
+      `${user.name} (${user.email}) a soumis une preuve de paiement et attend la vérification.`,
+      { userId: user.id, email: user.email }
+    );
+  },
+
+  /**
+   * Trigger: Payment approved (notify student)
+   */
+  async onPaymentApproved(user: User) {
+    await this.notifyUser(
+      user.id,
+      "PAYMENT_APPROVED",
+      "Paiement approuvé",
+      "Excellente nouvelle ! Votre paiement a été approuvé. Vous pouvez maintenant accéder à tous les contenus de la plateforme.",
+      { userId: user.id },
+      "IN_APP" // Email is sent separately in payment service
+    );
+  },
+
+  /**
+   * Trigger: Payment rejected (notify student)
+   */
+  async onPaymentRejected(user: User, reason: string) {
+    await this.notifyUser(
+      user.id,
+      "PAYMENT_REJECTED",
+      "Paiement refusé",
+      `Votre preuve de paiement a été refusée. Raison : ${reason}. Veuillez soumettre une nouvelle preuve.`,
+      { userId: user.id, reason },
+      "IN_APP" // Email is sent separately in payment service
+    );
+  },
+
+  /**
+   * Trigger: New resource published (notify all active students)
+   */
+  async onNewResourcePublished(
+    resourceType: "BOOK" | "VIDEO" | "QCM",
+    resourceTitle: string,
+    resourceId: string
+  ) {
+    // Get all active students with approved payment
+    const students = await prisma.user.findMany({
+      where: {
+        role: "STUDENT",
+        status: "ACTIVE",
+        paymentStatus: "APPROVED",
+      },
+      select: { id: true },
+    });
+
+    const typeLabels = {
+      BOOK: "Nouveau livre",
+      VIDEO: "Nouvelle vidéo",
+      QCM: "Nouveau QCM",
+    };
+
+    const notifications = students.map((student) => ({
+      type: "NEW_RESOURCE" as const,
+      title: typeLabels[resourceType],
+      message: `${resourceTitle} est maintenant disponible !`,
+      data: { resourceType, resourceId, resourceTitle },
+      userId: student.id,
+      channel: "IN_APP" as const,
+    }));
+
+    // Batch create notifications (in-app only, don't spam emails)
+    if (notifications.length > 0) {
+      await prisma.notification.createMany({
+        data: notifications,
+      });
+    }
   },
 };

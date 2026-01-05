@@ -142,6 +142,10 @@ enum NotificationType {
   USER_DEACTIVATED
   NEW_USER_REGISTERED
   SYSTEM_ANNOUNCEMENT
+  PAYMENT_SUBMITTED // Student submitted payment proof (for admins)
+  PAYMENT_APPROVED // Payment was approved (for student)
+  PAYMENT_REJECTED // Payment was rejected (for student)
+  NEW_RESOURCE // New book/video/qcm available (for students)
 }
 
 enum NotificationChannel {

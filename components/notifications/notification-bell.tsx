@@ -15,6 +15,10 @@ import {
   Lock,
   UserPlus,
   Megaphone,
+  CreditCard,
+  CheckCircle,
+  AlertCircle,
+  BookOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -38,6 +42,10 @@ const notificationConfig: Record<
   USER_DEACTIVATED: { icon: Lock, color: "text-red-600", bgColor: "bg-red-50" },
   NEW_USER_REGISTERED: { icon: UserPlus, color: "text-primary", bgColor: "bg-primary/10" },
   SYSTEM_ANNOUNCEMENT: { icon: Megaphone, color: "text-primary", bgColor: "bg-primary/10" },
+  PAYMENT_SUBMITTED: { icon: CreditCard, color: "text-amber-600", bgColor: "bg-amber-50" },
+  PAYMENT_APPROVED: { icon: CheckCircle, color: "text-emerald-600", bgColor: "bg-emerald-50" },
+  PAYMENT_REJECTED: { icon: AlertCircle, color: "text-red-600", bgColor: "bg-red-50" },
+  NEW_RESOURCE: { icon: BookOpen, color: "text-blue-600", bgColor: "bg-blue-50" },
 };
 
 export function NotificationBell() {

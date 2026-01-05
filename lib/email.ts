@@ -254,6 +254,10 @@ const notificationIcons: Record<
   USER_DEACTIVATED: { icon: "🔒", color: BRAND.error },
   NEW_USER_REGISTERED: { icon: "👤", color: BRAND.primary },
   SYSTEM_ANNOUNCEMENT: { icon: "📢", color: BRAND.primary },
+  PAYMENT_SUBMITTED: { icon: "💳", color: BRAND.primary },
+  PAYMENT_APPROVED: { icon: "✅", color: BRAND.success },
+  PAYMENT_REJECTED: { icon: "⚠️", color: BRAND.error },
+  NEW_RESOURCE: { icon: "📚", color: BRAND.primary },
 };
 
 export const notificationEmailService = {
@@ -274,17 +278,39 @@ export const notificationEmailService = {
     let actionUrl = appUrl;
     let actionText = "View Dashboard";
 
-    if (data) {
-      switch (type) {
-        case "NEW_USER_REGISTERED":
-          actionUrl = `${appUrl}/admin/users`;
-          actionText = "Manage Users";
-          break;
-        case "USER_ACTIVATED":
-          actionUrl = `${appUrl}/student`;
-          actionText = "Go to Dashboard";
-          break;
-      }
+    switch (type) {
+      case "NEW_USER_REGISTERED":
+        actionUrl = `${appUrl}/admin/users`;
+        actionText = "Gérer les utilisateurs";
+        break;
+      case "USER_ACTIVATED":
+        actionUrl = `${appUrl}/student`;
+        actionText = "Accéder au tableau de bord";
+        break;
+      case "PAYMENT_SUBMITTED":
+        actionUrl = `${appUrl}/admin`;
+        actionText = "Voir les paiements";
+        break;
+      case "PAYMENT_APPROVED":
+        actionUrl = `${appUrl}/student`;
+        actionText = "Accéder au tableau de bord";
+        break;
+      case "PAYMENT_REJECTED":
+        actionUrl = `${appUrl}/student/payment`;
+        actionText = "Soumettre à nouveau";
+        break;
+      case "NEW_RESOURCE":
+        if (data?.resourceType === "BOOK") {
+          actionUrl = `${appUrl}/student/books`;
+          actionText = "Voir les livres";
+        } else if (data?.resourceType === "VIDEO") {
+          actionUrl = `${appUrl}/student/videos`;
+          actionText = "Voir les vidéos";
+        } else if (data?.resourceType === "QCM") {
+          actionUrl = `${appUrl}/student/qcm`;
+          actionText = "Voir les QCM";
+        }
+        break;
     }
 
     try {

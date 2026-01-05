@@ -11,6 +11,7 @@ import type {
   BookStats,
   BookFilterOptions,
 } from "@/lib/validations/book.validation";
+import { notificationService } from "@/lib/services/notification.service";
 
 export const bookService = {
   /**
@@ -117,7 +118,7 @@ export const bookService = {
    * Create a new book
    */
   async create(data: CreateBookInput, uploadedById: string) {
-    return prisma.book.create({
+    const book = await prisma.book.create({
       data: {
         ...data,
         uploadedById,
@@ -133,6 +134,15 @@ export const bookService = {
         coverFile: true,
       },
     });
+
+    // Notify students about the new book if it's active
+    if (data.status === "ACTIVE") {
+      notificationService
+        .onNewResourcePublished("BOOK", book.title, book.id)
+        .catch(console.error);
+    }
+
+    return book;
   },
 
   /**

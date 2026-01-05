@@ -12,6 +12,7 @@ import type {
   VideoFilterOptions,
 } from "@/lib/validations/video.validation";
 import { extractYouTubeId } from "@/lib/validations/video.validation";
+import { notificationService } from "@/lib/services/notification.service";
 
 export const videoService = {
   /**
@@ -121,7 +122,7 @@ export const videoService = {
     // Extract YouTube ID from URL
     const youtubeId = extractYouTubeId(data.url);
 
-    return prisma.video.create({
+    const video = await prisma.video.create({
       data: {
         ...data,
         youtubeId,
@@ -138,6 +139,15 @@ export const videoService = {
         thumbnailFile: true,
       },
     });
+
+    // Notify students about the new video if it's active
+    if (data.status === "ACTIVE") {
+      notificationService
+        .onNewResourcePublished("VIDEO", video.title, video.id)
+        .catch(console.error);
+    }
+
+    return video;
   },
 
   /**

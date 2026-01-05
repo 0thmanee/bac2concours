@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { PAYMENT_STATUS, USER_STATUS } from "@/lib/constants";
 import type { PaymentStatus } from "@prisma/client";
 import { emailService } from "@/lib/email";
+import { notificationService } from "@/lib/services/notification.service";
 
 export const paymentService = {
   /**
@@ -13,6 +14,8 @@ export const paymentService = {
       where: { id: userId },
       select: {
         id: true,
+        name: true,
+        email: true,
         paymentStatus: true,
       },
     });
@@ -30,7 +33,7 @@ export const paymentService = {
     }
 
     // Update user with payment proof
-    return prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: {
         paymentProofUrl,
@@ -41,11 +44,20 @@ export const paymentService = {
       },
       select: {
         id: true,
+        name: true,
+        email: true,
         paymentStatus: true,
         paymentProofUrl: true,
         paymentSubmittedAt: true,
       },
     });
+
+    // Notify admins about the new payment submission (async)
+    notificationService
+      .onPaymentSubmitted(updatedUser as any)
+      .catch(console.error);
+
+    return updatedUser;
   },
 
   /**
@@ -127,6 +139,11 @@ export const paymentService = {
         // Don't throw - email failure shouldn't block the approval
       });
 
+    // Send in-app notification (async)
+    notificationService
+      .onPaymentApproved(updatedUser as any)
+      .catch(console.error);
+
     return updatedUser;
   },
 
@@ -177,6 +194,11 @@ export const paymentService = {
         console.error("Failed to send payment rejection email:", error);
         // Don't throw - email failure shouldn't block the rejection
       });
+
+    // Send in-app notification (async)
+    notificationService
+      .onPaymentRejected(updatedUser as any, rejectionReason)
+      .catch(console.error);
 
     return updatedUser;
   },
