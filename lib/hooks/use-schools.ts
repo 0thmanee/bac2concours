@@ -215,3 +215,24 @@ export function useToggleSchoolFeatured() {
     },
   });
 }
+
+/**
+ * Get schools for dropdown selection (returns all active schools)
+ */
+export function useSchoolsForDropdown() {
+  return useQuery<ApiSuccessResponse<SchoolsResponse>>({
+    queryKey: [...schoolKeys.all, "dropdown"],
+    queryFn: () => {
+      const params = buildSearchParams(
+        { status: "ACTIVE" },
+        { page: 1, limit: 200 }
+      );
+      return apiClient.get<ApiSuccessResponse<SchoolsResponse>>(
+        `${API_ROUTES.SCHOOLS}?${params.toString()}`
+      );
+    },
+    staleTime: QUERY_CONFIG.STALE_TIME.LONG,
+    gcTime: QUERY_CONFIG.CACHE_TIME.LONG,
+    select: (data) => data, // Return full response
+  });
+}

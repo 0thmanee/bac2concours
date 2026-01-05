@@ -17,3 +17,6 @@ export { AdminFormCard } from "./admin-form-card";
 export { AdminFormActions } from "./admin-form-actions";
 export { AdminStatusVisibility } from "./admin-status-visibility";
 export { AdminTagsInput } from "./admin-tags-input";
+
+// Settings components
+export { SettingsResourceManager } from "./settings-resource-manager";

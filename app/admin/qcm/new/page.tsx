@@ -9,7 +9,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2, X, ImageIcon } from "lucide-react";
-import { useCreateQuestion, useQuestionFilterOptions } from "@/lib/hooks/use-qcm";
+import { useCreateQuestion } from "@/lib/hooks/use-qcm";
+import { useDropdownOptions } from "@/lib/hooks/use-settings-resources";
+import { useSchoolsForDropdown } from "@/lib/hooks/use-schools";
 import { useUploadFile } from "@/lib/hooks/use-files";
 import {
   createQuestionSchema,
@@ -49,28 +51,12 @@ const DIFFICULTY_OPTIONS = [
   { value: QuestionDifficulty.HARD, label: "Difficile" },
 ];
 
-// Default schools and matieres
-const DEFAULT_SCHOOLS = [
-  "Sciences Mathématiques",
-  "Sciences Physiques",
-  "Sciences de la Vie et de la Terre",
-  "Sciences Économiques",
-];
-
-const DEFAULT_MATIERES = [
-  "Mathématiques",
-  "Physique",
-  "Chimie",
-  "Sciences de la Vie",
-  "Sciences de la Terre",
-  "Économie",
-];
-
 export default function NewQuestionPage() {
   const router = useRouter();
   const createMutation = useCreateQuestion();
   const uploadFileMutation = useUploadFile();
-  const { data: filtersData } = useQuestionFilterOptions();
+  const { data: dropdownData, isLoading: isLoadingDropdowns } = useDropdownOptions();
+  const { data: schoolsData, isLoading: isLoadingSchools } = useSchoolsForDropdown();
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -197,8 +183,10 @@ export default function NewQuestionPage() {
     }
   };
 
-  const schools = filtersData?.data?.schools || DEFAULT_SCHOOLS;
-  const matieres = filtersData?.data?.matieres || DEFAULT_MATIERES;
+  const categories = dropdownData?.data?.categories || [];
+  const levels = dropdownData?.data?.levels || [];
+  const matieres = dropdownData?.data?.matieres || [];
+  const schools = schoolsData?.data?.schools?.map(s => s.name) || [];
 
   return (
     <div className="space-y-6">
@@ -390,9 +378,9 @@ export default function NewQuestionPage() {
                   <Label htmlFor="school" className="text-sm font-medium">
                     École/Filière <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("school", value)}>
+                  <Select onValueChange={(value) => setValue("school", value)} disabled={isLoadingSchools}>
                     <SelectTrigger id="school" className="ops-input h-9">
-                      <SelectValue placeholder="Sélectionner une filière" />
+                      <SelectValue placeholder={isLoadingSchools ? "Chargement..." : "Sélectionner une filière"} />
                     </SelectTrigger>
                     <SelectContent className="ops-card">
                       {schools.map((school) => (
@@ -413,14 +401,14 @@ export default function NewQuestionPage() {
                   <Label htmlFor="matiere" className="text-sm font-medium">
                     Matière <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("matiere", value)}>
+                  <Select onValueChange={(value) => setValue("matiere", value)} disabled={isLoadingDropdowns}>
                     <SelectTrigger id="matiere" className="ops-input h-9">
-                      <SelectValue placeholder="Sélectionner une matière" />
+                      <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner une matière"} />
                     </SelectTrigger>
                     <SelectContent className="ops-card">
                       {matieres.map((matiere) => (
-                        <SelectItem key={matiere} value={matiere}>
-                          {matiere}
+                        <SelectItem key={matiere.value} value={matiere.value}>
+                          {matiere.label}
                         </SelectItem>
                       ))}
                     </SelectContent>

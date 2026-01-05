@@ -9,7 +9,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, X, Upload } from "lucide-react";
-import { useCreateBook, useBookFilters } from "@/lib/hooks/use-books";
+import { useCreateBook } from "@/lib/hooks/use-books";
+import { useDropdownOptions } from "@/lib/hooks/use-settings-resources";
+import { useSchoolsForDropdown } from "@/lib/hooks/use-schools";
 import { useUploadFile } from "@/lib/hooks/use-files";
 import { createBookSchema, type CreateBookInput } from "@/lib/validations/book.validation";
 import {
@@ -43,7 +45,8 @@ export default function NewBookPage() {
   const router = useRouter();
   const createMutation = useCreateBook();
   const uploadFileMutation = useUploadFile();
-  const { data: filtersData } = useBookFilters();
+  const { data: dropdownData, isLoading: isLoadingDropdowns } = useDropdownOptions();
+  const { data: schoolsData, isLoading: isLoadingSchools } = useSchoolsForDropdown();
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
 
@@ -106,10 +109,10 @@ export default function NewBookPage() {
     }
   };
 
-  const categories = filtersData?.data?.categories || [];
-  const schools = filtersData?.data?.schools || [];
-  const levels = filtersData?.data?.levels || [];
-  const subjects = filtersData?.data?.subjects || [];
+  const categories = dropdownData?.data?.categories || [];
+  const levels = dropdownData?.data?.levels || [];
+  const matieres = dropdownData?.data?.matieres || [];
+  const schools = schoolsData?.data?.schools?.map(s => s.name) || [];
 
   return (
     <div className="space-y-6">
@@ -190,27 +193,16 @@ export default function NewBookPage() {
                   <Label htmlFor="school" className="text-sm font-medium">
                     École/Filière
                   </Label>
-                  <Select onValueChange={(value) => setValue("school", value)}>
+                  <Select onValueChange={(value) => setValue("school", value)} disabled={isLoadingSchools}>
                     <SelectTrigger id="school" className="ops-input h-9">
-                      <SelectValue placeholder="Sélectionner une filière" />
+                      <SelectValue placeholder={isLoadingSchools ? "Chargement..." : "Sélectionner une filière"} />
                     </SelectTrigger>
                     <SelectContent className="ops-card">
-                      {schools.length > 0 ? (
-                        schools.map((school) => (
-                          <SelectItem key={school} value={school}>
-                            {school}
-                          </SelectItem>
-                        ))
-                      ) : (
-                        <>
-                          <SelectItem value="Sciences Mathématiques">Sciences Mathématiques</SelectItem>
-                          <SelectItem value="Sciences Physiques">Sciences Physiques</SelectItem>
-                          <SelectItem value="Sciences de la Vie et de la Terre">Sciences de la Vie et de la Terre</SelectItem>
-                          <SelectItem value="Sciences Économiques">Sciences Économiques</SelectItem>
-                          <SelectItem value="Sciences Humaines">Sciences Humaines</SelectItem>
-                          <SelectItem value="Toutes Filières">Toutes Filières</SelectItem>
-                        </>
-                      )}
+                      {schools.map((school) => (
+                        <SelectItem key={school} value={school}>
+                          {school}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   {errors.school && (
@@ -222,24 +214,16 @@ export default function NewBookPage() {
                   <Label htmlFor="level" className="text-sm font-medium">
                     Niveau
                   </Label>
-                  <Select onValueChange={(value) => setValue("level", value)}>
+                  <Select onValueChange={(value) => setValue("level", value)} disabled={isLoadingDropdowns}>
                     <SelectTrigger id="level" className="ops-input h-9">
-                      <SelectValue placeholder="Sélectionner un niveau" />
+                      <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner un niveau"} />
                     </SelectTrigger>
                     <SelectContent className="ops-card">
-                      {levels.length > 0 ? (
-                        levels.map((level) => (
-                          <SelectItem key={level} value={level}>
-                            {level}
-                          </SelectItem>
-                        ))
-                      ) : (
-                        <>
-                          <SelectItem value="Terminale">Terminale</SelectItem>
-                          <SelectItem value="Première">Première</SelectItem>
-                          <SelectItem value="Seconde">Seconde</SelectItem>
-                        </>
-                      )}
+                      {levels.map((level) => (
+                        <SelectItem key={level.value} value={level.value}>
+                          {level.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   {errors.level && (
@@ -251,29 +235,16 @@ export default function NewBookPage() {
                   <Label htmlFor="category" className="text-sm font-medium">
                     Catégorie
                   </Label>
-                  <Select onValueChange={(value) => setValue("category", value)}>
+                  <Select onValueChange={(value) => setValue("category", value)} disabled={isLoadingDropdowns}>
                     <SelectTrigger id="category" className="ops-input h-9">
-                      <SelectValue placeholder="Sélectionner une catégorie" />
+                      <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner une catégorie"} />
                     </SelectTrigger>
                     <SelectContent className="ops-card">
-                      {categories.length > 0 ? (
-                        categories.map((category) => (
-                          <SelectItem key={category} value={category}>
-                            {category}
-                          </SelectItem>
-                        ))
-                      ) : (
-                        <>
-                          <SelectItem value="Mathématiques">Mathématiques</SelectItem>
-                          <SelectItem value="Physique">Physique</SelectItem>
-                          <SelectItem value="Chimie">Chimie</SelectItem>
-                          <SelectItem value="SVT">SVT</SelectItem>
-                          <SelectItem value="Philosophie">Philosophie</SelectItem>
-                          <SelectItem value="Français">Français</SelectItem>
-                          <SelectItem value="Arabe">Arabe</SelectItem>
-                          <SelectItem value="Anglais">Anglais</SelectItem>
-                        </>
-                      )}
+                      {categories.map((category) => (
+                        <SelectItem key={category.value} value={category.value}>
+                          {category.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   {errors.category && (
@@ -285,29 +256,16 @@ export default function NewBookPage() {
                   <Label htmlFor="subject" className="text-sm font-medium">
                     Matière
                   </Label>
-                  <Select onValueChange={(value) => setValue("subject", value)}>
+                  <Select onValueChange={(value) => setValue("subject", value)} disabled={isLoadingDropdowns}>
                     <SelectTrigger id="subject" className="ops-input h-9">
-                      <SelectValue placeholder="Sélectionner une matière" />
+                      <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner une matière"} />
                     </SelectTrigger>
                     <SelectContent className="ops-card">
-                      {subjects.length > 0 ? (
-                        subjects.map((subject) => (
-                          <SelectItem key={subject} value={subject}>
-                            {subject}
-                          </SelectItem>
-                        ))
-                      ) : (
-                        <>
-                          <SelectItem value="Mathématiques">Mathématiques</SelectItem>
-                          <SelectItem value="Physique">Physique</SelectItem>
-                          <SelectItem value="Chimie">Chimie</SelectItem>
-                          <SelectItem value="SVT">SVT</SelectItem>
-                          <SelectItem value="Philosophie">Philosophie</SelectItem>
-                          <SelectItem value="Français">Français</SelectItem>
-                          <SelectItem value="Arabe">Arabe</SelectItem>
-                          <SelectItem value="Anglais">Anglais</SelectItem>
-                        </>
-                      )}
+                      {matieres.map((matiere) => (
+                        <SelectItem key={matiere.value} value={matiere.value}>
+                          {matiere.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   {errors.subject && (

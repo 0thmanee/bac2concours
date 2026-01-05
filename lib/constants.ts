@@ -98,6 +98,17 @@ export const API_ROUTES = {
     `/api/quiz/count?school=${encodeURIComponent(
       school
     )}&matiere=${encodeURIComponent(matiere)}`,
+  // Settings Resources
+  CATEGORIES: "/api/settings/categories",
+  CATEGORY: (id: string) => `/api/settings/categories/${id}`,
+  CATEGORIES_ACTIVE: "/api/settings/categories/active",
+  LEVELS: "/api/settings/levels",
+  LEVEL: (id: string) => `/api/settings/levels/${id}`,
+  LEVELS_ACTIVE: "/api/settings/levels/active",
+  MATIERES: "/api/settings/matieres",
+  MATIERE: (id: string) => `/api/settings/matieres/${id}`,
+  MATIERES_ACTIVE: "/api/settings/matieres/active",
+  DROPDOWN_OPTIONS: "/api/settings/dropdown-options",
 } as const;
 
 // ============================================================
@@ -188,6 +199,36 @@ export const QUERY_KEYS = {
     ALL: ["payments"] as const,
     STATUS: () => [...QUERY_KEYS.PAYMENTS.ALL, "status"] as const,
     PENDING: () => [...QUERY_KEYS.PAYMENTS.ALL, "pending"] as const,
+  },
+  CATEGORIES: {
+    ALL: ["categories"] as const,
+    LISTS: () => [...QUERY_KEYS.CATEGORIES.ALL, "list"] as const,
+    LIST: (filters?: Record<string, unknown>) =>
+      [...QUERY_KEYS.CATEGORIES.LISTS(), filters] as const,
+    DETAILS: () => [...QUERY_KEYS.CATEGORIES.ALL, "detail"] as const,
+    DETAIL: (id: string) => [...QUERY_KEYS.CATEGORIES.DETAILS(), id] as const,
+    ACTIVE: () => [...QUERY_KEYS.CATEGORIES.ALL, "active"] as const,
+  },
+  LEVELS: {
+    ALL: ["levels"] as const,
+    LISTS: () => [...QUERY_KEYS.LEVELS.ALL, "list"] as const,
+    LIST: (filters?: Record<string, unknown>) =>
+      [...QUERY_KEYS.LEVELS.LISTS(), filters] as const,
+    DETAILS: () => [...QUERY_KEYS.LEVELS.ALL, "detail"] as const,
+    DETAIL: (id: string) => [...QUERY_KEYS.LEVELS.DETAILS(), id] as const,
+    ACTIVE: () => [...QUERY_KEYS.LEVELS.ALL, "active"] as const,
+  },
+  MATIERES: {
+    ALL: ["matieres"] as const,
+    LISTS: () => [...QUERY_KEYS.MATIERES.ALL, "list"] as const,
+    LIST: (filters?: Record<string, unknown>) =>
+      [...QUERY_KEYS.MATIERES.LISTS(), filters] as const,
+    DETAILS: () => [...QUERY_KEYS.MATIERES.ALL, "detail"] as const,
+    DETAIL: (id: string) => [...QUERY_KEYS.MATIERES.DETAILS(), id] as const,
+    ACTIVE: () => [...QUERY_KEYS.MATIERES.ALL, "active"] as const,
+  },
+  DROPDOWN_OPTIONS: {
+    ALL: ["dropdown-options"] as const,
   },
 } as const;
 

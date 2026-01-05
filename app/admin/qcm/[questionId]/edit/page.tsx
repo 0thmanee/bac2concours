@@ -12,8 +12,9 @@ import { Plus, Trash2, X, ImageIcon } from "lucide-react";
 import {
   useQuestion,
   useUpdateQuestion,
-  useQuestionFilterOptions,
 } from "@/lib/hooks/use-qcm";
+import { useDropdownOptions } from "@/lib/hooks/use-settings-resources";
+import { useSchoolsForDropdown } from "@/lib/hooks/use-schools";
 import { useUploadFile } from "@/lib/hooks/use-files";
 import {
   updateQuestionSchema,
@@ -54,22 +55,6 @@ const DIFFICULTY_OPTIONS = [
   { value: QuestionDifficulty.HARD, label: "Difficile" },
 ];
 
-const DEFAULT_SCHOOLS = [
-  "Sciences Mathématiques",
-  "Sciences Physiques",
-  "Sciences de la Vie et de la Terre",
-  "Sciences Économiques",
-];
-
-const DEFAULT_MATIERES = [
-  "Mathématiques",
-  "Physique",
-  "Chimie",
-  "Sciences de la Vie",
-  "Sciences de la Terre",
-  "Économie",
-];
-
 interface PageProps {
   params: Promise<{ questionId: string }>;
 }
@@ -80,7 +65,8 @@ export default function EditQuestionPage({ params }: PageProps) {
   const { data: questionData, isLoading } = useQuestion(questionId);
   const updateMutation = useUpdateQuestion(questionId);
   const uploadFileMutation = useUploadFile();
-  const { data: filtersData } = useQuestionFilterOptions();
+  const { data: dropdownData, isLoading: isLoadingDropdowns } = useDropdownOptions();
+  const { data: schoolsData, isLoading: isLoadingSchools } = useSchoolsForDropdown();
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -226,8 +212,10 @@ export default function EditQuestionPage({ params }: PageProps) {
     }
   };
 
-  const schools = filtersData?.data?.schools || DEFAULT_SCHOOLS;
-  const matieres = filtersData?.data?.matieres || DEFAULT_MATIERES;
+  const categories = dropdownData?.data?.categories || [];
+  const levels = dropdownData?.data?.levels || [];
+  const matieres = dropdownData?.data?.matieres || [];
+  const schools = schoolsData?.data?.schools?.map(s => s.name) || [];
 
   if (isLoading) {
     return <LoadingState message="Chargement de la question..." />;
@@ -446,9 +434,10 @@ export default function EditQuestionPage({ params }: PageProps) {
                   <Select
                     value={watch("school")}
                     onValueChange={(value) => setValue("school", value)}
+                    disabled={isLoadingSchools}
                   >
                     <SelectTrigger id="school" className="ops-input h-9">
-                      <SelectValue placeholder="Sélectionner une filière" />
+                      <SelectValue placeholder={isLoadingSchools ? "Chargement..." : "Sélectionner une filière"} />
                     </SelectTrigger>
                     <SelectContent className="ops-card">
                       {schools.map((school) => (
@@ -467,14 +456,15 @@ export default function EditQuestionPage({ params }: PageProps) {
                   <Select
                     value={watch("matiere")}
                     onValueChange={(value) => setValue("matiere", value)}
+                    disabled={isLoadingDropdowns}
                   >
                     <SelectTrigger id="matiere" className="ops-input h-9">
-                      <SelectValue placeholder="Sélectionner une matière" />
+                      <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner une matière"} />
                     </SelectTrigger>
                     <SelectContent className="ops-card">
                       {matieres.map((matiere) => (
-                        <SelectItem key={matiere} value={matiere}>
-                          {matiere}
+                        <SelectItem key={matiere.value} value={matiere.value}>
+                          {matiere.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
