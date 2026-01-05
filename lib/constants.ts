@@ -78,6 +78,7 @@ export const API_ROUTES = {
   SCHOOLS: "/api/schools",
   SCHOOL: (id: string) => `/api/schools/${id}`,
   SCHOOL_VIEW: (id: string) => `/api/schools/${id}/view`,
+  SCHOOL_RELATED: (id: string) => `/api/schools/${id}/related`,
   SCHOOLS_STATS: "/api/schools/stats",
   SCHOOLS_FILTERS: "/api/schools/filters",
 } as const;

@@ -182,6 +182,22 @@ export function useIncrementSchoolViews(schoolId: string) {
 }
 
 /**
+ * Get related schools
+ */
+export function useRelatedSchools(schoolId: string) {
+  return useQuery<ApiSuccessResponse<SchoolWithRelations[]>>({
+    queryKey: [...schoolKeys.detail(schoolId), "related"],
+    queryFn: () =>
+      apiClient.get<ApiSuccessResponse<SchoolWithRelations[]>>(
+        API_ROUTES.SCHOOL_RELATED(schoolId)
+      ),
+    staleTime: QUERY_CONFIG.STALE_TIME.MEDIUM,
+    gcTime: QUERY_CONFIG.CACHE_TIME.MEDIUM,
+    enabled: !!schoolId,
+  });
+}
+
+/**
  * Toggle school featured status (admin only)
  */
 export function useToggleSchoolFeatured() {

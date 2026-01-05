@@ -301,4 +301,41 @@ export const schoolService = {
       data: { featured: !school.featured },
     });
   },
+
+  /**
+   * Get related schools based on type and city
+   */
+  async getRelated(id: string, limit = 5) {
+    const school = await prisma.school.findUnique({
+      where: { id },
+      select: { type: true, city: true },
+    });
+
+    if (!school) {
+      return [];
+    }
+
+    return prisma.school.findMany({
+      where: {
+        id: { not: id },
+        status: "ACTIVE",
+        isPublic: true,
+        OR: [{ type: school.type }, { city: school.city }],
+      },
+      select: {
+        id: true,
+        name: true,
+        shortName: true,
+        type: true,
+        description: true,
+        imageFile: true,
+        logoFile: true,
+        city: true,
+        views: true,
+        classementNational: true,
+      },
+      orderBy: [{ views: "desc" }],
+      take: limit,
+    });
+  },
 };
