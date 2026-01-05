@@ -24,7 +24,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
+import { ADMIN_ROUTES } from "@/lib/constants";
+import { getErrorMessage } from "@/lib/utils/error.utils"; 
 import { QuestionStatus, QuestionDifficulty, FileType } from "@prisma/client";
 import Image from "next/image";
 import {
@@ -192,9 +193,7 @@ export default function NewQuestionPage() {
       toast.success("Question créée avec succès");
       router.push(ADMIN_ROUTES.QCM);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : MESSAGES.ERROR.GENERIC
-      );
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -252,7 +251,7 @@ export default function NewQuestionPage() {
                       alt="Question preview"
                       width={320}
                       height={200}
-                      className="max-w-xs rounded-lg border object-contain"
+                      className="max-w-xs rounded-lg border border-ops object-contain"
                       unoptimized
                     />
                     <Button
@@ -266,7 +265,7 @@ export default function NewQuestionPage() {
                     </Button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-ops-bg-secondary transition-colors">
+                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-ops rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] hover:bg-ops-bg-secondary transition-colors">
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                       <ImageIcon className="w-8 h-8 text-ops-tertiary mb-2" />
                       <p className="text-sm text-ops-tertiary">
@@ -293,7 +292,7 @@ export default function NewQuestionPage() {
                 {options.map((option, index) => (
                   <div
                     key={option.id}
-                    className="flex items-start gap-3 p-3 rounded-lg border bg-ops-bg-secondary"
+                    className="flex items-start gap-3 p-3 rounded-lg border border-ops bg-ops-bg-secondary"
                   >
                     <button
                       type="button"
@@ -347,7 +346,7 @@ export default function NewQuestionPage() {
                     variant="outline"
                     size="sm"
                     onClick={addOption}
-                    className="w-full"
+                    className="w-full ops-btn-secondary"
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Ajouter une Option

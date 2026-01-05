@@ -22,6 +22,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
+import { getErrorMessage } from "@/lib/utils/error.utils";
 import { BookStatus, FileType } from "@prisma/client";
 import { SupabaseImage } from "@/components/ui/supabase-image";
 import {
@@ -101,7 +102,7 @@ export default function NewBookPage() {
       toast.success(MESSAGES.SUCCESS.BOOK_CREATED || "Livre créé avec succès");
       router.push(ADMIN_ROUTES.BOOKS);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : MESSAGES.ERROR.GENERIC);
+      toast.error(getErrorMessage(error));
     }
   };
 

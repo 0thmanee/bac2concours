@@ -264,7 +264,7 @@ function QuizContent() {
                   className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                     isSelected
                       ? "border-primary bg-primary/5"
-                      : "border-gray-200 hover:border-primary/50 hover:bg-gray-50"
+                      : "border-ops hover:border-primary/50 hover:bg-ops-bg-secondary dark:hover:bg-ops-bg-secondary"
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -272,7 +272,7 @@ function QuizContent() {
                       className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
                         isSelected
                           ? "bg-primary text-white"
-                          : "bg-gray-100 text-gray-600"
+                          : "bg-ops-bg-secondary text-ops-secondary"
                       }`}
                     >
                       {letter}

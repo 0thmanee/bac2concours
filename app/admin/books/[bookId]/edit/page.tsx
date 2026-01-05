@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
 import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
+import { getErrorMessage } from "@/lib/utils/error.utils";
 import { BookStatus, FileType } from "@prisma/client";
 import { SupabaseImage } from "@/components/ui/supabase-image";
 import {
@@ -154,7 +155,7 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
       toast.success(MESSAGES.SUCCESS.BOOK_UPDATED);
       router.push(ADMIN_ROUTES.BOOK(bookId));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : MESSAGES.ERROR.GENERIC);
+      toast.error(getErrorMessage(error));
     }
   };
 

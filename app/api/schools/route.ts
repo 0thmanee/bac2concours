@@ -12,6 +12,7 @@ import {
 } from "@/lib/auth-security";
 import { ZodError } from "zod";
 import { MESSAGES } from "@/lib/constants";
+import { formatZodError } from "@/lib/utils/error.utils";
 
 /**
  * GET /api/schools
@@ -83,7 +84,7 @@ export async function GET(req: NextRequest) {
 
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: "Paramètres invalides", details: error.issues },
+        { error: formatZodError(error) },
         { status: 400 }
       );
     }
@@ -128,13 +129,13 @@ export async function POST(req: NextRequest) {
 
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: "Données invalides", details: error.issues },
+        { error: formatZodError(error) },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { error: "Échec de la création de l'école" },
+      { error: MESSAGES.ERROR.GENERIC },
       { status: 500 }
     );
   }

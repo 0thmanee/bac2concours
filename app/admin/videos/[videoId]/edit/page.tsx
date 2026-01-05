@@ -24,6 +24,7 @@ import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
 
 import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
+import { getErrorMessage } from "@/lib/utils/error.utils";
 import { VideoStatus, FileType } from "@prisma/client";
 import { 
   updateVideoSchema, 
@@ -184,7 +185,7 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
       toast.success("Vidéo mise à jour avec succès");
       router.push(ADMIN_ROUTES.VIDEOS);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : MESSAGES.ERROR.GENERIC);
+      toast.error(getErrorMessage(error));
     }
   };
 

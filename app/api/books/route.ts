@@ -1,9 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { bookService } from "@/lib/services/book.service";
-import { createBookSchema, bookFiltersSchema, type BookFilters } from "@/lib/validations/book.validation";
-import { requireApiAdmin, validateApiSession, ApiAuthError } from "@/lib/auth-security";
+import {
+  createBookSchema,
+  bookFiltersSchema,
+  type BookFilters,
+} from "@/lib/validations/book.validation";
+import {
+  requireApiAdmin,
+  validateApiSession,
+  ApiAuthError,
+} from "@/lib/auth-security";
 import { ZodError } from "zod";
 import { MESSAGES } from "@/lib/constants";
+import { formatZodError } from "@/lib/utils/error.utils";
 
 /**
  * GET /api/books
@@ -13,7 +22,7 @@ import { MESSAGES } from "@/lib/constants";
 export async function GET(req: NextRequest) {
   try {
     const user = await validateApiSession();
-    
+
     if (!user) {
       return NextResponse.json(
         { error: MESSAGES.ERROR.UNAUTHORIZED },
@@ -30,12 +39,20 @@ export async function GET(req: NextRequest) {
       level: searchParams.get("level") || undefined,
       subject: searchParams.get("subject") || undefined,
       status: searchParams.get("status") || undefined,
-      isPublic: searchParams.get("isPublic") ? searchParams.get("isPublic") === "true" : undefined,
-      tags: searchParams.get("tags") ? searchParams.get("tags")!.split(",") : undefined,
+      isPublic: searchParams.get("isPublic")
+        ? searchParams.get("isPublic") === "true"
+        : undefined,
+      tags: searchParams.get("tags")
+        ? searchParams.get("tags")!.split(",")
+        : undefined,
       page: searchParams.get("page") ? parseInt(searchParams.get("page")!) : 1,
-      limit: searchParams.get("limit") ? parseInt(searchParams.get("limit")!) : 20,
-      sortBy: (searchParams.get("sortBy") as BookFilters["sortBy"]) || "createdAt",
-      sortOrder: (searchParams.get("sortOrder") as BookFilters["sortOrder"]) || "desc",
+      limit: searchParams.get("limit")
+        ? parseInt(searchParams.get("limit")!)
+        : 20,
+      sortBy:
+        (searchParams.get("sortBy") as BookFilters["sortBy"]) || "createdAt",
+      sortOrder:
+        (searchParams.get("sortOrder") as BookFilters["sortOrder"]) || "desc",
     };
 
     // If not admin, force isPublic=true and status=ACTIVE
@@ -65,7 +82,7 @@ export async function GET(req: NextRequest) {
 
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: "Paramètres invalides", details: error.issues },
+        { error: formatZodError(error) },
         { status: 400 }
       );
     }
@@ -90,11 +107,14 @@ export async function POST(req: NextRequest) {
 
     const book = await bookService.create(validated, user.id);
 
-    return NextResponse.json({
-      success: true,
-      message: "Livre créé avec succès",
-      data: book,
-    }, { status: 201 });
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Livre créé avec succès",
+        data: book,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Create book error:", error);
 
@@ -107,13 +127,13 @@ export async function POST(req: NextRequest) {
 
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: "Données invalides", details: error.issues },
+        { error: formatZodError(error) },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { error: "Échec de la création du livre" },
+      { error: MESSAGES.ERROR.GENERIC },
       { status: 500 }
     );
   }

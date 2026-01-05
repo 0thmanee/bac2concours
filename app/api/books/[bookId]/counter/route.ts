@@ -4,6 +4,7 @@ import { incrementBookCounterSchema } from "@/lib/validations/book.validation";
 import { validateApiSession, ApiAuthError } from "@/lib/auth-security";
 import { ZodError } from "zod";
 import { MESSAGES } from "@/lib/constants";
+import { formatZodError } from "@/lib/utils/error.utils";
 
 /**
  * POST /api/books/[bookId]/counter
@@ -15,7 +16,7 @@ export async function POST(
 ) {
   try {
     const user = await validateApiSession();
-    
+
     if (!user) {
       return NextResponse.json(
         { error: MESSAGES.ERROR.UNAUTHORIZED },
@@ -36,7 +37,8 @@ export async function POST(
 
     return NextResponse.json({
       success: true,
-      message: type === "download" ? "Téléchargement enregistré" : "Vue enregistrée",
+      message:
+        type === "download" ? "Téléchargement enregistré" : "Vue enregistrée",
       data: book,
     });
   } catch (error) {
@@ -51,7 +53,7 @@ export async function POST(
 
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: "Données invalides", details: error.issues },
+        { error: formatZodError(error) },
         { status: 400 }
       );
     }

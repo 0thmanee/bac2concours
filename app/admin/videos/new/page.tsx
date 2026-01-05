@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
+import { getErrorMessage } from "@/lib/utils/error.utils";
 import { VideoStatus, FileType } from "@prisma/client";
 import { SupabaseImage } from "@/components/ui/supabase-image";
 import {
@@ -105,9 +106,7 @@ export default function NewVideoPage() {
       toast.success("Vidéo créée avec succès");
       router.push(ADMIN_ROUTES.VIDEOS);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : MESSAGES.ERROR.GENERIC
-      );
+      toast.error(getErrorMessage(error));
     }
   };
 

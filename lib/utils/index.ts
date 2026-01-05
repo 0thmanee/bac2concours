@@ -5,3 +5,4 @@
 
 export { cn } from "@/lib/utils";
 export * from "./filter.utils";
+export * from "./error.utils";

@@ -12,6 +12,7 @@ import {
 } from "@/lib/auth-security";
 import { ZodError } from "zod";
 import { MESSAGES } from "@/lib/constants";
+import { formatZodError } from "@/lib/utils/error.utils";
 
 /**
  * GET /api/questions
@@ -84,7 +85,7 @@ export async function GET(req: NextRequest) {
 
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: "Paramètres invalides", details: error.issues },
+        { error: formatZodError(error) },
         { status: 400 }
       );
     }
@@ -129,7 +130,7 @@ export async function POST(req: NextRequest) {
 
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: "Données invalides", details: error.issues },
+        { error: formatZodError(error) },
         { status: 400 }
       );
     }

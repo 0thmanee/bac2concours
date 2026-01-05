@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { bookService } from "@/lib/services/book.service"; 
+import { bookService } from "@/lib/services/book.service";
 import { updateBookSchema } from "@/lib/validations/book.validation";
-import { requireApiAdmin, validateApiSession, ApiAuthError } from "@/lib/auth-security";
+import {
+  requireApiAdmin,
+  validateApiSession,
+  ApiAuthError,
+} from "@/lib/auth-security";
 import { ZodError } from "zod";
 import { MESSAGES } from "@/lib/constants";
+import { formatZodError } from "@/lib/utils/error.utils";
 
 /**
  * GET /api/books/[bookId]
@@ -15,7 +20,7 @@ export async function GET(
 ) {
   try {
     const user = await validateApiSession();
-    
+
     if (!user) {
       return NextResponse.json(
         { error: MESSAGES.ERROR.UNAUTHORIZED },
@@ -27,18 +32,12 @@ export async function GET(
     const book = await bookService.findById(bookId);
 
     if (!book) {
-      return NextResponse.json(
-        { error: "Livre introuvable" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Livre introuvable" }, { status: 404 });
     }
 
     // If not admin, only show public active books
     if (user.role !== "ADMIN" && (!book.isPublic || book.status !== "ACTIVE")) {
-      return NextResponse.json(
-        { error: "Livre introuvable" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Livre introuvable" }, { status: 404 });
     }
 
     return NextResponse.json({
@@ -96,20 +95,20 @@ export async function PATCH(
 
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: "Données invalides", details: error.issues },
+        { error: formatZodError(error) },
         { status: 400 }
       );
     }
 
-    if (error instanceof Error && error.message.includes("Record to update not found")) {
-      return NextResponse.json(
-        { error: "Livre introuvable" },
-        { status: 404 }
-      );
+    if (
+      error instanceof Error &&
+      error.message.includes("Record to update not found")
+    ) {
+      return NextResponse.json({ error: "Livre introuvable" }, { status: 404 });
     }
 
     return NextResponse.json(
-      { error: "Échec de la mise à jour du livre" },
+      { error: MESSAGES.ERROR.GENERIC },
       { status: 500 }
     );
   }
@@ -143,15 +142,15 @@ export async function DELETE(
       );
     }
 
-    if (error instanceof Error && error.message.includes("Record to delete does not exist")) {
-      return NextResponse.json(
-        { error: "Livre introuvable" },
-        { status: 404 }
-      );
+    if (
+      error instanceof Error &&
+      error.message.includes("Record to delete does not exist")
+    ) {
+      return NextResponse.json({ error: "Livre introuvable" }, { status: 404 });
     }
 
     return NextResponse.json(
-      { error: "Échec de la suppression du livre" },
+      { error: MESSAGES.ERROR.GENERIC },
       { status: 500 }
     );
   }

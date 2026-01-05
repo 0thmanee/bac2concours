@@ -43,7 +43,7 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           className={cn(
-            "pl-10 pr-10 !h-10 !py-0 !leading-10",
+            "pl-10 pr-10 h-10! py-0! leading-10!",
             "border-gray-300 dark:border-gray-700",
             "bg-white dark:bg-gray-900",
             "text-gray-900 dark:text-white",

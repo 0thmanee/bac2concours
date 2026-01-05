@@ -4,6 +4,7 @@ import { reviewPaymentSchema } from "@/lib/validations/payment.validation";
 import { MESSAGES, VALIDATION } from "@/lib/constants";
 import { ZodError } from "zod";
 import { requireApiAdmin, ApiAuthError } from "@/lib/auth-security";
+import { formatZodError } from "@/lib/utils/error.utils";
 
 // POST /api/payments/[userId]/review - Approve or reject payment (Admin only)
 export async function POST(
@@ -33,7 +34,8 @@ export async function POST(
       // Reject
       if (
         !validated.rejectionReason ||
-        validated.rejectionReason.length < VALIDATION.PAYMENT.REJECTION_REASON_MIN_LENGTH
+        validated.rejectionReason.length <
+          VALIDATION.PAYMENT.REJECTION_REASON_MIN_LENGTH
       ) {
         return NextResponse.json(
           { error: MESSAGES.ERROR.PAYMENT_REJECTION_REASON_REQUIRED },
@@ -41,7 +43,10 @@ export async function POST(
         );
       }
 
-      result = await paymentService.rejectPayment(userId, validated.rejectionReason);
+      result = await paymentService.rejectPayment(
+        userId,
+        validated.rejectionReason
+      );
       return NextResponse.json({
         success: true,
         message: MESSAGES.SUCCESS.PAYMENT_REJECTED,
@@ -60,16 +65,13 @@ export async function POST(
 
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: "Données invalides", details: error.issues },
+        { error: formatZodError(error) },
         { status: 400 }
       );
     }
 
     if (error instanceof Error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     return NextResponse.json(

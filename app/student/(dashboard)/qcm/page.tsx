@@ -108,7 +108,7 @@ export default function StudentQCMPage() {
           </p>
         </div>
         <Link href={`${STUDENT_ROUTES.QUIZ}/history`}>
-          <Button variant="outline" className="gap-2">
+          <Button variant="outline" className="gap-2 border border-ops">
             <History className="h-4 w-4" />
             Historique
           </Button>

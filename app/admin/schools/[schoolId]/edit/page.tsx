@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
+import { getErrorMessage } from "@/lib/utils/error.utils";
 import { SchoolStatus, SchoolType, FileType } from "@prisma/client";
 import {
   updateSchoolSchema,
@@ -226,9 +227,7 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
       toast.success("École mise à jour avec succès");
       router.push(ADMIN_ROUTES.SCHOOLS);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : MESSAGES.ERROR.GENERIC
-      );
+      toast.error(getErrorMessage(error));
     }
   };
 

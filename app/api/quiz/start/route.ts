@@ -4,6 +4,7 @@ import { startQuizSchema } from "@/lib/validations/qcm.validation";
 import { validateApiSession, ApiAuthError } from "@/lib/auth-security";
 import { ZodError } from "zod";
 import { MESSAGES } from "@/lib/constants";
+import { formatZodError } from "@/lib/utils/error.utils";
 
 /**
  * POST /api/quiz/start
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest) {
 
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: "Paramètres invalides", details: error.issues },
+        { error: formatZodError(error) },
         { status: 400 }
       );
     }

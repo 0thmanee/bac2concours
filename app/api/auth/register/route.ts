@@ -7,6 +7,7 @@ import { tokenService } from "@/lib/services/token.service";
 import { emailService } from "@/lib/email";
 import { notificationService } from "@/lib/services/notification.service";
 import { USER_ROLE, USER_STATUS } from "@/lib/constants";
+import { formatZodError } from "@/lib/utils/error.utils";
 
 export async function POST(request: NextRequest) {
   try {
@@ -92,13 +93,13 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: "Validation failed", details: error.issues },
+        { error: formatZodError(error) },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { error: "Failed to create account. Please try again." },
+      { error: "La création du compte a échoué. Veuillez réessayer." },
       { status: 500 }
     );
   }

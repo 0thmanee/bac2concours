@@ -8,6 +8,7 @@ import {
 } from "@/lib/auth-security";
 import { ZodError } from "zod";
 import { MESSAGES } from "@/lib/constants";
+import { formatZodError } from "@/lib/utils/error.utils";
 
 /**
  * GET /api/schools/[id]
@@ -100,13 +101,13 @@ export async function PATCH(
 
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: "Données invalides", details: error.issues },
+        { error: formatZodError(error) },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { error: "Échec de la mise à jour de l'école" },
+      { error: MESSAGES.ERROR.GENERIC },
       { status: 500 }
     );
   }
@@ -141,7 +142,7 @@ export async function DELETE(
     }
 
     return NextResponse.json(
-      { error: "Échec de la suppression de l'école" },
+      { error: MESSAGES.ERROR.GENERIC },
       { status: 500 }
     );
   }
