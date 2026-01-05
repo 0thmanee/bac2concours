@@ -9,11 +9,19 @@ import { QuestionDifficulty, QuestionStatus } from "@prisma/client";
 export const questionDifficultySchema = z.nativeEnum(QuestionDifficulty);
 export const questionStatusSchema = z.nativeEnum(QuestionStatus);
 
+// Option content type enum
+export const optionContentTypeSchema = z
+  .enum(["TEXT", "IMAGE", "MATH"])
+  .default("TEXT");
+export type OptionContentType = z.infer<typeof optionContentTypeSchema>;
+
 // Option schema (for question options)
 export const questionOptionSchema = z.object({
   id: z.string().min(1, "Option ID is required"),
-  text: z.string().min(1, "Option text is required"), // Supports HTML/Markdown for math
+  text: z.string().min(1, "Option text is required"), // Plain text or LaTeX for math
+  contentType: optionContentTypeSchema, // TEXT, IMAGE, or MATH
   imageUrl: z.string().url().optional().nullable(),
+  imageFileId: z.string().optional().nullable(), // For uploaded images
 });
 
 // ============================================================

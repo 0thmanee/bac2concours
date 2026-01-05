@@ -3,16 +3,44 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { X, Menu } from "lucide-react";
+import { X, Menu, LayoutDashboard, Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
+import { API_ROUTES } from "@/lib/constants";
+import { ADMIN_ROUTES, STUDENT_ROUTES } from "@/lib/routes";
+
+interface SessionUser {
+  name?: string | null;
+  email?: string | null;
+  role?: string;
+}
+
+interface SessionData {
+  user?: SessionUser;
+}
 
 export function PublicHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Fetch session to check if user is logged in
+  const { data: session, isLoading: isLoadingSession } = useQuery<SessionData | null>({
+    queryKey: ["session"],
+    queryFn: async () => {
+      const response = await fetch(API_ROUTES.AUTH_SESSION);
+      if (!response.ok) return null;
+      return response.json();
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    retry: false,
+  });
+
+  const isLoggedIn = !!session?.user;
+  const isAdmin = session?.user?.role === "ADMIN";
+  const dashboardHref = isAdmin ? ADMIN_ROUTES.DASHBOARD : STUDENT_ROUTES.DASHBOARD;
+
   const navLinks = [
     { name: "Accueil", href: "/" },
     { name: "Contact", href: "/contact" },
-    { name: "Connexion", href: "/login" },
   ];
 
   return (
@@ -42,6 +70,25 @@ export function PublicHeader() {
                 {link.name}
               </Link>
             ))}
+            {/* Auth action - Dashboard or Connexion */}
+            {isLoadingSession ? (
+              <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+            ) : isLoggedIn ? (
+              <Link
+                href={dashboardHref}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors font-medium"
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                Tableau de bord
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
+              >
+                Connexion
+              </Link>
+            )}
           </nav>
 
           {/* Mobile Menu Button */}
@@ -65,7 +112,7 @@ export function PublicHeader() {
       <div
         className={cn(
           "md:hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden transition-all duration-300",
-          mobileMenuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
+          mobileMenuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
         )}
       >
         <nav className="px-4 py-4 space-y-3">
@@ -79,6 +126,29 @@ export function PublicHeader() {
               {link.name}
             </Link>
           ))}
+          {/* Auth action - Dashboard or Connexion */}
+          {isLoadingSession ? (
+            <div className="flex items-center justify-center py-2">
+              <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+            </div>
+          ) : isLoggedIn ? (
+            <Link
+              href={dashboardHref}
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors font-medium"
+            >
+              <LayoutDashboard className="w-4 h-4" />
+              Tableau de bord
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
+            >
+              Connexion
+            </Link>
+          )}
         </nav>
       </div>
     </header>

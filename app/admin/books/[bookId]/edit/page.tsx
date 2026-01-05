@@ -53,6 +53,7 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
   const { data: schoolsData, isLoading: isLoadingSchools } = useSchoolsForDropdown();
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [existingCoverId, setExistingCoverId] = useState<string | null>(null);
 
   const {
     register,
@@ -92,6 +93,7 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
       // Set existing cover preview if available
       if (book.coverFile?.publicUrl) {
         setCoverPreview(book.coverFile.publicUrl);
+        setExistingCoverId(book.coverFileId || null);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,30 +115,18 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
     }
   };
 
-  const removeCover = async () => {
-    // If there's an existing cover file, mark it for deletion
-    const currentCoverFileId = book?.coverFileId;
-    
+  const removeCover = () => {
     setCoverFile(null);
     setCoverPreview(null);
+    setExistingCoverId(null);
     setValue("coverFileId", null);
-
-    // If we had an existing cover file, we'll delete it on submit
-    if (currentCoverFileId) {
-      try {
-        await deleteFileMutation.mutateAsync(currentCoverFileId);
-        toast.success("Couverture supprimée");
-      } catch (error) {
-        toast.error("Erreur lors de la suppression de la couverture");
-      }
-    }
   };
 
   const onSubmit = async (data: UpdateBookInput) => {
     try {
-      // Upload new cover if provided
+      // Handle cover changes
       if (coverFile) {
-        // Delete old cover if exists
+        // New file uploaded - delete old one if exists
         if (book?.coverFileId) {
           try {
             await deleteFileMutation.mutateAsync(book.coverFileId);
@@ -152,6 +142,14 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
           folder: "book-covers",
         });
         data.coverFileId = uploadResult.data.id;
+      } else if (!existingCoverId && book?.coverFileId) {
+        // Cover was removed (existingCoverId is null but book had one)
+        try {
+          await deleteFileMutation.mutateAsync(book.coverFileId);
+        } catch (error) {
+          console.error("Error deleting removed cover:", error);
+        }
+        data.coverFileId = null;
       }
 
       await updateMutation.mutateAsync(data);

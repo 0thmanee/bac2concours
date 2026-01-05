@@ -2,6 +2,7 @@
 
 import { use } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowLeft,
   Clock,
@@ -22,6 +23,7 @@ import { useQuizAttempt } from "@/lib/hooks/use-qcm";
 import { LoadingState } from "@/components/shared/loading-state";
 import { STUDENT_ROUTES } from "@/lib/routes";
 import { cn } from "@/lib/utils";
+import { MathContent } from "@/components/shared/math-content";
 import type { QuizAttemptWithAnswers } from "@/lib/hooks/use-qcm";
 
 // Format date for display
@@ -74,6 +76,7 @@ function getDifficultyColor(difficulty: string): string {
 interface QuestionOption {
   id: string;
   text: string;
+  contentType?: "TEXT" | "IMAGE" | "MATH";
   imageUrl?: string | null;
 }
 
@@ -327,8 +330,8 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
                           )}
                         </div>
 
-                        {/* Option text */}
-                        <span className={cn(
+                        {/* Option text/image */}
+                        <div className={cn(
                           "flex-1",
                           isCorrect
                             ? "text-green-700 dark:text-green-300 font-medium"
@@ -336,8 +339,22 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
                             ? "text-red-700 dark:text-red-300"
                             : "text-gray-700 dark:text-gray-300"
                         )}>
-                          {option.text}
-                        </span>
+                          {option.contentType === "IMAGE" && option.imageUrl ? (
+                            <Image
+                              src={option.imageUrl}
+                              alt="Option"
+                              width={160}
+                              height={100}
+                              className="rounded-md border border-ops object-contain max-h-24"
+                              unoptimized
+                            />
+                          ) : (
+                            <MathContent
+                              content={option.text}
+                              contentType={option.contentType || "TEXT"}
+                            />
+                          )}
+                        </div>
 
                         {/* Status badges */}
                         <div className="flex gap-1 shrink-0">

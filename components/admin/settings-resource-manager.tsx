@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -200,103 +199,114 @@ export function SettingsResourceManager<T extends Resource>({
       <CardContent>
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-ops-tertiary" />
           </div>
         ) : resources.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-ops-tertiary">
             Aucun {title.toLowerCase()} n&apos;a été ajouté.
           </div>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nom</TableHead>
-                <TableHead className="hidden sm:table-cell">Description</TableHead>
-                <TableHead className="text-center">Statut</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {resources.map((resource) => (
-                <TableRow key={resource.id}>
-                  <TableCell className="font-medium">{resource.name}</TableCell>
-                  <TableCell className="hidden sm:table-cell text-gray-500 max-w-50 truncate">
-                    {resource.description || "-"}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    {resource.isActive ? (
-                      <Badge variant="default" className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                        <CheckCircle2 className="h-3 w-3 mr-1" />
-                        Actif
-                      </Badge>
-                    ) : (
-                      <Badge variant="secondary" className="bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                        <XCircle className="h-3 w-3 mr-1" />
-                        Inactif
-                      </Badge>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => openEditDialog(resource)}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-red-500 hover:text-red-600 hover:bg-red-50"
-                        onClick={() => openDeleteDialog(resource)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="border-b border-ops hover:bg-transparent">
+                  <TableHead className="text-ops-secondary font-medium text-xs uppercase tracking-wider">Nom</TableHead>
+                  <TableHead className="hidden sm:table-cell text-ops-secondary font-medium text-xs uppercase tracking-wider">Description</TableHead>
+                  <TableHead className="text-center text-ops-secondary font-medium text-xs uppercase tracking-wider">Statut</TableHead>
+                  <TableHead className="text-right text-ops-secondary font-medium text-xs uppercase tracking-wider">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {resources.map((resource) => (
+                  <TableRow key={resource.id} className="border-b border-ops hover:bg-muted/50">
+                    <TableCell className="font-medium text-ops-primary">{resource.name}</TableCell>
+                    <TableCell className="hidden sm:table-cell text-ops-secondary max-w-[200px] truncate">
+                      {resource.description || "-"}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {resource.isActive ? (
+                        <span className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-md bg-linear-to-r from-emerald-50 to-emerald-100 text-emerald-700 border border-emerald-200">
+                          <CheckCircle2 className="h-3 w-3 mr-1" />
+                          Actif
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-md bg-linear-to-r from-gray-50 to-gray-100 text-gray-600 border border-gray-200">
+                          <XCircle className="h-3 w-3 mr-1" />
+                          Inactif
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 hover:bg-muted"
+                          onClick={() => openEditDialog(resource)}
+                        >
+                          <Pencil className="h-4 w-4 text-ops-secondary" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          onClick={() => openDeleteDialog(resource)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </CardContent>
 
       {/* Add Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="sm:max-w-106.25">
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Ajouter {title}</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-lg font-semibold text-ops-primary">Ajouter {title}</DialogTitle>
+            <DialogDescription className="text-sm text-ops-secondary">
               Créez un nouveau {title.toLowerCase()} pour les formulaires
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={addForm.handleSubmit(handleAdd)}>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="add-name">Nom *</Label>
+                <Label htmlFor="add-name" className="text-sm font-medium text-ops-primary">
+                  Nom <span className="text-destructive">*</span>
+                </Label>
                 <Input
                   id="add-name"
                   {...addForm.register("name")}
                   placeholder={`Nom du ${title.toLowerCase()}`}
+                  className="ops-input h-9"
                 />
                 {addForm.formState.errors.name && (
-                  <p className="text-xs text-red-500">
+                  <p className="text-xs text-destructive">
                     {addForm.formState.errors.name.message}
                   </p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="add-description">Description</Label>
+                <Label htmlFor="add-description" className="text-sm font-medium text-ops-primary">
+                  Description <span className="text-xs text-ops-tertiary">(Optionnel)</span>
+                </Label>
                 <Textarea
                   id="add-description"
                   {...addForm.register("description")}
                   placeholder="Description optionnelle"
                   rows={3}
+                  className="ops-input resize-none"
                 />
               </div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="add-isActive">Actif</Label>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border border-ops">
+                <Label htmlFor="add-isActive" className="text-sm font-medium text-ops-primary cursor-pointer">
+                  Actif
+                </Label>
                 <Switch
                   id="add-isActive"
                   checked={addForm.watch("isActive")}
@@ -304,15 +314,16 @@ export function SettingsResourceManager<T extends Resource>({
                 />
               </div>
             </div>
-            <DialogFooter>
+            <DialogFooter className="gap-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setIsAddDialogOpen(false)}
+                className="border-ops"
               >
                 Annuler
               </Button>
-              <Button type="submit" disabled={createPending}>
+              <Button type="submit" disabled={createPending} className="ops-btn-primary">
                 {createPending ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -331,37 +342,45 @@ export function SettingsResourceManager<T extends Resource>({
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Modifier {title}</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-lg font-semibold text-ops-primary">Modifier {title}</DialogTitle>
+            <DialogDescription className="text-sm text-ops-secondary">
               Modifiez les informations du {title.toLowerCase()}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={editForm.handleSubmit(handleEdit)}>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-name">Nom *</Label>
+                <Label htmlFor="edit-name" className="text-sm font-medium text-ops-primary">
+                  Nom <span className="text-destructive">*</span>
+                </Label>
                 <Input
                   id="edit-name"
                   {...editForm.register("name")}
                   placeholder={`Nom du ${title.toLowerCase()}`}
+                  className="ops-input h-9"
                 />
                 {editForm.formState.errors.name && (
-                  <p className="text-xs text-red-500">
+                  <p className="text-xs text-destructive">
                     {editForm.formState.errors.name.message}
                   </p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-description">Description</Label>
+                <Label htmlFor="edit-description" className="text-sm font-medium text-ops-primary">
+                  Description <span className="text-xs text-ops-tertiary">(Optionnel)</span>
+                </Label>
                 <Textarea
                   id="edit-description"
                   {...editForm.register("description")}
                   placeholder="Description optionnelle"
                   rows={3}
+                  className="ops-input resize-none"
                 />
               </div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="edit-isActive">Actif</Label>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border border-ops">
+                <Label htmlFor="edit-isActive" className="text-sm font-medium text-ops-primary cursor-pointer">
+                  Actif
+                </Label>
                 <Switch
                   id="edit-isActive"
                   checked={editForm.watch("isActive")}
@@ -369,15 +388,16 @@ export function SettingsResourceManager<T extends Resource>({
                 />
               </div>
             </div>
-            <DialogFooter>
+            <DialogFooter className="gap-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setIsEditDialogOpen(false)}
+                className="border-ops"
               >
                 Annuler
               </Button>
-              <Button type="submit" disabled={updatePending}>
+              <Button type="submit" disabled={updatePending} className="ops-btn-primary">
                 {updatePending ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />

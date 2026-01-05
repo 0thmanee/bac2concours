@@ -222,7 +222,7 @@ export default function SettingsPage() {
                         className="ops-input h-9"
                       />
                       {errors.incubatorName && (
-                        <p className="text-xs text-red-500">{errors.incubatorName.message}</p>
+                        <p className="text-xs text-destructive">{errors.incubatorName.message}</p>
                       )}
                     </div>
 

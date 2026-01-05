@@ -62,6 +62,7 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [autoThumbnail, setAutoThumbnail] = useState<string | null>(null);
+  const [existingThumbnailId, setExistingThumbnailId] = useState<string | null>(null);
 
   const video = videoData?.data;
 
@@ -106,6 +107,7 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
       // Set thumbnail preview
       if (video.thumbnailFile?.publicUrl) {
         setThumbnailPreview(video.thumbnailFile.publicUrl);
+        setExistingThumbnailId(video.thumbnailFileId || null);
       } else if (video.youtubeId) {
         const ytThumbnail = getYouTubeThumbnailUrl(video.youtubeId);
         setAutoThumbnail(ytThumbnail);
@@ -149,24 +151,17 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
     }
   };
 
-  const removeThumbnail = async () => {
-    if (video?.thumbnailFileId) {
-      try {
-        await deleteFileMutation.mutateAsync(video.thumbnailFileId);
-        toast.success("Miniature supprimée");
-      } catch {
-        // Continue even if delete fails
-      }
-    }
+  const removeThumbnail = () => {
     setThumbnailPreview(null);
     setThumbnailFile(null);
+    setExistingThumbnailId(null);
   };
 
   const onSubmit = async (data: UpdateVideoInput) => {
     try {
-      // Upload new thumbnail if provided
+      // Handle thumbnail changes
       if (thumbnailFile) {
-        // Delete old thumbnail first if exists
+        // New file uploaded - delete old one if exists
         if (video?.thumbnailFileId) {
           try {
             await deleteFileMutation.mutateAsync(video.thumbnailFileId);
@@ -182,6 +177,14 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
           folder: "video-thumbnails",
         });
         data.thumbnailFileId = uploadResult.data.id;
+      } else if (!existingThumbnailId && video?.thumbnailFileId) {
+        // Thumbnail was removed (existingThumbnailId is null but video had one)
+        try {
+          await deleteFileMutation.mutateAsync(video.thumbnailFileId);
+        } catch {
+          // Continue even if delete fails
+        }
+        data.thumbnailFileId = null;
       }
 
       await updateMutation.mutateAsync(data);

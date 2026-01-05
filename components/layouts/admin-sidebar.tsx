@@ -70,6 +70,11 @@ const navigation = [
     href: ADMIN_ROUTES.QCM,
     icon: HelpCircle,
   },
+  {
+    name: "Paramètres",
+    href: ADMIN_ROUTES.SETTINGS,
+    icon: Settings,
+  }
 ];
 
 export default function AdminSidebar() {

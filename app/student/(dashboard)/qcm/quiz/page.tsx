@@ -18,6 +18,8 @@ import { LoadingState } from "@/components/shared/loading-state";
 import { toast } from "sonner";
 import { STUDENT_ROUTES } from "@/lib/constants";
 import { Progress } from "@/components/ui/progress";
+import { MathContent } from "@/components/shared/math-content";
+import Image from "next/image";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -181,6 +183,7 @@ function QuizContent() {
   const options = currentQuestion.options as Array<{
     id: string;
     text: string;
+    contentType?: "TEXT" | "IMAGE" | "MATH";
     imageUrl?: string | null;
   }>;
 
@@ -256,6 +259,7 @@ function QuizContent() {
             {options.map((option, index) => {
               const isSelected = selectedAnswers.includes(option.id);
               const letter = String.fromCharCode(65 + index); // A, B, C, D...
+              const contentType = option.contentType || "TEXT";
 
               return (
                 <button
@@ -277,10 +281,24 @@ function QuizContent() {
                     >
                       {letter}
                     </div>
-                    <div
-                      className="flex-1 pt-1"
-                      dangerouslySetInnerHTML={{ __html: option.text }}
-                    />
+                    <div className="flex-1 pt-1">
+                      {contentType === "IMAGE" && option.imageUrl ? (
+                        <Image
+                          src={option.imageUrl}
+                          alt={`Option ${letter}`}
+                          width={200}
+                          height={120}
+                          className="rounded-md border border-ops object-contain max-h-32"
+                          unoptimized
+                        />
+                      ) : (
+                        <MathContent
+                          content={option.text}
+                          contentType={contentType}
+                          className="text-ops-primary"
+                        />
+                      )}
+                    </div>
                     {isSelected && (
                       <CheckCircle className="h-5 w-5 text-primary shrink-0" />
                     )}

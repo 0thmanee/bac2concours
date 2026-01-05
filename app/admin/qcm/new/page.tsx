@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, X, ImageIcon } from "lucide-react";
+import { Plus, Trash2, X, ImageIcon, Type, FunctionSquare } from "lucide-react";
 import { useCreateQuestion } from "@/lib/hooks/use-qcm";
 import { useDropdownOptions } from "@/lib/hooks/use-settings-resources";
 import { useSchoolsForDropdown } from "@/lib/hooks/use-schools";
@@ -17,6 +17,7 @@ import {
   createQuestionSchema,
   type CreateQuestionInput,
   type QuestionOption,
+  type OptionContentType,
 } from "@/lib/validations/qcm.validation";
 import {
   Select,
@@ -25,6 +26,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { MathContent } from "@/components/shared/math-content";
 import { toast } from "sonner";
 import { ADMIN_ROUTES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/utils/error.utils"; 
@@ -61,9 +69,10 @@ export default function NewQuestionPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [options, setOptions] = useState<QuestionOption[]>([
-    { id: nanoid(), text: "" },
-    { id: nanoid(), text: "" },
+    { id: nanoid(), text: "", contentType: "TEXT" },
+    { id: nanoid(), text: "", contentType: "TEXT" },
   ]);
+  const [optionImages, setOptionImages] = useState<Record<string, { file: File; preview: string }>>({});
   const [correctIds, setCorrectIds] = useState<string[]>([]);
 
   const {
@@ -115,7 +124,7 @@ export default function NewQuestionPage() {
 
   const addOption = () => {
     if (options.length < 10) {
-      setOptions([...options, { id: nanoid(), text: "" }]);
+      setOptions([...options, { id: nanoid(), text: "", contentType: "TEXT" }]);
     }
   };
 
@@ -123,11 +132,46 @@ export default function NewQuestionPage() {
     if (options.length > 2) {
       setOptions(options.filter((opt) => opt.id !== id));
       setCorrectIds(correctIds.filter((cid) => cid !== id));
+      // Clean up option image if exists
+      if (optionImages[id]) {
+        const newImages = { ...optionImages };
+        delete newImages[id];
+        setOptionImages(newImages);
+      }
     }
   };
 
   const updateOptionText = (id: string, text: string) => {
     setOptions(options.map((opt) => (opt.id === id ? { ...opt, text } : opt)));
+  };
+
+  const updateOptionContentType = (id: string, contentType: OptionContentType) => {
+    setOptions(options.map((opt) => (opt.id === id ? { ...opt, contentType } : opt)));
+  };
+
+  const handleOptionImageChange = (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setOptionImages((prev) => ({
+          ...prev,
+          [id]: { file, preview: reader.result as string },
+        }));
+        // Update option text to file name as placeholder
+        updateOptionText(id, file.name);
+        updateOptionContentType(id, "IMAGE");
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeOptionImage = (id: string) => {
+    const newImages = { ...optionImages };
+    delete newImages[id];
+    setOptionImages(newImages);
+    updateOptionContentType(id, "TEXT");
+    updateOptionText(id, "");
   };
 
   const toggleCorrect = (id: string) => {
@@ -139,8 +183,10 @@ export default function NewQuestionPage() {
   };
 
   const onSubmit = async (data: CreateQuestionInput) => {
-    // Validate options
-    const validOptions = options.filter((opt) => opt.text.trim() !== "");
+    // Validate options - check for text or image
+    const validOptions = options.filter((opt) => 
+      opt.text.trim() !== "" || (opt.contentType === "IMAGE" && optionImages[opt.id])
+    );
     if (validOptions.length < 2) {
       toast.error("Au moins 2 options sont requises");
       return;
@@ -161,7 +207,7 @@ export default function NewQuestionPage() {
     }
 
     try {
-      // Upload image if provided
+      // Upload question image if provided
       if (imageFile) {
         const uploadResult = await uploadFileMutation.mutateAsync({
           file: imageFile,
@@ -171,8 +217,27 @@ export default function NewQuestionPage() {
         data.imageFileId = uploadResult.data.id;
       }
 
+      // Upload option images and update options with URLs
+      const processedOptions = await Promise.all(
+        validOptions.map(async (opt) => {
+          if (opt.contentType === "IMAGE" && optionImages[opt.id]) {
+            const uploadResult = await uploadFileMutation.mutateAsync({
+              file: optionImages[opt.id].file,
+              type: FileType.IMAGE,
+              folder: "option-images",
+            });
+            return {
+              ...opt,
+              imageUrl: uploadResult.data.publicUrl,
+              imageFileId: uploadResult.data.id,
+            };
+          }
+          return opt;
+        })
+      );
+
       // Add options and correctIds to data
-      data.options = validOptions;
+      data.options = processedOptions;
       data.correctIds = validCorrectIds;
 
       await createMutation.mutateAsync(data);
@@ -272,7 +337,7 @@ export default function NewQuestionPage() {
             {/* Options */}
             <AdminFormCard
               title="Options de Réponse"
-              description="Ajoutez les options et sélectionnez les bonnes réponses"
+              description="Ajoutez les options (texte, formule mathématique ou image)"
             >
               <div className="space-y-4">
                 {options.map((option, index) => (
@@ -280,6 +345,7 @@ export default function NewQuestionPage() {
                     key={option.id}
                     className="flex items-start gap-3 p-3 rounded-lg border border-ops bg-ops-bg-secondary"
                   >
+                    {/* Correct answer toggle */}
                     <button
                       type="button"
                       onClick={() => toggleCorrect(option.id)}
@@ -303,15 +369,127 @@ export default function NewQuestionPage() {
                         </svg>
                       )}
                     </button>
-                    <div className="flex-1">
-                      <Textarea
-                        value={option.text}
-                        onChange={(e) => updateOptionText(option.id, e.target.value)}
-                        placeholder={`Option ${index + 1}...`}
-                        rows={2}
-                        className="ops-input resize-none font-mono text-sm"
-                      />
+
+                    {/* Option content */}
+                    <div className="flex-1 space-y-2">
+                      {/* Content type selector */}
+                      <div className="flex items-center gap-1 mb-2">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                type="button"
+                                variant={option.contentType === "TEXT" ? "default" : "outline"}
+                                size="sm"
+                                className="h-7 px-2"
+                                onClick={() => updateOptionContentType(option.id, "TEXT")}
+                              >
+                                <Type className="h-3 w-3" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Texte simple</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                type="button"
+                                variant={option.contentType === "MATH" ? "default" : "outline"}
+                                size="sm"
+                                className="h-7 px-2"
+                                onClick={() => updateOptionContentType(option.id, "MATH")}
+                              >
+                                <FunctionSquare className="h-3 w-3" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Formule mathématique (LaTeX)</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                type="button"
+                                variant={option.contentType === "IMAGE" ? "default" : "outline"}
+                                size="sm"
+                                className="h-7 px-2"
+                                onClick={() => updateOptionContentType(option.id, "IMAGE")}
+                              >
+                                <ImageIcon className="h-3 w-3" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Image</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+
+                      {/* Content input based on type */}
+                      {option.contentType === "IMAGE" ? (
+                        optionImages[option.id] ? (
+                          <div className="relative inline-block">
+                            <Image
+                              src={optionImages[option.id].preview}
+                              alt={`Option ${index + 1}`}
+                              width={160}
+                              height={100}
+                              className="rounded-md border border-ops object-contain max-h-24"
+                              unoptimized
+                            />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="icon"
+                              className="absolute -top-2 -right-2 h-5 w-5"
+                              onClick={() => removeOptionImage(option.id)}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <label className="flex items-center justify-center w-full h-20 border-2 border-dashed border-ops rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] transition-colors">
+                            <div className="flex items-center gap-2 text-ops-tertiary">
+                              <ImageIcon className="w-5 h-5" />
+                              <span className="text-sm">Ajouter une image</span>
+                            </div>
+                            <input
+                              type="file"
+                              className="hidden"
+                              accept="image/*"
+                              onChange={(e) => handleOptionImageChange(option.id, e)}
+                            />
+                          </label>
+                        )
+                      ) : (
+                        <div>
+                          <Textarea
+                            value={option.text}
+                            onChange={(e) => updateOptionText(option.id, e.target.value)}
+                            placeholder={
+                              option.contentType === "MATH"
+                                ? "Ex: \\frac{1}{2} + \\sqrt{x}"
+                                : `Option ${index + 1}...`
+                            }
+                            rows={2}
+                            className="ops-input resize-none font-mono text-sm"
+                          />
+                          {option.contentType === "MATH" && option.text && (
+                            <div className="mt-2 p-2 bg-white rounded border border-ops">
+                              <span className="text-xs text-ops-tertiary block mb-1">Aperçu:</span>
+                              <MathContent
+                                content={option.text}
+                                contentType="MATH"
+                                className="text-ops-primary"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
+
+                    {/* Delete button */}
                     {options.length > 2 && (
                       <Button
                         type="button"
