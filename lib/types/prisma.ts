@@ -10,7 +10,7 @@ export type BookWithRelations = Book & {
 export type UserSelect = Pick<User, "id" | "name" | "email">;
 
 // Re-export Prisma enums for convenience
-export { UserRole, UpdateFrequency } from "@prisma/client";
+export { UserRole } from "@prisma/client";
 
 // API Response types (matching api-utils.ts successResponse format)
 export interface ApiSuccessResponse<T> {

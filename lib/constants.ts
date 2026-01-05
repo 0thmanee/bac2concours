@@ -74,6 +74,12 @@ export const API_ROUTES = {
   VIDEO_RELATED: (id: string) => `/api/videos/${id}/related`,
   VIDEOS_STATS: "/api/videos/stats",
   VIDEOS_FILTERS: "/api/videos/filter-options",
+  // Schools
+  SCHOOLS: "/api/schools",
+  SCHOOL: (id: string) => `/api/schools/${id}`,
+  SCHOOL_VIEW: (id: string) => `/api/schools/${id}/view`,
+  SCHOOLS_STATS: "/api/schools/stats",
+  SCHOOLS_FILTERS: "/api/schools/filters",
 } as const;
 
 // ============================================================
@@ -125,6 +131,16 @@ export const QUERY_KEYS = {
       [...QUERY_KEYS.VIDEOS.DETAIL(id), "related"] as const,
     STATS: () => [...QUERY_KEYS.VIDEOS.ALL, "stats"] as const,
     FILTERS: () => [...QUERY_KEYS.VIDEOS.ALL, "filters"] as const,
+  },
+  SCHOOLS: {
+    ALL: ["schools"] as const,
+    LISTS: () => [...QUERY_KEYS.SCHOOLS.ALL, "list"] as const,
+    LIST: (filters?: Record<string, unknown>) =>
+      [...QUERY_KEYS.SCHOOLS.LISTS(), filters] as const,
+    DETAILS: () => [...QUERY_KEYS.SCHOOLS.ALL, "detail"] as const,
+    DETAIL: (id: string) => [...QUERY_KEYS.SCHOOLS.DETAILS(), id] as const,
+    STATS: () => [...QUERY_KEYS.SCHOOLS.ALL, "stats"] as const,
+    FILTERS: () => [...QUERY_KEYS.SCHOOLS.ALL, "filters"] as const,
   },
   PAYMENTS: {
     ALL: ["payments"] as const,

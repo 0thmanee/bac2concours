@@ -63,6 +63,20 @@ enum VideoStatus {
   PROCESSING
 }
 
+enum SchoolStatus {
+  ACTIVE
+  INACTIVE
+  DRAFT
+}
+
+enum SchoolType {
+  UNIVERSITE
+  ECOLE_INGENIEUR
+  ECOLE_COMMERCE
+  INSTITUT
+  FACULTE
+}
+
 // ============================================================
 // USER & AUTHENTICATION
 // ============================================================
@@ -88,6 +102,7 @@ model User {
   notificationPreferences NotificationPreference? @relation("NotificationPreferences")
   books                   Book[] // Books uploaded by this user (admin)
   videos                  Video[] // Videos uploaded by this user (admin)
+  schools                 School[] // Schools uploaded by this user (admin)
   uploadedFiles           File[] // Files uploaded by this user
   reviews                 Review[] // Reviews written by this user
 
@@ -318,9 +333,11 @@ model File {
   uploadedById String
   uploadedBy   User   @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
 
-  // Reverse relations for books and videos
-  bookCovers      Book[]  @relation("BookCoverFile")
-  videoThumbnails Video[] @relation("VideoThumbnailFile")
+  // Reverse relations for books, videos, and schools
+  bookCovers      Book[]   @relation("BookCoverFile")
+  videoThumbnails Video[]  @relation("VideoThumbnailFile")
+  schoolImages    School[] @relation("SchoolImageFile")
+  schoolLogos     School[] @relation("SchoolLogoFile")
 
   // Metadata
   metadata Json? // Additional file-specific metadata
@@ -378,4 +395,78 @@ model Review {
   @@index([rating])
   @@index([createdAt])
   @@map("reviews")
+}
+
+// ============================================================
+// EDUCATIONAL RESOURCES - SCHOOLS (ÉCOLES)
+// ============================================================
+
+model School {
+  id              String     @id @default(cuid())
+  name            String
+  shortName       String? // e.g., "ENSIAS", "ENSA", "FSR"
+  type            SchoolType
+  description     String     @db.Text
+  longDescription String?    @db.Text
+
+  // Images - uploaded files only
+  imageFileId String? // Main image FK to File model
+  imageFile   File?   @relation("SchoolImageFile", fields: [imageFileId], references: [id], onDelete: SetNull)
+  logoFileId  String? // Logo FK to File model
+  logoFile    File?   @relation("SchoolLogoFile", fields: [logoFileId], references: [id], onDelete: SetNull)
+
+  // Location Information
+  city    String
+  address String?
+  region  String?
+
+  // Contact Information
+  phone   String?
+  email   String?
+  website String?
+
+  // Admission Information
+  seuilDeSelection Float? // Selection threshold (note minimale)
+  documentsRequis  String[] // Required documents
+  datesConcours    String? // Exam dates
+  fraisInscription Float? // Registration fees
+  bourses          Boolean  @default(false) // Scholarships available
+
+  // Statistics
+  nombreEtudiants    Int? // Number of students
+  tauxReussite       Float? // Success rate (percentage)
+  classementNational Int? // National ranking
+
+  // Programs and details (JSON for flexibility)
+  programs        Json? // Array of program objects
+  specializations String[] // e.g., ["Intelligence Artificielle", "Cybersécurité"]
+  avantages       String[] // Benefits/advantages
+  services        String[] // Available services
+  infrastructures String[] // Facilities
+  partenariats    String[] // Partnerships
+
+  // Meta Information
+  isPublic        Boolean      @default(true)
+  featured        Boolean      @default(false)
+  establishedYear Int?
+  status          SchoolStatus @default(DRAFT)
+
+  // Relations
+  uploadedById String
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+
+  // Stats
+  views Int @default(0)
+
+  // Audit fields
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([type])
+  @@index([city])
+  @@index([isPublic])
+  @@index([featured])
+  @@index([uploadedById])
+  @@map("schools")
 }

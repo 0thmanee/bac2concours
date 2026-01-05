@@ -28,6 +28,10 @@ export const ADMIN_ROUTES = {
   VIDEO: (id: string) => `/admin/videos/${id}`,
   VIDEO_NEW: "/admin/videos/new",
   VIDEO_EDIT: (id: string) => `/admin/videos/${id}/edit`,
+  SCHOOLS: "/admin/schools",
+  SCHOOL: (id: string) => `/admin/schools/${id}`,
+  SCHOOL_NEW: "/admin/schools/new",
+  SCHOOL_EDIT: (id: string) => `/admin/schools/${id}/edit`,
   SETTINGS: "/admin/settings",
   PROFILE: "/admin/profile",
 } as const;
@@ -41,6 +45,8 @@ export const STUDENT_ROUTES = {
   BOOK: (id: string) => `/student/books/${id}`,
   VIDEOS: "/student/videos",
   VIDEO: (id: string) => `/student/videos/${id}`,
+  SCHOOLS: "/student/schools",
+  SCHOOL: (id: string) => `/student/schools/${id}`,
   PROFILE: "/student/profile",
 } as const;
 

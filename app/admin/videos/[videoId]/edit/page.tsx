@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { use, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,17 +20,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SupabaseImage } from "@/components/ui/supabase-image";
+import { LoadingState } from "@/components/shared/loading-state";
+import { ErrorState } from "@/components/shared/error-state";
 
-import { ADMIN_ROUTES } from "@/lib/routes";
-import { API_ROUTES } from "@/lib/constants";
-import { VideoStatus } from "@prisma/client";
+import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
+import { VideoStatus, FileType } from "@prisma/client";
 import { 
   updateVideoSchema, 
   type UpdateVideoInput,
-  type VideoWithRelations 
 } from "@/lib/validations/video.validation";
 import { extractYouTubeId, getYouTubeThumbnailUrl } from "@/lib/validations/video.validation";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useVideo, useUpdateVideo, useVideoFilterOptions } from "@/lib/hooks/use-videos";
+import { useUploadFile, useDeleteFile } from "@/lib/hooks/use-files";
 import {
   AdminFormHeader,
   AdminFormCard,
@@ -45,40 +46,25 @@ const VIDEO_STATUS_OPTIONS = [
   { value: VideoStatus.PROCESSING, label: "En traitement" },
 ];
 
-export default function EditVideoPage() {
-  const params = useParams();
+export default function EditVideoPage({ params }: { params: Promise<{ videoId: string }> }) {
+  const { videoId } = use(params);
   const router = useRouter();
-  const queryClient = useQueryClient();
-  const videoId = params.videoId as string;
+  const { data: videoData, isLoading } = useVideo(videoId);
+  const updateMutation = useUpdateVideo(videoId);
+  const uploadFileMutation = useUploadFile();
+  const deleteFileMutation = useDeleteFile();
+  const { data: filtersData } = useVideoFilterOptions();
 
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [autoThumbnail, setAutoThumbnail] = useState<string | null>(null);
 
-  // Fetch video data
-  const { data: video, isLoading: videoLoading } = useQuery<VideoWithRelations>({
-    queryKey: ["video", videoId],
-    queryFn: async () => {
-      const response = await fetch(API_ROUTES.VIDEO(videoId));
-      if (!response.ok) throw new Error("Failed to fetch video");
-      return response.json();
-    },
-  });
+  const video = videoData?.data;
 
-  // Fetch filter options
-  const { data: filterOptions } = useQuery({
-    queryKey: ["videos", "filter-options"],
-    queryFn: async () => {
-      const response = await fetch(API_ROUTES.VIDEOS_FILTERS);
-      if (!response.ok) throw new Error("Failed to fetch filter options");
-      return response.json();
-    },
-  });
-
-  const schools = filterOptions?.schools || [];
-  const levels = filterOptions?.levels || [];
-  const categories = filterOptions?.categories || [];
-  const subjects = filterOptions?.subjects || [];
+  const schools = filtersData?.data?.schools || [];
+  const levels = filtersData?.data?.levels || [];
+  const categories = filtersData?.data?.categories || [];
+  const subjects = filtersData?.data?.subjects || [];
 
   const {
     register,
@@ -98,7 +84,7 @@ export default function EditVideoPage() {
 
   // Initialize form with video data
   useEffect(() => {
-    if (video) {
+    if (video && !isLoading) {
       reset({
         title: video.title,
         description: video.description || "",
@@ -121,7 +107,8 @@ export default function EditVideoPage() {
         setAutoThumbnail(ytThumbnail);
       }
     }
-  }, [video, reset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [video?.id, isLoading]);
 
   // Auto-detect YouTube thumbnail when URL changes
   useEffect(() => {
@@ -137,54 +124,6 @@ export default function EditVideoPage() {
       setAutoThumbnail(null);
     }
   }, [watchedUrl]);
-
-  // Update mutation
-  const updateMutation = useMutation({
-    mutationFn: async (data: UpdateVideoInput) => {
-      const response = await fetch(API_ROUTES.VIDEO(videoId), {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Failed to update video");
-      }
-
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["videos"] });
-      queryClient.invalidateQueries({ queryKey: ["video", videoId] });
-      toast.success("Vidéo mise à jour avec succès");
-      router.push(ADMIN_ROUTES.VIDEO(videoId));
-    },
-    onError: (error: Error) => {
-      toast.error(error.message);
-    },
-  });
-
-  // Delete file mutation
-  const deleteFileMutation = useMutation({
-    mutationFn: async (fileId: string) => {
-      const response = await fetch(`/api/files/${fileId}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete file");
-      }
-
-      return response.json();
-    },
-    onSuccess: () => {
-      toast.success("Miniature supprimée");
-    },
-    onError: (error: Error) => {
-      toast.error(error.message);
-    },
-  });
 
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -208,7 +147,12 @@ export default function EditVideoPage() {
 
   const removeThumbnail = async () => {
     if (video?.thumbnailFileId) {
-      await deleteFileMutation.mutateAsync(video.thumbnailFileId);
+      try {
+        await deleteFileMutation.mutateAsync(video.thumbnailFileId);
+        toast.success("Miniature supprimée");
+      } catch {
+        // Continue even if delete fails
+      }
     }
     setThumbnailPreview(null);
     setThumbnailFile(null);
@@ -216,59 +160,45 @@ export default function EditVideoPage() {
 
   const onSubmit = async (data: UpdateVideoInput) => {
     try {
-      let thumbnailFileId = video?.thumbnailFileId;
-
-      // Upload new thumbnail if selected
+      // Upload new thumbnail if provided
       if (thumbnailFile) {
         // Delete old thumbnail first if exists
-        if (thumbnailFileId) {
-          await deleteFileMutation.mutateAsync(thumbnailFileId);
+        if (video?.thumbnailFileId) {
+          try {
+            await deleteFileMutation.mutateAsync(video.thumbnailFileId);
+          } catch {
+            // Continue even if delete fails
+          }
         }
 
         // Upload new thumbnail
-        const formData = new FormData();
-        formData.append("file", thumbnailFile);
-        formData.append("type", "THUMBNAIL");
-
-        const uploadResponse = await fetch("/api/files/upload", {
-          method: "POST",
-          body: formData,
+        const uploadResult = await uploadFileMutation.mutateAsync({
+          file: thumbnailFile,
+          type: FileType.IMAGE,
+          folder: "video-thumbnails",
         });
-
-        if (!uploadResponse.ok) {
-          throw new Error("Failed to upload thumbnail");
-        }
-
-        const uploadData = await uploadResponse.json();
-        thumbnailFileId = uploadData.id;
+        data.thumbnailFileId = uploadResult.data.id;
       }
 
-      // Update video with new thumbnail ID
-      await updateMutation.mutateAsync({
-        ...data,
-        thumbnailFileId,
-      });
+      await updateMutation.mutateAsync(data);
+      toast.success("Vidéo mise à jour avec succès");
+      router.push(ADMIN_ROUTES.VIDEOS);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Une erreur est survenue");
+      toast.error(error instanceof Error ? error.message : MESSAGES.ERROR.GENERIC);
     }
   };
 
-  if (videoLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-ops-tertiary" />
-      </div>
-    );
+  if (isLoading) {
+    return <LoadingState message="Chargement de la vidéo..." />;
   }
 
   if (!video) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
-        <p className="text-ops-secondary">Vidéo introuvable</p>
-        <Button asChild variant="outline" className="ops-btn-secondary">
-          <a href={ADMIN_ROUTES.VIDEOS}>Retour aux vidéos</a>
-        </Button>
-      </div>
+      <ErrorState
+        message="Vidéo non trouvée"
+        backHref={ADMIN_ROUTES.VIDEOS}
+        backLabel="Retour aux Vidéos"
+      />
     );
   }
 

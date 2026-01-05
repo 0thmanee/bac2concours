@@ -21,13 +21,13 @@ import { toast } from "sonner";
 import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
 import { VideoStatus, FileType } from "@prisma/client";
 import { SupabaseImage } from "@/components/ui/supabase-image";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createVideoSchema,
   type CreateVideoInput,
   extractYouTubeId,
   getYouTubeThumbnailUrl,
 } from "@/lib/validations/video.validation";
+import { useCreateVideo, useVideoFilterOptions } from "@/lib/hooks/use-videos";
 import { useUploadFile } from "@/lib/hooks/use-files";
 import {
   AdminFormHeader,
@@ -45,22 +45,19 @@ const VIDEO_STATUS_OPTIONS = [
 
 export default function NewVideoPage() {
   const router = useRouter();
-  const queryClient = useQueryClient();
+  const createMutation = useCreateVideo();
   const uploadFileMutation = useUploadFile();
+  const { data: filtersData } = useVideoFilterOptions();
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
 
-  // Fetch filter options
-  const { data: filtersData } = useQuery({
-    queryKey: ["admin-videos-filters"],
-    queryFn: async () => {
-      const res = await fetch("/api/videos/filter-options");
-      if (!res.ok) throw new Error("Failed to fetch filter options");
-      return res.json();
-    },
-  });
-
-  const form = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+    watch,
+  } = useForm({
     resolver: zodResolver(createVideoSchema),
     defaultValues: {
       status: VideoStatus.ACTIVE,
@@ -69,36 +66,10 @@ export default function NewVideoPage() {
     },
   });
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    setValue,
-    watch,
-  } = form;
-
   const watchedTags = (watch("tags") as string[]) || [];
   const watchedUrl = watch("url");
   const watchedStatus = watch("status") || VideoStatus.ACTIVE;
   const watchedIsPublic = watch("isPublic") ?? true;
-
-  // Create mutation
-  const createMutation = useMutation({
-    mutationFn: async (data: CreateVideoInput) => {
-      const res = await fetch("/api/videos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) throw new Error("Failed to create video");
-      return res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-videos"] });
-      toast.success("Vidéo créée avec succès");
-      router.push(ADMIN_ROUTES.VIDEOS);
-    },
-  });
 
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -131,6 +102,8 @@ export default function NewVideoPage() {
       }
 
       await createMutation.mutateAsync(data);
+      toast.success("Vidéo créée avec succès");
+      router.push(ADMIN_ROUTES.VIDEOS);
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : MESSAGES.ERROR.GENERIC
