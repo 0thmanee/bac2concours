@@ -32,6 +32,11 @@ const navigation = [
     icon: LayoutDashboard,
   },
   {
+    name: "Écoles",
+    href: STUDENT_ROUTES.SCHOOLS,
+    icon: BookOpen,
+  },
+  {
     name: "Bibliothèque",
     href: STUDENT_ROUTES.BOOKS,
     icon: BookOpen,

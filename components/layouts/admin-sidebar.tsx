@@ -50,6 +50,11 @@ const navigation = [
     icon: Users,
   },
   {
+    name: "Écoles",
+    href: ADMIN_ROUTES.SCHOOLS,
+    icon: Building2,
+  },
+  {
     name: "Livres",
     href: ADMIN_ROUTES.BOOKS,
     icon: BookOpen,
