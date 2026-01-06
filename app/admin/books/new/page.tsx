@@ -125,9 +125,9 @@ export default function NewBookPage() {
       />
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* Main Form */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="md:col-span-2 space-y-6">
             {/* Basic Information */}
             <AdminFormCard
               title="Informations de Base"

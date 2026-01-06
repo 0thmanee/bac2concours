@@ -148,8 +148,8 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
           attempt.percentage >= 60 ? "bg-yellow-500" :
           attempt.percentage >= 40 ? "bg-orange-500" : "bg-red-500"
         )} />
-        <CardContent className="p-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <CardContent className="p-4 sm:p-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             {/* Score */}
             <div className="text-center">
               <div className={cn(
@@ -241,10 +241,10 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
               )}
             >
               <CardHeader className="pb-3">
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
                   <div className="flex items-center gap-3">
                     <span className={cn(
-                      "flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold",
+                      "flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold shrink-0",
                       answer.isCorrect
                         ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
                         : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"

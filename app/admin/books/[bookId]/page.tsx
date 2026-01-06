@@ -187,9 +187,9 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
         />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Main Content */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="md:col-span-2 space-y-6">
           {/* Book Preview */}
           {book.coverFile?.publicUrl && (
             <Card className="ops-card border border-ops">

@@ -12,6 +12,7 @@ import { LoadingState } from "@/components/shared/loading-state";
 import { SearchInput } from "@/components/ui/search-input";
 import { FilterSelect } from "@/components/ui/filter-select";
 import { FilterPanel } from "@/components/ui/filter-panel";
+import { TablePagination } from "@/components/ui/data-table";
 import { toast } from "sonner";
 import { toApiParam } from "@/lib/utils/filter.utils";
 import {
@@ -191,6 +192,17 @@ export default function StudentBooksPage() {
             />
           ))}
         </div>
+      )}
+
+      {/* Pagination */}
+      {paginationData && paginationData.totalPages > 1 && (
+        <TablePagination
+          currentPage={currentPage}
+          totalPages={paginationData.totalPages}
+          totalItems={paginationData.total}
+          pageSize={pageSize}
+          onPageChange={setCurrentPage}
+        />
       )}
     </div>
   );

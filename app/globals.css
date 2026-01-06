@@ -255,14 +255,16 @@
   --muted-foreground: var(--ops-text-tertiary);
   --border: var(--ops-border);
   --input: var(--ops-border-strong);
-  --sidebar: hsl(240 5.9% 10%);
-  --sidebar-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-primary: hsl(224.3 76.3% 48%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(240 3.7% 15.9%);
-  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-border: hsl(240 3.7% 15.9%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+
+  /* Sidebar - Dark theme using RGB values */
+  --sidebar: var(--neutral-800); /* Dark surface background */
+  --sidebar-foreground: var(--ops-text-primary);
+  --sidebar-primary: var(--brand-500); /* Brand Purple */
+  --sidebar-primary-foreground: 255 255 255;
+  --sidebar-accent: var(--neutral-700); /* Subtle hover */
+  --sidebar-accent-foreground: var(--ops-text-primary);
+  --sidebar-border: var(--ops-border);
+  --sidebar-ring: var(--brand-500); /* Brand for focus */
 }
 
 @layer base {

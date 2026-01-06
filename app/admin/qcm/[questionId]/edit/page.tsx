@@ -336,9 +336,9 @@ export default function EditQuestionPage({ params }: PageProps) {
       />
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* Main Form */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="md:col-span-2 space-y-6">
             {/* Question Text */}
             <AdminFormCard
               title="Question"
@@ -587,7 +587,7 @@ export default function EditQuestionPage({ params }: PageProps) {
                             className="ops-input resize-none font-mono text-sm"
                           />
                           {option.contentType === "MATH" && option.text && (
-                            <div className="mt-2 p-2 bg-white rounded border border-ops">
+                            <div className="mt-2 p-2 ops-card rounded border border-ops">
                               <span className="text-xs text-ops-tertiary block mb-1">Aperçu:</span>
                               <MathContent
                                 content={option.text}

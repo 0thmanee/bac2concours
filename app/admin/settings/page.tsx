@@ -148,9 +148,9 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-ops-primary">
+          <h1 className="text-xl sm:text-2xl font-bold text-ops-primary">
             Paramètres
           </h1>
           <p className="mt-1 text-sm text-ops-secondary">
@@ -159,7 +159,7 @@ export default function SettingsPage() {
         </div>
         {isDirty && activeTab === "general" && (
           <Badge
-            className="h-6 text-xs bg-metric-orange-light text-metric-orange border-ops"
+            className="h-6 text-xs bg-metric-orange-light text-metric-orange border-ops w-fit"
           >
             Modifications non sauvegardées
           </Badge>
@@ -167,7 +167,7 @@ export default function SettingsPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-flex">
+        <TabsList className="grid w-full grid-cols-4 sm:w-auto sm:inline-flex">
           <TabsTrigger value="general" className="gap-2">
             <Settings2 className="h-4 w-4" />
             <span className="hidden sm:inline">Général</span>
@@ -189,9 +189,9 @@ export default function SettingsPage() {
         {/* General Settings Tab */}
         <TabsContent value="general">
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid gap-6 lg:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {/* Main Settings */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="md:col-span-2 space-y-6">
                 {/* Organization Settings */}
                 <Card className="ops-card border border-ops">
                   <CardHeader>

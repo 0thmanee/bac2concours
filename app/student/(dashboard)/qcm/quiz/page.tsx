@@ -138,9 +138,8 @@ function QuizContent() {
       });
 
       if (result.data) {
-        router.push(
-          `${STUDENT_ROUTES.QUIZ}/result?attemptId=${result.data.attemptId}`
-        );
+        // Navigate to attempt detail page to see results
+        router.push(STUDENT_ROUTES.QUIZ_ATTEMPT(result.data.attemptId));
       }
     } catch (err) {
       toast.error("Erreur lors de la soumission du quiz");
@@ -188,9 +187,9 @@ function QuizContent() {
   }>;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-0">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold text-ops-primary">Quiz en cours</h1>
           <p className="text-sm text-ops-tertiary">
@@ -199,7 +198,7 @@ function QuizContent() {
         </div>
         <Button
           variant="outline"
-          className="gap-2 text-amber-600 border-amber-200 hover:bg-amber-50"
+          className="gap-2 text-amber-600 border-amber-200 hover:bg-amber-50 w-full sm:w-auto"
           onClick={() => setShowConfirmSubmit(true)}
         >
           <Flag className="h-4 w-4" />
@@ -225,13 +224,13 @@ function QuizContent() {
         <CardContent className="pt-6 space-y-6">
           {/* Question Text */}
           <div className="space-y-4">
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex flex-col-reverse sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4">
               <div
-                className="text-lg font-medium text-ops-primary flex-1"
+                className="text-base sm:text-lg font-medium text-ops-primary flex-1"
                 dangerouslySetInnerHTML={{ __html: currentQuestion.text }}
               />
               <span
-                className={`text-xs px-2 py-1 rounded-full ${
+                className={`text-xs px-2 py-1 rounded-full shrink-0 self-start ${
                   currentQuestion.difficulty === "EASY"
                     ? "bg-green-100 text-green-700"
                     : currentQuestion.difficulty === "MEDIUM"
@@ -328,7 +327,7 @@ function QuizContent() {
         </Button>
 
         {/* Question indicators */}
-        <div className="hidden md:flex gap-1 overflow-x-auto max-w-md">
+        <div className="flex gap-1 overflow-x-auto max-w-[45vw] sm:max-w-md">
           {questions.map((q, index) => {
             const isAnswered = answers.has(q.id);
             const isCurrent = index === currentIndex;

@@ -306,4 +306,45 @@ export const bookService = {
       subjects: subjects.map((s) => s.subject),
     };
   },
+
+  /**
+   * Get related books (same category or level, excluding current book)
+   */
+  async findRelated(bookId: string, limit: number = 5) {
+    // First get the current book to know its category and level
+    const currentBook = await prisma.book.findUnique({
+      where: { id: bookId },
+      select: { category: true, level: true, subject: true },
+    });
+
+    if (!currentBook) {
+      return [];
+    }
+
+    // Find books with same category, level, or subject (excluding current book)
+    return prisma.book.findMany({
+      where: {
+        id: { not: bookId },
+        status: "ACTIVE",
+        isPublic: true,
+        OR: [
+          { category: currentBook.category },
+          { level: currentBook.level },
+          ...(currentBook.subject ? [{ subject: currentBook.subject }] : []),
+        ],
+      },
+      select: {
+        id: true,
+        title: true,
+        author: true,
+        category: true,
+        level: true,
+        coverFile: true,
+        views: true,
+        rating: true,
+      },
+      orderBy: [{ views: "desc" }, { rating: "desc" }],
+      take: limit,
+    });
+  },
 };

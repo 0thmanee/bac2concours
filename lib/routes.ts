@@ -33,6 +33,7 @@ export const ADMIN_ROUTES = {
   SCHOOL_NEW: "/admin/schools/new",
   SCHOOL_EDIT: (id: string) => `/admin/schools/${id}/edit`,
   QCM: "/admin/qcm",
+  QCM_VIEW: (id: string) => `/admin/qcm/${id}`,
   QCM_NEW: "/admin/qcm/new",
   QCM_EDIT: (id: string) => `/admin/qcm/${id}/edit`,
   SETTINGS: "/admin/settings",
@@ -52,7 +53,6 @@ export const STUDENT_ROUTES = {
   SCHOOL: (id: string) => `/student/schools/${id}`,
   QUIZ: "/student/qcm",
   QUIZ_HISTORY: "/student/qcm/history",
-  QUIZ_RESULT: "/student/qcm/result",
   QUIZ_ATTEMPT: (id: string) => `/student/qcm/history/${id}`,
   PROFILE: "/student/profile",
 } as const;

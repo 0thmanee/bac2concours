@@ -104,12 +104,12 @@ export function NotificationBell() {
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-96 overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-xl z-50">
+        <div className="absolute right-0 mt-2 w-96 overflow-hidden rounded-xl border border-ops ops-card shadow-xl z-50">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-100 bg-neutral-50/80">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-ops bg-muted/50">
             <div className="flex items-center gap-2">
               <Bell className="h-4 w-4 text-primary" />
-              <h3 className="font-semibold text-sm text-neutral-900">Notifications</h3>
+              <h3 className="font-semibold text-sm text-ops-primary">Notifications</h3>
               {unreadCount > 0 && (
                 <Badge variant="secondary" className="h-5 px-1.5 text-xs bg-primary/10 text-primary">
                   {unreadCount}
@@ -132,7 +132,7 @@ export function NotificationBell() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 text-neutral-500 hover:text-neutral-700"
+                className="h-7 w-7 text-ops-secondary hover:text-ops-primary"
                 onClick={() => setIsOpen(false)}
               >
                 <X className="h-4 w-4" />
@@ -141,22 +141,22 @@ export function NotificationBell() {
           </div>
 
           {/* Notifications List */}
-          <div className="max-h-96 overflow-y-auto bg-white">
+          <div className="max-h-96 overflow-y-auto">
             {isLoading ? (
               <div className="px-4 py-12 text-center">
                 <div className="w-8 h-8 mx-auto mb-3 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
-                <p className="text-sm text-neutral-500">Loading notifications...</p>
+                <p className="text-sm text-ops-secondary">Loading notifications...</p>
               </div>
             ) : notifications.length === 0 ? (
               <div className="px-4 py-12 text-center">
-                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-neutral-100 flex items-center justify-center">
-                  <Bell className="h-6 w-6 text-neutral-400" />
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-muted flex items-center justify-center">
+                  <Bell className="h-6 w-6 text-ops-tertiary" />
                 </div>
-                <p className="text-sm font-medium text-neutral-700">No notifications yet</p>
-                <p className="text-xs text-neutral-500 mt-1">We&apos;ll notify you when something happens</p>
+                <p className="text-sm font-medium text-ops-primary">No notifications yet</p>
+                <p className="text-xs text-ops-tertiary mt-1">We&apos;ll notify you when something happens</p>
               </div>
             ) : (
-              <div className="divide-y divide-neutral-100">
+              <div className="divide-y divide-ops">
                 {notifications.map((notification) => {
                   const config = notificationConfig[notification.type] || {
                     icon: Bell,
@@ -169,8 +169,8 @@ export function NotificationBell() {
                     <div
                       key={notification.id}
                       className={cn(
-                        "px-4 py-3 hover:bg-neutral-50 transition-colors group",
-                        !notification.isRead && "bg-primary/[0.03]"
+                        "px-4 py-3 hover:bg-muted/50 transition-colors group",
+                        !notification.isRead && "bg-primary/5"
                       )}
                     >
                       <div className="flex gap-3">
@@ -189,7 +189,7 @@ export function NotificationBell() {
                           <div className="flex items-start justify-between gap-2">
                             <p className={cn(
                               "text-sm truncate",
-                              !notification.isRead ? "font-semibold text-neutral-900" : "font-medium text-neutral-700"
+                              !notification.isRead ? "font-semibold text-ops-primary" : "font-medium text-ops-secondary"
                             )}>
                               {notification.title}
                             </p>
@@ -197,11 +197,11 @@ export function NotificationBell() {
                               <span className="shrink-0 w-2 h-2 bg-primary rounded-full mt-1.5" />
                             )}
                           </div>
-                          <p className="text-sm text-neutral-500 line-clamp-2 mt-0.5">
+                          <p className="text-sm text-ops-tertiary line-clamp-2 mt-0.5">
                             {notification.message}
                           </p>
                           <div className="flex items-center justify-between mt-2">
-                            <span className="text-xs text-neutral-400">
+                            <span className="text-xs text-ops-tertiary">
                               {formatDistanceToNow(new Date(notification.createdAt), {
                                 addSuffix: true,
                               })}
@@ -211,7 +211,7 @@ export function NotificationBell() {
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  className="h-7 w-7 text-neutral-400 hover:text-primary hover:bg-primary/10"
+                                  className="h-7 w-7 text-ops-tertiary hover:text-primary hover:bg-primary/10"
                                   onClick={() => handleMarkAsRead(notification.id)}
                                   disabled={markAsRead.isPending}
                                   title="Mark as read"
@@ -222,7 +222,7 @@ export function NotificationBell() {
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-7 w-7 text-neutral-400 hover:text-red-600 hover:bg-red-50"
+                                className="h-7 w-7 text-ops-tertiary hover:text-destructive hover:bg-destructive/10"
                                 onClick={() => handleDelete(notification.id)}
                                 disabled={deleteNotification.isPending}
                                 title="Delete notification"
@@ -242,7 +242,7 @@ export function NotificationBell() {
 
           {/* Footer */}
           {notifications.length > 0 && (
-            <div className="px-4 py-2.5 border-t border-neutral-100 bg-neutral-50/50">
+            <div className="px-4 py-2.5 border-t border-ops bg-muted/30">
               <Button variant="ghost" size="sm" className="w-full text-xs text-primary hover:text-primary hover:bg-primary/10">
                 View all notifications
               </Button>

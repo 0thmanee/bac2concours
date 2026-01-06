@@ -332,6 +332,11 @@ export default function AdminQCMPage() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="ops-card">
             <DropdownMenuItem asChild>
+              <Link href={ADMIN_ROUTES.QCM_VIEW(question.id)}>
+                Voir
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
               <Link href={ADMIN_ROUTES.QCM_EDIT(question.id)}>
                 Modifier
               </Link>

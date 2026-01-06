@@ -19,6 +19,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { TablePagination } from "@/components/ui/data-table";
 import { useQuizHistory, useQuizFilterOptions } from "@/lib/hooks/use-qcm";
 import { LoadingState } from "@/components/shared/loading-state";
 import { FilterPanel } from "@/components/ui/filter-panel";
@@ -304,27 +305,13 @@ export default function QuizHistoryPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 pt-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-              >
-                Précédent
-              </Button>
-              <span className="text-sm text-gray-600 dark:text-gray-400 px-4">
-                Page {currentPage} sur {totalPages}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
-              >
-                Suivant
-              </Button>
-            </div>
+            <TablePagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalItems={total}
+              pageSize={pageSize}
+              onPageChange={setCurrentPage}
+            />
           )}
         </>
       )}

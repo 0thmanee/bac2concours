@@ -101,6 +101,7 @@ export function DataTable<T>({
 
   return (
     <Card className={cn("overflow-hidden border-gray-200 dark:border-gray-800", className)}>
+      <div className="overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow className="border-b border-gray-200 dark:border-gray-800 hover:bg-transparent bg-gray-50/50 dark:bg-gray-900/50">
@@ -154,6 +155,7 @@ export function DataTable<T>({
           })}
         </TableBody>
       </Table>
+      </div>
       
       {/* Pagination */}
       {pagination && pagination.totalPages > 1 && (
@@ -217,16 +219,22 @@ function TablePagination({
   };
 
   return (
-    <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-gray-800">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between px-4 py-3 border-t border-gray-200 dark:border-gray-800">
       {/* Items info */}
-      <p className="text-sm text-ops-tertiary">
-        Affichage de <span className="font-medium text-ops-primary">{startItem}</span> à{" "}
-        <span className="font-medium text-ops-primary">{endItem}</span> sur{" "}
-        <span className="font-medium text-ops-primary">{totalItems}</span> résultats
+      <p className="text-sm text-ops-tertiary text-center sm:text-left">
+        <span className="hidden sm:inline">Affichage de </span>
+        <span className="font-medium text-ops-primary">{startItem}</span>
+        <span className="hidden sm:inline"> à </span>
+        <span className="sm:hidden">-</span>
+        <span className="font-medium text-ops-primary">{endItem}</span>
+        <span className="hidden sm:inline"> sur </span>
+        <span className="sm:hidden"> / </span>
+        <span className="font-medium text-ops-primary">{totalItems}</span>
+        <span className="hidden sm:inline"> résultats</span>
       </p>
 
       {/* Pagination controls */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center justify-center sm:justify-end gap-1">
         {/* First page */}
         <Button
           variant="ghost"
@@ -249,8 +257,13 @@ function TablePagination({
           <ChevronLeft className="h-4 w-4" />
         </Button>
 
-        {/* Page numbers */}
-        <div className="flex items-center gap-1 mx-2">
+        {/* Mobile page indicator */}
+        <span className="sm:hidden text-sm text-ops-secondary px-2">
+          {currentPage}/{totalPages}
+        </span>
+
+        {/* Page numbers - desktop only */}
+        <div className="hidden sm:flex items-center gap-1 mx-2">
           {getPageNumbers().map((page, index) =>
             page === "ellipsis" ? (
               <span

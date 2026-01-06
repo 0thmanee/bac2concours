@@ -36,12 +36,12 @@ export function AdminFilterBar({
 }: AdminFilterBarProps) {
   return (
     <FilterPanel className="space-y-3">
-      <div className="flex flex-col lg:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap lg:flex-nowrap gap-3">
         <SearchInput
           value={searchValue}
           onChange={onSearchChange}
           placeholder={searchPlaceholder}
-          containerClassName="flex-1 min-w-[250px]"
+          containerClassName="flex-1 min-w-0 sm:min-w-[250px]"
         />
 
         {filters.map((filter, index) => (
@@ -52,7 +52,7 @@ export function AdminFilterBar({
               filter.onChange(value === "all" ? "" : value)
             }
             options={filter.options}
-            className={filter.className || "w-full lg:w-[180px]"}
+            className={filter.className || "w-full sm:w-[180px]"}
           />
         ))}
       </div>

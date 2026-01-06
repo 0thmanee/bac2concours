@@ -19,13 +19,11 @@ import {
   History,
   BookOpen,
   Target,
-  Loader2,
 } from "lucide-react";
 import {
   useQuizFilterOptions,
   useQuizMatieres,
   useQuizQuestionCount,
-  useStartQuiz,
 } from "@/lib/hooks/use-qcm";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -46,8 +44,6 @@ export default function StudentQCMPage() {
     selectedMatiere || null
   );
 
-  const startQuizMutation = useStartQuiz();
-
   const schools = filterOptions?.data?.schools || [];
   const matieres = matieresData?.data || [];
   const availableQuestions = countData?.data?.count || 0;
@@ -57,41 +53,19 @@ export default function StudentQCMPage() {
     setSelectedMatiere(""); // Reset matiere when school changes
   };
 
-  const handleStartQuiz = async () => {
+  const handleStartQuiz = () => {
     if (!selectedSchool || !selectedMatiere) {
       toast.error("Veuillez sélectionner une filière et une matière");
       return;
     }
 
-    try {
-      const result = await startQuizMutation.mutateAsync({
-        school: selectedSchool,
-        matiere: selectedMatiere,
-        questionCount: Math.min(questionCount, availableQuestions),
-      });
-
-      if (result.data && result.data.length > 0) {
-        // Store quiz data in sessionStorage and navigate to quiz page
-        sessionStorage.setItem(
-          "quizData",
-          JSON.stringify({
-            questions: result.data,
-            school: selectedSchool,
-            matiere: selectedMatiere,
-            startTime: Date.now(),
-          })
-        );
-        router.push(`${STUDENT_ROUTES.QUIZ}/quiz`);
-      } else {
-        toast.error("Aucune question disponible pour cette sélection");
-      }
-    } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Erreur lors du démarrage du quiz"
-      );
-    }
+    // Navigate to quiz page with URL params - questions will be loaded there
+    const params = new URLSearchParams({
+      school: selectedSchool,
+      matiere: selectedMatiere,
+      count: Math.min(questionCount, availableQuestions).toString(),
+    });
+    router.push(`${STUDENT_ROUTES.QUIZ}/quiz?${params.toString()}`);
   };
 
   const canStartQuiz =
@@ -115,9 +89,9 @@ export default function StudentQCMPage() {
         </Link>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Quiz Setup */}
-        <div className="lg:col-span-2">
+        <div className="md:col-span-2">
           <Card className="ops-card">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -222,20 +196,11 @@ export default function StudentQCMPage() {
               {/* Start Button */}
               <Button
                 onClick={handleStartQuiz}
-                disabled={!canStartQuiz || startQuizMutation.isPending}
+                disabled={!canStartQuiz}
                 className="w-full ops-btn-primary h-12 text-lg"
               >
-                {startQuizMutation.isPending ? (
-                  <>
-                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                    Chargement...
-                  </>
-                ) : (
-                  <>
-                    <Play className="h-5 w-5 mr-2" />
-                    Commencer le Quiz
-                  </>
-                )}
+                <Play className="h-5 w-5 mr-2" />
+                Commencer le Quiz
               </Button>
             </CardContent>
           </Card>

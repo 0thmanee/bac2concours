@@ -324,6 +324,14 @@ export default function AdminSchoolsPage() {
           <DropdownMenuContent align="end" className="ops-card">
             <DropdownMenuItem asChild className="text-sm">
               <Link
+                href={ADMIN_ROUTES.SCHOOL(school.id)}
+                className="cursor-pointer"
+              >
+                Voir
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild className="text-sm">
+              <Link
                 href={ADMIN_ROUTES.SCHOOL_EDIT(school.id)}
                 className="cursor-pointer"
               >

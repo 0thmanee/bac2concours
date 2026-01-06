@@ -10,6 +10,7 @@ import { LoadingState } from "@/components/shared/loading-state";
 import { SearchInput } from "@/components/ui/search-input";
 import { FilterSelect } from "@/components/ui/filter-select";
 import { FilterPanel } from "@/components/ui/filter-panel";
+import { TablePagination } from "@/components/ui/data-table";
 import { STUDENT_ROUTES } from "@/lib/routes";
 import { toApiParam } from "@/lib/utils/filter.utils";
 import {
@@ -171,16 +172,15 @@ export default function StudentSchoolsPage() {
         </div>
       )}
 
-      {/* Load more button if there are more pages */}
-      {paginationData && paginationData.page < paginationData.totalPages && (
-        <div className="flex justify-center pt-4">
-          <button
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-            className="px-6 py-2 text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 transition-colors"
-          >
-            Charger plus d&apos;écoles
-          </button>
-        </div>
+      {/* Pagination */}
+      {paginationData && paginationData.totalPages > 1 && (
+        <TablePagination
+          currentPage={currentPage}
+          totalPages={paginationData.totalPages}
+          totalItems={paginationData.total}
+          pageSize={pageSize}
+          onPageChange={setCurrentPage}
+        />
       )}
     </div>
   );
