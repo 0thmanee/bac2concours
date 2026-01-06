@@ -48,8 +48,20 @@ export const createQuestionSchema = z.object({
   difficulty: questionDifficultySchema.default(QuestionDifficulty.MEDIUM),
   imageFileId: z.string().optional().nullable(),
   tags: z.array(z.string().max(50)).default([]),
-  points: z.number().int().min(1).max(100).default(1),
-  timeLimit: z.number().int().min(10).max(600).optional().nullable(),
+  points: z.preprocess(
+    (val) =>
+      val === "" || val === null || val === undefined || Number.isNaN(val)
+        ? 1
+        : Number(val),
+    z.number().int().min(1).max(100).default(1)
+  ),
+  timeLimit: z.preprocess(
+    (val) =>
+      val === "" || val === null || val === undefined || Number.isNaN(val)
+        ? undefined
+        : Number(val),
+    z.number().int().min(10).max(600).optional().nullable()
+  ),
   status: questionStatusSchema.default(QuestionStatus.ACTIVE),
   isPublic: z.boolean().default(true),
 });
@@ -66,8 +78,20 @@ export const updateQuestionSchema = z.object({
   difficulty: questionDifficultySchema.optional(),
   imageFileId: z.string().optional().nullable(),
   tags: z.array(z.string().max(50)).optional(),
-  points: z.number().int().min(1).max(100).optional(),
-  timeLimit: z.number().int().min(10).max(600).optional().nullable(),
+  points: z.preprocess(
+    (val) =>
+      val === "" || val === null || val === undefined || Number.isNaN(val)
+        ? undefined
+        : Number(val),
+    z.number().int().min(1).max(100).optional()
+  ),
+  timeLimit: z.preprocess(
+    (val) =>
+      val === "" || val === null || val === undefined || Number.isNaN(val)
+        ? undefined
+        : Number(val),
+    z.number().int().min(10).max(600).optional().nullable()
+  ),
   status: questionStatusSchema.optional(),
   isPublic: z.boolean().optional(),
 });

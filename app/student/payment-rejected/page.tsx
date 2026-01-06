@@ -38,7 +38,7 @@ export default function PaymentRejectedPage() {
     <div className="min-h-screen flex items-center justify-center bg-ops-background p-4">
       <Card className="ops-card max-w-md w-full">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[rgb(var(--error-light))]">
             <XCircle className="h-8 w-8 text-red-500" />
           </div>
           <CardTitle className="text-2xl font-bold text-ops-primary">

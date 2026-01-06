@@ -86,18 +86,6 @@ export default function StudentBookDetailPage() {
     { icon: Eye, value: `${book.views || 0} vues` },
   ];
 
-  if (book.rating && book.rating > 0) {
-    headerMetrics.push({
-      icon: Star,
-      value: (
-        <span className="flex items-center gap-1">
-          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-          {book.rating.toFixed(1)}
-        </span>
-      ),
-    });
-  }
-
   // Prepare detail info items
   const detailItems = [
     { label: "Auteur", value: book.author },
@@ -124,7 +112,6 @@ export default function StudentBookDetailPage() {
     title: b.title,
     thumbnailUrl: b.coverFile?.publicUrl,
     views: b.views,
-    rating: b.rating,
     extraInfo: b.author,
   }));
 

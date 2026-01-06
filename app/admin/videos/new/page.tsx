@@ -179,7 +179,7 @@ export default function NewVideoPage() {
                   </p>
                 )}
                 {youtubeId && (
-                  <p className="text-xs text-green-600">
+                  <p className="text-xs text-[rgb(var(--success))]">
                     ✓ Vidéo YouTube détectée: {youtubeId}
                   </p>
                 )}
@@ -452,13 +452,13 @@ export default function NewVideoPage() {
               onStatusChange={(value) => setValue("status", value as VideoStatus, { shouldValidate: true })}
               statusOptions={VIDEO_STATUS_OPTIONS}
               isPublic={watchedIsPublic}
-              onIsPublicChange={(value) => setValue("isPublic", value)}
+              onIsPublicChange={(value) => setValue("isPublic", value, { shouldValidate: true })}
             />
 
             {/* Tags */}
             <AdminTagsInput
               tags={watchedTags}
-              onChange={(tags) => setValue("tags", tags)}
+              onChange={(tags) => setValue("tags", tags, { shouldValidate: true })}
               placeholder="ex: cours, exercices, bac"
               helpText="Utilisez des étiquettes pertinentes pour améliorer la recherche"
             />

@@ -162,7 +162,7 @@ export default function AdminQCMPage() {
 
   const getDifficultyBadge = (difficulty: string) => {
     const styles: Record<string, string> = {
-      EASY: "bg-green-50 text-green-700 border-green-200",
+      EASY: "bg-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] border-[rgb(var(--success-light))]",
       MEDIUM: "bg-yellow-50 text-yellow-700 border-yellow-200",
       HARD: "bg-red-50 text-red-700 border-red-200",
     };

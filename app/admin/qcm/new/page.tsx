@@ -351,7 +351,7 @@ export default function NewQuestionPage() {
                       onClick={() => toggleCorrect(option.id)}
                       className={`mt-1 shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
                         correctIds.includes(option.id)
-                          ? "bg-green-500 border-green-500 text-white"
+                          ? "bg-[rgb(var(--success))] border-[rgb(var(--success))] text-white"
                           : "border-gray-300 hover:border-green-400"
                       }`}
                     >
@@ -668,7 +668,7 @@ export default function NewQuestionPage() {
             <AdminFormCard title="Tags" description="Mots-clés pour la recherche">
               <AdminTagsInput
                 tags={watchedTags}
-                onChange={(tags: string[]) => setValue("tags", tags)}
+                onChange={(tags: string[]) => setValue("tags", tags, { shouldValidate: true })}
                 placeholder="Ajouter un tag..."
                 withCard={false}
               />
@@ -682,7 +682,7 @@ export default function NewQuestionPage() {
               status={watchedStatus}
               isPublic={watchedIsPublic}
               onStatusChange={(value) => setValue("status", value as QuestionStatus, { shouldValidate: true })}
-              onIsPublicChange={(value: boolean) => setValue("isPublic", value)}
+              onIsPublicChange={(value: boolean) => setValue("isPublic", value, { shouldValidate: true })}
               statusOptions={STATUS_OPTIONS}
             />
 

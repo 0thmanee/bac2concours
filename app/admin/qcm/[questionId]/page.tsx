@@ -102,11 +102,11 @@ export default function QuestionDetailPage({
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
       ACTIVE:
-        "bg-linear-to-r from-emerald-50 to-emerald-100 text-emerald-700 border-emerald-200",
+        "bg-linear-to-r from-[rgb(var(--success-light))] to-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] border-[rgb(var(--success))]",
       INACTIVE:
-        "bg-linear-to-r from-gray-50 to-gray-100 text-gray-600 border-gray-200",
+        "bg-linear-to-r from-[rgb(var(--neutral-50))] to-[rgb(var(--neutral-100))] text-[rgb(var(--neutral-600))] border-[rgb(var(--neutral-200))]",
       DRAFT:
-        "bg-linear-to-r from-amber-50 to-amber-100 text-amber-700 border-amber-200",
+        "bg-linear-to-r from-[rgb(var(--warning-light))] to-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))] border-[rgb(var(--warning))]",
     };
     const labels: Record<string, string> = {
       ACTIVE: "Actif",
@@ -124,9 +124,9 @@ export default function QuestionDetailPage({
 
   const getDifficultyBadge = (difficulty: string) => {
     const styles: Record<string, string> = {
-      EASY: "bg-green-50 text-green-700 border-green-200",
-      MEDIUM: "bg-yellow-50 text-yellow-700 border-yellow-200",
-      HARD: "bg-red-50 text-red-700 border-red-200",
+      EASY: "bg-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] border-[rgb(var(--success))]",
+      MEDIUM: "bg-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))] border-[rgb(var(--warning))]",
+      HARD: "bg-[rgb(var(--error-light))] text-[rgb(var(--error-dark))] border-[rgb(var(--error))]",
     };
     const labels: Record<string, string> = {
       EASY: "Facile",
@@ -145,11 +145,11 @@ export default function QuestionDetailPage({
   const getContentTypeIcon = (contentType?: string) => {
     switch (contentType) {
       case "MATH":
-        return <FunctionSquare className="h-4 w-4 text-purple-500" />;
+        return <FunctionSquare className="h-4 w-4 text-[rgb(var(--brand-600))]" />;
       case "IMAGE":
-        return <ImageIcon className="h-4 w-4 text-blue-500" />;
+        return <ImageIcon className="h-4 w-4 text-[rgb(var(--info))]" />;
       default:
-        return <Type className="h-4 w-4 text-gray-500" />;
+        return <Type className="h-4 w-4 text-[rgb(var(--neutral-500))]" />;
     }
   };
 
@@ -285,7 +285,7 @@ export default function QuestionDetailPage({
                       key={option.id}
                       className={`flex items-start gap-3 p-4 rounded-lg border-2 ${
                         isCorrect
-                          ? "border-green-300 bg-green-50 dark:bg-green-950/20"
+                          ? "border-[rgb(var(--success))] bg-[rgb(var(--success-light))] dark:bg-[rgb(var(--success-dark))]"
                           : "border-ops bg-ops-bg-secondary"
                       }`}
                     >
@@ -293,8 +293,8 @@ export default function QuestionDetailPage({
                       <div
                         className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
                           isCorrect
-                            ? "bg-green-500 text-white"
-                            : "bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                            ? "bg-[rgb(var(--success))] text-white"
+                            : "bg-[rgb(var(--neutral-200))] text-[rgb(var(--neutral-600))] dark:bg-[rgb(var(--neutral-700))] dark:text-[rgb(var(--neutral-300))]"
                         }`}
                       >
                         {letter}
@@ -308,7 +308,7 @@ export default function QuestionDetailPage({
                             {contentType}
                           </span>
                           {isCorrect && (
-                            <span className="text-xs text-green-600 font-medium flex items-center gap-1">
+                            <span className="text-xs text-[rgb(var(--success))] font-medium flex items-center gap-1">
                               <CheckCircle className="h-3 w-3" />
                               Correct
                             </span>

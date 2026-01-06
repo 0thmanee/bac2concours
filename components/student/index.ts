@@ -3,7 +3,6 @@ export { StudentPageHeader } from "./student-page-header";
 export { StudentEmptyState } from "./student-empty-state";
 export { StudentMediaCard } from "./student-media-card";
 export { StudentCategoryBadge } from "./student-category-badge";
-export { StudentStarRating } from "./student-star-rating";
 
 // Student detail page components
 export { StudentDetailHeader } from "./student-detail-header";

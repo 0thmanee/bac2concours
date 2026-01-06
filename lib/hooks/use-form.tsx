@@ -111,7 +111,7 @@ export function FormField({ label, error, required, description, children }: For
       {label && (
         <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
           {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
+          {required && <span className="text-[rgb(var(--error))] ml-1">*</span>}
         </label>
       )}
       {children}
@@ -119,7 +119,7 @@ export function FormField({ label, error, required, description, children }: For
         <p className="text-sm text-muted-foreground">{description}</p>
       )}
       {error && (
-        <p className="text-sm text-red-600">{error}</p>
+        <p className="text-sm text-[rgb(var(--error))]">{error}</p>
       )}
     </div>
   )

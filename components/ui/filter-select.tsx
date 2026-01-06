@@ -35,7 +35,7 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
   return (
     <div className="relative">
       {label && (
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-[rgb(var(--neutral-700))] dark:text-[rgb(var(--neutral-300))] mb-2">
           {label}
         </label>
       )}
@@ -43,13 +43,13 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
         <SelectTrigger 
           className={cn(
             "!h-10 !py-0 !leading-10 px-4",
-            "border-gray-300 dark:border-gray-700",
-            "bg-white dark:bg-gray-900",
-            "text-gray-900 dark:text-white",
-            "hover:border-gray-400 dark:hover:border-gray-600",
+            "border-[rgb(var(--neutral-300))] dark:border-[rgb(var(--neutral-700))]",
+            "bg-white dark:bg-[rgb(var(--neutral-900))]",
+            "text-[rgb(var(--neutral-900))] dark:text-white",
+            "hover:border-[rgb(var(--neutral-400))] dark:hover:border-[rgb(var(--neutral-600))]",
             "focus:ring-brand-500/20",
             "focus:border-brand-500 dark:focus:border-brand-500",
-            "data-[placeholder]:text-gray-400 dark:data-[placeholder]:text-gray-500",
+            "data-[placeholder]:text-[rgb(var(--neutral-400))] dark:data-[placeholder]:text-[rgb(var(--neutral-500))]",
             "transition-all duration-200",
             "[&>span]:line-clamp-1",
             className
@@ -59,8 +59,8 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
         </SelectTrigger>
         <SelectContent 
           className={cn(
-            "bg-white dark:bg-gray-900",
-            "border-gray-200 dark:border-gray-800",
+            "bg-white dark:bg-[rgb(var(--neutral-900))]",
+            "border-[rgb(var(--neutral-200))] dark:border-[rgb(var(--neutral-800))]",
             "max-h-[300px]"
           )}
         >

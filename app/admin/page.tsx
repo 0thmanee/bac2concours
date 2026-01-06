@@ -190,8 +190,8 @@ export default async function AdminDashboard() {
                     </div>
                     <span className={`ml-2 rounded-full px-2 py-0.5 text-xs font-medium ${
                       user.status === "ACTIVE" 
-                        ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" 
-                        : "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400"
+                        ? "bg-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] dark:bg-[rgb(var(--success))]/30 dark:text-[rgb(var(--success-light))]" 
+                        : "bg-[rgb(var(--neutral-100))] text-[rgb(var(--neutral-700))] dark:bg-[rgb(var(--neutral-900))]/30 dark:text-[rgb(var(--neutral-400))]"
                     }`}>
                       {user.status === "ACTIVE" ? "Actif" : "Inactif"}
                     </span>

@@ -454,13 +454,13 @@ export default function NewBookPage() {
               onStatusChange={(value) => setValue("status", value as BookStatus, { shouldValidate: true })}
               statusOptions={BOOK_STATUS_OPTIONS}
               isPublic={watchedIsPublic}
-              onIsPublicChange={(value) => setValue("isPublic", value)}
+              onIsPublicChange={(value) => setValue("isPublic", value, { shouldValidate: true })}
             />
 
             {/* Tags */}
             <AdminTagsInput
               tags={watchedTags}
-              onChange={(tags) => setValue("tags", tags)}
+              onChange={(tags) => setValue("tags", tags, { shouldValidate: true })}
               placeholder="ex: exercices, corrigés, bac"
               helpText="Utilisez des étiquettes pertinentes pour améliorer la recherche"
             />

@@ -3,7 +3,6 @@
 import { ReactNode } from "react";
 import { LucideIcon } from "lucide-react";
 import { SupabaseImage } from "@/components/ui/supabase-image";
-import { StudentStarRating } from "./student-star-rating";
 import { StudentCategoryBadge } from "./student-category-badge";
 
 interface MediaCardMetric {
@@ -24,7 +23,6 @@ interface StudentMediaCardProps {
   category?: string | null;
   level?: string | null;
   metrics?: MediaCardMetric[];
-  rating?: number | null;
   actions?: ReactNode;
   overlayContent?: ReactNode;
 }
@@ -42,7 +40,6 @@ export function StudentMediaCard({
   category,
   level,
   metrics,
-  rating,
   actions,
   overlayContent,
 }: StudentMediaCardProps) {
@@ -119,16 +116,6 @@ export function StudentMediaCard({
                 </div>
               )}
             </div>
-          </div>
-
-          {/* Rating and Actions */}
-          <div className="space-y-3 mt-auto pt-3">
-            {rating && rating > 0 && (
-              <div className="pb-2">
-                <StudentStarRating rating={rating} />
-              </div>
-            )}
-            {actions && <div className="flex gap-2">{actions}</div>}
           </div>
         </div>
       </div>

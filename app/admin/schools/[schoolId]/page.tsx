@@ -106,9 +106,9 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      ACTIVE: "bg-linear-to-r from-emerald-50 to-emerald-100 text-emerald-700 border-emerald-200",
-      INACTIVE: "bg-linear-to-r from-gray-50 to-gray-100 text-gray-600 border-gray-200",
-      DRAFT: "bg-linear-to-r from-amber-50 to-amber-100 text-amber-700 border-amber-200",
+      ACTIVE: "bg-linear-to-r from-[rgb(var(--success-light))] to-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] border-[rgb(var(--success-light))]",
+      INACTIVE: "bg-linear-to-r from-[rgb(var(--neutral-100))] to-[rgb(var(--neutral-100))] text-[rgb(var(--neutral-600))] border-[rgb(var(--neutral-200))]",
+      DRAFT: "bg-linear-to-r from-[rgb(var(--warning-light))] to-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))] border-[rgb(var(--warning))]",
     };
     const labels: Record<string, string> = {
       ACTIVE: "Actif",
@@ -138,7 +138,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
               </span>
             )}
             {school.featured && (
-              <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg bg-linear-to-r from-yellow-50 to-yellow-100 text-yellow-700 border border-yellow-200">
+              <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--warning-light))] to-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))] border border-[rgb(var(--warning))]">
                 <Star className="h-3 w-3 mr-1 fill-current" />
                 À la une
               </span>
@@ -294,7 +294,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
                   <p className="text-base text-ops-primary mt-1 flex items-center gap-1">
                     {school.bourses ? (
                       <>
-                        <CheckCircle2 className="h-4 w-4 text-green-500" />
+                        <CheckCircle2 className="h-4 w-4 text-[rgb(var(--success))]" />
                         Oui
                       </>
                     ) : (

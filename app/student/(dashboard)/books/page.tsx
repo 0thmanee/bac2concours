@@ -150,7 +150,7 @@ export default function StudentBooksPage() {
               metrics={[
                 { icon: Eye, value: book.views },
               ]}
-              rating={book.rating}
+
               actions={
                 <>
                   <Button

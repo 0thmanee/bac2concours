@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Trash2, Eye, Star, FileText, BookOpen, User, School, Calendar } from "lucide-react";
+import { Edit, Trash2, Eye, FileText, BookOpen, User, School, Calendar } from "lucide-react";
 import { MetricCard } from "@/components/ui/metric-card";
 import { useBook, useDeleteBook, useIncrementBookCounter } from "@/lib/hooks/use-books";
 import { toast } from "sonner";
@@ -151,12 +151,6 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
           color="blue"
         />
         <MetricCard
-          title="Note Moyenne"
-          value={book.rating?.toFixed(1) || "0.0"}
-          icon={Star}
-          color="yellow"
-        />
-        <MetricCard
           title="Pages"
           value={book.totalPages?.toLocaleString() || "0"}
           icon={FileText}
@@ -272,12 +266,6 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
                   <BookOpen className="h-4 w-4" />
                   {book.totalPages} pages
                 </p>
-              </div>
-              <div className="pt-3">
-                <Button onClick={handleDownload} className="ops-btn-primary w-full h-9 gap-2">
-                  <Download className="h-4 w-4" />
-                  Télécharger le PDF
-                </Button>
               </div>
             </CardContent>
           </Card>

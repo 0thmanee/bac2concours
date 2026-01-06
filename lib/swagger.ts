@@ -67,8 +67,10 @@ export const openApiSpec = {
           tags: { type: "array", items: { type: "string" } },
           downloads: { type: "integer" },
           views: { type: "integer" },
-          rating: { type: "number" },
-          status: { type: "string", enum: ["ACTIVE", "INACTIVE", "PROCESSING"] },
+          status: {
+            type: "string",
+            enum: ["ACTIVE", "INACTIVE", "PROCESSING"],
+          },
           createdAt: { type: "string", format: "date-time" },
           updatedAt: { type: "string", format: "date-time" },
         },
@@ -88,8 +90,10 @@ export const openApiSpec = {
           tags: { type: "array", items: { type: "string" } },
           duration: { type: "integer", nullable: true },
           views: { type: "integer" },
-          rating: { type: "number" },
-          status: { type: "string", enum: ["ACTIVE", "INACTIVE", "PROCESSING"] },
+          status: {
+            type: "string",
+            enum: ["ACTIVE", "INACTIVE", "PROCESSING"],
+          },
           createdAt: { type: "string", format: "date-time" },
           updatedAt: { type: "string", format: "date-time" },
         },
@@ -179,11 +183,27 @@ export const openApiSpec = {
         description: "Admin only - Get paginated list of users",
         security: [{ bearerAuth: [] }],
         parameters: [
-          { name: "page", in: "query", schema: { type: "integer", default: 1 } },
-          { name: "limit", in: "query", schema: { type: "integer", default: 10 } },
+          {
+            name: "page",
+            in: "query",
+            schema: { type: "integer", default: 1 },
+          },
+          {
+            name: "limit",
+            in: "query",
+            schema: { type: "integer", default: 10 },
+          },
           { name: "search", in: "query", schema: { type: "string" } },
-          { name: "role", in: "query", schema: { type: "string", enum: ["ADMIN", "STUDENT"] } },
-          { name: "status", in: "query", schema: { type: "string", enum: ["ACTIVE", "INACTIVE"] } },
+          {
+            name: "role",
+            in: "query",
+            schema: { type: "string", enum: ["ADMIN", "STUDENT"] },
+          },
+          {
+            name: "status",
+            in: "query",
+            schema: { type: "string", enum: ["ACTIVE", "INACTIVE"] },
+          },
         ],
         responses: {
           200: {
@@ -193,7 +213,10 @@ export const openApiSpec = {
                 schema: {
                   type: "object",
                   properties: {
-                    data: { type: "array", items: { $ref: "#/components/schemas/User" } },
+                    data: {
+                      type: "array",
+                      items: { $ref: "#/components/schemas/User" },
+                    },
                     pagination: {
                       type: "object",
                       properties: {
@@ -218,8 +241,16 @@ export const openApiSpec = {
         description: "Get paginated list of books",
         security: [{ bearerAuth: [] }],
         parameters: [
-          { name: "page", in: "query", schema: { type: "integer", default: 1 } },
-          { name: "limit", in: "query", schema: { type: "integer", default: 10 } },
+          {
+            name: "page",
+            in: "query",
+            schema: { type: "integer", default: 1 },
+          },
+          {
+            name: "limit",
+            in: "query",
+            schema: { type: "integer", default: 10 },
+          },
           { name: "search", in: "query", schema: { type: "string" } },
           { name: "category", in: "query", schema: { type: "string" } },
           { name: "level", in: "query", schema: { type: "string" } },
@@ -233,7 +264,10 @@ export const openApiSpec = {
                 schema: {
                   type: "object",
                   properties: {
-                    data: { type: "array", items: { $ref: "#/components/schemas/Book" } },
+                    data: {
+                      type: "array",
+                      items: { $ref: "#/components/schemas/Book" },
+                    },
                     pagination: { type: "object" },
                   },
                 },
@@ -268,8 +302,16 @@ export const openApiSpec = {
         description: "Get paginated list of videos",
         security: [{ bearerAuth: [] }],
         parameters: [
-          { name: "page", in: "query", schema: { type: "integer", default: 1 } },
-          { name: "limit", in: "query", schema: { type: "integer", default: 10 } },
+          {
+            name: "page",
+            in: "query",
+            schema: { type: "integer", default: 1 },
+          },
+          {
+            name: "limit",
+            in: "query",
+            schema: { type: "integer", default: 10 },
+          },
           { name: "search", in: "query", schema: { type: "string" } },
           { name: "category", in: "query", schema: { type: "string" } },
           { name: "level", in: "query", schema: { type: "string" } },
@@ -283,7 +325,10 @@ export const openApiSpec = {
                 schema: {
                   type: "object",
                   properties: {
-                    data: { type: "array", items: { $ref: "#/components/schemas/Video" } },
+                    data: {
+                      type: "array",
+                      items: { $ref: "#/components/schemas/Video" },
+                    },
                     pagination: { type: "object" },
                   },
                 },
@@ -315,7 +360,8 @@ export const openApiSpec = {
       get: {
         tags: ["Payments"],
         summary: "List pending payments",
-        description: "Admin only - Get list of users with pending payment verification",
+        description:
+          "Admin only - Get list of users with pending payment verification",
         security: [{ bearerAuth: [] }],
         responses: {
           200: {

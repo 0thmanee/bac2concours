@@ -76,7 +76,6 @@ export const videoService = {
         tags: true,
         duration: true,
         views: true,
-        rating: true,
         status: true,
         isPublic: true,
         createdAt: true,
@@ -218,9 +217,6 @@ export const videoService = {
         _sum: {
           views: true,
         },
-        _avg: {
-          rating: true,
-        },
       }),
     ]);
 
@@ -229,7 +225,6 @@ export const videoService = {
       active,
       inactive,
       totalViews: aggregations._sum.views || 0,
-      averageRating: aggregations._avg.rating || 0,
     };
   },
 
@@ -291,7 +286,6 @@ export const videoService = {
         thumbnailFile: true,
         duration: true,
         views: true,
-        rating: true,
         category: true,
         level: true,
       },

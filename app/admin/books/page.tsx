@@ -109,7 +109,7 @@ export default function AdminBooksPage() {
     activeBooks: 0,
     totalDownloads: 0,
     totalViews: 0,
-    averageRating: 0,
+
     booksByCategory: {},
     booksByLevel: {},
   };
@@ -130,9 +130,9 @@ export default function AdminBooksPage() {
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      ACTIVE: "bg-linear-to-r from-emerald-50 to-emerald-100 text-emerald-700 border-emerald-200",
-      INACTIVE: "bg-linear-to-r from-gray-50 to-gray-100 text-gray-600 border-gray-200",
-      PROCESSING: "bg-linear-to-r from-amber-50 to-amber-100 text-amber-700 border-amber-200",
+      ACTIVE: "bg-linear-to-r from-[rgb(var(--success-light))] to-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] border-[rgb(var(--success-light))]",
+      INACTIVE: "bg-linear-to-r from-[rgb(var(--neutral-100))] to-[rgb(var(--neutral-100))] text-[rgb(var(--neutral-600))] border-[rgb(var(--neutral-200))]",
+      PROCESSING: "bg-linear-to-r from-[rgb(var(--warning-light))] to-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))] border-[rgb(var(--warning-light))]",
     };
     const labels: Record<string, string> = {
       ACTIVE: "Actif",
@@ -164,7 +164,7 @@ export default function AdminBooksPage() {
     },
     {
       title: "Note Moyenne",
-      value: stats.averageRating.toFixed(1),
+      value: "0.0",
       icon: Star,
       color: "purple",
       subtitle: "Sur 5.0",
@@ -267,12 +267,6 @@ export default function AdminBooksPage() {
             <Eye className="h-3 w-3" />
             {book.views}
           </span>
-          {book.rating && (
-            <span className="flex items-center gap-1">
-              <Star className="h-3 w-3 fill-current text-yellow-500" />
-              {book.rating.toFixed(1)}
-            </span>
-          )}
         </div>
       ),
     },

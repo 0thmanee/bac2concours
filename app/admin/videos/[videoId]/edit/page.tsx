@@ -316,7 +316,7 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
                     École/Filière
                   </Label>
                   <Select
-                    value={watch("school")}
+                    value={watch("school") || ""}
                     onValueChange={(value) => setValue("school", value, { shouldValidate: true })}
                     disabled={isLoadingSchools}
                   >
@@ -341,7 +341,7 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
                     Niveau
                   </Label>
                   <Select
-                    value={watch("level")}
+                    value={watch("level") || ""}
                     onValueChange={(value) => setValue("level", value, { shouldValidate: true })}
                     disabled={isLoadingDropdowns}
                   >
@@ -366,7 +366,7 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
                     Catégorie
                   </Label>
                   <Select
-                    value={watch("category")}
+                    value={watch("category") || ""}
                     onValueChange={(value) => setValue("category", value, { shouldValidate: true })}
                     disabled={isLoadingDropdowns}
                   >
@@ -391,7 +391,7 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
                     Matière
                   </Label>
                   <Select
-                    value={watch("subject")}
+                    value={watch("subject") || ""}
                     onValueChange={(value) => setValue("subject", value, { shouldValidate: true })}
                     disabled={isLoadingDropdowns}
                   >
@@ -531,13 +531,13 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
               onStatusChange={(value) => setValue("status", value as VideoStatus, { shouldValidate: true })}
               statusOptions={VIDEO_STATUS_OPTIONS}
               isPublic={watchedIsPublic}
-              onIsPublicChange={(value) => setValue("isPublic", value)}
+              onIsPublicChange={(value) => setValue("isPublic", value, { shouldValidate: true })}
             />
 
             {/* Tags */}
             <AdminTagsInput
               tags={watchedTags}
-              onChange={(tags) => setValue("tags", tags)}
+              onChange={(tags) => setValue("tags", tags, { shouldValidate: true })}
               placeholder="ex: cours, exercices, bac"
             />
           </div>

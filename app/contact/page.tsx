@@ -111,9 +111,9 @@ export default function ContactPage() {
   return (
     <>
       <PublicHeader />
-      <div className="relative min-h-screen bg-white dark:bg-gray-900 overflow-hidden pt-16 sm:pt-20">
+      <div className="relative min-h-screen bg-white dark:bg-[rgb(var(--neutral-900))] overflow-hidden pt-16 sm:pt-20">
         {/* Background */}
-        <div className="absolute inset-0 bg-gray-50 dark:bg-gray-900" />
+        <div className="absolute inset-0 bg-[rgb(var(--neutral-50))] dark:bg-[rgb(var(--neutral-900))]" />
 
         {/* Decorative elements */}
         <div className="absolute top-40 left-10 w-72 h-72 bg-[rgb(var(--brand-200))]/20 rounded-full blur-3xl" />
@@ -130,7 +130,7 @@ export default function ContactPage() {
                 </span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-gray-900 dark:text-white">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-[rgb(var(--neutral-900))] dark:text-white">
                 Nous sommes à votre{" "}
                 <span className="bg-gradient-to-r from-[rgb(var(--brand-500))] to-[rgb(var(--brand-700))] bg-clip-text text-transparent">
                   écoute

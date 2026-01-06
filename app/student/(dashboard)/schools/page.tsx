@@ -160,7 +160,7 @@ export default function StudentSchoolsPage() {
               overlayContent={
                 school.featured ? (
                   <div className="absolute top-2 right-2">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-yellow-500 text-white shadow-sm">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-[rgb(var(--warning))] text-white shadow-sm">
                       <Award className="h-3 w-3 mr-1" />
                       Recommandée
                     </span>

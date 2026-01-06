@@ -525,13 +525,13 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
                 <Switch
                   id="bourses"
                   checked={watchedBourses}
-                  onCheckedChange={(checked) => setValue("bourses", checked)}
+                  onCheckedChange={(checked) => setValue("bourses", checked, { shouldValidate: true })}
                 />
               </div>
 
               <AdminTagsInput
                 tags={watchedDocumentsRequis}
-                onChange={(tags: string[]) => setValue("documentsRequis", tags)}
+                onChange={(tags: string[]) => setValue("documentsRequis", tags, { shouldValidate: true })}
                 cardTitle="Documents requis"
                 cardDescription="Ajouter les documents nécessaires pour l'inscription"
                 placeholder="Ajouter un document (ex: Baccalauréat)"
@@ -593,7 +593,7 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
             >
               <AdminTagsInput
                 tags={watchedSpecializations}
-                onChange={(tags: string[]) => setValue("specializations", tags)}
+                onChange={(tags: string[]) => setValue("specializations", tags, { shouldValidate: true })}
                 cardTitle="Spécialisations"
                 cardDescription="Domaines d'expertise de l'école"
                 placeholder="Ajouter une spécialisation"
@@ -602,7 +602,7 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
 
               <AdminTagsInput
                 tags={watchedAvantages}
-                onChange={(tags: string[]) => setValue("avantages", tags)}
+                onChange={(tags: string[]) => setValue("avantages", tags, { shouldValidate: true })}
                 cardTitle="Avantages"
                 cardDescription="Points forts de l'école"
                 placeholder="Ajouter un avantage"
@@ -619,7 +619,7 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
               onStatusChange={(value) => setValue("status", value as SchoolStatus, { shouldValidate: true })}
               statusOptions={SCHOOL_STATUS_OPTIONS}
               isPublic={watchedIsPublic}
-              onIsPublicChange={(checked) => setValue("isPublic", checked)}
+              onIsPublicChange={(checked) => setValue("isPublic", checked, { shouldValidate: true })}
             />
 
             {/* Featured */}
@@ -634,7 +634,7 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
                 <Switch
                   id="featured"
                   checked={watchedFeatured}
-                  onCheckedChange={(checked) => setValue("featured", checked)}
+                  onCheckedChange={(checked) => setValue("featured", checked, { shouldValidate: true })}
                 />
               </div>
             </AdminFormCard>

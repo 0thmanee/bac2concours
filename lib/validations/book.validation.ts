@@ -85,7 +85,7 @@ export const bookFiltersSchema = z.object({
   page: z.number().int().positive().default(1),
   limit: z.number().int().positive().max(100).default(20),
   sortBy: z
-    .enum(["title", "createdAt", "downloads", "views", "rating"])
+    .enum(["title", "createdAt", "downloads", "views"])
     .default("createdAt"),
   sortOrder: z.enum(["asc", "desc"]).default("desc"),
 });
@@ -124,7 +124,6 @@ export const bookStatsSchema = z.object({
   activeBooks: z.number(),
   totalDownloads: z.number(),
   totalViews: z.number(),
-  averageRating: z.number(),
   booksByCategory: z.record(z.string(), z.number()),
   booksByLevel: z.record(z.string(), z.number()),
 });

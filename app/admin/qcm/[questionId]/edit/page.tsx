@@ -442,7 +442,7 @@ export default function EditQuestionPage({ params }: PageProps) {
                       onClick={() => toggleCorrect(option.id)}
                       className={`mt-1 shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
                         correctIds.includes(option.id)
-                          ? "bg-green-500 border-green-500 text-white"
+                          ? "bg-[rgb(var(--success))] border-[rgb(var(--success))] text-white"
                           : "border-gray-300 hover:border-green-400"
                       }`}
                     >
@@ -661,7 +661,7 @@ export default function EditQuestionPage({ params }: PageProps) {
                     École/Filière
                   </Label>
                   <Select
-                    value={watch("school")}
+                    value={watch("school") || ""}
                     onValueChange={(value) => setValue("school", value, { shouldValidate: true })}
                     disabled={isLoadingSchools}
                   >
@@ -683,7 +683,7 @@ export default function EditQuestionPage({ params }: PageProps) {
                     Matière
                   </Label>
                   <Select
-                    value={watch("matiere")}
+                    value={watch("matiere") || ""}
                     onValueChange={(value) => setValue("matiere", value, { shouldValidate: true })}
                     disabled={isLoadingDropdowns}
                   >
@@ -717,7 +717,7 @@ export default function EditQuestionPage({ params }: PageProps) {
                     Difficulté
                   </Label>
                   <Select
-                    value={watch("difficulty")}
+                    value={watch("difficulty") || ""}
                     onValueChange={(value) =>
                       setValue("difficulty", value as QuestionDifficulty, { shouldValidate: true })
                     }
@@ -770,7 +770,7 @@ export default function EditQuestionPage({ params }: PageProps) {
             <AdminFormCard title="Tags" description="Mots-clés pour la recherche">
               <AdminTagsInput
                 tags={watchedTags}
-                onChange={(tags: string[]) => setValue("tags", tags)}
+                onChange={(tags: string[]) => setValue("tags", tags, { shouldValidate: true })}
                 placeholder="Ajouter un tag..."
                 withCard={false}
               />
@@ -784,7 +784,7 @@ export default function EditQuestionPage({ params }: PageProps) {
               status={watchedStatus}
               isPublic={watchedIsPublic}
               onStatusChange={(value) => setValue("status", value as QuestionStatus, { shouldValidate: true })}
-              onIsPublicChange={(value: boolean) => setValue("isPublic", value)}
+              onIsPublicChange={(value: boolean) => setValue("isPublic", value, { shouldValidate: true })}
               statusOptions={STATUS_OPTIONS}
             />
 

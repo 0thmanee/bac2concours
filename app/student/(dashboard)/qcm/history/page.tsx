@@ -70,10 +70,10 @@ function formatTimeSpent(seconds: number | null): string {
 
 // Get score color based on percentage
 function getScoreColor(percentage: number): string {
-  if (percentage >= 80) return "text-green-600 dark:text-green-400";
-  if (percentage >= 60) return "text-yellow-600 dark:text-yellow-400";
-  if (percentage >= 40) return "text-orange-600 dark:text-orange-400";
-  return "text-red-600 dark:text-red-400";
+  if (percentage >= 80) return "text-[rgb(var(--success))] dark:text-[rgb(var(--success-light))]";
+  if (percentage >= 60) return "text-[rgb(var(--warning))] dark:text-[rgb(var(--warning-light))]";
+  if (percentage >= 40) return "text-[rgb(var(--info))] dark:text-[rgb(var(--info-light))]";
+  return "text-[rgb(var(--error))] dark:text-[rgb(var(--error-light))]";
 }
 
 // Get score badge variant

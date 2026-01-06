@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LucideIcon, Eye, Star } from "lucide-react";
+import { LucideIcon, Eye } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { SupabaseImage } from "@/components/ui/supabase-image";
 
@@ -10,7 +10,6 @@ interface RelatedItem {
   title: string;
   thumbnailUrl?: string | null;
   views?: number | null;
-  rating?: number | null;
   duration?: string | null;
   extraInfo?: string;
 }
@@ -85,12 +84,6 @@ export function StudentRelatedItems({
                   <span className="flex items-center gap-1">
                     <Eye className="h-3 w-3" />
                     {item.views}
-                  </span>
-                )}
-                {item.rating !== undefined && item.rating !== null && item.rating > 0 && (
-                  <span className="flex items-center gap-1">
-                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                    {item.rating.toFixed(1)}
                   </span>
                 )}
                 {item.extraInfo && <span>{item.extraInfo}</span>}

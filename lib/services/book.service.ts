@@ -76,7 +76,6 @@ export const bookService = {
         tags: true,
         downloads: true,
         views: true,
-        rating: true,
         status: true,
         isPublic: true,
         createdAt: true,
@@ -241,9 +240,6 @@ export const bookService = {
             downloads: true,
             views: true,
           },
-          _avg: {
-            rating: true,
-          },
         }),
         prisma.book.groupBy({
           by: ["category"],
@@ -274,7 +270,6 @@ export const bookService = {
       activeBooks,
       totalDownloads: aggregations._sum.downloads || 0,
       totalViews: aggregations._sum.views || 0,
-      averageRating: aggregations._avg.rating || 0,
       booksByCategory,
       booksByLevel,
     };
@@ -349,9 +344,8 @@ export const bookService = {
         level: true,
         coverFile: true,
         views: true,
-        rating: true,
       },
-      orderBy: [{ views: "desc" }, { rating: "desc" }],
+      orderBy: [{ views: "desc" }],
       take: limit,
     });
   },

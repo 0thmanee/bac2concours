@@ -43,20 +43,6 @@ enum FileType {
   OTHER
 }
 
-enum ReviewableType {
-  BOOK
-  VIDEO
-  COURSE
-  ARTICLE
-}
-
-enum ReviewStatus {
-  PENDING
-  APPROVED
-  REJECTED
-  FLAGGED
-}
-
 enum VideoStatus {
   ACTIVE
   INACTIVE
@@ -104,7 +90,6 @@ model User {
   videos                  Video[] // Videos uploaded by this user (admin)
   schools                 School[] // Schools uploaded by this user (admin)
   uploadedFiles           File[] // Files uploaded by this user
-  reviews                 Review[] // Reviews written by this user
   questions               Question[] // Questions uploaded by this user (admin)
   quizAttempts            QuizAttempt[] // Quiz attempts by this user (student)
 
@@ -254,14 +239,12 @@ model Book {
   tags       String[] // Array of tags for filtering
   downloads  Int        @default(0)
   views      Int        @default(0)
-  rating     Float      @default(0)
   status     BookStatus @default(ACTIVE)
   isPublic   Boolean    @default(true)
 
   // Relations
   uploadedById String
-  uploadedBy   User     @relation(fields: [uploadedById], references: [id])
-  reviews      Review[]
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
 
   // Audit fields
   createdAt DateTime @default(now())
@@ -297,7 +280,6 @@ model Video {
   tags     String[] // Array of tags for filtering
   duration Int? // Duration in seconds
   views    Int         @default(0)
-  rating   Float       @default(0)
   status   VideoStatus @default(ACTIVE)
   isPublic Boolean     @default(true)
 
@@ -306,8 +288,7 @@ model Video {
 
   // Relations
   uploadedById String
-  uploadedBy   User     @relation(fields: [uploadedById], references: [id])
-  reviews      Review[]
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
 
   // Audit fields
   createdAt DateTime @default(now())
@@ -356,52 +337,6 @@ model File {
   @@index([type])
   @@index([createdAt])
   @@map("files")
-}
-
-// ============================================================
-// REVIEWS (Polymorphic - for Books, Videos, Courses, etc.)
-// ============================================================
-
-model Review {
-  id      String       @id @default(cuid())
-  rating  Int // 1-5 stars
-  comment String?      @db.Text
-  status  ReviewStatus @default(PENDING)
-
-  // Polymorphic relation fields
-  reviewableType ReviewableType // Type of resource being reviewed
-  reviewableId   String // ID of the resource being reviewed
-
-  // Specific relations (optional - based on reviewableType)
-  bookId String?
-  book   Book?   @relation(fields: [bookId], references: [id], onDelete: Cascade)
-
-  videoId String?
-  video   Video?  @relation(fields: [videoId], references: [id], onDelete: Cascade)
-
-  // Author of the review
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  // Moderation
-  isVerifiedPurchase Boolean   @default(false) // For future e-commerce integration
-  helpfulCount       Int       @default(0) // Number of users who found this helpful
-  reportCount        Int       @default(0) // Number of times reported
-  moderatedAt        DateTime?
-  moderatedBy        String? // Admin user ID who moderated
-
-  // Audit fields
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([reviewableType, reviewableId])
-  @@index([bookId])
-  @@index([videoId])
-  @@index([userId])
-  @@index([status])
-  @@index([rating])
-  @@index([createdAt])
-  @@map("reviews")
 }
 
 // ============================================================

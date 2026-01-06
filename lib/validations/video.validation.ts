@@ -75,9 +75,7 @@ export const videoFiltersSchema = z.object({
   tags: z.array(z.string()).optional(),
   page: z.number().int().positive().default(1),
   limit: z.number().int().positive().max(100).default(20),
-  sortBy: z
-    .enum(["title", "createdAt", "views", "rating"])
-    .default("createdAt"),
+  sortBy: z.enum(["title", "createdAt", "views"]).default("createdAt"),
   sortOrder: z.enum(["asc", "desc"]).default("desc"),
 });
 
@@ -129,7 +127,6 @@ export const videoResponseSchema = z.object({
   tags: z.array(z.string()),
   duration: z.number().nullable(),
   views: z.number(),
-  rating: z.number(),
   status: videoStatusSchema,
   isPublic: z.boolean(),
   createdAt: z.date(),
@@ -162,7 +159,6 @@ export type VideoStats = {
   active: number;
   inactive: number;
   totalViews: number;
-  averageRating: number;
 };
 
 // Video with relations (from API)
@@ -187,7 +183,6 @@ export type VideoWithRelations = {
   tags: string[];
   duration: number | null;
   views: number;
-  rating: number;
   status: string;
   isPublic: boolean;
   createdAt: Date;

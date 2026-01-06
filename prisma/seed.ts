@@ -1230,7 +1230,6 @@ async function main() {
   // Clear existing users (and cascaded data)
   await prisma.quizAnswer.deleteMany();
   await prisma.quizAttempt.deleteMany();
-  await prisma.review.deleteMany();
   await prisma.notification.deleteMany();
   await prisma.question.deleteMany();
   await prisma.book.deleteMany();
@@ -1293,14 +1292,24 @@ async function main() {
   for (const bookData of booksData) {
     await prisma.book.create({
       data: {
-        ...bookData,
+        title: bookData.title,
+        author: bookData.author,
+        school: bookData.school,
+        category: bookData.category,
+        level: bookData.level,
+        subject: bookData.subject,
+        description: bookData.description,
+        fileUrl: bookData.fileUrl,
+        fileName: bookData.fileName,
+        fileSize: bookData.fileSize,
+        totalPages: bookData.totalPages,
+        tags: bookData.tags,
         uploadedById: adminId,
         status: BookStatus.ACTIVE,
         isPublic: true,
         language: "fr",
         views: randomInt(50, 500),
         downloads: randomInt(20, 200),
-        rating: randomFloat(3.5, 5.0),
       },
     });
     console.log(`   ✓ ${bookData.title}`);
@@ -1315,13 +1324,20 @@ async function main() {
     const youtubeId = extractYouTubeId(videoData.url);
     await prisma.video.create({
       data: {
-        ...videoData,
+        title: videoData.title,
+        description: videoData.description,
+        url: videoData.url,
+        school: videoData.school,
+        category: videoData.category,
+        level: videoData.level,
+        subject: videoData.subject,
+        duration: videoData.duration,
+        tags: videoData.tags,
         youtubeId,
         uploadedById: adminId,
         status: VideoStatus.ACTIVE,
         isPublic: true,
         views: randomInt(100, 1000),
-        rating: randomFloat(3.5, 5.0),
       },
     });
     console.log(`   ✓ ${videoData.title}`);

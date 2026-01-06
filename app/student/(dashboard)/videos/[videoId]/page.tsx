@@ -87,17 +87,6 @@ export default function StudentVideoDetailPage() {
     { icon: Eye, value: `${video.views || 0} vues` },
   ];
 
-  if (video.rating && video.rating > 0) {
-    headerMetrics.push({
-      icon: Star,
-      value: (
-        <span className="flex items-center gap-1">
-          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-          {video.rating.toFixed(1)}
-        </span>
-      ),
-    });
-  }
 
   if (video.duration) {
     headerMetrics.push({
@@ -125,7 +114,6 @@ export default function StudentVideoDetailPage() {
       v.thumbnailFile?.publicUrl ||
       (v.youtubeId ? getYouTubeThumbnailUrl(v.youtubeId) : null),
     views: v.views,
-    rating: v.rating,
     duration: formatDuration(v.duration),
   }));
 

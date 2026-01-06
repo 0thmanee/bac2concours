@@ -494,7 +494,7 @@ function CreateUserDialog({
               <Label htmlFor="role">Role</Label>
               <Select
                 value={selectedRole}
-                onValueChange={(value) => setValue("role", value as typeof USER_ROLE.ADMIN | typeof USER_ROLE.STUDENT)}
+                onValueChange={(value) => setValue("role", value as typeof USER_ROLE.ADMIN | typeof USER_ROLE.STUDENT, { shouldValidate: true })}
               >
                 <SelectTrigger id="role" className="ops-input h-9">
                   <SelectValue />
@@ -512,7 +512,7 @@ function CreateUserDialog({
             <div className="space-y-2">
               <Label htmlFor="status">Status</Label>
               <Select
-                onValueChange={(value) => setValue("status", value as typeof USER_STATUS.ACTIVE | typeof USER_STATUS.INACTIVE)}
+                onValueChange={(value) => setValue("status", value as typeof USER_STATUS.ACTIVE | typeof USER_STATUS.INACTIVE, { shouldValidate: true })}
               >
                 <SelectTrigger id="status" className="ops-input h-9">
                   <SelectValue placeholder="Select status" />
@@ -650,7 +650,7 @@ function EditUserDialog({
               <Label htmlFor="edit-role">Role</Label>
               <Select
                 value={selectedRole}
-                onValueChange={(value) => setValue("role", value as typeof USER_ROLE.ADMIN | typeof USER_ROLE.STUDENT)}
+                onValueChange={(value) => setValue("role", value as typeof USER_ROLE.ADMIN | typeof USER_ROLE.STUDENT, { shouldValidate: true })}
               >
                 <SelectTrigger id="edit-role" className="ops-input h-9">
                   <SelectValue />
@@ -669,7 +669,7 @@ function EditUserDialog({
               <Label htmlFor="edit-status">Status</Label>
               <Select
                 value={selectedStatus}
-                onValueChange={(value) => setValue("status", value as typeof USER_STATUS.ACTIVE | typeof USER_STATUS.INACTIVE)}
+                onValueChange={(value) => setValue("status", value as typeof USER_STATUS.ACTIVE | typeof USER_STATUS.INACTIVE, { shouldValidate: true })}
               >
                 <SelectTrigger id="edit-status" className="ops-input h-9">
                   <SelectValue />

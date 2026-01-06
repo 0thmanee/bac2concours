@@ -119,7 +119,7 @@ export default function StudentSidebar() {
       >
         <Button
           variant="ghost"
-          className="w-full justify-start gap-3 h-9 text-sm font-medium hover:bg-neutral-100 text-ops-secondary"
+          className="w-full justify-start gap-3 h-9 text-sm font-medium hover:bg-[rgb(var(--neutral-100))] text-ops-secondary"
           onClick={handleLogout}
           disabled={logoutMutation.isPending}
         >

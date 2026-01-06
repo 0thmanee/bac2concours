@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { AdminFormCard } from "./admin-form-card";
 
 interface StatusOption {
@@ -72,12 +73,10 @@ export function AdminStatusVisibility({
           </Label>
           <p className="text-xs text-ops-tertiary">{publicDescription}</p>
         </div>
-        <input
+        <Switch
           id="isPublic"
-          type="checkbox"
           checked={isPublic}
-          onChange={(e) => onIsPublicChange(e.target.checked)}
-          className="h-4 w-4 rounded border-gray-300 text-brand-500 focus:ring-brand-500"
+          onCheckedChange={onIsPublicChange}
         />
       </div>
     </AdminFormCard>

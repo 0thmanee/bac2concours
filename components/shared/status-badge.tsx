@@ -13,18 +13,18 @@ interface StatusBadgeProps {
 
 const statusClasses: Record<string, string> = {
   // Common statuses
-  ACTIVE: "bg-green-100 text-green-700 hover:bg-green-100",
-  INACTIVE: "bg-gray-100 text-gray-700 hover:bg-gray-100",
-  PROCESSING: "bg-yellow-100 text-yellow-700 hover:bg-yellow-100",
+  ACTIVE: "bg-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] hover:bg-[rgb(var(--success-light))]",
+  INACTIVE: "bg-[rgb(var(--neutral-100))] text-[rgb(var(--neutral-600))] hover:bg-[rgb(var(--neutral-100))]",
+  PROCESSING: "bg-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))] hover:bg-[rgb(var(--warning-light))]",
   // Payment statuses
-  PENDING: "bg-yellow-100 text-yellow-700 hover:bg-yellow-100",
-  APPROVED: "bg-green-100 text-green-700 hover:bg-green-100",
-  REJECTED: "bg-red-100 text-red-700 hover:bg-red-100",
-  NOT_SUBMITTED: "bg-gray-100 text-gray-700 hover:bg-gray-100",
+  PENDING: "bg-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))] hover:bg-[rgb(var(--warning-light))]",
+  APPROVED: "bg-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] hover:bg-[rgb(var(--success-light))]",
+  REJECTED: "bg-[rgb(var(--error-light))] text-[rgb(var(--error-dark))] hover:bg-[rgb(var(--error-light))]",
+  NOT_SUBMITTED: "bg-[rgb(var(--neutral-100))] text-[rgb(var(--neutral-600))] hover:bg-[rgb(var(--neutral-100))]",
 };
 
 function getStatusBadgeClasses(status: string): string {
-  return statusClasses[status.toUpperCase()] || "bg-gray-100 text-gray-700 hover:bg-gray-100";
+  return statusClasses[status.toUpperCase()] || "bg-[rgb(var(--neutral-100))] text-[rgb(var(--neutral-600))] hover:bg-[rgb(var(--neutral-100))]";
 }
 
 function formatStatus(status: string): string {
