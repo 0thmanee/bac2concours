@@ -24,7 +24,7 @@ export function StatCard({
   className,
 }: StatCardProps) {
   return (
-    <Card className={cn("ops-card border border-ops", className)}>
+    <Card className={cn("ops-card border border-border", className)}>
       <CardContent className="p-6">
         <div className="flex items-start justify-between">
           <div className="space-y-2 flex-1">

@@ -58,10 +58,10 @@ export function DataTable<T>({
 }: DataTableProps<T>) {
   if (isLoading) {
     return (
-      <Card className={cn("overflow-hidden border-gray-200 dark:border-gray-800", className)}>
+      <Card className={cn("overflow-hidden border-border", className)}>
         <Table>
           <TableHeader>
-            <TableRow className="border-b border-gray-200 dark:border-gray-800 hover:bg-transparent bg-gray-50/50 dark:bg-gray-900/50">
+            <TableRow className="border-b border-border hover:bg-transparent bg-gray-50/50 dark:bg-gray-900/50">
               {columns.map((column, index) => (
                 <TableHead
                   key={index}
@@ -77,7 +77,7 @@ export function DataTable<T>({
           </TableHeader>
           <TableBody>
             {Array.from({ length: loadingRows }).map((_, index) => (
-              <TableRow key={index} className="border-b border-gray-200 dark:border-gray-800">
+              <TableRow key={index} className="border-b border-border">
                 {columns.map((_, colIndex) => (
                   <TableCell key={colIndex}>
                     <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
@@ -93,18 +93,18 @@ export function DataTable<T>({
 
   if (data.length === 0 && emptyState) {
     return (
-      <Card className={cn("p-12 border-gray-200 dark:border-gray-800", className)}>
+      <Card className={cn("p-12 border-border", className)}>
         {emptyState}
       </Card>
     );
   }
 
   return (
-    <Card className={cn("overflow-hidden border-gray-200 dark:border-gray-800", className)}>
+    <Card className={cn("overflow-hidden border-border", className)}>
       <div className="overflow-x-auto">
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-gray-200 dark:border-gray-800 hover:bg-transparent bg-gray-50/50 dark:bg-gray-900/50">
+          <TableRow className="border-b border-border hover:bg-transparent bg-gray-50/50 dark:bg-gray-900/50">
             {columns.map((column, index) => (
               <TableHead
                 key={index}
@@ -129,7 +129,7 @@ export function DataTable<T>({
                 key={keyExtractor(row)}
                 onClick={() => onRowClick?.(row)}
                 className={cn(
-                  "border-b border-gray-200 dark:border-gray-800",
+                  "border-b border-border",
                   "transition-colors duration-150",
                   onRowClick && "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900/50",
                   computedRowClassName
@@ -219,7 +219,7 @@ function TablePagination({
   };
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between px-4 py-3 border-t border-gray-200 dark:border-gray-800">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between px-4 py-3 border-t border-border">
       {/* Items info */}
       <p className="text-sm text-ops-tertiary text-center sm:text-left">
         <span className="hidden sm:inline">Affichage de </span>

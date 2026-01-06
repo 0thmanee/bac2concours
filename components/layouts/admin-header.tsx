@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AUTH_ROUTES, ADMIN_ROUTES } from "@/lib/routes";
 import { NotificationBell } from "@/components/notifications/notification-bell";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface AdminHeaderProps {
   userName: string;
@@ -48,7 +49,7 @@ export function AdminHeader({ userName, userEmail }: AdminHeaderProps) {
 
   return (
     <header 
-      className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b border-ops bg-ops-surface px-4 md:px-6"
+      className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b border-border bg-ops-surface px-4 md:px-6"
     >
       <SidebarTrigger className="md:hidden" />
       
@@ -66,14 +67,17 @@ export function AdminHeader({ userName, userEmail }: AdminHeaderProps) {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-2 ml-auto">
+      <div className="flex items-center gap-2 ml-auto border-0!">
+        {/* Theme Toggle */}
+        <ThemeToggle />
+        
         {/* Notifications */}
         <NotificationBell />
 
         {/* User Menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-9 gap-2 px-2">
+            <Button variant="ghost" className="h-9 gap-2 px-2 border-0">
               <Avatar className="h-7 w-7">
                 <AvatarFallback 
                   className="text-xs font-semibold bg-metric-purple-light text-metric-purple-dark"

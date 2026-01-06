@@ -255,7 +255,7 @@ export default function QuestionDetailPage({
                     alt="Question image"
                     width={400}
                     height={300}
-                    className="rounded-lg border border-ops object-contain"
+                    className="rounded-lg border border-border object-contain"
                     unoptimized
                   />
                 </div>
@@ -286,7 +286,7 @@ export default function QuestionDetailPage({
                       className={`flex items-start gap-3 p-4 rounded-lg border-2 ${
                         isCorrect
                           ? "border-[rgb(var(--success))] bg-[rgb(var(--success-light))] dark:bg-[rgb(var(--success-dark))]"
-                          : "border-ops bg-ops-bg-secondary"
+                          : "border-border bg-ops-bg-secondary"
                       }`}
                     >
                       {/* Letter badge */}
@@ -320,7 +320,7 @@ export default function QuestionDetailPage({
                             alt={`Option ${letter}`}
                             width={200}
                             height={120}
-                            className="rounded-md border border-ops object-contain max-h-32"
+                            className="rounded-md border border-border object-contain max-h-32"
                             unoptimized
                           />
                         ) : (

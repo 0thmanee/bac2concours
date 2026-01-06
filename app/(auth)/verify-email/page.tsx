@@ -80,7 +80,7 @@ function VerifyEmailForm() {
       {isPending && (
         <>
           <div className="flex justify-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-neutral-100 border border-ops">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-neutral-100 border border-border">
               <Loader2 className="h-8 w-8 animate-spin text-action-primary" />
             </div>
           </div>
@@ -187,7 +187,7 @@ export default function VerifyEmailPage() {
     <Suspense fallback={
       <div className="space-y-6">
         <div className="flex justify-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-neutral-100 border border-ops">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-neutral-100 border border-border">
             <Loader2 className="h-8 w-8 animate-spin text-action-primary" />
           </div>
         </div>

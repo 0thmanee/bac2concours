@@ -9,7 +9,7 @@ export default function NotFound() {
       <div className="w-full max-w-md text-center space-y-6">
         {/* Icon */}
         <div className="flex justify-center">
-          <div className="rounded-full bg-neutral-100 border border-ops p-4">
+          <div className="rounded-full bg-neutral-100 border border-border p-4">
             <FileQuestion className="h-16 w-16 text-ops-tertiary" />
           </div>
         </div>

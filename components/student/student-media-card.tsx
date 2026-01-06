@@ -48,7 +48,7 @@ export function StudentMediaCard({
   return (
     <div
       onClick={onClick}
-      className="ops-card border border-ops group h-full flex flex-col overflow-hidden transition-all duration-300 hover:border-[rgb(var(--brand-400))] dark:hover:border-[rgb(var(--brand-600))] cursor-pointer"
+      className="ops-card border border-border group h-full flex flex-col overflow-hidden transition-all duration-300 hover:border-[rgb(var(--brand-400))] dark:hover:border-[rgb(var(--brand-600))] cursor-pointer"
     >
       <div className="relative flex-1 flex flex-col p-4 sm:p-5">
         {/* Thumbnail */}
@@ -106,7 +106,7 @@ export function StudentMediaCard({
                 </div>
               )}
               {metrics && metrics.length > 0 && (
-                <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 pt-1 border-t border-gray-100 dark:border-gray-800">
+                <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 pt-1 border-t border-border">
                   {metrics.map((metric, index) => (
                     <span key={index} className="flex items-center gap-1.5">
                       <metric.icon size={13} className="text-gray-400" />

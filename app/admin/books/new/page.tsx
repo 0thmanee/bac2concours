@@ -314,7 +314,7 @@ export default function NewBookPage() {
                 <div className="space-y-2">
                   {coverPreview ? (
                     <div className="space-y-2">
-                      <div className="relative w-full h-64 rounded-lg overflow-hidden border border-ops">
+                      <div className="relative w-full h-64 rounded-lg overflow-hidden border border-border">
                         <SupabaseImage
                           src={coverPreview}
                           alt="Aperçu de la couverture"
@@ -333,7 +333,7 @@ export default function NewBookPage() {
                       </div>
                       <label
                         htmlFor="cover"
-                        className="flex items-center justify-center w-full h-10 border border-ops rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                        className="flex items-center justify-center w-full h-10 border border-border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                       >
                         <Upload className="h-4 w-4 text-ops-secondary mr-2" />
                         <span className="text-sm text-ops-secondary">Changer l&apos;image</span>
@@ -349,7 +349,7 @@ export default function NewBookPage() {
                   ) : (
                     <label
                       htmlFor="cover"
-                      className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-ops rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] transition-colors"
+                      className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] transition-colors"
                     >
                       <div className="flex flex-col items-center justify-center pt-5 pb-6">
                         <Upload className="h-10 w-10 text-ops-tertiary mb-3" />
@@ -466,7 +466,7 @@ export default function NewBookPage() {
             />
 
             {/* Help */}
-            <Card className="ops-card border border-ops ops-status-info">
+            <Card className="ops-card border border-border ops-status-info">
               <CardContent className="p-4">
                 <div className="flex gap-3">
                   <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />

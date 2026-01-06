@@ -267,7 +267,7 @@ function QuizContent() {
                   className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                     isSelected
                       ? "border-primary bg-primary/5"
-                      : "border-ops hover:border-primary/50 hover:bg-ops-bg-secondary dark:hover:bg-ops-bg-secondary"
+                      : "border-border hover:border-primary/50 hover:bg-ops-bg-secondary dark:hover:bg-ops-bg-secondary"
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -287,7 +287,7 @@ function QuizContent() {
                           alt={`Option ${letter}`}
                           width={200}
                           height={120}
-                          className="rounded-md border border-ops object-contain max-h-32"
+                          className="rounded-md border border-border object-contain max-h-32"
                           unoptimized
                         />
                       ) : (

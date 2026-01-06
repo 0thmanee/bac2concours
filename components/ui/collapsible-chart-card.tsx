@@ -26,7 +26,7 @@ export function CollapsibleChartCard({
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
 
   return (
-    <Card className={cn("ops-card border border-ops", className)}>
+    <Card className={cn("ops-card border border-border", className)}>
       <CardHeader className="flex flex-row items-center justify-between pb-4">
         <div className="space-y-1">
           <CardTitle className="text-lg font-semibold text-ops-primary">

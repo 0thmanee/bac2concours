@@ -16,7 +16,7 @@ export function ComingSoon({ title, description, icon: Icon }: ComingSoonProps) 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="pb-4 border-b border-ops">
+      <div className="pb-4 border-b border-border">
         <div className="flex items-center gap-3">
           {Icon && <Icon className="h-6 w-6 text-action-primary" />}
           <div>

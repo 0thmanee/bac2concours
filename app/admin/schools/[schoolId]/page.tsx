@@ -225,7 +225,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
         <div className="md:col-span-2 space-y-6">
           {/* School Image */}
           {school.imageFile?.publicUrl && (
-            <Card className="ops-card border border-ops">
+            <Card className="ops-card border border-border">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-ops-primary">
                   Image de l&apos;École
@@ -246,7 +246,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
 
           {/* Long Description */}
           {school.longDescription && (
-            <Card className="ops-card border border-ops">
+            <Card className="ops-card border border-border">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-ops-primary">
                   Description Détaillée
@@ -259,7 +259,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
           )}
 
           {/* Admission Information */}
-          <Card className="ops-card border border-ops">
+          <Card className="ops-card border border-border">
             <CardHeader>
               <CardTitle className="text-lg font-semibold text-ops-primary flex items-center gap-2">
                 <FileText className="h-5 w-5" />
@@ -319,7 +319,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
 
           {/* Specializations */}
           {school.specializations && school.specializations.length > 0 && (
-            <Card className="ops-card border border-ops">
+            <Card className="ops-card border border-border">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-ops-primary flex items-center gap-2">
                   <GraduationCap className="h-5 w-5" />
@@ -340,7 +340,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
 
           {/* Advantages */}
           {school.avantages && school.avantages.length > 0 && (
-            <Card className="ops-card border border-ops">
+            <Card className="ops-card border border-border">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-ops-primary flex items-center gap-2">
                   <Star className="h-5 w-5" />
@@ -362,7 +362,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
 
           {/* Partnerships */}
           {school.partenariats && school.partenariats.length > 0 && (
-            <Card className="ops-card border border-ops">
+            <Card className="ops-card border border-border">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-ops-primary flex items-center gap-2">
                   <Briefcase className="h-5 w-5" />
@@ -372,7 +372,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   {school.partenariats.map((partner, index) => (
-                    <span key={index} className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+                    <span key={index} className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-border">
                       {partner}
                     </span>
                   ))}
@@ -386,7 +386,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
         <div className="space-y-6">
           {/* Logo */}
           {school.logoFile?.publicUrl && (
-            <Card className="ops-card border border-ops">
+            <Card className="ops-card border border-border">
               <CardHeader>
                 <CardTitle className="text-base font-semibold text-ops-primary">
                   Logo
@@ -405,7 +405,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
           )}
 
           {/* Contact Information */}
-          <Card className="ops-card border border-ops">
+          <Card className="ops-card border border-border">
             <CardHeader>
               <CardTitle className="text-base font-semibold text-ops-primary">
                 Informations de Contact
@@ -451,7 +451,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
 
           {/* Services & Infrastructure */}
           {((school.services && school.services.length > 0) || (school.infrastructures && school.infrastructures.length > 0)) && (
-            <Card className="ops-card border border-ops">
+            <Card className="ops-card border border-border">
               <CardHeader>
                 <CardTitle className="text-base font-semibold text-ops-primary">
                   Services & Infrastructures
@@ -487,7 +487,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
           )}
 
           {/* Publication Information */}
-          <Card className="ops-card border border-ops">
+          <Card className="ops-card border border-border">
             <CardHeader>
               <CardTitle className="text-base font-semibold text-ops-primary">
                 Informations de Publication

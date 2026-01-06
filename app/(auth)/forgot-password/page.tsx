@@ -41,11 +41,11 @@ export default function ForgotPasswordPage() {
 
         {/* Success Message */}
         <div className="text-center space-y-2">
-          <h2 className="text-2xl font-semibold text-ops-primary">
-            Check Your Email
+          <h2 className="text-2xl font-semibold text-foreground">
+            Vérifiez votre Email
           </h2>
-          <p className="text-sm text-ops-secondary">
-            We&apos;ve sent password reset instructions to your email address.
+          <p className="text-sm text-muted-foreground">
+            Nous avons envoyé les instructions de réinitialisation à votre email.
           </p>
         </div>
 
@@ -81,12 +81,15 @@ export default function ForgotPasswordPage() {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div>
-        <h2 className="text-2xl font-semibold mb-1 text-ops-primary">
-          Reset Password
+      <div className="text-center">
+        <span className="inline-block px-4 py-1 bg-purple-900/30 border border-purple-600/30 rounded-full text-purple-300 font-medium text-sm mb-4">
+          Mot de Passe Oublié
+        </span>
+        <h2 className="text-2xl font-semibold mb-1 text-foreground">
+          Réinitialiser le Mot de Passe
         </h2>
-        <p className="text-sm text-ops-secondary">
-          Enter your email to receive reset instructions
+        <p className="text-sm text-muted-foreground">
+          Entrez votre email pour recevoir les instructions
         </p>
       </div>
 

@@ -18,7 +18,7 @@ interface AdminStatsGridProps {
   columns?: 3 | 4 | 5;
 }
 
-export function AdminStatsGrid({ stats, columns = 4 }: AdminStatsGridProps) {
+export function AdminStatsGrid({ stats, columns = 3 }: AdminStatsGridProps) {
   const gridCols = {
     3: "md:grid-cols-3",
     4: "md:grid-cols-4",

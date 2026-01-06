@@ -181,7 +181,7 @@ export default function PaymentsPage() {
         <CardContent>
           <Table>
             <TableHeader>
-              <TableRow className="border-ops">
+              <TableRow className="border-border">
                 <TableHead className="font-medium text-ops-secondary">Utilisateur</TableHead>
                 <TableHead className="font-medium text-ops-secondary">Date d&apos;inscription</TableHead>
                 <TableHead className="font-medium text-ops-secondary">Date de soumission</TableHead>
@@ -201,7 +201,7 @@ export default function PaymentsPage() {
                 </TableRow>
               ) : (
                 payments.map((user) => (
-                  <TableRow key={user.id} className="border-ops">
+                  <TableRow key={user.id} className="border-border">
                     <TableCell>
                       <div>
                         <p className="font-medium text-sm text-ops-primary">
@@ -282,7 +282,7 @@ export default function PaymentsPage() {
             {viewingUser?.paymentProofUrl && (
               <>
                 {viewingUser.paymentProofUrl.match(/\.(jpg|jpeg|png|webp)$/i) ? (
-                  <div className="relative w-full h-96 rounded-lg overflow-hidden border border-ops">
+                  <div className="relative w-full h-96 rounded-lg overflow-hidden border border-border">
                     <SupabaseImage
                       src={viewingUser.paymentProofUrl}
                       alt="Preuve de paiement"

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { QueryProvider } from "@/lib/providers/query-provider";
 import { ToastProvider } from "@/lib/providers/toast-provider";
+import { ThemeProvider } from "@/lib/providers/theme-provider";
+import NextAuthProvider from "@/lib/providers/auth-provider";
 import { I18nProvider } from "@/lib/i18n/provider";
 import "./globals.css";
 
@@ -35,14 +37,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={inter.variable}>
+    <html lang="fr" className={inter.variable} suppressHydrationWarning>
       <body className="font-sans antialiased">
-        <I18nProvider initialLocale="en">
-          <QueryProvider>
-            {children}
-            <ToastProvider />
-          </QueryProvider>
-        </I18nProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <I18nProvider initialLocale="en">
+            <NextAuthProvider>
+              <QueryProvider>
+                {children}
+                <ToastProvider />
+              </QueryProvider>
+            </NextAuthProvider>
+          </I18nProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

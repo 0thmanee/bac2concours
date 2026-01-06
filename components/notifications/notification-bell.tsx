@@ -104,9 +104,9 @@ export function NotificationBell() {
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-96 overflow-hidden rounded-xl border border-ops ops-card shadow-xl z-50">
+        <div className="absolute right-0 mt-2 w-96 overflow-hidden rounded-xl border border-border ops-card shadow-xl z-50">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-ops bg-muted/50">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/50">
             <div className="flex items-center gap-2">
               <Bell className="h-4 w-4 text-primary" />
               <h3 className="font-semibold text-sm text-ops-primary">Notifications</h3>
@@ -242,7 +242,7 @@ export function NotificationBell() {
 
           {/* Footer */}
           {notifications.length > 0 && (
-            <div className="px-4 py-2.5 border-t border-ops bg-muted/30">
+            <div className="px-4 py-2.5 border-t border-border bg-muted/30">
               <Button variant="ghost" size="sm" className="w-full text-xs text-primary hover:text-primary hover:bg-primary/10">
                 View all notifications
               </Button>

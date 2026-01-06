@@ -344,7 +344,7 @@ export default function NewVideoPage() {
                       <p className="text-xs text-ops-tertiary">
                         Miniature YouTube détectée:
                       </p>
-                      <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-ops">
+                      <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-border">
                         <Image
                           src={autoThumbnail}
                           alt="YouTube thumbnail"
@@ -361,7 +361,7 @@ export default function NewVideoPage() {
                   {/* Custom thumbnail preview */}
                   {thumbnailPreview ? (
                     <div className="space-y-2">
-                      <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-ops">
+                      <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-border">
                         <SupabaseImage
                           src={thumbnailPreview}
                           alt="Aperçu de la miniature"
@@ -380,7 +380,7 @@ export default function NewVideoPage() {
                       </div>
                       <label
                         htmlFor="thumbnail"
-                        className="flex items-center justify-center w-full h-10 border border-ops rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                        className="flex items-center justify-center w-full h-10 border border-border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                       >
                         <Upload className="h-4 w-4 text-ops-secondary mr-2" />
                         <span className="text-sm text-ops-secondary">Changer l&apos;image</span>
@@ -396,7 +396,7 @@ export default function NewVideoPage() {
                   ) : !autoThumbnail && (
                     <label
                       htmlFor="thumbnail-upload"
-                      className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-ops rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] transition-colors"
+                      className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] transition-colors"
                     >
                       <div className="flex flex-col items-center justify-center pt-5 pb-6">
                         <Upload className="h-10 w-10 text-ops-tertiary mb-3" />
@@ -417,7 +417,7 @@ export default function NewVideoPage() {
                   {autoThumbnail && !thumbnailPreview && (
                     <label
                       htmlFor="thumbnail-custom"
-                      className="flex items-center justify-center w-full h-10 border border-ops rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                      className="flex items-center justify-center w-full h-10 border border-border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                     >
                       <Upload className="h-4 w-4 text-ops-secondary mr-2" />
                       <span className="text-sm text-ops-secondary">Télécharger une miniature personnalisée</span>

@@ -515,7 +515,7 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
                 </div>
               </div>
 
-              <div className="flex items-center justify-between rounded-lg border border-ops p-4">
+              <div className="flex items-center justify-between rounded-lg border border-border p-4">
                 <div>
                   <Label htmlFor="bourses" className="text-sm font-medium">Bourses disponibles</Label>
                   <p className="text-xs text-ops-tertiary">
@@ -667,7 +667,7 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
                     </Button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center h-32 border-2 border-dashed border-ops rounded-lg cursor-pointer hover:bg-ops-hover transition-colors">
+                  <label className="flex flex-col items-center justify-center h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-ops-hover transition-colors">
                     <Upload className="h-6 w-6 text-ops-tertiary mb-2" />
                     <span className="text-sm text-ops-tertiary">Cliquer pour télécharger</span>
                     <input
@@ -712,7 +712,7 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
                     </Button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center h-32 border-2 border-dashed border-ops rounded-lg cursor-pointer hover:bg-ops-hover transition-colors">
+                  <label className="flex flex-col items-center justify-center h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-ops-hover transition-colors">
                     <Upload className="h-6 w-6 text-ops-tertiary mb-2" />
                     <span className="text-sm text-ops-tertiary">Cliquer pour télécharger</span>
                     <input

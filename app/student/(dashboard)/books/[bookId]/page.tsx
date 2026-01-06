@@ -128,7 +128,7 @@ export default function StudentBookDetailPage() {
         {/* Main Content */}
         <div className="md:col-span-2 space-y-6">
           {/* Book Cover */}
-          <Card className="ops-card border border-ops overflow-hidden">
+          <Card className="ops-card border border-border overflow-hidden">
             <CardContent className="p-6">
               <div className="flex flex-col sm:flex-row gap-6">
                 {/* Cover Image */}
@@ -167,7 +167,7 @@ export default function StudentBookDetailPage() {
                       </span>
                     )}
                     {book.totalPages && (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-gray-100 text-gray-700 dark:bg-gray-800/50 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-gray-100 text-gray-700 dark:bg-gray-800/50 dark:text-gray-300 border border-border">
                         {book.totalPages} pages
                       </span>
                     )}

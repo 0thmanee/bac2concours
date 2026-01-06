@@ -73,7 +73,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
       ACTIVE: "bg-linear-to-r from-emerald-50 to-emerald-100 text-emerald-700 border-emerald-200",
-      INACTIVE: "bg-linear-to-r from-gray-50 to-gray-100 text-gray-600 border-gray-200",
+      INACTIVE: "bg-linear-to-r from-gray-50 to-gray-100 text-gray-600 border-border",
       PROCESSING: "bg-linear-to-r from-amber-50 to-amber-100 text-amber-700 border-amber-200",
     };
     const labels: Record<string, string> = {
@@ -163,7 +163,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
         <div className="md:col-span-2 space-y-6">
           {/* Book Preview */}
           {book.coverFile?.publicUrl && (
-            <Card className="ops-card border border-ops">
+            <Card className="ops-card border border-border">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-ops-primary">
                   Aperçu de la Couverture
@@ -184,7 +184,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
           )}
 
           {/* Classification */}
-          <Card className="ops-card border border-ops">
+          <Card className="ops-card border border-border">
             <CardHeader>
               <CardTitle className="text-lg font-semibold text-ops-primary">
                 Classification
@@ -223,7 +223,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
 
           {/* Tags */}
           {book.tags && book.tags.length > 0 && (
-            <Card className="ops-card border border-ops">
+            <Card className="ops-card border border-border">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-ops-primary">
                   Étiquettes
@@ -245,7 +245,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
         {/* Sidebar */}
         <div className="space-y-6">
           {/* File Information */}
-          <Card className="ops-card border border-ops">
+          <Card className="ops-card border border-border">
             <CardHeader>
               <CardTitle className="text-base font-semibold text-ops-primary">
                 Informations du Fichier
@@ -271,7 +271,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
           </Card>
 
           {/* Upload Information */}
-          <Card className="ops-card border border-ops">
+          <Card className="ops-card border border-border">
             <CardHeader>
               <CardTitle className="text-base font-semibold text-ops-primary">
                 Informations de Publication

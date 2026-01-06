@@ -38,7 +38,7 @@ export function StudentRelatedItems({
   const thumbnailClass = thumbnailAspect === "book" ? "w-12 h-16" : "w-24 h-16";
 
   return (
-    <Card className="ops-card border border-ops">
+    <Card className="ops-card border border-border">
       <CardHeader>
         <CardTitle className="text-base font-semibold text-ops-primary">
           {title}

@@ -204,7 +204,7 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="mt-6 pt-4 border-t border-border">
             <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500 dark:text-gray-400">
               <span className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
@@ -307,7 +307,7 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
                             ? "bg-green-50/50 border-green-200 dark:bg-green-900/10 dark:border-green-800"
                             : isSelected && !isCorrect
                             ? "bg-red-50 border-red-300 dark:bg-red-900/20 dark:border-red-700"
-                            : "bg-gray-50 border-gray-200 dark:bg-gray-800/50 dark:border-gray-700"
+                            : "bg-gray-50 border-border dark:bg-gray-800/50 dark:border-border"
                         )}
                       >
                         {/* Selection indicator */}
@@ -319,7 +319,7 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
                             ? "border-green-500"
                             : isSelected
                             ? "border-red-500 bg-red-500"
-                            : "border-gray-300 dark:border-gray-600"
+                            : "border-border dark:border-gray-600"
                         )}>
                           {(isSelected || isCorrect) && (
                             isCorrect ? (
@@ -345,7 +345,7 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
                               alt="Option"
                               width={160}
                               height={100}
-                              className="rounded-md border border-ops object-contain max-h-24"
+                              className="rounded-md border border-border object-contain max-h-24"
                               unoptimized
                             />
                           ) : (

@@ -80,7 +80,7 @@ export function MetricCard({
   const styles = colorStyles[color];
 
   return (
-    <Card className={cn("border-0 transition-all", styles.bg, className)}>
+    <Card className={cn("border border-border bg-card transition-all", className)}>
       <CardContent>
         <div className="flex flex-col gap-4">
           {/* Icon */}
@@ -90,19 +90,19 @@ export function MetricCard({
 
           {/* Content */}
           <div className="space-y-1">
-            <p className="text-sm font-medium text-ops-secondary">
+            <p className="text-sm font-medium text-muted-foreground">
               {title}
             </p>
-            <p className={cn("text-3xl font-bold", styles.text)}>
+            <p className={cn("text-3xl font-bold text-foreground")}>
               {value}
             </p>
             {subtitle && (
-              <p className="text-xs text-ops-tertiary">
+              <p className="text-xs text-muted-foreground">
                 {subtitle}
               </p>
             )}
             {trend && (
-              <p className={cn("text-xs font-medium flex items-center gap-1", trend.isPositive ? "text-[rgb(var(--success))]" : "text-[rgb(var(--error))]")}>
+              <p className={cn("text-xs font-medium flex items-center gap-1", trend.isPositive ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")}>
                 <span>{trend.isPositive ? "↑" : "↓"}</span>
                 {trend.value}
               </p>

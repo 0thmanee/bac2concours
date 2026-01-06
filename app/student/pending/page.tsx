@@ -75,7 +75,7 @@ export default async function PendingPage() {
             </div>
           </div>
 
-          <div className="pt-4 border-t border-ops">
+          <div className="pt-4 border-t border-border">
             <div className="rounded-lg bg-[rgb(var(--neutral-50))] p-4">
               <p className="text-sm text-ops-secondary text-center">
                 <span className="font-medium text-ops-primary">

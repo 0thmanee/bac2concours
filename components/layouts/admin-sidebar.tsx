@@ -87,11 +87,11 @@ export default function AdminSidebar() {
 
   return (
     <Sidebar 
-      className="border-r border-ops bg-ops-surface"
+      className="border-r border-border bg-ops-surface"
     >
       {/* Header */}
       <SidebarHeader 
-        className="h-16 px-6 py-0 border-b border-ops flex-row! items-center justify-center"
+        className="h-16 px-6 py-0 border-b border-border flex-row! items-center justify-center"
       >
         {/* Logo */}
         <Image
@@ -117,10 +117,10 @@ export default function AdminSidebar() {
                       asChild 
                       isActive={isActive}
                       className={cn(
-                        "h-9 px-3 text-sm font-medium transition-colors",
+                        "h-9 px-3 text-sm font-medium",
                         isActive 
-                          ? "bg-[rgb(var(--ops-action-primary))] text-white hover:bg-[rgb(var(--ops-action-primary-hover))]"
-                          : "text-[rgb(var(--ops-text-secondary))] hover:bg-[rgb(var(--neutral-100))] hover:text-[rgb(var(--ops-text-primary))]"
+                          ? "bg-[rgb(var(--ops-action-primary))] text-white"
+                          : "text-[rgb(var(--ops-text-secondary))]"
                       )}
                     >
                       <Link href={item.href} className="flex items-center gap-3">
@@ -138,11 +138,11 @@ export default function AdminSidebar() {
 
       {/* Footer */}
       <SidebarFooter 
-        className="p-3 border-t border-ops"
+        className="p-3 border-t border-border"
       >
         <Button
           variant="ghost"
-          className="w-full justify-start gap-3 h-9 text-sm font-medium hover:bg-[rgb(var(--neutral-100))] text-ops-secondary"
+          className="w-full justify-start gap-3 h-9 text-sm font-medium text-ops-secondary"
           onClick={handleLogout}
           disabled={logoutMutation.isPending}
         >

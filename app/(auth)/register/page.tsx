@@ -112,12 +112,15 @@ export default function RegisterPage() {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div>
-        <h2 className="text-2xl font-semibold mb-1 text-ops-primary">
-          Create Account
+      <div className="text-center">
+        <span className="inline-block px-4 py-1 bg-purple-900/30 border border-purple-600/30 rounded-full text-purple-300 font-medium text-sm mb-4">
+          Nouveau Compte
+        </span>
+        <h2 className="text-2xl font-semibold mb-1 text-foreground">
+          Créer un Compte
         </h2>
-        <p className="text-sm text-ops-secondary">
-          Start your learning journey
+        <p className="text-sm text-muted-foreground">
+          Rejoignez la plateforme de préparation aux concours
         </p>
       </div>
 

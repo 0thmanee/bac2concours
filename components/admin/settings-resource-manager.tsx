@@ -168,7 +168,7 @@ export function SettingsResourceManager<T extends Resource>({
   };
 
   return (
-    <Card className="ops-card border border-ops">
+    <Card className="ops-card border border-border">
       <CardHeader className="pb-4 sm:pb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -209,7 +209,7 @@ export function SettingsResourceManager<T extends Resource>({
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow className="border-b border-ops hover:bg-transparent">
+                <TableRow className="border-b border-border hover:bg-transparent">
                   <TableHead className="text-ops-secondary font-medium text-xs uppercase tracking-wider">Nom</TableHead>
                   <TableHead className="hidden sm:table-cell text-ops-secondary font-medium text-xs uppercase tracking-wider">Description</TableHead>
                   <TableHead className="text-center text-ops-secondary font-medium text-xs uppercase tracking-wider">Statut</TableHead>
@@ -218,7 +218,7 @@ export function SettingsResourceManager<T extends Resource>({
               </TableHeader>
               <TableBody>
                 {resources.map((resource) => (
-                  <TableRow key={resource.id} className="border-b border-ops hover:bg-muted/50">
+                  <TableRow key={resource.id} className="border-b border-border hover:bg-muted/50">
                     <TableCell className="font-medium text-ops-primary">{resource.name}</TableCell>
                     <TableCell className="hidden sm:table-cell text-ops-secondary max-w-[200px] truncate">
                       {resource.description || "-"}
@@ -230,7 +230,7 @@ export function SettingsResourceManager<T extends Resource>({
                           Actif
                         </span>
                       ) : (
-                        <span className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-md bg-linear-to-r from-gray-50 to-gray-100 text-gray-600 border border-gray-200">
+                        <span className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-md bg-linear-to-r from-gray-50 to-gray-100 text-gray-600 border border-border">
                           <XCircle className="h-3 w-3 mr-1" />
                           Inactif
                         </span>
@@ -303,7 +303,7 @@ export function SettingsResourceManager<T extends Resource>({
                   className="ops-input resize-none"
                 />
               </div>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border border-ops">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border border-border">
                 <Label htmlFor="add-isActive" className="text-sm font-medium text-ops-primary cursor-pointer">
                   Actif
                 </Label>
@@ -319,7 +319,7 @@ export function SettingsResourceManager<T extends Resource>({
                 type="button"
                 variant="outline"
                 onClick={() => setIsAddDialogOpen(false)}
-                className="border-ops"
+                className="border-border"
               >
                 Annuler
               </Button>
@@ -377,7 +377,7 @@ export function SettingsResourceManager<T extends Resource>({
                   className="ops-input resize-none"
                 />
               </div>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border border-ops">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border border-border">
                 <Label htmlFor="edit-isActive" className="text-sm font-medium text-ops-primary cursor-pointer">
                   Actif
                 </Label>
@@ -393,7 +393,7 @@ export function SettingsResourceManager<T extends Resource>({
                 type="button"
                 variant="outline"
                 onClick={() => setIsEditDialogOpen(false)}
-                className="border-ops"
+                className="border-border"
               >
                 Annuler
               </Button>

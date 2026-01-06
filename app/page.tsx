@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { getDefaultDashboard } from "@/lib/routes";
-import { PublicHeader } from "@/components/marketing/public-header";
-import { HeroSection } from "@/components/marketing/hero-section";
+import NavBar from "@/components/landing/NavBar";
+import Hero from "@/components/landing/Hero";
 
 export default async function Home() {
   let session = null;
@@ -22,9 +22,9 @@ export default async function Home() {
 
   // Not authenticated - show homepage
   return (
-    <>
-      <PublicHeader />
-      <HeroSection />
-    </>
+    <main className="bg-main-bcg">
+      <NavBar />
+      <Hero />
+    </main>
   );
 }

@@ -380,7 +380,7 @@ export default function AdminVideosPage() {
       />
 
       {/* Metric Cards */}
-      <AdminStatsGrid stats={statsConfig} columns={4} />
+      <AdminStatsGrid stats={statsConfig} columns={3} />
 
       {/* Filters */}
       <AdminFilterBar

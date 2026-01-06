@@ -44,7 +44,7 @@ export function HeroSection() {
         {/* Main Hero */}
         <div className="pt-20 pb-16 md:pt-32 md:pb-24 text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-white/[0.03] border border-gray-200 dark:border-gray-800 rounded-full text-gray-700 dark:text-gray-300 font-medium text-sm mb-8 shadow-sm animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-white/[0.03] border border-border rounded-full text-gray-700 dark:text-gray-300 font-medium text-sm mb-8 shadow-sm animate-fade-in">
             <GraduationCap className="w-4 h-4 text-[rgb(var(--brand-600))] dark:text-[rgb(var(--brand-400))]" />
             <span>Préparation Concours 2026</span>
           </div>
@@ -78,7 +78,7 @@ export function HeroSection() {
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full sm:w-auto border-2 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-8 py-3 text-lg h-auto"
+                className="w-full sm:w-auto border-2 border-border text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-8 py-3 text-lg h-auto"
               >
                 Nous contacter
               </Button>
@@ -112,7 +112,7 @@ export function HeroSection() {
               return (
                 <div
                   key={index}
-                  className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] p-6 hover:border-gray-300 dark:hover:border-gray-700 transition-all duration-300 shadow-sm hover:shadow-md animate-fade-in-up"
+                  className="rounded-2xl border border-border bg-white dark:border-border dark:bg-white/[0.03] p-6 hover:border-border dark:hover:border-border transition-all duration-300 shadow-sm hover:shadow-md animate-fade-in-up"
                   style={{ animationDelay: `${600 + index * 100}ms` }}
                 >
                   <div className="w-12 h-12 bg-[rgb(var(--brand-50))] dark:bg-[rgb(var(--brand-950))]/30 rounded-xl flex items-center justify-center mb-4">

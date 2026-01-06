@@ -31,7 +31,7 @@ export function ErrorState({
           </Link>
         </Button>
       )}
-      <Card className="ops-card border border-ops">
+      <Card className="ops-card border border-border">
         <CardContent className="p-6 text-center">
           <p className="text-ops-secondary">{message}</p>
         </CardContent>

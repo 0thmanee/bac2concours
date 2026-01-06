@@ -302,7 +302,7 @@ export default function NewQuestionPage() {
                       alt="Question preview"
                       width={320}
                       height={200}
-                      className="max-w-xs rounded-lg border border-ops object-contain"
+                      className="max-w-xs rounded-lg border border-border object-contain"
                       unoptimized
                     />
                     <Button
@@ -316,7 +316,7 @@ export default function NewQuestionPage() {
                     </Button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-ops rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] hover:bg-ops-bg-secondary transition-colors">
+                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] hover:bg-ops-bg-secondary transition-colors">
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                       <ImageIcon className="w-8 h-8 text-ops-tertiary mb-2" />
                       <p className="text-sm text-ops-tertiary">
@@ -343,7 +343,7 @@ export default function NewQuestionPage() {
                 {options.map((option, index) => (
                   <div
                     key={option.id}
-                    className="flex items-start gap-3 p-3 rounded-lg border border-ops bg-ops-bg-secondary"
+                    className="flex items-start gap-3 p-3 rounded-lg border border-border bg-ops-bg-secondary"
                   >
                     {/* Correct answer toggle */}
                     <button
@@ -352,7 +352,7 @@ export default function NewQuestionPage() {
                       className={`mt-1 shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
                         correctIds.includes(option.id)
                           ? "bg-[rgb(var(--success))] border-[rgb(var(--success))] text-white"
-                          : "border-gray-300 hover:border-green-400"
+                          : "border-border hover:border-green-400"
                       }`}
                     >
                       {correctIds.includes(option.id) && (
@@ -435,7 +435,7 @@ export default function NewQuestionPage() {
                               alt={`Option ${index + 1}`}
                               width={160}
                               height={100}
-                              className="rounded-md border border-ops object-contain max-h-24"
+                              className="rounded-md border border-border object-contain max-h-24"
                               unoptimized
                             />
                             <Button
@@ -449,7 +449,7 @@ export default function NewQuestionPage() {
                             </Button>
                           </div>
                         ) : (
-                          <label className="flex items-center justify-center w-full h-20 border-2 border-dashed border-ops rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] transition-colors">
+                          <label className="flex items-center justify-center w-full h-20 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] transition-colors">
                             <div className="flex items-center gap-2 text-ops-tertiary">
                               <ImageIcon className="w-5 h-5" />
                               <span className="text-sm">Ajouter une image</span>
@@ -476,7 +476,7 @@ export default function NewQuestionPage() {
                             className="ops-input resize-none font-mono text-sm"
                           />
                           {option.contentType === "MATH" && option.text && (
-                            <div className="mt-2 p-2 ops-card rounded border border-ops">
+                            <div className="mt-2 p-2 ops-card rounded border border-border">
                               <span className="text-xs text-ops-tertiary block mb-1">Aperçu:</span>
                               <MathContent
                                 content={option.text}

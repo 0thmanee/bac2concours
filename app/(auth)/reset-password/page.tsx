@@ -114,12 +114,15 @@ function ResetPasswordForm() {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div>
-        <h2 className="text-2xl font-semibold mb-1 text-ops-primary">
-          Reset Password
+      <div className="text-center">
+        <span className="inline-block px-4 py-1 bg-purple-900/30 border border-purple-600/30 rounded-full text-purple-300 font-medium text-sm mb-4">
+          Nouveau Mot de Passe
+        </span>
+        <h2 className="text-2xl font-semibold mb-1 text-foreground">
+          Réinitialiser le Mot de Passe
         </h2>
-        <p className="text-sm text-ops-secondary">
-          Create a new secure password for your account
+        <p className="text-sm text-muted-foreground">
+          Créez un nouveau mot de passe sécurisé pour votre compte
         </p>
       </div>
 

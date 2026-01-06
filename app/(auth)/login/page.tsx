@@ -49,12 +49,15 @@ export default function LoginPage() {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div>
-        <h2 className="text-2xl font-semibold mb-1 text-ops-primary">
-          Sign In
+      <div className="text-center">
+        <span className="inline-block px-4 py-1 bg-purple-900/30 border border-purple-600/30 rounded-full text-purple-300 font-medium text-sm mb-4">
+          Espace Membre
+        </span>
+        <h2 className="text-2xl font-semibold mb-1 text-foreground">
+          Bienvenue
         </h2>
-        <p className="text-sm text-ops-secondary">
-          Access your operations dashboard
+        <p className="text-sm text-muted-foreground">
+          Veuillez entrer votre email et mot de passe pour vous connecter
         </p>
       </div>
 

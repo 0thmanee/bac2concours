@@ -17,7 +17,7 @@ export function StudentDetailCard({
   className = "",
 }: StudentDetailCardProps) {
   return (
-    <Card className={`ops-card border border-ops ${className}`}>
+    <Card className={`ops-card border border-border ${className}`}>
       <CardHeader>
         <CardTitle className="text-lg font-semibold text-ops-primary">
           {title}

@@ -17,7 +17,7 @@ interface StudentDetailInfoProps {
 
 export function StudentDetailInfo({ title, items }: StudentDetailInfoProps) {
   return (
-    <Card className="ops-card border border-ops">
+    <Card className="ops-card border border-border">
       <CardHeader>
         <CardTitle className="text-base font-semibold text-ops-primary">
           {title}

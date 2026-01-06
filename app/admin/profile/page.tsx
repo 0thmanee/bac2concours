@@ -98,7 +98,7 @@ export default function ProfilePage() {
         </p>
       </div>
 
-      <Card className="ops-card border border-ops">
+      <Card className="ops-card border border-border">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>

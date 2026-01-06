@@ -81,7 +81,7 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
       ACTIVE: "bg-linear-to-r from-emerald-50 to-emerald-100 text-emerald-700 border-emerald-200",
-      INACTIVE: "bg-linear-to-r from-gray-50 to-gray-100 text-gray-600 border-gray-200",
+      INACTIVE: "bg-linear-to-r from-gray-50 to-gray-100 text-gray-600 border-border",
       PROCESSING: "bg-linear-to-r from-amber-50 to-amber-100 text-amber-700 border-amber-200",
     };
     const labels: Record<string, string> = {
@@ -191,7 +191,7 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
         <div className="md:col-span-2 space-y-6">
           {/* Video Preview */}
           {thumbnailUrl && (
-            <Card className="ops-card border border-ops">
+            <Card className="ops-card border border-border">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-ops-primary">
                   Aperçu de la Vidéo
@@ -225,7 +225,7 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
           )}
 
           {/* Classification */}
-          <Card className="ops-card border border-ops">
+          <Card className="ops-card border border-border">
             <CardHeader>
               <CardTitle className="text-lg font-semibold text-ops-primary">
                 Classification
@@ -258,7 +258,7 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
 
           {/* Tags */}
           {video.tags && video.tags.length > 0 && (
-            <Card className="ops-card border border-ops">
+            <Card className="ops-card border border-border">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-ops-primary">
                   Étiquettes
@@ -280,7 +280,7 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Video Information */}
-          <Card className="ops-card border border-ops">
+          <Card className="ops-card border border-border">
             <CardHeader>
               <CardTitle className="text-base font-semibold text-ops-primary">
                 Informations de la Vidéo
@@ -321,7 +321,7 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
           </Card>
 
           {/* Publication Information */}
-          <Card className="ops-card border border-ops">
+          <Card className="ops-card border border-border">
             <CardHeader>
               <CardTitle className="text-base font-semibold text-ops-primary">
                 Informations de Publication

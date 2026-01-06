@@ -111,7 +111,7 @@ export default function PaymentPage() {
           </CardHeader>
           <CardContent className="space-y-6">
             {paymentStatus.paymentProofUrl && (
-              <div className="rounded-lg border border-ops p-4">
+              <div className="rounded-lg border border-border p-4">
                 <p className="text-sm text-ops-secondary mb-2">Document soumis :</p>
                 {paymentStatus.paymentProofUrl.match(/\.(jpg|jpeg|png|webp)$/i) ? (
                   <div className="relative w-full h-48 rounded-lg overflow-hidden">
@@ -181,7 +181,7 @@ export default function PaymentPage() {
             className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
               dragActive
                 ? "border-[rgb(var(--brand-500))] bg-[rgb(var(--brand-50))]"
-                : "border-ops hover:border-[rgb(var(--brand-300))]"
+                : "border-border hover:border-[rgb(var(--brand-300))]"
             }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}

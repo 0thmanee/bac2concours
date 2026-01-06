@@ -130,7 +130,7 @@ export default function StudentVideoDetailPage() {
         {/* Main Content */}
         <div className="md:col-span-2 space-y-6">
           {/* Video Player */}
-          <Card className="ops-card border border-ops overflow-hidden">
+          <Card className="ops-card border border-border overflow-hidden">
             <CardContent className="p-0">
               {embedUrl ? (
                 <div className="relative aspect-video w-full">

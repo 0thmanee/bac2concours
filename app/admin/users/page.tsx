@@ -268,7 +268,7 @@ export default function UsersPage() {
       <Card className="ops-card border-0">
         <Table>
           <TableHeader>
-            <TableRow className="border-ops">
+            <TableRow className="border-border">
               <TableHead className="font-medium text-ops-secondary">User</TableHead>
               <TableHead className="font-medium text-ops-secondary">Role</TableHead>
               <TableHead className="font-medium text-ops-secondary">Status</TableHead>
@@ -289,7 +289,7 @@ export default function UsersPage() {
               </TableRow>
             ) : (
               users.map((user) => (
-                <TableRow key={user.id} className="border-ops">
+                <TableRow key={user.id} className="border-border">
                   <TableCell>
                     <div>
                       <p className="font-medium text-sm text-ops-primary">

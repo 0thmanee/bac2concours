@@ -25,7 +25,7 @@ export function AdminFormCard({
   compact = false,
 }: AdminFormCardProps) {
   return (
-    <Card className="ops-card border border-ops">
+    <Card className="ops-card border border-border">
       <CardHeader>
         <CardTitle className={compact 
           ? "text-base font-semibold text-ops-primary" 

@@ -134,7 +134,7 @@ export default function StudentSchoolDetailPage() {
       />
 
       {/* Hero Section with Cover Image */}
-      <Card className="ops-card border border-ops overflow-hidden">
+      <Card className="ops-card border border-border overflow-hidden">
         <CardContent className="p-0">
           <div className="relative h-64 sm:h-80 lg:h-96 w-full">
             {school.imageFile?.publicUrl ? (
@@ -213,7 +213,7 @@ export default function StudentSchoolDetailPage() {
 
           {/* Key Statistics */}
           {(school.nombreEtudiants || school.tauxReussite || school.classementNational) && (
-            <Card className="ops-card border border-ops">
+            <Card className="ops-card border border-border">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg font-semibold text-ops-primary flex items-center gap-2">
                   <TrendingUp className="h-5 w-5 text-brand-500" />
@@ -262,7 +262,7 @@ export default function StudentSchoolDetailPage() {
 
           {/* Programs Section */}
           {school.programs && school.programs.length > 0 && (
-            <Card className="ops-card border border-ops">
+            <Card className="ops-card border border-border">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg font-semibold text-ops-primary flex items-center gap-2">
                   <BookOpen className="h-5 w-5 text-brand-500" />
@@ -273,7 +273,7 @@ export default function StudentSchoolDetailPage() {
                 {school.programs.map((program) => (
                   <div
                     key={program.id}
-                    className="p-4 rounded-xl border border-ops bg-ops-hover/30"
+                    className="p-4 rounded-xl border border-border bg-ops-hover/30"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
@@ -293,7 +293,7 @@ export default function StudentSchoolDetailPage() {
                       </div>
                     </div>
                     {program.requirements && program.requirements.length > 0 && (
-                      <div className="mt-3 pt-3 border-t border-ops">
+                      <div className="mt-3 pt-3 border-t border-border">
                         <p className="text-xs text-ops-tertiary mb-2">Prérequis:</p>
                         <div className="flex flex-wrap gap-2">
                           {program.requirements.map((req, idx) => (
@@ -331,7 +331,7 @@ export default function StudentSchoolDetailPage() {
 
           {/* Advantages */}
           {school.avantages && school.avantages.length > 0 && (
-            <Card className="ops-card border border-ops">
+            <Card className="ops-card border border-border">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg font-semibold text-ops-primary flex items-center gap-2">
                   <CheckCircle2 className="h-5 w-5 text-green-500" />
@@ -356,7 +356,7 @@ export default function StudentSchoolDetailPage() {
             (school.services && school.services.length > 0)) && (
             <div className="grid gap-6 md:grid-cols-2">
               {school.infrastructures && school.infrastructures.length > 0 && (
-                <Card className="ops-card border border-ops">
+                <Card className="ops-card border border-border">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-base font-semibold text-ops-primary flex items-center gap-2">
                       <Building2 className="h-5 w-5 text-brand-500" />
@@ -378,7 +378,7 @@ export default function StudentSchoolDetailPage() {
                 </Card>
               )}
               {school.services && school.services.length > 0 && (
-                <Card className="ops-card border border-ops">
+                <Card className="ops-card border border-border">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-base font-semibold text-ops-primary flex items-center gap-2">
                       <Briefcase className="h-5 w-5 text-brand-500" />
@@ -422,7 +422,7 @@ export default function StudentSchoolDetailPage() {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Admission Info */}
-          <Card className="ops-card border border-ops">
+          <Card className="ops-card border border-border">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg font-semibold text-ops-primary flex items-center gap-2">
                 <FileText className="h-5 w-5 text-brand-500" />
@@ -431,7 +431,7 @@ export default function StudentSchoolDetailPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               {school.seuilDeSelection && (
-                <div className="flex items-center justify-between py-2 border-b border-ops">
+                <div className="flex items-center justify-between py-2 border-b border-border">
                   <span className="text-sm text-ops-secondary">Seuil de sélection</span>
                   <span className="font-semibold text-ops-primary">
                     {school.seuilDeSelection}/20
@@ -439,7 +439,7 @@ export default function StudentSchoolDetailPage() {
                 </div>
               )}
               {school.fraisInscription && (
-                <div className="flex items-center justify-between py-2 border-b border-ops">
+                <div className="flex items-center justify-between py-2 border-b border-border">
                   <span className="text-sm text-ops-secondary">Frais d&apos;inscription</span>
                   <span className="font-semibold text-ops-primary">
                     {school.fraisInscription.toLocaleString()} DH
@@ -447,7 +447,7 @@ export default function StudentSchoolDetailPage() {
                 </div>
               )}
               {school.datesConcours && (
-                <div className="flex items-center justify-between py-2 border-b border-ops">
+                <div className="flex items-center justify-between py-2 border-b border-border">
                   <span className="text-sm text-ops-secondary">Dates concours</span>
                   <span className="font-semibold text-ops-primary">
                     {school.datesConcours}
@@ -467,7 +467,7 @@ export default function StudentSchoolDetailPage() {
 
           {/* Required Documents */}
           {school.documentsRequis && school.documentsRequis.length > 0 && (
-            <Card className="ops-card border border-ops">
+            <Card className="ops-card border border-border">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base font-semibold text-ops-primary">
                   Documents requis
@@ -487,7 +487,7 @@ export default function StudentSchoolDetailPage() {
           )}
 
           {/* Contact Info */}
-          <Card className="ops-card border border-ops">
+          <Card className="ops-card border border-border">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg font-semibold text-ops-primary">
                 Contact

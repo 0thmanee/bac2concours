@@ -159,7 +159,7 @@ export default function SettingsPage() {
         </div>
         {isDirty && activeTab === "general" && (
           <Badge
-            className="h-6 text-xs bg-metric-orange-light text-metric-orange border-ops w-fit"
+            className="h-6 text-xs bg-metric-orange-light text-metric-orange border-border w-fit"
           >
             Modifications non sauvegardées
           </Badge>
@@ -193,7 +193,7 @@ export default function SettingsPage() {
               {/* Main Settings */}
               <div className="md:col-span-2 space-y-6">
                 {/* Organization Settings */}
-                <Card className="ops-card border border-ops">
+                <Card className="ops-card border border-border">
                   <CardHeader>
                     <div className="flex items-center gap-3">
                       <div 
@@ -241,7 +241,7 @@ export default function SettingsPage() {
                 </Card>
 
                 {/* Email Settings */}
-                <Card className="ops-card border border-ops">
+                <Card className="ops-card border border-border">
                   <CardHeader>
                     <div className="flex items-center gap-3">
                       <div 
@@ -278,7 +278,7 @@ export default function SettingsPage() {
               {/* Sidebar */}
               <div className="space-y-6">
                 {/* Save Actions */}
-                <Card className="ops-card border border-ops sticky top-6">
+                <Card className="ops-card border border-border sticky top-6">
                   <CardHeader>
                     <CardTitle className="text-lg font-semibold text-ops-primary">
                       Actions

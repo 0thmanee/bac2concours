@@ -15,7 +15,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({ children, className })
       className={cn(
         "p-5",
         "bg-white dark:bg-white/[0.03]",
-        "border-gray-200 dark:border-gray-800",
+        "border-border",
         "transition-all duration-200",
         className
       )}
