@@ -7,7 +7,6 @@ import {
   Eye,
   Star,
   Calendar,
-  Download,
   BookOpen,
   FileText,
 } from "lucide-react";
@@ -51,16 +50,6 @@ export default function StudentBookDetailPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [book?.id]);
 
-  const handleDownload = () => {
-    if (!book?.fileUrl) {
-      toast.error("Fichier non disponible");
-      return;
-    }
-    incrementCounter.mutate("download");
-    window.open(book.fileUrl, "_blank");
-    toast.success(`Téléchargement de "${book.title}"`);
-  };
-
   const handleRead = () => {
     if (book?.fileUrl) {
       window.open(book.fileUrl, "_blank");
@@ -95,7 +84,6 @@ export default function StudentBookDetailPage() {
       value: new Date(book.createdAt).toLocaleDateString("fr-FR"),
     },
     { icon: Eye, value: `${book.views || 0} vues` },
-    { icon: Download, value: `${book.downloads || 0} téléchargements` },
   ];
 
   if (book.rating && book.rating > 0) {
@@ -201,17 +189,8 @@ export default function StudentBookDetailPage() {
                   {/* Action Buttons */}
                   <div className="flex gap-3 pt-4">
                     <Button
-                      onClick={handleDownload}
-                      className="flex-1 ops-btn-primary"
-                      disabled={!book.fileUrl}
-                    >
-                      <Download className="h-4 w-4 mr-2" />
-                      Télécharger
-                    </Button>
-                    <Button
                       onClick={handleRead}
-                      variant="outline"
-                      className="ops-btn-secondary"
+                      className="flex-1 ops-btn-primary"
                       disabled={!book.fileUrl}
                     >
                       <FileText className="h-4 w-4 mr-2" />

@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Plus, Download, Eye, Star } from "lucide-react";
+import { BookOpen, Plus, Eye, Star } from "lucide-react";
 import { DataTable, Column, type PaginationConfig } from "@/components/ui/data-table";
 import {
   AdminPageHeader,
@@ -156,13 +156,6 @@ export default function AdminBooksPage() {
       subtitle: `${stats.activeBooks} actifs`,
     },
     {
-      title: "Téléchargements",
-      value: stats.totalDownloads.toLocaleString(),
-      icon: Download,
-      color: "orange",
-      subtitle: "Total",
-    },
-    {
       title: "Vues",
       value: stats.totalViews.toLocaleString(),
       icon: Eye,
@@ -271,10 +264,6 @@ export default function AdminBooksPage() {
       cell: (book) => (
         <div className="flex gap-3 text-xs text-gray-600 dark:text-gray-400">
           <span className="flex items-center gap-1">
-            <Download className="h-3 w-3" />
-            {book.downloads}
-          </span>
-          <span className="flex items-center gap-1">
             <Eye className="h-3 w-3" />
             {book.views}
           </span>
@@ -327,11 +316,6 @@ export default function AdminBooksPage() {
               <Link href={ADMIN_ROUTES.BOOK_EDIT(book.id)} className="cursor-pointer">
                 Modifier
               </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild className="text-sm">
-              <a href={book.fileUrl || undefined} download target="_blank" rel="noopener noreferrer" className="cursor-pointer">
-                Télécharger
-              </a>
             </DropdownMenuItem>
             <AlertDialog>
               <AlertDialogTrigger asChild>

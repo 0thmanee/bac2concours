@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Trash2, Download, Eye, Star, FileText, BookOpen, User, School, Calendar } from "lucide-react";
+import { Edit, Trash2, Eye, Star, FileText, BookOpen, User, School, Calendar } from "lucide-react";
 import { MetricCard } from "@/components/ui/metric-card";
 import { useBook, useDeleteBook, useIncrementBookCounter } from "@/lib/hooks/use-books";
 import { toast } from "sonner";
@@ -70,19 +70,6 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
     }
   };
 
-  const handleDownload = async () => {
-    if (!book.fileUrl) return;
-    
-    try {
-      await incrementCounter.mutateAsync("download");
-      window.open(book.fileUrl, "_blank");
-    } catch (error) {
-      console.error("Failed to increment download counter:", error);
-      // Still allow download even if counter fails
-      window.open(book.fileUrl, "_blank");
-    }
-  };
-
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
       ACTIVE: "bg-linear-to-r from-emerald-50 to-emerald-100 text-emerald-700 border-emerald-200",
@@ -123,10 +110,6 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
         description={book.description || undefined}
         actions={
           <>
-            <Button onClick={handleDownload} variant="outline" className="ops-btn-secondary h-9 gap-2">
-              <Download className="h-4 w-4" />
-              Télécharger
-            </Button>
             <Button asChild variant="outline" className="ops-btn-secondary h-9 gap-2">
               <Link href={ADMIN_ROUTES.BOOK_EDIT(bookId)}>
                 <Edit className="h-4 w-4" />
@@ -160,18 +143,12 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
       />
 
       {/* Metrics */}
-      <div className="grid gap-4 md:grid-cols-4">
-        <MetricCard
-          title="Téléchargements"
-          value={book.downloads?.toLocaleString() || "0"}
-          icon={Download}
-          color="blue"
-        />
+      <div className="grid gap-4 md:grid-cols-3">
         <MetricCard
           title="Vues"
           value={book.views?.toLocaleString() || "0"}
           icon={Eye}
-          color="orange"
+          color="blue"
         />
         <MetricCard
           title="Note Moyenne"

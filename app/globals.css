@@ -162,6 +162,7 @@
   --ops-text-primary: var(--neutral-900);
   --ops-text-secondary: var(--neutral-600);
   --ops-text-tertiary: var(--neutral-500);
+  --ops-text-placeholder: var(--neutral-400);
   --ops-text-disabled: var(--neutral-400);
   --ops-text-inverse: 255 255 255;
 
@@ -238,6 +239,7 @@
   --ops-text-primary: var(--neutral-50);
   --ops-text-secondary: var(--neutral-300);
   --ops-text-tertiary: var(--neutral-400);
+  --ops-text-placeholder: var(--neutral-500);
   --ops-text-disabled: var(--neutral-500);
 
   --ops-action-primary: var(--brand-600); /* Keep Brand Purple in dark mode */
@@ -448,6 +450,10 @@
 
   .text-ops-tertiary {
     color: rgb(var(--ops-text-tertiary));
+  }
+
+  .text-ops-placeholder {
+    color: rgb(var(--ops-text-placeholder));
   }
 
   .text-ops-inverse {

@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Download, Eye, BookOpen, FileText } from "lucide-react";
+import { Eye, BookOpen, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBooks, useBookFilters } from "@/lib/hooks/use-books";
 import { BookWithRelations } from "@/lib/types/prisma";
@@ -66,20 +66,6 @@ export default function StudentBooksPage() {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setCurrentPage(1);
   }, []);
-
-  const handleDownload = (
-    e: React.MouseEvent,
-    fileUrl: string | null,
-    title: string
-  ) => {
-    e.stopPropagation();
-    if (!fileUrl) {
-      toast.error("Fichier non disponible");
-      return;
-    }
-    window.open(fileUrl, "_blank");
-    toast.success(`Téléchargement de "${title}"`);
-  };
 
   const handleRead = (e: React.MouseEvent, fileUrl: string | null) => {
     e.stopPropagation();
@@ -163,30 +149,18 @@ export default function StudentBooksPage() {
               level={book.level}
               metrics={[
                 { icon: Eye, value: book.views },
-                { icon: Download, value: book.downloads },
               ]}
               rating={book.rating}
               actions={
                 <>
                   <Button
-                    onClick={(e) => handleDownload(e, book.fileUrl, book.title)}
-                    className="flex-1 bg-linear-to-r from-[rgb(var(--brand-500))] to-[rgb(var(--brand-600))] hover:from-[rgb(var(--brand-600))] hover:to-[rgb(var(--brand-700))] text-white py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={!book.fileUrl}
-                  >
-                    <Download size={15} className="mr-2" />
-                    Télécharger
-                  </Button>
-                  <button
                     onClick={(e) => handleRead(e, book.fileUrl)}
                     disabled={!book.fileUrl}
-                    className="p-2.5 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 hover:border-[rgb(var(--brand-400))] dark:hover:border-[rgb(var(--brand-600))] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group/btn"
-                    title="Lire"
+                    className="flex-1 bg-linear-to-r from-[rgb(var(--brand-500))] to-[rgb(var(--brand-600))] hover:from-[rgb(var(--brand-600))] hover:to-[rgb(var(--brand-700))] text-white py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <FileText
-                      size={18}
-                      className="text-gray-600 dark:text-gray-400 group-hover/btn:text-[rgb(var(--brand-600))] dark:group-hover/btn:text-[rgb(var(--brand-400))] transition-colors"
-                    />
-                  </button>
+                    <FileText size={15} className="mr-2" />
+                    Lire
+                  </Button>
                 </>
               }
             />

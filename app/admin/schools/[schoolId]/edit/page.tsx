@@ -517,12 +517,13 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
 
               <div className="flex items-center justify-between rounded-lg border border-ops p-4">
                 <div>
-                  <p className="text-sm font-medium">Bourses disponibles</p>
+                  <Label htmlFor="bourses" className="text-sm font-medium">Bourses disponibles</Label>
                   <p className="text-xs text-ops-tertiary">
                     L&apos;école offre des bourses aux étudiants
                   </p>
                 </div>
                 <Switch
+                  id="bourses"
                   checked={watchedBourses}
                   onCheckedChange={(checked) => setValue("bourses", checked)}
                 />
@@ -625,12 +626,13 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
             <AdminFormCard title="Mise en avant">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium">À la une</p>
+                  <Label htmlFor="featured" className="text-sm font-medium">À la une</Label>
                   <p className="text-xs text-ops-tertiary">
                     Mettre en avant sur la page d&apos;accueil
                   </p>
                 </div>
                 <Switch
+                  id="featured"
                   checked={watchedFeatured}
                   onCheckedChange={(checked) => setValue("featured", checked)}
                 />
