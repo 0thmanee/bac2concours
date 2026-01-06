@@ -311,8 +311,8 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
                     Type <span className="text-destructive">*</span>
                   </Label>
                   <Select
-                    value={watch("type")}
-                    onValueChange={(value) => setValue("type", value as SchoolType)}
+                    value={watch("type") || ""}
+                    onValueChange={(value) => setValue("type", value as SchoolType, { shouldValidate: true })}
                   >
                     <SelectTrigger id="type" className="ops-input h-9">
                       <SelectValue placeholder="Sélectionner un type" />
@@ -616,7 +616,7 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
             {/* Status & Visibility */}
             <AdminStatusVisibility
               status={watchedStatus}
-              onStatusChange={(value) => setValue("status", value as SchoolStatus)}
+              onStatusChange={(value) => setValue("status", value as SchoolStatus, { shouldValidate: true })}
               statusOptions={SCHOOL_STATUS_OPTIONS}
               isPublic={watchedIsPublic}
               onIsPublicChange={(checked) => setValue("isPublic", checked)}

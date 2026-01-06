@@ -317,7 +317,7 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
                   </Label>
                   <Select
                     value={watch("school")}
-                    onValueChange={(value) => setValue("school", value)}
+                    onValueChange={(value) => setValue("school", value, { shouldValidate: true })}
                     disabled={isLoadingSchools}
                   >
                     <SelectTrigger id="school" className="ops-input h-9">
@@ -342,7 +342,7 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
                   </Label>
                   <Select
                     value={watch("level")}
-                    onValueChange={(value) => setValue("level", value)}
+                    onValueChange={(value) => setValue("level", value, { shouldValidate: true })}
                     disabled={isLoadingDropdowns}
                   >
                     <SelectTrigger id="level" className="ops-input h-9">
@@ -367,7 +367,7 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
                   </Label>
                   <Select
                     value={watch("category")}
-                    onValueChange={(value) => setValue("category", value)}
+                    onValueChange={(value) => setValue("category", value, { shouldValidate: true })}
                     disabled={isLoadingDropdowns}
                   >
                     <SelectTrigger id="category" className="ops-input h-9">
@@ -392,7 +392,7 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
                   </Label>
                   <Select
                     value={watch("subject")}
-                    onValueChange={(value) => setValue("subject", value)}
+                    onValueChange={(value) => setValue("subject", value, { shouldValidate: true })}
                     disabled={isLoadingDropdowns}
                   >
                     <SelectTrigger id="subject" className="ops-input h-9">
@@ -528,7 +528,7 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
             {/* Status & Visibility */}
             <AdminStatusVisibility
               status={watchedStatus}
-              onStatusChange={(value) => setValue("status", value as VideoStatus)}
+              onStatusChange={(value) => setValue("status", value as VideoStatus, { shouldValidate: true })}
               statusOptions={VIDEO_STATUS_OPTIONS}
               isPublic={watchedIsPublic}
               onIsPublicChange={(value) => setValue("isPublic", value)}

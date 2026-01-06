@@ -662,7 +662,7 @@ export default function EditQuestionPage({ params }: PageProps) {
                   </Label>
                   <Select
                     value={watch("school")}
-                    onValueChange={(value) => setValue("school", value)}
+                    onValueChange={(value) => setValue("school", value, { shouldValidate: true })}
                     disabled={isLoadingSchools}
                   >
                     <SelectTrigger id="school" className="ops-input h-9">
@@ -684,7 +684,7 @@ export default function EditQuestionPage({ params }: PageProps) {
                   </Label>
                   <Select
                     value={watch("matiere")}
-                    onValueChange={(value) => setValue("matiere", value)}
+                    onValueChange={(value) => setValue("matiere", value, { shouldValidate: true })}
                     disabled={isLoadingDropdowns}
                   >
                     <SelectTrigger id="matiere" className="ops-input h-9">
@@ -719,7 +719,7 @@ export default function EditQuestionPage({ params }: PageProps) {
                   <Select
                     value={watch("difficulty")}
                     onValueChange={(value) =>
-                      setValue("difficulty", value as QuestionDifficulty)
+                      setValue("difficulty", value as QuestionDifficulty, { shouldValidate: true })
                     }
                   >
                     <SelectTrigger id="difficulty" className="ops-input h-9">
@@ -783,7 +783,7 @@ export default function EditQuestionPage({ params }: PageProps) {
             <AdminStatusVisibility
               status={watchedStatus}
               isPublic={watchedIsPublic}
-              onStatusChange={(value) => setValue("status", value as QuestionStatus)}
+              onStatusChange={(value) => setValue("status", value as QuestionStatus, { shouldValidate: true })}
               onIsPublicChange={(value: boolean) => setValue("isPublic", value)}
               statusOptions={STATUS_OPTIONS}
             />

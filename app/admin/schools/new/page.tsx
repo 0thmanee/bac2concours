@@ -210,7 +210,7 @@ export default function NewSchoolPage() {
                   <Label htmlFor="type" className="text-sm font-medium">
                     Type <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("type", value as SchoolType)}>
+                  <Select onValueChange={(value) => setValue("type", value as SchoolType, { shouldValidate: true })}>
                     <SelectTrigger id="type" className="ops-input h-9">
                       <SelectValue placeholder="Sélectionner un type" />
                     </SelectTrigger>
@@ -513,7 +513,7 @@ export default function NewSchoolPage() {
             {/* Status & Visibility */}
             <AdminStatusVisibility
               status={watchedStatus}
-              onStatusChange={(value) => setValue("status", value as SchoolStatus)}
+              onStatusChange={(value) => setValue("status", value as SchoolStatus, { shouldValidate: true })}
               statusOptions={SCHOOL_STATUS_OPTIONS}
               isPublic={watchedIsPublic}
               onIsPublicChange={(checked) => setValue("isPublic", checked)}

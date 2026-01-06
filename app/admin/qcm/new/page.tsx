@@ -554,7 +554,7 @@ export default function NewQuestionPage() {
                   <Label htmlFor="school" className="text-sm font-medium">
                     École/Filière <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("school", value)} disabled={isLoadingSchools}>
+                  <Select onValueChange={(value) => setValue("school", value, { shouldValidate: true })} disabled={isLoadingSchools}>
                     <SelectTrigger id="school" className="ops-input h-9">
                       <SelectValue placeholder={isLoadingSchools ? "Chargement..." : "Sélectionner une filière"} />
                     </SelectTrigger>
@@ -577,7 +577,7 @@ export default function NewQuestionPage() {
                   <Label htmlFor="matiere" className="text-sm font-medium">
                     Matière <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("matiere", value)} disabled={isLoadingDropdowns}>
+                  <Select onValueChange={(value) => setValue("matiere", value, { shouldValidate: true })} disabled={isLoadingDropdowns}>
                     <SelectTrigger id="matiere" className="ops-input h-9">
                       <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner une matière"} />
                     </SelectTrigger>
@@ -616,7 +616,7 @@ export default function NewQuestionPage() {
                   <Select
                     defaultValue={QuestionDifficulty.MEDIUM}
                     onValueChange={(value) =>
-                      setValue("difficulty", value as QuestionDifficulty)
+                      setValue("difficulty", value as QuestionDifficulty, { shouldValidate: true })
                     }
                   >
                     <SelectTrigger id="difficulty" className="ops-input h-9">
@@ -681,7 +681,7 @@ export default function NewQuestionPage() {
             <AdminStatusVisibility
               status={watchedStatus}
               isPublic={watchedIsPublic}
-              onStatusChange={(value) => setValue("status", value as QuestionStatus)}
+              onStatusChange={(value) => setValue("status", value as QuestionStatus, { shouldValidate: true })}
               onIsPublicChange={(value: boolean) => setValue("isPublic", value)}
               statusOptions={STATUS_OPTIONS}
             />

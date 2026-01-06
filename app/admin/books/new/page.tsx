@@ -198,7 +198,7 @@ export default function NewBookPage() {
                   <Label htmlFor="school" className="text-sm font-medium">
                     École/Filière
                   </Label>
-                  <Select onValueChange={(value) => setValue("school", value)} disabled={isLoadingSchools}>
+                  <Select onValueChange={(value) => setValue("school", value, { shouldValidate: true })} disabled={isLoadingSchools}>
                     <SelectTrigger id="school" className="ops-input h-9">
                       <SelectValue placeholder={isLoadingSchools ? "Chargement..." : "Sélectionner une filière"} />
                     </SelectTrigger>
@@ -219,7 +219,7 @@ export default function NewBookPage() {
                   <Label htmlFor="level" className="text-sm font-medium">
                     Niveau
                   </Label>
-                  <Select onValueChange={(value) => setValue("level", value)} disabled={isLoadingDropdowns}>
+                  <Select onValueChange={(value) => setValue("level", value, { shouldValidate: true })} disabled={isLoadingDropdowns}>
                     <SelectTrigger id="level" className="ops-input h-9">
                       <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner un niveau"} />
                     </SelectTrigger>
@@ -240,7 +240,7 @@ export default function NewBookPage() {
                   <Label htmlFor="category" className="text-sm font-medium">
                     Catégorie
                   </Label>
-                  <Select onValueChange={(value) => setValue("category", value)} disabled={isLoadingDropdowns}>
+                  <Select onValueChange={(value) => setValue("category", value, { shouldValidate: true })} disabled={isLoadingDropdowns}>
                     <SelectTrigger id="category" className="ops-input h-9">
                       <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner une catégorie"} />
                     </SelectTrigger>
@@ -261,7 +261,7 @@ export default function NewBookPage() {
                   <Label htmlFor="subject" className="text-sm font-medium">
                     Matière
                   </Label>
-                  <Select onValueChange={(value) => setValue("subject", value)} disabled={isLoadingDropdowns}>
+                  <Select onValueChange={(value) => setValue("subject", value, { shouldValidate: true })} disabled={isLoadingDropdowns}>
                     <SelectTrigger id="subject" className="ops-input h-9">
                       <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner une matière"} />
                     </SelectTrigger>
@@ -285,7 +285,7 @@ export default function NewBookPage() {
                 </Label>
                 <Select
                   defaultValue="fr"
-                  onValueChange={(value) => setValue("language", value)}
+                  onValueChange={(value) => setValue("language", value, { shouldValidate: true })}
                 >
                   <SelectTrigger id="language" className="ops-input h-9">
                     <SelectValue placeholder="Sélectionner une langue" />
@@ -451,7 +451,7 @@ export default function NewBookPage() {
             {/* Status & Visibility */}
             <AdminStatusVisibility
               status={watchedStatus}
-              onStatusChange={(value) => setValue("status", value as BookStatus)}
+              onStatusChange={(value) => setValue("status", value as BookStatus, { shouldValidate: true })}
               statusOptions={BOOK_STATUS_OPTIONS}
               isPublic={watchedIsPublic}
               onIsPublicChange={(value) => setValue("isPublic", value)}

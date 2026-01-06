@@ -265,7 +265,7 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
                   </Label>
                   <Select
                     defaultValue={book.school}
-                    onValueChange={(value) => setValue("school", value)}
+                    onValueChange={(value) => setValue("school", value, { shouldValidate: true })}
                     disabled={isLoadingSchools}
                   >
                     <SelectTrigger id="school" className="ops-input h-9">
@@ -290,7 +290,7 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
                   </Label>
                   <Select
                     defaultValue={book.level}
-                    onValueChange={(value) => setValue("level", value)}
+                    onValueChange={(value) => setValue("level", value, { shouldValidate: true })}
                     disabled={isLoadingDropdowns}
                   >
                     <SelectTrigger id="level" className="ops-input h-9">
@@ -315,7 +315,7 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
                   </Label>
                   <Select
                     defaultValue={book.category}
-                    onValueChange={(value) => setValue("category", value)}
+                    onValueChange={(value) => setValue("category", value, { shouldValidate: true })}
                     disabled={isLoadingDropdowns}
                   >
                     <SelectTrigger id="category" className="ops-input h-9">
@@ -340,7 +340,7 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
                   </Label>
                   <Select
                     defaultValue={book.subject}
-                    onValueChange={(value) => setValue("subject", value)}
+                    onValueChange={(value) => setValue("subject", value, { shouldValidate: true })}
                     disabled={isLoadingDropdowns}
                   >
                     <SelectTrigger id="subject" className="ops-input h-9">
@@ -366,7 +366,7 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
                 </Label>
                 <Select
                   defaultValue={book.language}
-                  onValueChange={(value) => setValue("language", value)}
+                  onValueChange={(value) => setValue("language", value, { shouldValidate: true })}
                 >
                   <SelectTrigger id="language" className="ops-input h-9">
                     <SelectValue placeholder="Sélectionner une langue" />
@@ -534,7 +534,7 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
             {/* Status & Visibility */}
             <AdminStatusVisibility
               status={watchedStatus}
-              onStatusChange={(value) => setValue("status", value as BookStatus)}
+              onStatusChange={(value) => setValue("status", value as BookStatus, { shouldValidate: true })}
               statusOptions={BOOK_STATUS_OPTIONS}
               isPublic={watchedIsPublic}
               onIsPublicChange={(value) => setValue("isPublic", value)}

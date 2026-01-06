@@ -238,7 +238,7 @@ export default function NewVideoPage() {
                   <Label htmlFor="school" className="text-sm font-medium">
                     École/Filière <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("school", value)} disabled={isLoadingSchools}>
+                  <Select onValueChange={(value) => setValue("school", value, { shouldValidate: true })} disabled={isLoadingSchools}>
                     <SelectTrigger id="school" className="ops-input h-9">
                       <SelectValue placeholder={isLoadingSchools ? "Chargement..." : "Sélectionner une filière"} />
                     </SelectTrigger>
@@ -261,7 +261,7 @@ export default function NewVideoPage() {
                   <Label htmlFor="level" className="text-sm font-medium">
                     Niveau <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("level", value)} disabled={isLoadingDropdowns}>
+                  <Select onValueChange={(value) => setValue("level", value, { shouldValidate: true })} disabled={isLoadingDropdowns}>
                     <SelectTrigger id="level" className="ops-input h-9">
                       <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner un niveau"} />
                     </SelectTrigger>
@@ -284,7 +284,7 @@ export default function NewVideoPage() {
                   <Label htmlFor="category" className="text-sm font-medium">
                     Catégorie <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("category", value)} disabled={isLoadingDropdowns}>
+                  <Select onValueChange={(value) => setValue("category", value, { shouldValidate: true })} disabled={isLoadingDropdowns}>
                     <SelectTrigger id="category" className="ops-input h-9">
                       <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner une catégorie"} />
                     </SelectTrigger>
@@ -307,7 +307,7 @@ export default function NewVideoPage() {
                   <Label htmlFor="subject" className="text-sm font-medium">
                     Matière <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("subject", value)} disabled={isLoadingDropdowns}>
+                  <Select onValueChange={(value) => setValue("subject", value, { shouldValidate: true })} disabled={isLoadingDropdowns}>
                     <SelectTrigger id="subject" className="ops-input h-9">
                       <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner une matière"} />
                     </SelectTrigger>
@@ -449,7 +449,7 @@ export default function NewVideoPage() {
             {/* Status & Visibility */}
             <AdminStatusVisibility
               status={watchedStatus}
-              onStatusChange={(value) => setValue("status", value as VideoStatus)}
+              onStatusChange={(value) => setValue("status", value as VideoStatus, { shouldValidate: true })}
               statusOptions={VIDEO_STATUS_OPTIONS}
               isPublic={watchedIsPublic}
               onIsPublicChange={(value) => setValue("isPublic", value)}
