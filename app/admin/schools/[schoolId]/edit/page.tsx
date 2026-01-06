@@ -81,6 +81,17 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
 
   useEffect(() => {
     if (school && !isLoading) {
+      // Safely parse programs - ensure each program has required fields
+      const safePrograms = Array.isArray(school.programs)
+        ? school.programs.map((p: Record<string, unknown>) => ({
+            id: String(p.id || ''),
+            name: String(p.name || ''),
+            description: p.description ? String(p.description) : undefined,
+            duration: p.duration ? String(p.duration) : undefined,
+            requirements: Array.isArray(p.requirements) ? p.requirements : [],
+          }))
+        : [];
+
       reset({
         name: school.name || "",
         shortName: school.shortName || "",
@@ -102,6 +113,7 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
         nombreEtudiants: school.nombreEtudiants || undefined,
         tauxReussite: school.tauxReussite || undefined,
         classementNational: school.classementNational || undefined,
+        programs: safePrograms,
         specializations: school.specializations || [],
         avantages: school.avantages || [],
         services: school.services || [],

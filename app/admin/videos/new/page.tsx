@@ -95,6 +95,11 @@ export default function NewVideoPage() {
 
   const onSubmit = async (data: CreateVideoInput) => {
     try {
+      // Clean NaN values
+      if (Number.isNaN(data.duration)) {
+        data.duration = undefined;
+      }
+
       // Upload thumbnail if provided
       if (thumbnailFile) {
         const uploadResult = await uploadFileMutation.mutateAsync({

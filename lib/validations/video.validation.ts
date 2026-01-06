@@ -37,7 +37,12 @@ export const createVideoSchema = z.object({
   level: z.string().min(1, "Le niveau est requis").max(50),
   subject: z.string().min(1, "La matière est requise").max(50),
   tags: z.array(z.string().max(50)).default([]),
-  duration: z.number().int().positive("La durée doit être positive").optional(),
+  duration: z
+    .number()
+    .int()
+    .positive("La durée doit être positive")
+    .optional()
+    .nullable(),
   status: videoStatusSchema.default(VideoStatus.ACTIVE),
   isPublic: z.boolean().default(true),
 });
@@ -53,7 +58,7 @@ export const updateVideoSchema = z.object({
   level: z.string().min(1).max(50).optional(),
   subject: z.string().min(1).max(50).optional(),
   tags: z.array(z.string().max(50)).optional(),
-  duration: z.number().int().positive().optional(),
+  duration: z.number().int().positive().optional().nullable(),
   status: videoStatusSchema.optional(),
   isPublic: z.boolean().optional(),
 });

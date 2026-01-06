@@ -15,7 +15,7 @@ export const schoolProgramSchema = z.object({
   name: z.string().min(1, "Le nom du programme est requis"),
   description: z.string().optional(),
   duration: z.string().optional(), // e.g., "3 ans"
-  requirements: z.array(z.string()).default([]),
+  requirements: z.array(z.string()).optional().default([]),
 });
 
 // Base school schema for creation
@@ -47,16 +47,46 @@ export const createSchoolSchema = z.object({
   website: z.string().url("URL invalide").optional().or(z.literal("")),
 
   // Admission
-  seuilDeSelection: z.number().min(0).max(20).optional(),
+  seuilDeSelection: z.preprocess(
+    (val) =>
+      val === "" || val === null || val === undefined || Number.isNaN(val)
+        ? undefined
+        : Number(val),
+    z.number().min(0).max(20).optional()
+  ),
   documentsRequis: z.array(z.string().max(100)).default([]),
   datesConcours: z.string().max(100).optional(),
-  fraisInscription: z.number().min(0).optional(),
+  fraisInscription: z.preprocess(
+    (val) =>
+      val === "" || val === null || val === undefined || Number.isNaN(val)
+        ? undefined
+        : Number(val),
+    z.number().min(0).optional()
+  ),
   bourses: z.boolean().default(false),
 
   // Statistics
-  nombreEtudiants: z.number().int().positive().optional(),
-  tauxReussite: z.number().min(0).max(100).optional(),
-  classementNational: z.number().int().positive().optional(),
+  nombreEtudiants: z.preprocess(
+    (val) =>
+      val === "" || val === null || val === undefined || Number.isNaN(val)
+        ? undefined
+        : Number(val),
+    z.number().int().positive().optional()
+  ),
+  tauxReussite: z.preprocess(
+    (val) =>
+      val === "" || val === null || val === undefined || Number.isNaN(val)
+        ? undefined
+        : Number(val),
+    z.number().min(0).max(100).optional()
+  ),
+  classementNational: z.preprocess(
+    (val) =>
+      val === "" || val === null || val === undefined || Number.isNaN(val)
+        ? undefined
+        : Number(val),
+    z.number().int().positive().optional()
+  ),
 
   // Programs and details
   programs: z.array(schoolProgramSchema).default([]),
@@ -69,9 +99,24 @@ export const createSchoolSchema = z.object({
   // Meta
   isPublic: z.boolean().default(true),
   featured: z.boolean().default(false),
-  establishedYear: z.number().int().min(1800).max(2100).optional(),
+  establishedYear: z.preprocess(
+    (val) =>
+      val === "" || val === null || val === undefined || Number.isNaN(val)
+        ? undefined
+        : Number(val),
+    z.number().int().min(1800).max(2100).optional()
+  ),
   status: schoolStatusSchema.default(SchoolStatus.DRAFT),
 });
+
+// Helper to coerce NaN to null for optional positive integer fields
+const optionalPositiveInt = z.preprocess(
+  (val) =>
+    val === "" || val === null || val === undefined || Number.isNaN(val)
+      ? null
+      : Number(val),
+  z.number().int().positive().nullable().optional()
+);
 
 // Schema for updating a school (all fields optional)
 export const updateSchoolSchema = z.object({
@@ -96,19 +141,37 @@ export const updateSchoolSchema = z.object({
   website: z.string().url().optional().nullable().or(z.literal("")),
 
   // Admission
-  seuilDeSelection: z.number().min(0).max(20).optional().nullable(),
+  seuilDeSelection: z.preprocess(
+    (val) =>
+      val === "" || val === null || val === undefined || Number.isNaN(val)
+        ? null
+        : Number(val),
+    z.number().min(0).max(20).nullable().optional()
+  ),
   documentsRequis: z.array(z.string().max(100)).optional(),
   datesConcours: z.string().max(100).optional().nullable(),
-  fraisInscription: z.number().min(0).optional().nullable(),
+  fraisInscription: z.preprocess(
+    (val) =>
+      val === "" || val === null || val === undefined || Number.isNaN(val)
+        ? null
+        : Number(val),
+    z.number().min(0).nullable().optional()
+  ),
   bourses: z.boolean().optional(),
 
   // Statistics
-  nombreEtudiants: z.number().int().positive().optional().nullable(),
-  tauxReussite: z.number().min(0).max(100).optional().nullable(),
-  classementNational: z.number().int().positive().optional().nullable(),
+  nombreEtudiants: optionalPositiveInt,
+  tauxReussite: z.preprocess(
+    (val) =>
+      val === "" || val === null || val === undefined || Number.isNaN(val)
+        ? null
+        : Number(val),
+    z.number().min(0).max(100).nullable().optional()
+  ),
+  classementNational: optionalPositiveInt,
 
   // Programs and details
-  programs: z.array(schoolProgramSchema).optional(),
+  programs: z.array(schoolProgramSchema).optional().nullable(),
   specializations: z.array(z.string().max(100)).optional(),
   avantages: z.array(z.string().max(200)).optional(),
   services: z.array(z.string().max(100)).optional(),
@@ -118,7 +181,13 @@ export const updateSchoolSchema = z.object({
   // Meta
   isPublic: z.boolean().optional(),
   featured: z.boolean().optional(),
-  establishedYear: z.number().int().min(1800).max(2100).optional().nullable(),
+  establishedYear: z.preprocess(
+    (val) =>
+      val === "" || val === null || val === undefined || Number.isNaN(val)
+        ? null
+        : Number(val),
+    z.number().int().min(1800).max(2100).nullable().optional()
+  ),
   status: schoolStatusSchema.optional(),
 });
 

@@ -91,6 +91,11 @@ export default function NewBookPage() {
 
   const onSubmit = async (data: CreateBookInput) => {
     try {
+      // Clean NaN values
+      if (Number.isNaN(data.totalPages)) {
+        data.totalPages = 0;
+      }
+
       // Upload cover if provided
       if (coverFile) {
         const uploadResult = await uploadFileMutation.mutateAsync({

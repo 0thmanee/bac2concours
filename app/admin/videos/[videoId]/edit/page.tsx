@@ -159,6 +159,11 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
 
   const onSubmit = async (data: UpdateVideoInput) => {
     try {
+      // Clean NaN values
+      if (Number.isNaN(data.duration)) {
+        data.duration = undefined;
+      }
+
       // Handle thumbnail changes
       if (thumbnailFile) {
         // New file uploaded - delete old one if exists

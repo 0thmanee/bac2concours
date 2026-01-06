@@ -124,6 +124,11 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
 
   const onSubmit = async (data: UpdateBookInput) => {
     try {
+      // Clean NaN values
+      if (Number.isNaN(data.totalPages)) {
+        data.totalPages = undefined;
+      }
+
       // Handle cover changes
       if (coverFile) {
         // New file uploaded - delete old one if exists

@@ -150,12 +150,20 @@ export const schoolService = {
    * Update a school
    */
   async update(id: string, data: UpdateSchoolInput) {
-    // Clean empty string fields
-    const cleanedData = {
-      ...data,
-      email: data.email === "" ? null : data.email,
-      website: data.website === "" ? null : data.website,
-    };
+    // Clean empty string fields and remove undefined values
+    const cleanedData: Record<string, unknown> = {};
+
+    // Only include defined values (not undefined)
+    for (const [key, value] of Object.entries(data)) {
+      if (value !== undefined) {
+        // Handle empty strings for email and website
+        if (key === "email" || key === "website") {
+          cleanedData[key] = value === "" ? null : value;
+        } else {
+          cleanedData[key] = value;
+        }
+      }
+    }
 
     return prisma.school.update({
       where: { id },

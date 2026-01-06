@@ -149,9 +149,17 @@ export const bookService = {
    * Update a book
    */
   async update(id: string, data: UpdateBookInput) {
+    // Only include defined values (not undefined)
+    const cleanedData: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(data)) {
+      if (value !== undefined) {
+        cleanedData[key] = value;
+      }
+    }
+
     return prisma.book.update({
       where: { id },
-      data,
+      data: cleanedData,
       include: {
         uploadedBy: {
           select: {

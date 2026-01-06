@@ -31,7 +31,13 @@ export const createBookSchema = z.object({
     .min(1, "L'URL du fichier (Google Drive) est requise"),
   fileName: z.string().min(1, "Le nom du fichier est requis").max(255),
   fileSize: z.string().min(1, "La taille du fichier est requise"),
-  totalPages: z.number().int().positive("Le nombre de pages doit être positif"),
+  totalPages: z.preprocess(
+    (val) =>
+      val === "" || val === null || val === undefined || Number.isNaN(val)
+        ? 0
+        : Number(val),
+    z.number().int().positive("Le nombre de pages doit être positif")
+  ),
   language: z.string().max(10).default("fr"),
   level: z.string().min(1, "Le niveau est requis").max(50),
   subject: z.string().min(1, "La matière est requise").max(50),
@@ -51,7 +57,13 @@ export const updateBookSchema = z.object({
   fileUrl: z.string().url().optional(),
   fileName: z.string().min(1).max(255).optional(),
   fileSize: z.string().optional(),
-  totalPages: z.number().int().positive().optional(),
+  totalPages: z.preprocess(
+    (val) =>
+      val === "" || val === null || val === undefined || Number.isNaN(val)
+        ? undefined
+        : Number(val),
+    z.number().int().positive().optional()
+  ),
   language: z.string().max(10).optional(),
   level: z.string().min(1).max(50).optional(),
   subject: z.string().min(1).max(50).optional(),

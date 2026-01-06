@@ -154,18 +154,22 @@ export const videoService = {
    * Update a video
    */
   async update(id: string, data: UpdateVideoInput) {
-    // If URL is being updated, extract new YouTube ID
-    const updateData: UpdateVideoInput & { youtubeId?: string | null } = {
-      ...data,
-    };
+    // Only include defined values (not undefined)
+    const cleanedData: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(data)) {
+      if (value !== undefined) {
+        cleanedData[key] = value;
+      }
+    }
 
+    // If URL is being updated, extract new YouTube ID
     if (data.url) {
-      updateData.youtubeId = extractYouTubeId(data.url);
+      cleanedData.youtubeId = extractYouTubeId(data.url);
     }
 
     return prisma.video.update({
       where: { id },
-      data: updateData,
+      data: cleanedData,
       include: {
         uploadedBy: {
           select: {
