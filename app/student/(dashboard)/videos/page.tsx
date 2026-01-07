@@ -7,7 +7,7 @@ import { useVideos, useVideoFilterOptions } from "@/lib/hooks/use-videos";
 import { formatDuration, toApiParam } from "@/lib/utils/filter.utils";
 import type { VideoUIFilters, VideoWithRelations } from "@/lib/validations/video.validation";
 import { getYouTubeThumbnailUrl } from "@/lib/validations/video.validation";
-import { VideoStatus } from "@prisma/client";
+import { VideoStatus } from "@/lib/enums";
 import { LoadingState } from "@/components/shared/loading-state";
 import { SearchInput } from "@/components/ui/search-input";
 import { FilterSelect } from "@/components/ui/filter-select";

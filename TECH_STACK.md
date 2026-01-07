@@ -7,26 +7,31 @@ IncubationOS is a lightweight SaaS platform that helps incubators allocate budge
 ## 📚 Tech Stack
 
 ### Frontend
+
 - **Next.js 14+** (App Router) - React framework with server-side rendering
 - **TypeScript** (Strict mode) - Type-safe development
 - **Tailwind CSS** - Utility-first CSS framework
 - **shadcn/ui** - Accessible, customizable UI components
 
 ### Backend
+
 - **Next.js API Routes** - Serverless API endpoints
 - **Prisma** - Type-safe ORM
 - **PostgreSQL** - Relational database
 
 ### Authentication
+
 - **Auth.js (NextAuth v5)** - Authentication with JWT sessions
 - **bcryptjs** - Password hashing
 - **RBAC** - Role-based access control (ADMIN, STUDENT)
 
 ### Forms & Validation
+
 - **React Hook Form** - Performant form handling
 - **Zod** - Schema validation (shared client/server)
 
 ### Additional Tools
+
 - **Resend** - Transactional emails
 - **S3-Compatible Storage** - Receipt/document uploads
 - **Sentry** - Error tracking (optional)
@@ -77,6 +82,7 @@ IncubationOS/
 ## 🗄️ Database Schema
 
 ### Key Models:
+
 - **User** - Admin & Student accounts with role-based access
 - **Startup** - Incubator startups with budget allocation
 - **BudgetCategory** - Categorized budget allocation (Marketing, Development, etc.)
@@ -85,6 +91,7 @@ IncubationOS/
 - **IncubatorSettings** - Global incubator configuration
 
 ### Relationships:
+
 - One-to-many: Startup → BudgetCategories
 - One-to-many: Startup → Expenses
 - One-to-many: Startup → ProgressUpdates
@@ -100,6 +107,7 @@ IncubationOS/
 ## 🛠️ Development Setup
 
 ### Prerequisites
+
 - Node.js 18+
 - PostgreSQL database (local or cloud)
 - npm or pnpm
@@ -127,7 +135,7 @@ npm run seed
 npm run dev
 ```
 
-Visit http://localhost:3000
+Visit http://localhost:4000
 
 ## 📦 Available Scripts
 
@@ -164,6 +172,7 @@ npm run type-check   # TypeScript type checking
 ## 📝 MVP Scope
 
 ### ✅ Included in MVP:
+
 - Budget allocation & tracking
 - Expense submission & approval
 - Progress updates (weekly/monthly)
@@ -172,6 +181,7 @@ npm run type-check   # TypeScript type checking
 - Role-based access control
 
 ### ❌ Not in MVP:
+
 - Mobile app
 - Real-time notifications
 - Messaging/chat
@@ -199,18 +209,21 @@ npm run type-check   # TypeScript type checking
 ## 🐛 Troubleshooting
 
 ### Database Connection Issues
+
 ```bash
 # Test database connection
 npx prisma db pull
 ```
 
 ### Prisma Client Not Generated
+
 ```bash
 # Regenerate Prisma client
 npx prisma generate
 ```
 
 ### Type Errors
+
 ```bash
 # Check for type errors
 npm run type-check

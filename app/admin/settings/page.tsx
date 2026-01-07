@@ -39,7 +39,7 @@ import { ErrorState } from "@/components/shared/error-state";
 import { SettingsResourceManager } from "@/components/admin";
 import { apiClient } from "@/lib/api-client";
 import { useQueryClient } from "@tanstack/react-query";
-import type { Category, Level, Matiere } from "@prisma/client";
+import type { Category, Level, Matiere } from "@/lib/enums";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("general");
@@ -312,7 +312,7 @@ export default function SettingsPage() {
 
         {/* Categories Tab */}
         <TabsContent value="categories">
-          <SettingsResourceManager<Category>
+          <SettingsResourceManager
             title="Catégorie"
             description="Gérez les catégories disponibles pour les vidéos et livres"
             icon={FolderOpen}
@@ -333,7 +333,7 @@ export default function SettingsPage() {
 
         {/* Levels Tab */}
         <TabsContent value="levels">
-          <SettingsResourceManager<Level>
+          <SettingsResourceManager
             title="Niveau"
             description="Gérez les niveaux disponibles (ex: Terminale, Première)"
             icon={GraduationCap}
@@ -354,7 +354,7 @@ export default function SettingsPage() {
 
         {/* Matieres Tab */}
         <TabsContent value="matieres">
-          <SettingsResourceManager<Matiere>
+          <SettingsResourceManager
             title="Matière"
             description="Gérez les matières disponibles (ex: Mathématiques, Physique)"
             icon={BookOpen}

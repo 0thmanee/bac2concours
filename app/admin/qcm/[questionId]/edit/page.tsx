@@ -39,7 +39,7 @@ import { MathContent } from "@/components/shared/math-content";
 import { toast } from "sonner";
 import { ADMIN_ROUTES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/utils/error.utils"; 
-import { QuestionStatus, QuestionDifficulty, FileType } from "@prisma/client";
+import { QuestionStatus, QuestionDifficulty, FileType } from "@/lib/enums";
 import Image from "next/image";
 import {
   AdminFormHeader,

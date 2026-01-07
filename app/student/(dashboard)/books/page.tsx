@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useBooks, useBookFilters } from "@/lib/hooks/use-books";
 import { BookWithRelations } from "@/lib/types/prisma";
 import type { BookUIFilters } from "@/lib/validations/book.validation";
-import { BookStatus } from "@prisma/client";
+import { BookStatus } from "@/lib/enums";
 import { LoadingState } from "@/components/shared/loading-state";
 import { SearchInput } from "@/components/ui/search-input";
 import { FilterSelect } from "@/components/ui/filter-select";

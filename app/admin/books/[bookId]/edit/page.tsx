@@ -26,7 +26,7 @@ import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
 import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/utils/error.utils";
-import { BookStatus, FileType } from "@prisma/client";
+import { BookStatus, FileType } from "@/lib/enums";
 import { SupabaseImage } from "@/components/ui/supabase-image";
 import {
   AdminFormHeader,

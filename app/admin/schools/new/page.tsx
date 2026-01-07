@@ -19,7 +19,7 @@ import {
 import { toast } from "sonner";
 import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/utils/error.utils";
-import { SchoolStatus, SchoolType, FileType } from "@prisma/client";
+import { SchoolStatus, SchoolType, FileType } from "@/lib/enums";
 import {
   createSchoolSchema,
   type CreateSchoolInput,

@@ -6,7 +6,7 @@ Complete interactive API documentation built with Swagger/OpenAPI 3.0.
 
 ### Local Development
 
-Visit: **http://localhost:3000/api-docs**
+Visit: **http://localhost:4000/api-docs**
 
 ### Production
 

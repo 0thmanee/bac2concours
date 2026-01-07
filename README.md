@@ -242,7 +242,7 @@ DATABASE_URL="postgresql://..."
 
 # NextAuth
 NEXTAUTH_SECRET="votre-secret-32-chars"
-NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_URL="http://localhost:4000"
 
 # Email (Resend)
 RESEND_API_KEY="re_..."
@@ -278,28 +278,28 @@ EMAIL_FROM="noreply@2baconcours.ma"
 
 ### Couleurs Principales
 
-| Couleur | Hex | Utilisation |
-|---------|-----|-------------|
+| Couleur      | Hex       | Utilisation                               |
+| ------------ | --------- | ----------------------------------------- |
 | Brand Purple | `#b02d94` | Couleur principale, boutons, liens actifs |
-| Brand Light | `#f7d6ee` | Backgrounds subtils, hover states |
-| Brand Dark | `#6b1b5e` | Texte sur fond clair, accents forts |
-| Pink Accent | `#ec4899` | Actions secondaires, notifications |
-| Teal | `#14b8a6` | Succès, progression, complémentaire |
+| Brand Light  | `#f7d6ee` | Backgrounds subtils, hover states         |
+| Brand Dark   | `#6b1b5e` | Texte sur fond clair, accents forts       |
+| Pink Accent  | `#ec4899` | Actions secondaires, notifications        |
+| Teal         | `#14b8a6` | Succès, progression, complémentaire       |
 
 ### Palette Complète
 
 ```css
---brand-50: #fbebf7;   /* Backgrounds très légers */
---brand-100: #f7d6ee;  /* Hover states */
---brand-200: #efaddf;  /* Borders subtils */
---brand-300: #e37ac9;  /* Icônes désactivées */
---brand-400: #d247ad;  /* Texte secondaire */
---brand-500: #bd2d98;  /* Liens, hover */
---brand-600: #b02d94;  /* PRIMARY - Boutons, liens actifs */
---brand-700: #8b2277;  /* Hover sur primary */
---brand-800: #6b1b5e;  /* Texte fort */
---brand-900: #54154b;  /* Headings */
---brand-950: #380a30;  /* Plus sombre */
+--brand-50: #fbebf7; /* Backgrounds très légers */
+--brand-100: #f7d6ee; /* Hover states */
+--brand-200: #efaddf; /* Borders subtils */
+--brand-300: #e37ac9; /* Icônes désactivées */
+--brand-400: #d247ad; /* Texte secondaire */
+--brand-500: #bd2d98; /* Liens, hover */
+--brand-600: #b02d94; /* PRIMARY - Boutons, liens actifs */
+--brand-700: #8b2277; /* Hover sur primary */
+--brand-800: #6b1b5e; /* Texte fort */
+--brand-900: #54154b; /* Headings */
+--brand-950: #380a30; /* Plus sombre */
 ```
 
 ### Typographie
@@ -363,5 +363,6 @@ Ce projet est sous licence privée. Tous droits réservés.
 ## 🤝 Contact
 
 Pour toute question ou suggestion :
+
 - Email : support@2baconcours.ma
 - Site : https://2baconcours.ma

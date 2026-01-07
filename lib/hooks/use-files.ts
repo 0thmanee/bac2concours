@@ -3,7 +3,7 @@
  */
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FileType } from "@prisma/client";
+import type { FileType } from "@/lib/enums";
 
 interface UploadFileParams {
   file: File;

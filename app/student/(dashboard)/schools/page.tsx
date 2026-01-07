@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { GraduationCap, Eye, Users, Award } from "lucide-react";
 import { useSchools, useSchoolFilterOptions } from "@/lib/hooks/use-schools";
 import type { SchoolUIFilters, SchoolWithRelations, SchoolTypeInput } from "@/lib/validations/school.validation";
-import { SchoolStatus } from "@prisma/client";
+import { SchoolStatus } from "@/lib/enums";
 import { LoadingState } from "@/components/shared/loading-state";
 import { SearchInput } from "@/components/ui/search-input";
 import { FilterSelect } from "@/components/ui/filter-select";

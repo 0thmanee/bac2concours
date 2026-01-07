@@ -4,7 +4,7 @@ import type { NotificationType } from "@prisma/client";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const fromEmail = process.env.EMAIL_FROM || "onboarding@resend.dev";
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:4000";
 
 // Brand colors
 const BRAND = {

@@ -25,7 +25,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/utils/error.utils";
-import { BookStatus, FileType } from "@prisma/client";
+import { BookStatus, FileType } from "@/lib/enums";
 import { SupabaseImage } from "@/components/ui/supabase-image";
 import {
   AdminFormHeader,

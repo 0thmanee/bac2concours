@@ -71,7 +71,7 @@ DATABASE_URL="postgresql://user:password@host:5432/incubationos"
 AUTH_SECRET="run: openssl rand -base64 32"
 
 # Base URL
-NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_URL="http://localhost:4000"
 ```
 
 **Generate AUTH_SECRET:**
@@ -99,7 +99,7 @@ npm run db:seed
 npm run dev
 ```
 
-Visit [http://localhost:3000](http://localhost:3000)
+Visit [http://localhost:4000](http://localhost:4000)
 
 ### 7. Login with Demo Accounts
 
@@ -175,7 +175,7 @@ Get started: [https://sentry.io](https://sentry.io)
 
 ```bash
 # Development
-npm run dev              # Start dev server (http://localhost:3000)
+npm run dev              # Start dev server (http://localhost:4000)
 npm run build            # Build for production
 npm run start            # Start production server
 npm run lint             # Run ESLint
@@ -233,7 +233,7 @@ npm run type-check
 npm run db:generate
 ```
 
-### Issue: Port 3000 already in use
+### Issue: Port 4000 already in use
 
 **Solution:**
 

@@ -20,7 +20,7 @@ import {
 import { toast } from "sonner";
 import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/utils/error.utils";
-import { VideoStatus, FileType } from "@prisma/client";
+import { VideoStatus, FileType } from "@/lib/enums";
 import { SupabaseImage } from "@/components/ui/supabase-image";
 import {
   createVideoSchema,

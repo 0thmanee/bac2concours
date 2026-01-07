@@ -25,7 +25,7 @@ import { ErrorState } from "@/components/shared/error-state";
 
 import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/utils/error.utils";
-import { VideoStatus, FileType } from "@prisma/client";
+import { VideoStatus, FileType } from "@/lib/enums";
 import { 
   updateVideoSchema, 
   type UpdateVideoInput,

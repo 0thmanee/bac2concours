@@ -218,7 +218,7 @@ export function useVerifyEmail() {
       toast.success(data.message);
       setTimeout(() => {
         router.push(AUTH_ROUTES.LOGIN);
-      }, 3000);
+      }, 4000);
     },
   });
 }

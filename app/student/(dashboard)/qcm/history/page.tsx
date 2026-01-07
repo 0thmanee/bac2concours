@@ -29,8 +29,8 @@ import {
   StudentEmptyState,
 } from "@/components/student";
 import { STUDENT_ROUTES } from "@/lib/routes";
-import type { QuizAttempt } from "@prisma/client";
 import { cn } from "@/lib/utils";
+import type { QuizAttempt } from "@/lib/enums";
 
 // Filters interface
 interface HistoryFilters {

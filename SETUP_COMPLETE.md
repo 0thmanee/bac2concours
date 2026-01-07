@@ -132,7 +132,7 @@ Start with **SETUP.md** for detailed instructions!
 
 ```bash
 # Development
-npm run dev              # Start dev server (http://localhost:3000)
+npm run dev              # Start dev server (http://localhost:4000)
 npm run build            # Production build
 npm run type-check       # TypeScript validation
 

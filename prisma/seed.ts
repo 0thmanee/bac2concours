@@ -945,7 +945,7 @@ const videosData = [
     category: "Mathématiques",
     level: "Bac+2",
     subject: "Mathématiques",
-    duration: 3000,
+    duration: 4000,
     tags: ["algèbre", "espaces vectoriels", "cpge"],
   },
 ];
