@@ -101,7 +101,7 @@ export function AdminTagsInput({
                 <button
                   type="button"
                   onClick={() => removeTag(tag)}
-                  className="ml-1 hover:text-red-500 transition-colors"
+                  className="ml-1 hover:text-[rgb(var(--error))] transition-colors"
                 >
                   <X className="h-3 w-3" />
                 </button>

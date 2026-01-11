@@ -242,7 +242,7 @@ export default function PaymentsPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-8 gap-1 text-green-600 hover:text-green-700 hover:bg-green-50"
+                          className="h-8 gap-1 text-[rgb(var(--success-dark))] hover:text-[rgb(var(--success))] hover:bg-[rgb(var(--success-light))]"
                           onClick={() => handleApprove(user)}
                           disabled={isProcessing}
                         >
@@ -252,7 +252,7 @@ export default function PaymentsPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-8 gap-1 text-red-600 hover:text-red-700 hover:bg-red-50"
+                          className="h-8 gap-1 text-[rgb(var(--error-dark))] hover:text-[rgb(var(--error))] hover:bg-[rgb(var(--error-light))]"
                           onClick={() => setRejectingUser(user)}
                           disabled={isProcessing}
                         >
@@ -315,7 +315,7 @@ export default function PaymentsPage() {
               Fermer
             </Button>
             <Button
-              className="bg-green-600 hover:bg-green-700 text-white"
+              className="bg-[rgb(var(--success))] hover:bg-[rgb(var(--success-dark))] text-white"
               onClick={() => {
                 if (viewingUser) {
                   handleApprove(viewingUser);
@@ -355,7 +355,7 @@ export default function PaymentsPage() {
       }}>
         <DialogContent className="ops-card max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-red-600">
+            <DialogTitle className="flex items-center gap-2 text-[rgb(var(--error-dark))]">
               <AlertTriangle className="h-5 w-5" />
               Rejeter le paiement
             </DialogTitle>

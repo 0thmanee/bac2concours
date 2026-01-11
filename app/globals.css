@@ -728,11 +728,11 @@ html {
   }
 
   .btn-outline {
-    @apply border-2 border-border text-foreground hover:bg-purple-600/10 hover:shadow-glow;
+    @apply border-2 border-border text-foreground hover:bg-primary/10 hover:shadow-glow;
   }
 
   .nav-link {
-    @apply relative py-2 text-muted-foreground hover:text-foreground transition-colors duration-300 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-purple-600 after:transition-all after:duration-300 hover:after:w-full;
+    @apply relative py-2 text-muted-foreground hover:text-foreground transition-colors duration-300 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full;
   }
 
   .nav-link.active {
@@ -744,7 +744,7 @@ html {
   }
 
   .card:hover {
-    @apply border-purple-500/50 shadow-glow;
+    @apply border-primary/50 shadow-glow;
   }
 }
 
@@ -836,6 +836,64 @@ html {
 /* Additional utility classes for 2bac design */
 @utility bg-main-bcg {
   background-color: rgb(var(--ops-background));
+}
+
+/* Professional Public Background - Simple and elegant for auth/landing pages */
+@layer components {
+  .public-background {
+    position: relative;
+    background: rgb(var(--ops-background));
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Light Mode - Subtle gradient with soft patterns */
+  .public-background::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(circle at 0% 0%, rgba(176, 45, 148, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 100% 100%, rgba(128, 55, 182, 0.03) 0%, transparent 50%),
+      linear-gradient(135deg, rgba(251, 235, 247, 0.2) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(240, 249, 255, 0.3) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Subtle dot pattern for light mode */
+  .public-background::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(176, 45, 148, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: 0 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  /* Dark Mode - Deeper gradients with subtle brand colors */
+  .dark .public-background::before {
+    background: 
+      radial-gradient(circle at 0% 0%, rgba(176, 45, 148, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 100% 100%, rgba(128, 55, 182, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.04) 0%, transparent 70%),
+      linear-gradient(135deg, rgba(17, 17, 17, 0.98) 0%, rgba(23, 23, 23, 0.95) 50%, rgba(38, 38, 38, 0.97) 100%);
+  }
+
+  /* Dot pattern for dark mode - more visible */
+  .dark .public-background::after {
+    background-image: radial-gradient(circle, rgba(176, 45, 148, 0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+    opacity: 0.3;
+  }
+
+  /* Ensure content is above background layers */
+  .public-background > * {
+    position: relative;
+    z-index: 1;
+  }
 }
 
 @utility bg-gradient-primary {

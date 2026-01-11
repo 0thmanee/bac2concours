@@ -24,15 +24,7 @@ export default async function AuthLayout({
   }
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-gray-950 dark:bg-gray-950 flex items-center justify-center">
-      {/* Background effects */}
-      <div className="absolute inset-0 bg-[url('/bcg.png')] bg-cover bg-center opacity-30"></div>
-      <div className="absolute top-0 right-0 w-full h-full bg-linear-to-b from-purple-600/10 to-gray-950/80"></div>
-      
-      {/* Animated gradient circles */}
-      <div className="absolute top-[-30%] left-[-10%] w-[70%] h-[70%] rounded-full bg-gradient-conic opacity-30 blur-3xl"></div>
-      <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-gradient-conic opacity-20 blur-3xl"></div>
-      
+    <section className="relative min-h-screen w-full overflow-hidden public-background flex items-center justify-center">
       <div className="relative w-full max-w-md mx-auto px-4 z-10">
         {/* Logo */}
         <div className="mb-8 text-center">

@@ -232,10 +232,10 @@ function QuizContent() {
               <span
                 className={`text-xs px-2 py-1 rounded-full shrink-0 self-start ${
                   currentQuestion.difficulty === "EASY"
-                    ? "bg-green-100 text-green-700"
+                    ? "bg-[rgb(var(--success-light))] text-[rgb(var(--success-dark))]"
                     : currentQuestion.difficulty === "MEDIUM"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : "bg-red-100 text-red-700"
+                      ? "bg-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))]"
+                      : "bg-[rgb(var(--error-light))] text-[rgb(var(--error-dark))]"
                 }`}
               >
                 {currentQuestion.difficulty === "EASY"
@@ -343,8 +343,8 @@ function QuizContent() {
                   isCurrent
                     ? "bg-primary text-white"
                     : isAnswered
-                      ? "bg-green-100 text-green-700"
-                      : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                      ? "bg-[rgb(var(--success-light))] text-[rgb(var(--success-dark))]"
+                      : "bg-muted text-muted-foreground hover:bg-muted/80"
                 }`}
               >
                 {index + 1}

@@ -5,11 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaRegEnvelope, FaPhoneAlt, FaFacebookF, FaInstagram, FaArrowRight } from "react-icons/fa";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 const Hero = () => {
   const { data: session, status } = useSession();
-  const router = useRouter();
   const [redirectPage, setRedirectPage] = useState("/login");
 
   useEffect(() => {
@@ -26,21 +24,13 @@ const Hero = () => {
   }, [session, status]);
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-background dark:bg-gray-950 flex items-center justify-center">
-      {/* Background effects */}
-      <div className="absolute inset-0 bg-[url('/bcg.png')] bg-cover bg-center opacity-20 dark:opacity-30"></div>
-      <div className="absolute top-0 right-0 w-full h-full bg-linear-to-b from-purple-500/5 via-purple-400/5 to-background/90 dark:from-purple-500/10 dark:to-gray-950/80"></div>
-      
-      {/* Animated gradient circle */}
-      <div className="absolute top-[-30%] left-[-10%] w-[70%] h-[70%] rounded-full bg-gradient-conic opacity-30 blur-3xl"></div>
-      <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-gradient-conic opacity-20 blur-3xl"></div>
-      
+    <section className="relative min-h-screen w-full overflow-hidden public-background flex items-center justify-center">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-64 sm:pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left column - Content */}
           <div className="space-y-8">
             <div>
-              <span className="inline-block px-4 py-1 bg-purple-900/30 border border-purple-600/30 rounded-full text-purple-300 font-medium text-sm mb-6">
+              <span className="inline-block px-4 py-1 bg-primary/10 border border-primary/20 rounded-full text-primary font-medium text-sm mb-6">
                 Préparation Concours 2025
               </span>
             </div>
@@ -73,7 +63,7 @@ const Hero = () => {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="text-gray-200">{feature}</span>
+                  <span className="text-muted-foreground">{feature}</span>
                 </div>
               ))}
             </div>
@@ -106,7 +96,7 @@ const Hero = () => {
                   key={i}
                   href={item.href}
                   target="_blank"
-                  className="w-10 h-10 bg-gray-800/50 hover:bg-purple-900/50 border border-border hover:border-purple-700 rounded-full flex items-center justify-center text-gray-300 hover:text-white transition-all duration-300 hover:shadow-glow"
+                  className="w-10 h-10 bg-muted hover:bg-primary/10 border border-border hover:border-primary rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-all duration-300 hover:shadow-glow"
                 >
                   {item.icon}
                 </Link>
@@ -126,44 +116,6 @@ const Hero = () => {
                   priority
                   className="object-cover"
                 />
-              </div>
-              
-              {/* Floating elements */}
-              <div className="absolute -top-6 -right-2 sm:-right-6 p-4 glass-card rounded-xl shadow-lg">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-white">Taux de réussite</p>
-                    <p className="text-lg font-bold text-primary-300">95%</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="absolute bottom-4 sm:bottom-12 -left-2 sm:-left-6 p-4 glass-card rounded-xl shadow-lg max-w-[200px]">
-                <div className="flex flex-col space-y-2">
-                  <div className="flex -space-x-2">
-                    {[1, 2, 3, 4].map(num => (
-                      <div key={num} className="w-8 h-8 rounded-full bg-gray-700 border-2 border-border overflow-hidden relative">
-                        <Image
-                          src={`/avatar-${num}.jpg`}
-                          alt="Student avatar"
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    ))}
-                    <div className="w-8 h-8 rounded-full bg-purple-600 border-2 border-border flex items-center justify-center text-[0.6rem] text-white">
-                      +346
-                    </div>
-                  </div>
-                  <p className="text-sm text-gray-300">
-                    Rejoignez plus de 350 étudiants qui réussissent
-                  </p>
-                </div>
               </div>
             </div>
           </div>

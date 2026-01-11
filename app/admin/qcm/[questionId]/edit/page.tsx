@@ -797,7 +797,7 @@ export default function EditQuestionPage({ params }: PageProps) {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-ops-tertiary">Réponses correctes</span>
-                  <span className="font-medium text-green-600">
+                  <span className="font-medium text-[rgb(var(--success-dark))]">
                     {question.timesCorrect}
                   </span>
                 </div>

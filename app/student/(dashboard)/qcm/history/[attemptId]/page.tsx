@@ -49,10 +49,10 @@ function formatTimeSpent(seconds: number | null): string {
 
 // Get score color based on percentage
 function getScoreColor(percentage: number): string {
-  if (percentage >= 80) return "text-green-600 dark:text-green-400";
-  if (percentage >= 60) return "text-yellow-600 dark:text-yellow-400";
-  if (percentage >= 40) return "text-orange-600 dark:text-orange-400";
-  return "text-red-600 dark:text-red-400";
+  if (percentage >= 80) return "text-[rgb(var(--success-dark))] dark:text-[rgb(var(--success))]";
+  if (percentage >= 60) return "text-[rgb(var(--warning-dark))] dark:text-[rgb(var(--warning))]";
+  if (percentage >= 40) return "text-[rgb(var(--warning-dark))] dark:text-[rgb(var(--warning))]";
+  return "text-[rgb(var(--error-dark))] dark:text-[rgb(var(--error))]";
 }
 
 // Get difficulty badge color
@@ -60,13 +60,13 @@ function getDifficultyColor(difficulty: string): string {
   switch (difficulty.toLowerCase()) {
     case "easy":
     case "facile":
-      return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400";
+      return "bg-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] dark:bg-[rgb(var(--success-dark))]/30 dark:text-[rgb(var(--success))]";
     case "medium":
     case "moyen":
-      return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400";
+      return "bg-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))] dark:bg-[rgb(var(--warning-dark))]/30 dark:text-[rgb(var(--warning))]";
     case "hard":
     case "difficile":
-      return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400";
+      return "bg-[rgb(var(--error-light))] text-[rgb(var(--error-dark))] dark:bg-[rgb(var(--error-dark))]/30 dark:text-[rgb(var(--error))]";
     default:
       return "bg-muted text-muted-foreground";
   }
@@ -104,7 +104,7 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
         </Link>
         <Card className="ops-card">
           <CardContent className="py-16 text-center">
-            <XCircle className="h-16 w-16 text-red-400 mx-auto mb-4" />
+            <XCircle className="h-16 w-16 text-[rgb(var(--error))] mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-foreground mb-2">
               Quiz non trouvé
             </h2>
@@ -144,9 +144,9 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
       <Card className="ops-card overflow-hidden">
         <div className={cn(
           "h-2",
-          attempt.percentage >= 80 ? "bg-green-500" :
-          attempt.percentage >= 60 ? "bg-yellow-500" :
-          attempt.percentage >= 40 ? "bg-orange-500" : "bg-red-500"
+          attempt.percentage >= 80 ? "bg-[rgb(var(--success))]" :
+          attempt.percentage >= 60 ? "bg-[rgb(var(--warning))]" :
+          attempt.percentage >= 40 ? "bg-[rgb(var(--warning))]" : "bg-[rgb(var(--error))]"
         )} />
         <CardContent className="p-4 sm:p-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
@@ -160,9 +160,9 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
               </div>
               <div className="text-sm text-muted-foreground flex items-center justify-center gap-1">
                 {attempt.percentage >= 80 ? (
-                  <Trophy className="h-4 w-4 text-yellow-500" />
+                  <Trophy className="h-4 w-4 text-[rgb(var(--warning))]" />
                 ) : attempt.percentage >= 60 ? (
-                  <TrendingUp className="h-4 w-4 text-blue-500" />
+                  <TrendingUp className="h-4 w-4 text-[rgb(var(--info))]" />
                 ) : (
                   <Target className="h-4 w-4" />
                 )}
@@ -172,22 +172,22 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
 
             {/* Correct */}
             <div className="text-center">
-              <div className="text-4xl font-bold text-green-600 dark:text-green-400 mb-1">
+              <div className="text-4xl font-bold text-[rgb(var(--success-dark))] dark:text-[rgb(var(--success))] mb-1">
                 {correctAnswers}
               </div>
               <div className="text-sm text-muted-foreground flex items-center justify-center gap-1">
-                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                <CheckCircle2 className="h-4 w-4 text-[rgb(var(--success))]" />
                 Correctes
               </div>
             </div>
 
             {/* Incorrect */}
             <div className="text-center">
-              <div className="text-4xl font-bold text-red-600 dark:text-red-400 mb-1">
+              <div className="text-4xl font-bold text-[rgb(var(--error-dark))] dark:text-[rgb(var(--error))] mb-1">
                 {incorrectAnswers}
               </div>
               <div className="text-sm text-muted-foreground flex items-center justify-center gap-1">
-                <XCircle className="h-4 w-4 text-red-500" />
+                <XCircle className="h-4 w-4 text-[rgb(var(--error))]" />
                 Incorrectes
               </div>
             </div>
@@ -246,8 +246,8 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
                     <span className={cn(
                       "flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold shrink-0",
                       answer.isCorrect
-                        ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                        : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                        ? "bg-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] dark:bg-[rgb(var(--success-dark))]/30 dark:text-[rgb(var(--success))]"
+                        : "bg-[rgb(var(--error-light))] text-[rgb(var(--error-dark))] dark:bg-[rgb(var(--error-dark))]/30 dark:text-[rgb(var(--error))]"
                     )}>
                       {index + 1}
                     </span>
@@ -255,9 +255,9 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
                       <CardTitle className="text-base">
                         <span className="flex items-center gap-2">
                           {answer.isCorrect ? (
-                            <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0" />
+                            <CheckCircle2 className="h-5 w-5 text-[rgb(var(--success))] shrink-0" />
                           ) : (
-                            <XCircle className="h-5 w-5 text-red-500 shrink-0" />
+                            <XCircle className="h-5 w-5 text-[rgb(var(--error))] shrink-0" />
                           )}
                           {answer.isCorrect ? "Réponse correcte" : "Réponse incorrecte"}
                         </span>
@@ -281,7 +281,7 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Question Text */}
-                <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4">
+                <div className="bg-muted rounded-lg p-4">
                   <div className="flex items-start gap-2">
                     <HelpCircle className="h-5 w-5 text-[rgb(var(--brand-600))] shrink-0 mt-0.5" />
                     <p className="text-foreground font-medium">
@@ -302,24 +302,24 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
                         className={cn(
                           "flex items-center gap-3 p-3 rounded-lg border transition-colors",
                           isCorrect && isSelected
-                            ? "bg-green-50 border-green-300 dark:bg-green-900/20 dark:border-green-700"
+                            ? "bg-[rgb(var(--success-light))] border-[rgb(var(--success))] dark:bg-[rgb(var(--success-dark))]/20 dark:border-[rgb(var(--success))]"
                             : isCorrect
-                            ? "bg-green-50/50 border-green-200 dark:bg-green-900/10 dark:border-green-800"
+                            ? "bg-[rgb(var(--success-light))]/50 border-[rgb(var(--success))]/30 dark:bg-[rgb(var(--success-dark))]/10 dark:border-[rgb(var(--success-dark))]/50"
                             : isSelected && !isCorrect
-                            ? "bg-red-50 border-red-300 dark:bg-red-900/20 dark:border-red-700"
-                            : "bg-gray-50 border-border dark:bg-gray-800/50 dark:border-border"
+                            ? "bg-[rgb(var(--error-light))] border-[rgb(var(--error))] dark:bg-[rgb(var(--error-dark))]/20 dark:border-[rgb(var(--error))]"
+                            : "bg-muted border-border dark:bg-muted dark:border-border"
                         )}
                       >
                         {/* Selection indicator */}
                         <div className={cn(
                           "w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0",
                           isCorrect && isSelected
-                            ? "border-green-500 bg-green-500"
+                            ? "border-[rgb(var(--success))] bg-[rgb(var(--success))]"
                             : isCorrect
-                            ? "border-green-500"
+                            ? "border-[rgb(var(--success))]"
                             : isSelected
-                            ? "border-red-500 bg-red-500"
-                            : "border-border dark:border-gray-600"
+                            ? "border-[rgb(var(--error))] bg-[rgb(var(--error))]"
+                            : "border-border dark:border-border"
                         )}>
                           {(isSelected || isCorrect) && (
                             isCorrect ? (
@@ -334,10 +334,10 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
                         <div className={cn(
                           "flex-1",
                           isCorrect
-                            ? "text-green-700 dark:text-green-300 font-medium"
+                            ? "text-[rgb(var(--success-dark))] dark:text-[rgb(var(--success))] font-medium"
                             : isSelected
-                            ? "text-red-700 dark:text-red-300"
-                            : "text-gray-700 dark:text-gray-300"
+                            ? "text-[rgb(var(--error-dark))] dark:text-[rgb(var(--error))]"
+                            : "text-foreground"
                         )}>
                           {option.contentType === "IMAGE" && option.imageUrl ? (
                             <Image
@@ -369,7 +369,7 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
                           {isCorrect && !isSelected && (
                             <Badge
                               variant="outline"
-                              className="text-xs border-green-500 text-green-600"
+                              className="text-xs border-[rgb(var(--success))] text-[rgb(var(--success-dark))]"
                             >
                               Bonne réponse
                             </Badge>
@@ -382,14 +382,14 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
 
                 {/* Explanation */}
                 {answer.question.explanation && (
-                  <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                  <div className="bg-[rgb(var(--info-light))] dark:bg-[rgb(var(--info-dark))]/20 rounded-lg p-4 border border-[rgb(var(--info))]/30 dark:border-[rgb(var(--info-dark))]/50">
                     <div className="flex items-start gap-2">
-                      <Lightbulb className="h-5 w-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                      <Lightbulb className="h-5 w-5 text-[rgb(var(--info))] dark:text-[rgb(var(--info))] shrink-0 mt-0.5" />
                       <div>
-                        <p className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
+                        <p className="text-sm font-medium text-[rgb(var(--info-dark))] dark:text-[rgb(var(--info))] mb-1">
                           Explication
                         </p>
-                        <p className="text-sm text-blue-600 dark:text-blue-400">
+                        <p className="text-sm text-[rgb(var(--info))] dark:text-[rgb(var(--info))]">
                           {answer.question.explanation}
                         </p>
                       </div>

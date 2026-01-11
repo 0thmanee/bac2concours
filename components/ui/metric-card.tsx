@@ -102,7 +102,7 @@ export function MetricCard({
               </p>
             )}
             {trend && (
-              <p className={cn("text-xs font-medium flex items-center gap-1", trend.isPositive ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")}>
+              <p className={cn("text-xs font-medium flex items-center gap-1", trend.isPositive ? "text-[rgb(var(--success-dark))] dark:text-[rgb(var(--success))]" : "text-[rgb(var(--error-dark))] dark:text-[rgb(var(--error))]")}>
                 <span>{trend.isPositive ? "↑" : "↓"}</span>
                 {trend.value}
               </p>

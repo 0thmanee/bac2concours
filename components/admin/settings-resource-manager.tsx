@@ -426,7 +426,7 @@ export function SettingsResourceManager<T extends Resource>({
             <AlertDialogCancel>Annuler</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-[rgb(var(--error))] hover:bg-[rgb(var(--error-dark))]"
               disabled={deletePending}
             >
               {deletePending ? (

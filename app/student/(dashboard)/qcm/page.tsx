@@ -245,14 +245,14 @@ export default function StudentQCMPage() {
           </Card>
 
           {/* Tips */}
-          <Card className="ops-card bg-linear-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-blue-200 dark:border-blue-800">
+          <Card className="ops-card bg-linear-to-br from-[rgb(var(--info-light))] to-[rgb(var(--info-light))] dark:from-[rgb(var(--info-dark))]/20 dark:to-[rgb(var(--info-dark))]/20 border-[rgb(var(--info))]/30 dark:border-[rgb(var(--info-dark))]/50">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg text-blue-700 dark:text-blue-300">
+              <CardTitle className="flex items-center gap-2 text-lg text-[rgb(var(--info-dark))] dark:text-[rgb(var(--info))]">
                 <BookOpen className="h-5 w-5" />
                 Conseils
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm text-blue-600 dark:text-blue-400">
+            <CardContent className="space-y-2 text-sm text-[rgb(var(--info))] dark:text-[rgb(var(--info))]">
               <p>• Lisez chaque question attentivement</p>
               <p>• Certaines questions peuvent avoir plusieurs réponses</p>
               <p>• Vous pouvez revoir vos erreurs après le quiz</p>

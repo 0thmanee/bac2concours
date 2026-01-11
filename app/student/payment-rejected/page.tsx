@@ -39,7 +39,7 @@ export default function PaymentRejectedPage() {
       <Card className="ops-card max-w-md w-full">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[rgb(var(--error-light))]">
-            <XCircle className="h-8 w-8 text-red-500" />
+            <XCircle className="h-8 w-8 text-[rgb(var(--error))]" />
           </div>
           <CardTitle className="text-2xl font-bold text-ops-primary">
             Paiement non validé
@@ -51,14 +51,14 @@ export default function PaymentRejectedPage() {
         <CardContent className="space-y-6">
           {/* Rejection reason */}
           {paymentStatus?.paymentRejectionReason && (
-            <div className="rounded-lg bg-red-50 border border-red-200 p-4">
+            <div className="rounded-lg bg-[rgb(var(--error-light))] border border-[rgb(var(--error))]/30 p-4">
               <div className="flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
+                <AlertTriangle className="h-5 w-5 text-[rgb(var(--error))] shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-red-800 mb-1">
+                  <p className="text-sm font-medium text-[rgb(var(--error-dark))] mb-1">
                     Raison du rejet :
                   </p>
-                  <p className="text-sm text-red-700">
+                  <p className="text-sm text-[rgb(var(--error-dark))]">
                     {paymentStatus.paymentRejectionReason}
                   </p>
                 </div>

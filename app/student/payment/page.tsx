@@ -213,7 +213,7 @@ export default function PaymentPage() {
                   </div>
                 )}
                 <div className="flex items-center justify-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-[rgb(var(--success))]" />
                   <span className="text-sm font-medium text-ops-primary">
                     {selectedFile.name}
                   </span>

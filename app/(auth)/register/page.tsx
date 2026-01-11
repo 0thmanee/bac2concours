@@ -113,7 +113,7 @@ export default function RegisterPage() {
     <div className="space-y-5">
       {/* Header */}
       <div className="text-center">
-        <span className="inline-block px-4 py-1 bg-purple-900/30 border border-purple-600/30 rounded-full text-purple-300 font-medium text-sm mb-4">
+        <span className="inline-block px-4 py-1 bg-primary/10 border border-primary/20 rounded-full text-primary font-medium text-sm mb-4">
           Nouveau Compte
         </span>
         <h2 className="text-2xl font-semibold mb-1 text-foreground">
