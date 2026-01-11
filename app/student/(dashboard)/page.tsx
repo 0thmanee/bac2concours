@@ -93,7 +93,7 @@ export default async function StudentDashboard() {
       </div>
 
       {/* Recent Content */}
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
         {/* Recent Books */}
         <Card className="ops-card">
           <CardHeader className="flex flex-row items-center justify-between">
@@ -195,28 +195,28 @@ export default async function StudentDashboard() {
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <Link 
               href={STUDENT_ROUTES.BOOKS}
-              className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover"
+              className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover text-center"
             >
               <BookOpen className="h-8 w-8 text-metric-blue mb-3" />
               <span className="text-sm font-medium">Tous les Livres</span>
             </Link>
             <Link 
               href={STUDENT_ROUTES.VIDEOS}
-              className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover"
+              className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover text-center"
             >
               <Video className="h-8 w-8 text-metric-orange mb-3" />
               <span className="text-sm font-medium">Toutes les Vidéos</span>
             </Link>
             <Link 
               href={STUDENT_ROUTES.QUIZ}
-              className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover"
+              className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover text-center"
             >
               <HelpCircle className="h-8 w-8 text-metric-purple mb-3" />
               <span className="text-sm font-medium">Quiz QCM</span>
             </Link>
             <Link 
               href={STUDENT_ROUTES.PROFILE}
-              className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover"
+              className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover text-center"
             >
               <GraduationCap className="h-8 w-8 text-metric-mint mb-3" />
               <span className="text-sm font-medium">Mon Profil</span>
