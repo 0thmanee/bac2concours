@@ -225,16 +225,16 @@ export default function AdminVideosPage() {
               className="h-12 w-9 rounded object-cover shrink-0"
             />
           ) : (
-            <div className="h-12 w-9 rounded bg-gray-200 dark:bg-gray-700 flex items-center justify-center shrink-0">
-              <Video className="h-4 w-4 text-gray-400" />
+            <div className="h-12 w-9 rounded bg-muted flex items-center justify-center shrink-0">
+              <Video className="h-4 w-4 text-muted-foreground" />
             </div>
           )}
           <div>
-            <p className="font-medium text-sm text-gray-900 dark:text-white">
+            <p className="font-medium text-sm text-foreground">
               {video.title}
             </p>
             {video.duration && (
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-muted-foreground">
                 {formatDuration(video.duration)}
               </p>
             )}
@@ -246,11 +246,11 @@ export default function AdminVideosPage() {
       header: "Catégorie",
       cell: (video) => (
         <div>
-          <p className="text-sm text-gray-900 dark:text-white">
+          <p className="text-sm text-foreground">
             {video.category}
           </p>
           {video.subject && (
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-muted-foreground">
               {video.subject}
             </p>
           )}
@@ -261,10 +261,10 @@ export default function AdminVideosPage() {
       header: "École/Niveau",
       cell: (video) => (
         <div>
-          <p className="text-sm text-gray-900 dark:text-white">
+          <p className="text-sm text-foreground">
             {video.school}
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-muted-foreground">
             {video.level}
           </p>
         </div>
@@ -273,7 +273,7 @@ export default function AdminVideosPage() {
     {
       header: "Statistiques",
       cell: (video) => (
-        <div className="flex gap-3 text-xs text-gray-600 dark:text-gray-400">
+        <div className="flex gap-3 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
             <Eye className="h-3 w-3" />
             {video.views}
@@ -295,7 +295,7 @@ export default function AdminVideosPage() {
     {
       header: "Ajouté le",
       cell: (video) => (
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-sm text-muted-foreground">
           {format(new Date(video.createdAt), "MMM d, yyyy")}
         </p>
       ),

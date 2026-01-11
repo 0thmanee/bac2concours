@@ -68,7 +68,7 @@ function getDifficultyColor(difficulty: string): string {
     case "difficile":
       return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400";
     default:
-      return "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400";
+      return "bg-muted text-muted-foreground";
   }
 }
 
@@ -105,10 +105,10 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
         <Card className="ops-card">
           <CardContent className="py-16 text-center">
             <XCircle className="h-16 w-16 text-red-400 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            <h2 className="text-xl font-semibold text-foreground mb-2">
               Quiz non trouvé
             </h2>
-            <p className="text-gray-500 dark:text-gray-400">
+            <p className="text-muted-foreground">
               Ce quiz n&apos;existe pas ou a été supprimé.
             </p>
           </CardContent>
@@ -131,10 +131,10 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl font-bold text-foreground">
             Résultats du Quiz
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-muted-foreground">
             {attempt.school} - {attempt.matiere}
           </p>
         </div>
@@ -158,7 +158,7 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
               )}>
                 {Math.round(attempt.percentage)}%
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center justify-center gap-1">
+              <div className="text-sm text-muted-foreground flex items-center justify-center gap-1">
                 {attempt.percentage >= 80 ? (
                   <Trophy className="h-4 w-4 text-yellow-500" />
                 ) : attempt.percentage >= 60 ? (
@@ -175,7 +175,7 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
               <div className="text-4xl font-bold text-green-600 dark:text-green-400 mb-1">
                 {correctAnswers}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center justify-center gap-1">
+              <div className="text-sm text-muted-foreground flex items-center justify-center gap-1">
                 <CheckCircle2 className="h-4 w-4 text-green-500" />
                 Correctes
               </div>
@@ -186,7 +186,7 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
               <div className="text-4xl font-bold text-red-600 dark:text-red-400 mb-1">
                 {incorrectAnswers}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center justify-center gap-1">
+              <div className="text-sm text-muted-foreground flex items-center justify-center gap-1">
                 <XCircle className="h-4 w-4 text-red-500" />
                 Incorrectes
               </div>
@@ -194,10 +194,10 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
 
             {/* Time */}
             <div className="text-center">
-              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-1">
+              <div className="text-4xl font-bold text-foreground mb-1">
                 {formatTimeSpent(attempt.timeSpent)}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center justify-center gap-1">
+              <div className="text-sm text-muted-foreground flex items-center justify-center gap-1">
                 <Clock className="h-4 w-4" />
                 Temps
               </div>
@@ -205,7 +205,7 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
           </div>
 
           <div className="mt-6 pt-4 border-t border-border">
-            <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+            <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
                 {formatDate(attempt.createdAt)}
@@ -221,7 +221,7 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
 
       {/* Questions Review */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+        <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
           <BookOpen className="h-5 w-5" />
           Révision des Questions ({attempt.answers.length})
         </h2>
@@ -263,7 +263,7 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
                         </span>
                       </CardTitle>
                       {answer.question.chapter && (
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1">
                           Chapitre: {answer.question.chapter}
                         </p>
                       )}
@@ -284,7 +284,7 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
                 <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4">
                   <div className="flex items-start gap-2">
                     <HelpCircle className="h-5 w-5 text-[rgb(var(--brand-600))] shrink-0 mt-0.5" />
-                    <p className="text-gray-900 dark:text-white font-medium">
+                    <p className="text-foreground font-medium">
                       {answer.question.text}
                     </p>
                   </div>

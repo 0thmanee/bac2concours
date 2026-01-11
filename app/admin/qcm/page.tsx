@@ -142,7 +142,7 @@ export default function AdminQCMPage() {
       ACTIVE:
         "bg-linear-to-r from-emerald-50 to-emerald-100 text-emerald-700 border-emerald-200",
       INACTIVE:
-        "bg-linear-to-r from-gray-50 to-gray-100 text-gray-600 border-border",
+        "bg-linear-to-r from-gray-50 to-gray-100 text-muted-foreground border-border",
       DRAFT:
         "bg-linear-to-r from-amber-50 to-amber-100 text-amber-700 border-amber-200",
     };

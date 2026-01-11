@@ -14,8 +14,8 @@ export default function ForbiddenPage() {
         </div>
         
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-gray-900">Access Denied</h1>
-          <p className="text-gray-600">
+          <h1 className="text-3xl font-bold text-foreground">Access Denied</h1>
+          <p className="text-muted-foreground">
             You don&apos;t have permission to access this page.
           </p>
         </div>

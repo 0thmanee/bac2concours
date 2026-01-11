@@ -58,7 +58,7 @@ export function AdminFilterBar({
       </div>
 
       {resultsCount !== undefined && (
-        <div className="text-sm text-gray-500 dark:text-gray-400">
+        <div className="text-sm text-muted-foreground">
           {resultsCount} {resultsLabel}
           {resultsCount !== 1 ? "s" : ""} trouvé
           {resultsCount !== 1 ? "s" : ""}

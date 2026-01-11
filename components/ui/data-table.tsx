@@ -61,12 +61,12 @@ export function DataTable<T>({
       <Card className={cn("overflow-hidden border-border", className)}>
         <Table>
           <TableHeader>
-            <TableRow className="border-b border-border hover:bg-transparent bg-gray-50/50 dark:bg-gray-900/50">
+            <TableRow className="border-b border-border hover:bg-transparent bg-muted/50">
               {columns.map((column, index) => (
                 <TableHead
                   key={index}
                   className={cn(
-                    "font-medium text-gray-600 dark:text-gray-400",
+                    "font-medium text-muted-foreground",
                     column.headerClassName
                   )}
                 >
@@ -80,7 +80,7 @@ export function DataTable<T>({
               <TableRow key={index} className="border-b border-border">
                 {columns.map((_, colIndex) => (
                   <TableCell key={colIndex}>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                    <div className="h-4 bg-muted rounded animate-pulse" />
                   </TableCell>
                 ))}
               </TableRow>
@@ -104,12 +104,12 @@ export function DataTable<T>({
       <div className="overflow-x-auto">
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-border hover:bg-transparent bg-gray-50/50 dark:bg-gray-900/50">
+          <TableRow className="border-b border-border hover:bg-transparent bg-muted/50">
             {columns.map((column, index) => (
               <TableHead
                 key={index}
                 className={cn(
-                  "font-medium text-gray-600 dark:text-gray-400",
+                  "font-medium text-muted-foreground",
                   column.headerClassName
                 )}
               >
@@ -131,7 +131,7 @@ export function DataTable<T>({
                 className={cn(
                   "border-b border-border",
                   "transition-colors duration-150",
-                  onRowClick && "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900/50",
+                  onRowClick && "cursor-pointer hover:bg-muted/50",
                   computedRowClassName
                 )}
               >
@@ -139,7 +139,7 @@ export function DataTable<T>({
                   <TableCell
                     key={colIndex}
                     className={cn(
-                      "text-gray-900 dark:text-gray-100",
+                      "text-foreground",
                       column.cellClassName
                     )}
                   >

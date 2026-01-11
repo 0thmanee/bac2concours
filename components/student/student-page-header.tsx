@@ -25,7 +25,7 @@ export function StudentPageHeader({
         <h1 className="text-2xl sm:text-3xl font-bold bg-linear-to-r from-[rgb(var(--brand-600))] to-[rgb(var(--brand-700))] bg-clip-text text-transparent mb-2">
           {title}
         </h1>
-        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+        <p className="text-sm sm:text-base text-muted-foreground">
           {count} {label} disponible{count !== 1 ? "s" : ""}
         </p>
       </div>

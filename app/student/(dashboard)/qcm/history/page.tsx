@@ -191,7 +191,7 @@ export default function QuizHistoryPage() {
             <Button
               variant="ghost"
               onClick={clearFilters}
-              className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              className="text-sm text-muted-foreground hover:text-foreground"
             >
               Effacer les filtres
             </Button>
@@ -226,11 +226,11 @@ export default function QuizHistoryPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
                         <FileQuestion className="h-5 w-5 text-[rgb(var(--brand-600))]" />
-                        <h3 className="font-semibold text-gray-900 dark:text-white truncate">
+                        <h3 className="font-semibold text-foreground truncate">
                           {attempt.school} - {attempt.matiere}
                         </h3>
                       </div>
-                      <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+                      <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <Calendar className="h-4 w-4" />
                           {formatDate(attempt.createdAt)}
@@ -255,7 +255,7 @@ export default function QuizHistoryPage() {
                         )}>
                           {Math.round(attempt.percentage)}%
                         </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                        <div className="text-xs text-muted-foreground">
                           {attempt.score}/{attempt.totalQuestions} correctes
                         </div>
                       </div>

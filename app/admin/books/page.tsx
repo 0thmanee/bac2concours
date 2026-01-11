@@ -224,14 +224,14 @@ export default function AdminBooksPage() {
             />
           )}
           <div>
-            <p className="font-medium text-sm text-gray-900 dark:text-white">
+            <p className="font-medium text-sm text-foreground">
               {book.title}
             </p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-muted-foreground">
               {book.author}
             </p>
             {book.totalPages && (
-              <p className="text-xs text-gray-400 dark:text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 {book.totalPages} p.
               </p>
             )}
@@ -243,9 +243,9 @@ export default function AdminBooksPage() {
       header: "Catégorie",
       cell: (book) => (
         <div>
-          <p className="text-sm text-gray-900 dark:text-white">{book.category}</p>
+          <p className="text-sm text-foreground">{book.category}</p>
           {book.subject && (
-            <p className="text-xs text-gray-500 dark:text-gray-400">{book.subject}</p>
+            <p className="text-xs text-muted-foreground">{book.subject}</p>
           )}
         </div>
       ),
@@ -254,15 +254,15 @@ export default function AdminBooksPage() {
       header: "École/Niveau",
       cell: (book) => (
         <div>
-          <p className="text-sm text-gray-900 dark:text-white">{book.school}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">{book.level}</p>
+          <p className="text-sm text-foreground">{book.school}</p>
+          <p className="text-xs text-muted-foreground">{book.level}</p>
         </div>
       ),
     },
     {
       header: "Statistiques",
       cell: (book) => (
-        <div className="flex gap-3 text-xs text-gray-600 dark:text-gray-400">
+        <div className="flex gap-3 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
             <Eye className="h-3 w-3" />
             {book.views}
@@ -284,7 +284,7 @@ export default function AdminBooksPage() {
     {
       header: "Ajouté le",
       cell: (book) => (
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-sm text-muted-foreground">
           {format(new Date(book.createdAt), "MMM d, yyyy")}
         </p>
       ),

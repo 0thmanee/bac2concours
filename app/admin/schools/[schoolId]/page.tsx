@@ -372,7 +372,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   {school.partenariats.map((partner, index) => (
-                    <span key={index} className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-border">
+                    <span key={index} className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-muted text-foreground border border-border">
                       {partner}
                     </span>
                   ))}
@@ -463,7 +463,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
                     <p className="text-sm font-medium text-ops-tertiary mb-2">Services</p>
                     <div className="flex flex-wrap gap-1">
                       {school.services.map((service, index) => (
-                        <span key={index} className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-gray-600 dark:text-gray-400">
+                        <span key={index} className="text-xs px-2 py-1 bg-muted rounded-md text-muted-foreground">
                           {service}
                         </span>
                       ))}
@@ -475,7 +475,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
                     <p className="text-sm font-medium text-ops-tertiary mb-2">Infrastructures</p>
                     <div className="flex flex-wrap gap-1">
                       {school.infrastructures.map((infra, index) => (
-                        <span key={index} className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-gray-600 dark:text-gray-400">
+                        <span key={index} className="text-xs px-2 py-1 bg-muted rounded-md text-muted-foreground">
                           {infra}
                         </span>
                       ))}

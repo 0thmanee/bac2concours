@@ -235,16 +235,16 @@ export default function AdminSchoolsPage() {
               className="h-9 w-9 rounded object-cover shrink-0"
             />
           ) : (
-            <div className="h-9 w-9 rounded bg-gray-200 dark:bg-gray-700 flex items-center justify-center shrink-0">
-              <GraduationCap className="h-4 w-4 text-gray-400" />
+            <div className="h-9 w-9 rounded bg-muted flex items-center justify-center shrink-0">
+              <GraduationCap className="h-4 w-4 text-muted-foreground" />
             </div>
           )}
           <div>
-            <p className="font-medium text-sm text-gray-900 dark:text-white">
+            <p className="font-medium text-sm text-foreground">
               {school.shortName || school.name}
             </p>
             {school.shortName && (
-              <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">
+              <p className="text-xs text-muted-foreground line-clamp-1">
                 {school.name}
               </p>
             )}
@@ -255,7 +255,7 @@ export default function AdminSchoolsPage() {
     {
       header: "Type",
       cell: (school) => (
-        <p className="text-sm text-gray-900 dark:text-white">
+        <p className="text-sm text-foreground">
           {SCHOOL_TYPE_LABELS[school.type] || school.type}
         </p>
       ),
@@ -264,8 +264,8 @@ export default function AdminSchoolsPage() {
       header: "Localisation",
       cell: (school) => (
         <div className="flex items-center gap-1">
-          <MapPin className="h-3 w-3 text-gray-400" />
-          <p className="text-sm text-gray-900 dark:text-white">
+          <MapPin className="h-3 w-3 text-muted-foreground" />
+          <p className="text-sm text-foreground">
             {school.city}
           </p>
         </div>
@@ -274,7 +274,7 @@ export default function AdminSchoolsPage() {
     {
       header: "Statistiques",
       cell: (school) => (
-        <div className="flex gap-3 text-xs text-gray-600 dark:text-gray-400">
+        <div className="flex gap-3 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
             <Eye className="h-3 w-3" />
             {school.views}
@@ -305,7 +305,7 @@ export default function AdminSchoolsPage() {
     {
       header: "Ajouté le",
       cell: (school) => (
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-sm text-muted-foreground">
           {format(new Date(school.createdAt), "MMM d, yyyy")}
         </p>
       ),

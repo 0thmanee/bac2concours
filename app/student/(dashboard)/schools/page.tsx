@@ -140,7 +140,7 @@ export default function StudentSchoolsPage() {
               thumbnailAspect="video"
               fallbackIcon={GraduationCap}
               badge={
-                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-white/95 backdrop-blur-sm text-gray-700 shadow-sm border border-white/50">
+                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-white/95 backdrop-blur-sm text-foreground shadow-sm border border-white/50">
                   {SCHOOL_TYPE_LABELS[school.type] || school.type}
                 </span>
               }

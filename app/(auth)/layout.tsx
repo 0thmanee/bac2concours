@@ -27,7 +27,7 @@ export default async function AuthLayout({
     <section className="relative min-h-screen w-full overflow-hidden bg-gray-950 dark:bg-gray-950 flex items-center justify-center">
       {/* Background effects */}
       <div className="absolute inset-0 bg-[url('/bcg.png')] bg-cover bg-center opacity-30"></div>
-      <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-b from-purple-600/10 to-gray-950/80"></div>
+      <div className="absolute top-0 right-0 w-full h-full bg-linear-to-b from-purple-600/10 to-gray-950/80"></div>
       
       {/* Animated gradient circles */}
       <div className="absolute top-[-30%] left-[-10%] w-[70%] h-[70%] rounded-full bg-gradient-conic opacity-30 blur-3xl"></div>
@@ -49,7 +49,7 @@ export default async function AuthLayout({
         </div>
         
         {/* Content Card */}
-        <div className="glass-card rounded-2xl p-8 border border-border hover:border-purple-700/50 transition-all duration-300 shadow-lg">
+        <div className="glass-card rounded-2xl p-8 border border-ops-border">
           {children}
         </div>
 

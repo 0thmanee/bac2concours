@@ -81,18 +81,18 @@ export function StudentMediaCard({
         <div className="flex-1 flex flex-col justify-between space-y-4">
           <div className="space-y-3">
             <div>
-              <h3 className="line-clamp-2 mb-1.5 font-semibold text-gray-900 text-base sm:text-lg dark:text-white group-hover:text-[rgb(var(--brand-600))] dark:group-hover:text-[rgb(var(--brand-400))] transition-colors">
+              <h3 className="line-clamp-2 mb-1.5 font-semibold text-foreground text-base sm:text-lg group-hover:text-[rgb(var(--brand-600))] dark:group-hover:text-[rgb(var(--brand-400))] transition-colors">
                 {title}
               </h3>
               {subtitle && (
-                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                <div className="text-xs sm:text-sm text-muted-foreground">
                   {subtitle}
                 </div>
               )}
             </div>
 
             {description && (
-              <p className="line-clamp-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+              <p className="line-clamp-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 {description}
               </p>
             )}
@@ -106,10 +106,10 @@ export function StudentMediaCard({
                 </div>
               )}
               {metrics && metrics.length > 0 && (
-                <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 pt-1 border-t border-border">
+                <div className="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border">
                   {metrics.map((metric, index) => (
                     <span key={index} className="flex items-center gap-1.5">
-                      <metric.icon size={13} className="text-gray-400" />
+                      <metric.icon size={13} className="text-muted-foreground" />
                       <span className="font-medium">{metric.value}</span>
                     </span>
                   ))}
