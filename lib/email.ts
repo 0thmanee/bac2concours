@@ -6,18 +6,16 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const fromEmail = process.env.EMAIL_FROM || "onboarding@resend.dev";
 const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:4000";
 
-// Brand colors
+// Brand colors - Simple and clean
 const BRAND = {
-  primary: "#047C6E",
-  primaryDark: "#035854",
+  primary: "#b02d94", // Brand purple
+  primaryDark: "#8b2277",
   textPrimary: "#111827",
   textSecondary: "#6b7280",
   textMuted: "#9ca3af",
   background: "#f9fafb",
   surface: "#ffffff",
-  success: "#22C55E",
-  warning: "#EAB308",
-  error: "#EF4444",
+  border: "#e5e7eb",
 };
 
 // Email template wrapper
@@ -36,10 +34,8 @@ function emailTemplate(content: string): string {
           BRAND.surface
         }; border-radius: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
           <!-- Header -->
-          <div style="background-color: ${
-            BRAND.primary
-          }; padding: 24px 32px; border-radius: 8px 8px 0 0; text-align: center;">
-            <h1 style="color: #ffffff; font-size: 20px; font-weight: 700; margin: 0;">2BAConcours</h1>
+          <div style="padding: 24px 32px; border-bottom: 1px solid ${BRAND.border}; text-align: center;">
+            <h1 style="color: ${BRAND.primary}; font-size: 20px; font-weight: 700; margin: 0;">2BAConcours</h1>
           </div>
           <!-- Content -->
           <div style="padding: 40px 32px;">
@@ -142,20 +138,17 @@ export const emailService = {
       const result = await resend.emails.send({
         from: fromEmail,
         to: email,
-        subject: "✅ Paiement approuvé - Bienvenue sur 2BAConcours",
+        subject: "Paiement approuvé - Bienvenue sur 2BAConcours",
         html: emailTemplate(`
-          <div style="text-align: center; margin-bottom: 24px;">
-            <span style="font-size: 48px;">🎉</span>
-          </div>
           <h2 style="color: ${BRAND.textPrimary}; font-size: 24px; font-weight: 700; margin: 0 0 16px 0; text-align: center;">
-            Paiement Approuvé !
+            Paiement Approuvé
           </h2>
           <p style="color: ${BRAND.textSecondary}; font-size: 16px; line-height: 24px; margin: 0 0 24px 0; text-align: center;">
             Bonjour ${userName},
           </p>
-          <div style="background-color: #f0fdf4; border-radius: 8px; padding: 20px; margin-bottom: 24px; border-left: 4px solid ${BRAND.success};">
+          <div style="background-color: ${BRAND.background}; border-radius: 8px; padding: 20px; margin-bottom: 24px; border: 1px solid ${BRAND.border};">
             <p style="color: ${BRAND.textPrimary}; font-size: 16px; line-height: 24px; margin: 0;">
-              Excellente nouvelle ! Votre preuve de paiement a été vérifiée et approuvée. Votre compte est maintenant actif et vous pouvez accéder à tous les contenus de la plateforme.
+              Votre preuve de paiement a été vérifiée et approuvée. Votre compte est maintenant actif et vous pouvez accéder à tous les contenus de la plateforme.
             </p>
           </div>
           <div style="background-color: ${BRAND.background}; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
@@ -195,18 +188,15 @@ export const emailService = {
       const result = await resend.emails.send({
         from: fromEmail,
         to: email,
-        subject: "⚠️ Action requise - Preuve de paiement à soumettre à nouveau",
+        subject: "Action requise - Preuve de paiement à soumettre à nouveau",
         html: emailTemplate(`
-          <div style="text-align: center; margin-bottom: 24px;">
-            <span style="font-size: 48px;">⚠️</span>
-          </div>
           <h2 style="color: ${BRAND.textPrimary}; font-size: 24px; font-weight: 700; margin: 0 0 16px 0; text-align: center;">
             Preuve de paiement à revoir
           </h2>
           <p style="color: ${BRAND.textSecondary}; font-size: 16px; line-height: 24px; margin: 0 0 24px 0; text-align: center;">
             Bonjour ${userName},
           </p>
-          <div style="background-color: #fef2f2; border-radius: 8px; padding: 20px; margin-bottom: 24px; border-left: 4px solid ${BRAND.error};">
+          <div style="background-color: ${BRAND.background}; border-radius: 8px; padding: 20px; margin-bottom: 24px; border: 1px solid ${BRAND.border};">
             <p style="color: ${BRAND.textPrimary}; font-size: 16px; line-height: 24px; margin: 0 0 12px 0; font-weight: 600;">
               Votre preuve de paiement a été examinée et nécessite une nouvelle soumission.
             </p>
@@ -250,14 +240,14 @@ const notificationIcons: Record<
   NotificationType,
   { icon: string; color: string }
 > = {
-  USER_ACTIVATED: { icon: "✅", color: BRAND.success },
-  USER_DEACTIVATED: { icon: "🔒", color: BRAND.error },
-  NEW_USER_REGISTERED: { icon: "👤", color: BRAND.primary },
-  SYSTEM_ANNOUNCEMENT: { icon: "📢", color: BRAND.primary },
-  PAYMENT_SUBMITTED: { icon: "💳", color: BRAND.primary },
-  PAYMENT_APPROVED: { icon: "✅", color: BRAND.success },
-  PAYMENT_REJECTED: { icon: "⚠️", color: BRAND.error },
-  NEW_RESOURCE: { icon: "📚", color: BRAND.primary },
+  USER_ACTIVATED: { icon: "", color: BRAND.primary },
+  USER_DEACTIVATED: { icon: "", color: BRAND.primary },
+  NEW_USER_REGISTERED: { icon: "", color: BRAND.primary },
+  SYSTEM_ANNOUNCEMENT: { icon: "", color: BRAND.primary },
+  PAYMENT_SUBMITTED: { icon: "", color: BRAND.primary },
+  PAYMENT_APPROVED: { icon: "", color: BRAND.primary },
+  PAYMENT_REJECTED: { icon: "", color: BRAND.primary },
+  NEW_RESOURCE: { icon: "", color: BRAND.primary },
 };
 
 export const notificationEmailService = {
@@ -270,7 +260,7 @@ export const notificationEmailService = {
     data?: Record<string, unknown> | null
   ) {
     const { icon, color } = notificationIcons[type] || {
-      icon: "🔔",
+      icon: "",
       color: BRAND.primary,
     };
 
@@ -317,18 +307,15 @@ export const notificationEmailService = {
       const result = await resend.emails.send({
         from: fromEmail,
         to: email,
-        subject: `${icon} ${title} - 2BAConcours`,
+        subject: `${title} - 2BAConcours`,
         html: emailTemplate(`
-          <div style="text-align: center; margin-bottom: 24px;">
-            <span style="font-size: 48px;">${icon}</span>
-          </div>
           <h2 style="color: ${BRAND.textPrimary}; font-size: 24px; font-weight: 700; margin: 0 0 8px 0; text-align: center;">
             ${title}
           </h2>
           <p style="color: ${BRAND.textSecondary}; font-size: 14px; margin: 0 0 24px 0; text-align: center;">
-            Hi ${userName},
+            Bonjour ${userName},
           </p>
-          <div style="background-color: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 24px; border-left: 4px solid ${color};">
+          <div style="background-color: ${BRAND.background}; border-radius: 8px; padding: 20px; margin-bottom: 24px; border: 1px solid ${BRAND.border};">
             <p style="color: ${BRAND.textPrimary}; font-size: 16px; line-height: 24px; margin: 0;">
               ${message}
             </p>
