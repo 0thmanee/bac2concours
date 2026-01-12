@@ -18,7 +18,7 @@ export function MobileAlert() {
   }
 
   return (
-    <div className="fixed inset-0 z-9999 bg-black flex items-center justify-center p-6">
+    <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center p-6">
       <div className="max-w-md w-full space-y-8 text-center">
         {/* Icon */}
         <div className="flex justify-center">
