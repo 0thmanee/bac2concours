@@ -159,7 +159,7 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
       />
 
       {/* Metrics */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           title="Vues"
           value={video.views?.toLocaleString() || "0"}

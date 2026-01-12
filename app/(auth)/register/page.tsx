@@ -28,7 +28,7 @@ export default function RegisterPage() {
       }
     },
     successMessage: '', // We'll show custom message
-    errorMessage: 'Failed to create account',
+    errorMessage: 'Échec de la création du compte',
   })
 
   const { register, formState: { errors }, handleFormSubmit, isSubmitting } = form
@@ -53,10 +53,10 @@ export default function RegisterPage() {
         {/* Success Message */}
         <div className="text-center space-y-2">
           <h2 className="text-2xl font-semibold text-ops-primary">
-            Check Your Email
+            Vérifiez votre Email
           </h2>
           <p className="text-sm text-ops-secondary">
-            We&apos;ve sent a verification link to:
+            Nous avons envoyé un lien de vérification à :
           </p>
           <p className="text-sm font-medium text-action-primary">
             {registeredEmail}
@@ -68,11 +68,11 @@ export default function RegisterPage() {
           <div className="flex gap-3">
             <Mail className="h-5 w-5 shrink-0 mt-0.5" />
             <div className="space-y-2">
-              <p className="text-sm font-medium">Next Steps</p>
+              <p className="text-sm font-medium">Prochaines Étapes</p>
               <ul className="space-y-1.5 text-sm">
-                <li>1. Check your inbox for the verification email</li>
-                <li>2. Click the verification link to activate your account</li>
-                <li>3. Return here to sign in once verified</li>
+                <li>1. Vérifiez votre boîte de réception pour l&apos;email de vérification</li>
+                <li>2. Cliquez sur le lien de vérification pour activer votre compte</li>
+                <li>3. Revenez ici pour vous connecter une fois vérifié</li>
               </ul>
             </div>
           </div>
@@ -81,7 +81,7 @@ export default function RegisterPage() {
         {/* Resend Button */}
         <div className="space-y-3">
           <p className="text-sm text-center text-ops-secondary">
-            Didn&apos;t receive the email?
+            Vous n&apos;avez pas reçu l&apos;email ?
           </p>
           <Button
             type="button"
@@ -91,18 +91,18 @@ export default function RegisterPage() {
             className="ops-btn-secondary w-full h-10"
           >
             <Mail className="h-4 w-4 mr-2" />
-            {resendVerificationMutation.isPending ? 'Sending...' : 'Resend Email'}
+            {resendVerificationMutation.isPending ? 'Envoi...' : 'Renvoyer l\'email'}
           </Button>
         </div>
 
         {/* Back to Login */}
         <div className="ops-divider"></div>
         <div className="text-center">
-          <Link 
-            href={AUTH_ROUTES.LOGIN} 
+          <Link
+            href={AUTH_ROUTES.LOGIN}
             className="text-sm font-medium hover:underline text-action-primary"
           >
-            ← Back to Sign In
+            ← Retour à la connexion
           </Link>
         </div>
       </div>
@@ -113,9 +113,6 @@ export default function RegisterPage() {
     <div className="space-y-5">
       {/* Header */}
       <div className="text-center">
-        <span className="inline-block px-4 py-1 bg-primary/10 border border-primary/20 rounded-full text-primary font-medium text-sm mb-4">
-          Nouveau Compte
-        </span>
         <h2 className="text-2xl font-semibold mb-1 text-foreground">
           Créer un Compte
         </h2>
@@ -128,12 +125,12 @@ export default function RegisterPage() {
       <form onSubmit={handleFormSubmit} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="name" className="text-sm font-medium">
-            Full Name
+            Nom Complet
           </Label>
           <Input
             id="name"
             type="text"
-            placeholder="John Doe"
+            placeholder="Prénom Nom"
             {...register('name')}
             disabled={isSubmitting}
             className="ops-input h-10"
@@ -148,12 +145,12 @@ export default function RegisterPage() {
 
         <div className="space-y-2">
           <Label htmlFor="email" className="text-sm font-medium">
-            Email Address
+            Adresse Email
           </Label>
           <Input
             id="email"
             type="email"
-            placeholder="name@company.com"
+            placeholder="nom@exemple.com"
             {...register('email')}
             disabled={isSubmitting}
             className="ops-input h-10"
@@ -168,13 +165,13 @@ export default function RegisterPage() {
 
         <div className="space-y-2">
           <Label htmlFor="password" className="text-sm font-medium">
-            Password
+            Mot de passe
           </Label>
           <div className="relative">
             <Input
               id="password"
               type={showPassword ? "text" : "password"}
-              placeholder="Minimum 8 characters"
+              placeholder="Minimum 8 caractères"
               {...register('password')}
               disabled={isSubmitting}
               className="ops-input h-10 pr-10"
@@ -198,16 +195,16 @@ export default function RegisterPage() {
             </p>
           )}
           <p className="text-xs text-ops-tertiary">
-            Must be at least 8 characters
+            Doit contenir au moins 8 caractères
           </p>
         </div>
 
-        <Button 
-          type="submit" 
-          className="ops-btn-primary w-full h-10" 
+        <Button
+          type="submit"
+          className="ops-btn-primary w-full h-10"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Creating Account...' : 'Create Account'}
+          {isSubmitting ? 'Création du compte...' : 'Créer un compte'}
         </Button>
 
         {/* Terms */}
@@ -227,12 +224,12 @@ export default function RegisterPage() {
 
         {/* Sign In Link */}
         <div className="text-center text-sm text-ops-secondary">
-          Already have an account?{' '}
-          <Link 
-            href={AUTH_ROUTES.LOGIN} 
+          Vous avez déjà un compte ?{' '}
+          <Link
+            href={AUTH_ROUTES.LOGIN}
             className="font-medium hover:underline text-action-primary"
           >
-            Sign in
+            Se connecter
           </Link>
         </div>
       </form>

@@ -35,7 +35,7 @@ export default function LoginPage() {
       }
     },
     successMessage: '', // Let the redirect happen without toast
-    errorMessage: 'Invalid email or password',
+    errorMessage: 'Email ou mot de passe invalide',
   })
 
   const { register, formState: { errors }, handleFormSubmit, isSubmitting } = form
@@ -50,9 +50,6 @@ export default function LoginPage() {
     <div className="space-y-5">
       {/* Header */}
       <div className="text-center">
-        <span className="inline-block px-4 py-1 bg-primary/10 border border-primary/20 rounded-full text-primary font-medium text-sm mb-4">
-          Espace Membre
-        </span>
         <h2 className="text-2xl font-semibold mb-1 text-foreground">
           Bienvenue
         </h2>
@@ -68,10 +65,10 @@ export default function LoginPage() {
             <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
             <div className="flex-1 space-y-2">
               <p className="text-sm font-medium">
-                Email Verification Required
+                Vérification d&apos;email requise
               </p>
               <p className="text-sm">
-                Check your inbox for the verification link to activate your account.
+                Vérifiez votre boîte de réception pour le lien de vérification afin d&apos;activer votre compte.
               </p>
               <Button
                 type="button"
@@ -82,7 +79,7 @@ export default function LoginPage() {
                 className="ops-btn-secondary mt-2"
               >
                 <Mail className="mr-2 h-4 w-4" />
-                {resendVerificationMutation.isPending ? 'Sending...' : 'Resend Link'}
+                {resendVerificationMutation.isPending ? 'Envoi...' : 'Renvoyer le lien'}
               </Button>
             </div>
           </div>
@@ -93,12 +90,12 @@ export default function LoginPage() {
       <form onSubmit={handleFormSubmit} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email" className="text-sm font-medium">
-            Email Address
+            Adresse Email
           </Label>
           <Input
             id="email"
             type="email"
-            placeholder="name@company.com"
+            placeholder="nom@exemple.com"
             {...register('email')}
             disabled={isSubmitting}
             className="ops-input h-10"
@@ -114,20 +111,20 @@ export default function LoginPage() {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="password" className="text-sm font-medium">
-              Password
+              Mot de passe
             </Label>
-            <Link 
-              href={AUTH_ROUTES.FORGOT_PASSWORD} 
+            <Link
+              href={AUTH_ROUTES.FORGOT_PASSWORD}
               className="text-xs font-medium hover:underline text-action-primary"
             >
-              Forgot password?
+              Mot de passe oublié ?
             </Link>
           </div>
           <div className="relative">
             <Input
               id="password"
               type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
+              placeholder="Entrez votre mot de passe"
               {...register('password')}
               disabled={isSubmitting}
               className="ops-input h-10 pr-10"
@@ -157,7 +154,7 @@ export default function LoginPage() {
           className="ops-btn-primary w-full h-10" 
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Signing In...' : 'Sign In'}
+          {isSubmitting ? 'Connexion...' : 'Se connecter'}
         </Button>
 
         {/* Divider */}
@@ -165,12 +162,12 @@ export default function LoginPage() {
 
         {/* Sign Up Link */}
         <div className="text-center text-sm text-ops-secondary">
-          Don&apos;t have an account?{' '}
-          <Link 
-            href={AUTH_ROUTES.REGISTER} 
+          Vous n&apos;avez pas de compte ?{' '}
+          <Link
+            href={AUTH_ROUTES.REGISTER}
             className="font-medium hover:underline text-action-primary"
           >
-            Create an account
+            Créer un compte
           </Link>
         </div>
       </form>

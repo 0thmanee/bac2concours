@@ -61,7 +61,7 @@ export default async function StudentDashboard() {
       </div>
 
       {/* Metric Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           title="Livres Disponibles"
           value={bookStats.activeBooks}
@@ -192,7 +192,7 @@ export default async function StudentDashboard() {
           <CardDescription>Explorez votre contenu éducatif</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Link 
               href={STUDENT_ROUTES.BOOKS}
               className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover text-center"

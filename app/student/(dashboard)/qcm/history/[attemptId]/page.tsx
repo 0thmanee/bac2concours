@@ -149,7 +149,7 @@ export default function AttemptDetailPage({ params }: AttemptDetailPageProps) {
           attempt.percentage >= 40 ? "bg-[rgb(var(--warning))]" : "bg-[rgb(var(--error))]"
         )} />
         <CardContent className="p-4 sm:p-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {/* Score */}
             <div className="text-center">
               <div className={cn(

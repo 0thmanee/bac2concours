@@ -191,9 +191,9 @@ export default function StudentSchoolDetailPage() {
         </CardContent>
       </Card>
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
         {/* Main Content */}
-        <div className="md:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-6">
           {/* About Section */}
           <StudentDetailCard title="À propos">
             {school.longDescription ? (
@@ -354,7 +354,7 @@ export default function StudentSchoolDetailPage() {
           {/* Infrastructure and Services */}
           {((school.infrastructures && school.infrastructures.length > 0) ||
             (school.services && school.services.length > 0)) && (
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2">
               {school.infrastructures && school.infrastructures.length > 0 && (
                 <Card className="ops-card border border-border">
                   <CardHeader className="pb-3">

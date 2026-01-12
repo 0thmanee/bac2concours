@@ -59,7 +59,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Main Metric Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <MetricCard
           title="Total Étudiants"
           value={userMetrics.studentCount}
@@ -98,7 +98,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Secondary Stats */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         <StatCard
           title="Utilisateurs Vérifiés"
           value={userMetrics.verifiedCount}
@@ -120,7 +120,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Quick Links & Recent Activity */}
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
         {/* Quick Links */}
         <Card className="ops-card">
           <CardHeader>
@@ -128,7 +128,7 @@ export default async function AdminDashboard() {
             <CardDescription>Accès rapide aux fonctionnalités principales</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 gap-3">
               <Link 
                 href={ADMIN_ROUTES.USERS}
                 className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover"

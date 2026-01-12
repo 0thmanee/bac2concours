@@ -54,11 +54,11 @@ export default function ForgotPasswordPage() {
           <div className="flex gap-3">
             <Mail className="h-5 w-5 shrink-0 mt-0.5" />
             <div className="space-y-2">
-              <p className="text-sm font-medium">Next Steps</p>
+              <p className="text-sm font-medium">Prochaines Étapes</p>
               <ul className="space-y-1.5 text-sm">
-                <li>1. Check your inbox for the password reset email</li>
-                <li>2. Click the reset link (valid for 1 hour)</li>
-                <li>3. Create a new password and sign in</li>
+                <li>1. Vérifiez votre boîte de réception pour l'email de réinitialisation</li>
+                <li>2. Cliquez sur le lien de réinitialisation (valide pendant 1 heure)</li>
+                <li>3. Créez un nouveau mot de passe et connectez-vous</li>
               </ul>
             </div>
           </div>
@@ -71,7 +71,7 @@ export default function ForgotPasswordPage() {
             href={AUTH_ROUTES.LOGIN} 
             className="text-sm font-medium hover:underline text-action-primary"
           >
-            ← Back to Sign In
+            ← Retour à la connexion
           </Link>
         </div>
       </div>
@@ -97,12 +97,12 @@ export default function ForgotPasswordPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email" className="text-sm font-medium">
-            Email Address
+            Adresse Email
           </Label>
           <Input
             id="email"
             type="email"
-            placeholder="name@company.com"
+            placeholder="nom@exemple.com"
             className="ops-input h-10"
             {...register("email")}
           />
@@ -114,18 +114,18 @@ export default function ForgotPasswordPage() {
           )}
         </div>
 
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           disabled={isPending}
           className="ops-btn-primary w-full h-10"
         >
-          {isPending ? 'Sending...' : 'Send Reset Link'}
+          {isPending ? 'Envoi...' : 'Envoyer le lien de réinitialisation'}
         </Button>
 
         {/* Info Box */}
         <div className="ops-status-info rounded-lg p-3">
           <p className="text-xs text-center">
-            The reset link will be valid for 1 hour. Check your spam folder if you don&apos;t receive an email.
+            Le lien de réinitialisation sera valide pendant 1 heure. Vérifiez votre dossier spam si vous ne recevez pas d&apos;email.
           </p>
         </div>
 
@@ -136,7 +136,7 @@ export default function ForgotPasswordPage() {
             href={AUTH_ROUTES.LOGIN} 
             className="text-sm font-medium hover:underline text-action-primary"
           >
-            ← Back to Sign In
+            ← Retour à la connexion
           </Link>
         </div>
       </form>
