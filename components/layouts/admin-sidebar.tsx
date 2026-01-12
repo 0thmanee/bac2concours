@@ -33,6 +33,7 @@ import { Button } from "@/components/ui/button";
 import { useLogout } from "@/lib/hooks/use-auth";
 import { ADMIN_ROUTES } from "@/lib/routes";
 import { cn } from "@/lib/utils";
+import { useSidebar } from "@/components/ui/sidebar";
 
 const navigation = [
   {
@@ -77,12 +78,18 @@ const navigation = [
   }
 ];
 
+
 export default function AdminSidebar() {
   const pathname = usePathname();
   const logoutMutation = useLogout();
+  const { isMobile, setOpenMobile } = useSidebar();
 
   const handleLogout = () => {
     logoutMutation.mutate();
+  };
+
+  const handleLinkClick = () => {
+    if (isMobile) setOpenMobile(false);
   };
 
   return (
@@ -123,7 +130,7 @@ export default function AdminSidebar() {
                           : "text-muted-foreground"
                       )}
                     >
-                      <Link href={item.href} className="flex items-center gap-3">
+                      <Link href={item.href} className="flex items-center gap-3" onClick={handleLinkClick}>
                         <item.icon className="h-4 w-4" />
                         <span>{item.name}</span>
                       </Link>
