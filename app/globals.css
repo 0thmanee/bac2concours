@@ -52,7 +52,10 @@
  * Brand Color: #b02d94 (Purple/Pink)
  */
 
-/* Performance optimizations */
+/* ============================================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================================ */
+
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -74,23 +77,30 @@ html {
   }
 }
 
-:root {
-  /* Professional Color System */
+/* ============================================================
+   COLOR SYSTEM - 2BAConcours
+   Professional educational platform design
+   ============================================================ */
 
-  /* Core Neutrals - Foundation of design */
-  --neutral-50: 250 250 250; /* #FAFAFA - Subtle background */
-  --neutral-100: 245 245 245; /* #F5F5F5 - Light background */
-  --neutral-200: 229 229 229; /* #E5E5E5 - Borders */
-  --neutral-300: 212 212 212; /* #D4D4D4 - Dividers */
-  --neutral-400: 163 163 163; /* #A3A3A3 - Disabled text */
-  --neutral-500: 115 115 115; /* #737373 - Secondary text */
-  --neutral-600: 82 82 82; /* #525252 - Body text */
-  --neutral-700: 64 64 64; /* #404040 - Headings */
-  --neutral-800: 38 38 38; /* #262626 - Strong text */
-  --neutral-900: 23 23 23; /* #171717 - Darkest */
+:root {
+  /* ==========================================
+     CORE NEUTRALS - Foundation
+     ========================================== */
+  --neutral-50: 250 250 250; /* #FAFAFA */
+  --neutral-100: 245 245 245; /* #F5F5F5 */
+  --neutral-200: 229 229 229; /* #E5E5E5 */
+  --neutral-300: 212 212 212; /* #D4D4D4 */
+  --neutral-400: 163 163 163; /* #A3A3A3 */
+  --neutral-500: 115 115 115; /* #737373 */
+  --neutral-600: 82 82 82; /* #525252 */
+  --neutral-700: 64 64 64; /* #404040 */
+  --neutral-800: 38 38 38; /* #262626 */
+  --neutral-900: 23 23 23; /* #171717 */
+  --neutral-950: 10 10 12; /* #0A0A0C - Deep premium black */
+  --neutral-975: 6 6 8; /* #060608 - Ultra dark premium */
 
   /* Brand Purple - Primary brand color #b02d94 */
-  --brand-25: 253 245 251; /* Lightest */
+  --brand-25: 253 245 251;
   --brand-50: 251 235 247; /* #FBEBF7 */
   --brand-100: 247 214 238; /* #F7D6EE */
   --brand-200: 239 173 223; /* #EFADDF */
@@ -113,7 +123,7 @@ html {
   --pink-600: 219 39 119;
   --pink-700: 190 24 93;
 
-  /* Keep Teal as complementary */
+  /* Teal as complementary */
   --teal-50: 240 253 250;
   --teal-100: 204 251 241;
   --teal-200: 153 246 228;
@@ -123,7 +133,7 @@ html {
   --teal-600: 13 148 136;
   --teal-700: 15 118 110;
 
-  /* Semantic System - Clear, unambiguous */
+  /* Semantic Colors - Status indicators */
   --success-light: 220 252 231; /* #DCFCE7 */
   --success: 34 197 94; /* #22C55E */
   --success-dark: 21 128 61; /* #15803D */
@@ -173,14 +183,21 @@ html {
   --metric-teal-main: 0 191 165;
   --metric-teal-dark: 0 160 133;
 
-  /* System Variables - Semantic naming */
+  /* ============================================ */
+  /* SYSTEM VARIABLES - Semantic Naming */
+  /* ============================================ */
+
+  /* Backgrounds */
   --ops-background: var(--neutral-50);
   --ops-surface: 255 255 255;
   --ops-surface-elevated: 255 255 255;
-  --ops-border: #e5e7eb; /* Soft gray - gray-200 */
-  --ops-border-strong: #d1d5db; /* Medium gray - gray-300 */
+
+  /* Borders */
+  --ops-border: #e5e7eb;
+  --ops-border-strong: #d1d5db;
   --ops-divider: var(--neutral-200);
 
+  /* Text Colors */
   --ops-text-primary: var(--neutral-900);
   --ops-text-secondary: var(--neutral-600);
   --ops-text-tertiary: var(--neutral-500);
@@ -188,30 +205,34 @@ html {
   --ops-text-disabled: var(--neutral-400);
   --ops-text-inverse: 255 255 255;
 
-  --ops-action-primary: var(--brand-600); /* Brand Purple #b02d94 */
-  --ops-action-primary-hover: var(--brand-700); /* Darker variant for hover */
+  /* Actions */
+  --ops-action-primary: var(--brand-600);
+  --ops-action-primary-hover: var(--brand-700);
   --ops-action-primary-text: 255 255 255;
-  --ops-action-secondary: var(--pink-500); /* Pink for accents */
-  --ops-action-secondary-hover: var(--pink-600);
   --ops-action-secondary: var(--neutral-100);
   --ops-action-secondary-hover: var(--neutral-200);
   --ops-action-secondary-text: var(--neutral-900);
 
-  --ops-focus-ring: var(--brand-500); /* Brand for focus states */
+  /* Focus */
+  --ops-focus-ring: var(--brand-500);
   --ops-focus-ring-offset: 255 255 255;
 
-  /* Layout Variables */
+  /* Layout */
   --ops-radius-sm: 4px;
   --ops-radius-base: 6px;
   --ops-radius-lg: 8px;
   --ops-radius-xl: 12px;
 
+  /* Shadows - Removed for flat design */
   --ops-shadow-sm: none;
   --ops-shadow-base: none;
   --ops-shadow-md: none;
   --ops-shadow-lg: none;
 
-  /* Tailwind compatibility mappings */
+  /* ============================================ */
+  /* TAILWIND COMPATIBILITY MAPPINGS */
+  /* ============================================ */
+
   --radius: var(--ops-radius-base);
   --background: var(--ops-background);
   --foreground: var(--ops-text-primary);
@@ -219,81 +240,93 @@ html {
   --card-foreground: var(--ops-text-primary);
   --popover: var(--ops-surface-elevated);
   --popover-foreground: var(--ops-text-primary);
-  --primary: var(--ops-action-primary); /* Brand Purple */
+  --primary: var(--ops-action-primary);
   --primary-foreground: var(--ops-action-primary-text);
-  --secondary: var(--ops-action-secondary); /* Pink */
-  --secondary-foreground: 255 255 255;
+  --secondary: var(--ops-action-secondary);
+  --secondary-foreground: var(--ops-action-secondary-text);
   --muted: var(--neutral-100);
   --muted-foreground: var(--ops-text-tertiary);
   --accent: var(--brand-100);
   --accent-foreground: var(--brand-900);
   --destructive: var(--error);
   --destructive-foreground: var(--ops-text-inverse);
-  --border: #e5e7eb;
-  --input: #d1d5db;
+  --border: var(--ops-border);
+  --input: var(--ops-border-strong);
   --ring: var(--ops-focus-ring);
 
-  /* Sidebar - Professional light theme */
-  --sidebar: 255 255 255; /* White background */
+  /* Sidebar */
+  --sidebar: 255 255 255;
   --sidebar-foreground: var(--ops-text-primary);
-  --sidebar-primary: var(--brand-600); /* Brand Purple */
+  --sidebar-primary: var(--brand-600);
   --sidebar-primary-foreground: 255 255 255;
-  --sidebar-accent: var(--neutral-50); /* Very subtle hover */
+  --sidebar-accent: var(--neutral-50);
   --sidebar-accent-foreground: var(--ops-text-primary);
   --sidebar-border: var(--ops-border);
-  --sidebar-ring: var(--brand-500); /* Brand for focus */
+  --sidebar-ring: var(--brand-500);
 
-  /* Charts - Modern data visualization */
-  --chart-1: var(--brand-600); /* Brand Purple */
-  --chart-2: var(--pink-500); /* Pink */
-  --chart-3: var(--teal-500); /* Teal */
-  --chart-4: var(--neutral-600); /* Neutral gray */
+  /* Charts */
+  --chart-1: var(--brand-600);
+  --chart-2: var(--pink-500);
+  --chart-3: var(--teal-500);
+  --chart-4: var(--neutral-600);
   --chart-5: var(--brand-400);
 }
 
-.dark {
-  --ops-background: var(--neutral-900);
-  --ops-surface: var(--neutral-800);
-  --ops-surface-elevated: var(--neutral-800);
-  --ops-border: #374151; /* Soft dark gray - gray-700 */
-  --ops-border-strong: #4b5563; /* Medium dark gray - gray-600 */
+/* ============================================ */
+/* DARK MODE VARIABLES */
+/* ============================================ */
 
+.dark {
+  /* Backgrounds - Premium deep dark */
+  --ops-background: var(--neutral-950);
+  --ops-surface: 15 15 17; /* #0F0F11 - Slightly lighter than background for cards */
+  --ops-surface-elevated: 20 20 22; /* #141416 - Elevated cards */
+
+  /* Borders - Subtle in deep dark mode */
+  --ops-border: rgba(176, 45, 148, 0.1);
+  --ops-border-strong: rgba(176, 45, 148, 0.15);
+
+  /* Text Colors */
   --ops-text-primary: var(--neutral-50);
   --ops-text-secondary: var(--neutral-300);
   --ops-text-tertiary: var(--neutral-400);
   --ops-text-placeholder: var(--neutral-500);
   --ops-text-disabled: var(--neutral-500);
 
-  --ops-action-primary: var(--brand-600); /* Keep Brand Purple in dark mode */
-  --ops-action-primary-hover: var(
-    --brand-500
-  ); /* Lighter variant for dark mode */
+  /* Actions */
+  --ops-action-primary: var(--brand-500);
+  --ops-action-primary-hover: var(--brand-400);
 
+  /* Tailwind Compatibility */
   --background: var(--ops-background);
   --foreground: var(--ops-text-primary);
   --card: var(--ops-surface);
   --card-foreground: var(--ops-text-primary);
   --popover: var(--ops-surface-elevated);
   --popover-foreground: var(--ops-text-primary);
-  --muted: var(--neutral-800);
+  --muted: 18 18 20; /* #121214 - Muted background */
   --muted-foreground: var(--ops-text-tertiary);
-  --border: #374151;
-  --input: #4b5563;
+  --border: var(--ops-border);
+  --input: var(--ops-border-strong);
 
-  /* Sidebar - Dark theme using RGB values */
-  --sidebar: var(--neutral-800); /* Dark surface background */
+  /* Sidebar - Premium dark */
+  --sidebar: 12 12 14; /* #0C0C0E - Slightly lighter than main background */
   --sidebar-foreground: var(--ops-text-primary);
-  --sidebar-primary: var(--brand-500); /* Brand Purple */
+  --sidebar-primary: var(--brand-500);
   --sidebar-primary-foreground: 255 255 255;
-  --sidebar-accent: var(--neutral-700); /* Subtle hover */
+  --sidebar-accent: 18 18 20; /* #121214 - Subtle hover */
   --sidebar-accent-foreground: var(--ops-text-primary);
   --sidebar-border: var(--ops-border);
-  --sidebar-ring: var(--brand-500); /* Brand for focus */
+  --sidebar-ring: var(--brand-500);
 }
+
+/* ============================================ */
+/* BASE STYLES */
+/* ============================================ */
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border outline-ring/50;
   }
 
   body {
@@ -301,7 +334,7 @@ html {
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
-  /* Professional Typography - No decorative elements */
+  /* Typography */
   h1,
   h2,
   h3,
@@ -309,6 +342,7 @@ html {
   h5,
   h6 {
     @apply font-semibold;
+    font-family: "Lexend", sans-serif;
     letter-spacing: -0.01em;
     line-height: 1.2;
   }
@@ -329,28 +363,21 @@ html {
     @apply text-lg;
   }
 
-  /* Professional Focus States */
+  /* Focus States */
   :focus-visible {
     @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
 
-  /* Scrollbar - Professional styling */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+  /* Error Text */
+  .text-destructive {
+    color: rgb(var(--error)) !important;
   }
 
-  ::-webkit-scrollbar-track {
-    background: rgb(var(--neutral-100));
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: rgb(var(--neutral-300));
-    border-radius: var(--ops-radius-sm);
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgb(var(--neutral-400));
+  .form-error {
+    color: rgb(var(--error));
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    margin-top: 0.25rem;
   }
 
   /* Selection */
@@ -360,25 +387,310 @@ html {
   }
 }
 
+/* ============================================ */
+/* SCROLLBAR STYLING */
+/* ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(176, 45, 148, 0.3);
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(176, 45, 148, 0.5);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(176, 45, 148, 0.4);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(176, 45, 148, 0.6);
+}
+
+/* ============================================ */
+/* PREMIUM BACKGROUNDS */
+/* ============================================ */
+
+/* Public Background - For auth and landing pages */
+@layer components {
+  .public-background {
+    position: relative;
+    background: rgb(var(--ops-background));
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Light Mode - Sophisticated gradient with depth */
+  .public-background::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      /* Subtle top-left glow */
+      radial-gradient(
+        ellipse 800px 600px at 10% 10%,
+        rgba(176, 45, 148, 0.04),
+        transparent 50%
+      ),
+      /* Bottom-right accent */
+      radial-gradient(
+        ellipse 700px 500px at 90% 90%,
+        rgba(128, 55, 182, 0.03),
+        transparent 50%
+      ),
+      /* Center subtle highlight */
+      radial-gradient(
+        ellipse 1200px 800px at 50% 50%,
+        rgba(251, 235, 247, 0.3),
+        transparent 70%
+      ),
+      /* Base gradient */
+      linear-gradient(
+        180deg,
+        rgba(250, 250, 250, 1) 0%,
+        rgba(255, 255, 255, 0.98) 50%,
+        rgba(248, 250, 252, 1) 100%
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Elegant mesh pattern for light mode */
+  .public-background::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(
+        circle at center,
+        rgba(176, 45, 148, 0.02) 0.5px,
+        transparent 0.5px
+      );
+    background-size: 40px 40px;
+    background-position: 0 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* Dark Mode - Ultra premium deep black atmosphere */
+  .dark .public-background::before {
+    background:
+      /* Primary brand glow - more visible */
+      radial-gradient(
+        ellipse 800px 600px at 10% 10%,
+        rgba(176, 45, 148, 0.08),
+        transparent 50%
+      ),
+      /* Secondary purple accent */
+      radial-gradient(
+        ellipse 700px 500px at 90% 90%,
+        rgba(128, 55, 182, 0.07),
+        transparent 50%
+      ),
+      /* Ambient center glow */
+      radial-gradient(
+        ellipse 1000px 700px at 50% 40%,
+        rgba(139, 34, 119, 0.05),
+        transparent 60%
+      ),
+      /* Rich deep black gradient */
+      linear-gradient(
+        180deg,
+        rgba(6, 6, 8, 1) 0%,
+        rgba(10, 10, 12, 0.98) 50%,
+        rgba(12, 12, 14, 1) 100%
+      );
+  }
+
+  /* Premium mesh pattern for dark mode */
+  .dark .public-background::after {
+    background-image:
+      radial-gradient(
+        circle at center,
+        rgba(176, 45, 148, 0.08) 0.5px,
+        transparent 0.5px
+      );
+    background-size: 40px 40px;
+    opacity: 0.35;
+  }
+
+  /* Ensure content is above background */
+  .public-background > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* Dashboard Background - For admin and student interfaces */
+@layer components {
+  .dashboard-background {
+    position: relative;
+    background: rgb(var(--ops-background));
+    overflow: hidden;
+    isolation: isolate;
+    min-height: 100vh;
+  }
+
+  /* Light Mode - Professional workspace with subtle energy */
+  .dashboard-background::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      /* Top-left primary accent */
+      radial-gradient(
+        ellipse 900px 700px at 15% 20%,
+        rgba(176, 45, 148, 0.06),
+        transparent 55%
+      ),
+      /* Bottom-right secondary */
+      radial-gradient(
+        ellipse 800px 600px at 85% 80%,
+        rgba(128, 55, 182, 0.05),
+        transparent 55%
+      ),
+      /* Mid-right pink accent */
+      radial-gradient(
+        ellipse 600px 500px at 75% 45%,
+        rgba(236, 72, 153, 0.04),
+        transparent 50%
+      ),
+      /* Top-right teal complement */
+      radial-gradient(
+        ellipse 500px 400px at 90% 15%,
+        rgba(20, 184, 166, 0.03),
+        transparent 50%
+      ),
+      /* Center ambient light */
+      radial-gradient(
+        ellipse 1400px 900px at 50% 50%,
+        rgba(251, 235, 247, 0.25),
+        transparent 70%
+      ),
+      /* Base premium gradient */
+      linear-gradient(
+        135deg,
+        rgba(250, 250, 250, 1) 0%,
+        rgba(255, 255, 255, 0.95) 40%,
+        rgba(248, 250, 252, 0.98) 70%,
+        rgba(252, 252, 253, 1) 100%
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Premium grid pattern for light mode */
+  .dashboard-background::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(176, 45, 148, 0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(176, 45, 148, 0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    background-position: -1px -1px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+    mask-image: radial-gradient(
+      ellipse 100% 100% at 50% 50%,
+      black 40%,
+      transparent 100%
+    );
+  }
+
+  /* Dark Mode - Ultra premium deep workspace */
+  .dark .dashboard-background::before {
+    background:
+      /* Primary brand glow - vibrant and visible */
+      radial-gradient(
+        ellipse 900px 700px at 15% 20%,
+        rgba(176, 45, 148, 0.15),
+        transparent 55%
+      ),
+      /* Secondary purple - enhanced depth */
+      radial-gradient(
+        ellipse 800px 600px at 85% 80%,
+        rgba(128, 55, 182, 0.12),
+        transparent 55%
+      ),
+      /* Pink accent - premium pop */
+      radial-gradient(
+        ellipse 600px 500px at 75% 45%,
+        rgba(236, 72, 153, 0.10),
+        transparent 50%
+      ),
+      /* Teal complement - sophisticated */
+      radial-gradient(
+        ellipse 500px 400px at 90% 15%,
+        rgba(20, 184, 166, 0.08),
+        transparent 50%
+      ),
+      /* Deep brand accent - rich warmth */
+      radial-gradient(
+        ellipse 700px 500px at 40% 70%,
+        rgba(139, 34, 119, 0.09),
+        transparent 50%
+      ),
+      /* Ambient center glow - premium depth */
+      radial-gradient(
+        ellipse 1200px 800px at 50% 50%,
+        rgba(56, 10, 48, 0.5),
+        transparent 65%
+      ),
+      /* Ultra premium deep black base */
+      linear-gradient(
+        135deg,
+        rgba(6, 6, 8, 1) 0%,
+        rgba(8, 8, 10, 0.98) 40%,
+        rgba(10, 10, 12, 0.95) 70%,
+        rgba(12, 12, 14, 1) 100%
+      );
+  }
+
+  /* Premium grid for dark mode */
+  .dark .dashboard-background::after {
+    background-image:
+      linear-gradient(rgba(176, 45, 148, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(176, 45, 148, 0.08) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.4;
+    mask-image: radial-gradient(
+      ellipse 100% 100% at 50% 50%,
+      black 40%,
+      transparent 100%
+    );
+  }
+
+  /* Content above background */
+  .dashboard-background > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* ============================================ */
+/* UTILITY CLASSES */
+/* ============================================ */
+
 @layer utilities {
-  /* Professional Shadow System - Removed */
-  .ops-shadow-sm {
-    box-shadow: none;
-  }
-
-  .ops-shadow {
-    box-shadow: none;
-  }
-
-  .ops-shadow-md {
-    box-shadow: none;
-  }
-
-  .ops-shadow-lg {
-    box-shadow: none;
-  }
-
-  /* Professional Card */
+  /* Professional Cards */
   .ops-card {
     background: rgb(var(--ops-surface));
     border: none;
@@ -389,10 +701,9 @@ html {
     background: rgb(var(--ops-surface-elevated));
     border: 1px solid var(--ops-border);
     border-radius: var(--ops-radius-lg);
-    box-shadow: none;
   }
 
-  /* Professional Button Styles */
+  /* Professional Buttons */
   .ops-btn-primary {
     background: rgb(var(--ops-action-primary));
     color: rgb(var(--ops-action-primary-text));
@@ -427,10 +738,9 @@ html {
   .ops-input:focus {
     outline: none;
     border-color: rgb(var(--ops-action-primary));
-    box-shadow: none;
   }
 
-  /* Status indicators - Clear, functional */
+  /* Status Indicators */
   .ops-status-success {
     background: rgb(var(--success-light));
     color: rgb(var(--success-dark));
@@ -462,7 +772,7 @@ html {
     border: none !important;
   }
 
-  /* Text Color Utilities */
+  /* Text Colors */
   .text-ops-primary {
     color: rgb(var(--ops-text-primary));
   }
@@ -475,23 +785,11 @@ html {
     color: rgb(var(--ops-text-tertiary));
   }
 
-  .text-ops-placeholder {
-    color: rgb(var(--ops-text-placeholder));
-  }
-
-  .text-ops-inverse {
-    color: rgb(var(--ops-text-inverse));
-  }
-
-  .text-ops-disabled {
-    color: rgb(var(--ops-text-disabled));
-  }
-
   .text-action-primary {
     color: rgb(var(--ops-action-primary));
   }
 
-  /* Background Utilities */
+  /* Background Colors */
   .bg-ops-surface {
     background: rgb(var(--ops-surface));
   }
@@ -504,19 +802,7 @@ html {
     background: rgb(var(--ops-action-primary));
   }
 
-  .bg-action-primary-hover {
-    background: rgb(var(--ops-action-primary-hover));
-  }
-
-  .bg-neutral-100 {
-    background: rgb(var(--neutral-100));
-  }
-
-  .bg-neutral-200 {
-    background: rgb(var(--neutral-200));
-  }
-
-  /* Metric Text Colors */
+  /* Metric Colors */
   .text-metric-blue {
     color: rgb(var(--metric-blue-main));
   }
@@ -537,10 +823,6 @@ html {
     color: rgb(var(--metric-mint-main));
   }
 
-  .text-metric-mint-dark {
-    color: rgb(var(--metric-mint-dark));
-  }
-
   .text-metric-rose {
     color: rgb(var(--metric-rose-main));
   }
@@ -553,7 +835,7 @@ html {
     color: rgb(var(--metric-yellow-main));
   }
 
-  /* Metric Background Colors */
+  /* Metric Backgrounds - Light Mode */
   .bg-metric-blue-light {
     background: rgb(var(--metric-blue-light));
   }
@@ -586,34 +868,40 @@ html {
     background: rgb(var(--metric-yellow-light));
   }
 
-  /* Hover state utilities */
-  .hover\:bg-action-primary-hover:hover {
-    background: rgb(var(--ops-action-primary-hover));
+  /* Metric Backgrounds - Dark Mode Premium */
+  .dark .bg-metric-blue-light {
+    background: rgba(91, 147, 255, 0.12);
   }
 
-  .hover\:bg-neutral-100:hover {
-    background: rgb(var(--neutral-100));
+  .dark .bg-metric-orange-light {
+    background: rgba(255, 159, 67, 0.12);
   }
 
-  .hover\:text-ops-primary:hover {
-    color: rgb(var(--ops-text-primary));
+  .dark .bg-metric-purple-light {
+    background: rgba(115, 103, 240, 0.12);
   }
 
-  /* Dynamic Progress Bar */
-  .progress-bar {
-    width: var(--progress-width, 0%);
+  .dark .bg-metric-cyan-light {
+    background: rgba(0, 207, 232, 0.12);
   }
 
-  .progress-bar-bg {
-    background-color: var(--progress-color, rgb(var(--ops-action-primary)));
+  .dark .bg-metric-mint-light {
+    background: rgba(40, 199, 111, 0.12);
   }
 
-  /* Dynamic Legend Indicator */
-  .legend-indicator {
-    background-color: var(--legend-color, currentColor);
+  .dark .bg-metric-rose-light {
+    background: rgba(255, 107, 107, 0.12);
   }
 
-  /* Elegant Border Utilities */
+  .dark .bg-metric-teal-light {
+    background: rgba(0, 191, 165, 0.12);
+  }
+
+  .dark .bg-metric-yellow-light {
+    background: rgba(255, 193, 7, 0.12);
+  }
+
+  /* Elegant Borders */
   .border-elegant {
     border: 1px solid rgba(176, 45, 148, 0.08);
   }
@@ -630,15 +918,63 @@ html {
     border: 1px solid rgba(176, 45, 148, 0.2);
   }
 
-  .border-soft {
-    border: 1px solid rgba(229, 229, 229, 0.6);
+  /* Progress Bar */
+  .progress-bar {
+    width: var(--progress-width, 0%);
   }
 
-  .dark .border-soft {
-    border: 1px solid rgba(64, 64, 64, 0.4);
+  .progress-bar-bg {
+    background-color: var(--progress-color, rgb(var(--ops-action-primary)));
   }
 
-  /* Animations for marketing pages */
+  /* Legend Indicator */
+  .legend-indicator {
+    background-color: var(--legend-color, currentColor);
+  }
+
+  /* Gradients */
+  .bg-gradient-primary {
+    background-image: linear-gradient(135deg, #b02d94 0%, #8037b6 100%) !important;
+  }
+
+  .bg-gradient-hover {
+    background-image: linear-gradient(135deg, #d435af 0%, #924ad1 100%) !important;
+  }
+
+  .text-gradient {
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+    color: transparent !important;
+    background-image: linear-gradient(135deg, #b02d94 0%, #8037b6 100%) !important;
+  }
+
+  /* Shadows for Marketing */
+  .shadow-button {
+    box-shadow: 0 5px 15px rgba(176, 45, 148, 0.3) !important;
+  }
+
+  .shadow-glow {
+    box-shadow: 0 0 15px rgba(176, 45, 148, 0.5) !important;
+  }
+
+  .shadow-card {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* Glass Effect */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .dark .glass-card {
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid var(--ops-border) !important;
+  }
+
+  /* Animations */
   @keyframes fade-in {
     from {
       opacity: 0;
@@ -680,411 +1016,88 @@ html {
   }
 }
 
-/*---break---
- */
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-
-  /* Ensure error messages are always visible with proper red color */
-  .text-destructive {
-    color: rgb(var(--error)) !important;
-  }
-
-  /* Form error text styling */
-  .form-error {
-    color: rgb(var(--error));
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    margin-top: 0.25rem;
-  }
-}
-
-@layer base {
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: "Lexend", sans-serif;
-    font-weight: 600;
-    line-height: 1.2;
-  }
-}
+/* ============================================ */
+/* MARKETING COMPONENTS */
+/* ============================================ */
 
 @layer components {
   .btn {
-    @apply px-6 py-3 rounded-full font-medium transition-all duration-300 inline-flex items-center justify-center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .btn-primary {
-    @apply bg-gradient-primary text-white shadow-button hover:shadow-lg hover:-translate-y-0.5;
+    background-image: linear-gradient(135deg, #b02d94 0%, #8037b6 100%);
+    color: white;
+    box-shadow: 0 5px 15px rgba(176, 45, 148, 0.3);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 10px 25px rgba(176, 45, 148, 0.4);
+    transform: translateY(-2px);
   }
 
   .btn-outline {
-    @apply border-2 border-border text-foreground hover:bg-primary/10 hover:shadow-glow;
+    border: 2px solid var(--border);
+    color: rgb(var(--ops-text-primary));
+  }
+
+  .btn-outline:hover {
+    background: rgba(176, 45, 148, 0.1);
+    box-shadow: 0 0 15px rgba(176, 45, 148, 0.5);
   }
 
   .nav-link {
-    @apply relative py-2 text-muted-foreground hover:text-foreground transition-colors duration-300 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full;
+    position: relative;
+    padding: 0.5rem 0;
+    color: rgb(var(--ops-text-tertiary));
+    transition: color 0.3s;
+  }
+
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background: rgb(var(--ops-action-primary));
+    transition: width 0.3s;
+  }
+
+  .nav-link:hover {
+    color: rgb(var(--ops-text-primary));
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
   }
 
   .nav-link.active {
-    @apply text-foreground after:w-full;
+    color: rgb(var(--ops-text-primary));
+  }
+
+  .nav-link.active::after {
+    width: 100%;
   }
 
   .card {
-    @apply bg-card/80 backdrop-blur-md border border-border rounded-xl shadow-card overflow-hidden transition-all duration-300;
+    background: rgba(var(--card), 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s;
   }
 
   .card:hover {
-    @apply border-primary/50 shadow-glow;
-  }
-}
-
-/* Custom animations removed for performance */
-
-/* Hide scrollbar but allow scrolling */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(176, 45, 148, 0.5);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(176, 45, 148, 0.8);
-}
-
-/* Shaped elements */
-@utility shaped {
-  shape-outside: circle();
-}
-
-/* Gradient text animation removed for performance */
-
-/* Custom glass effect */
-@utility glass-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.dark {
-  .glass-card {
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--ops-border);
-  }
-}
-
-/* 2BAC Color Variables */
-:root {
-  --primary: #b02d94;
-  --primary-50: #fdf4fc;
-  --primary-100: #fbeaf9;
-  --primary-200: #f6d6f1;
-  --primary-300: #f0b3e5;
-  --primary-400: #e380d2;
-  --primary-500: #d450bb;
-  --primary-600: #b02d94;
-  --primary-700: #92247a;
-  --primary-800: #791f65;
-  --primary-900: #661b54;
-  --primary-950: #400a33;
-
-  --purple: #8037b6;
-  --purple-50: #f7f2fc;
-  --purple-100: #f0e8fa;
-  --purple-200: #e2d1f5;
-  --purple-300: #cbaeec;
-  --purple-400: #ae7edf;
-  --purple-500: #9353d0;
-  --purple-600: #8037b6;
-  --purple-700: #6b2c96;
-  --purple-800: #58267b;
-  --purple-900: #4a2065;
-  --purple-950: #2e1040;
-
-  --dark: #111827;
-  --dark-50: #f9fafb;
-  --dark-100: #f3f4f6;
-  --dark-200: #e5e7eb;
-  --dark-300: #d1d5db;
-  --dark-400: #9ca3af;
-  --dark-500: #6b7280;
-  --dark-600: #4b5563;
-  --dark-700: #374151;
-  --dark-800: #1f2937;
-  --dark-900: #111827;
-  --dark-950: #030712;
-}
-
-/* Additional utility classes for 2bac design */
-@utility bg-main-bcg {
-  background-color: rgb(var(--ops-background));
-}
-
-/* Professional Public Background - Simple and elegant for auth/landing pages */
-@layer components {
-  .public-background {
-    position: relative;
-    background: rgb(var(--ops-background));
-    overflow: hidden;
-    isolation: isolate;
-  }
-
-  /* Light Mode - Subtle gradient with soft patterns */
-  .public-background::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-        circle at 0% 0%,
-        rgba(176, 45, 148, 0.03) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 100% 100%,
-        rgba(128, 55, 182, 0.03) 0%,
-        transparent 50%
-      ),
-      linear-gradient(
-        135deg,
-        rgba(251, 235, 247, 0.2) 0%,
-        rgba(255, 255, 255, 0.8) 50%,
-        rgba(240, 249, 255, 0.3) 100%
-      );
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* Subtle dot pattern for light mode */
-  .public-background::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(
-      circle,
-      rgba(176, 45, 148, 0.04) 1px,
-      transparent 1px
-    );
-    background-size: 32px 32px;
-    background-position: 0 0;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.5;
-  }
-
-  /* Dark Mode - Deeper gradients with subtle brand colors */
-  .dark .public-background::before {
-    background: radial-gradient(
-        circle at 0% 0%,
-        rgba(176, 45, 148, 0.08) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 100% 100%,
-        rgba(128, 55, 182, 0.06) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 50% 50%,
-        rgba(236, 72, 153, 0.04) 0%,
-        transparent 70%
-      ),
-      linear-gradient(
-        135deg,
-        rgba(17, 17, 17, 0.98) 0%,
-        rgba(23, 23, 23, 0.95) 50%,
-        rgba(38, 38, 38, 0.97) 100%
-      );
-  }
-
-  /* Dot pattern for dark mode - more visible */
-  .dark .public-background::after {
-    background-image: radial-gradient(
-      circle,
-      rgba(176, 45, 148, 0.08) 1px,
-      transparent 1px
-    );
-    background-size: 32px 32px;
-    opacity: 0.3;
-  }
-
-  /* Ensure content is above background layers */
-  .public-background > * {
-    position: relative;
-    z-index: 1;
-  }
-}
-
-@utility bg-gradient-primary {
-  background-image: linear-gradient(135deg, #b02d94 0%, #8037b6 100%);
-}
-
-@utility bg-gradient-hover {
-  background-image: linear-gradient(135deg, #d435af 0%, #924ad1 100%);
-}
-
-@utility bg-gradient-conic {
-  background: conic-gradient(
-    from 180deg at 50% 50%,
-    #b02d94 0%,
-    #8037b6 50%,
-    #b02d94 100%
-  );
-}
-
-@utility shadow-button {
-  box-shadow: 0 5px 15px rgba(176, 45, 148, 0.3);
-}
-
-@utility shadow-glow {
-  box-shadow: 0 0 15px rgba(176, 45, 148, 0.5);
-}
-
-@utility shadow-card {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-@utility text-gradient {
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  background-image: linear-gradient(135deg, #b02d94 0%, #8037b6 100%);
-}
-
-/* Dashboard Background - Awesome backgrounds for inner dashboards only */
-@layer components {
-  .dashboard-background {
-    position: relative;
-    background: rgb(var(--ops-background));
-    overflow: hidden;
-    isolation: isolate;
-  }
-
-  /* Light Mode Dashboard Background */
-  .dashboard-background::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-        circle at 20% 50%,
-        rgba(176, 45, 148, 0.1) 0%,
-        transparent 60%
-      ),
-      radial-gradient(
-        circle at 80% 80%,
-        rgba(128, 55, 182, 0.08) 0%,
-        transparent 60%
-      ),
-      radial-gradient(
-        circle at 40% 20%,
-        rgba(236, 72, 153, 0.06) 0%,
-        transparent 60%
-      ),
-      radial-gradient(
-        circle at 70% 40%,
-        rgba(20, 184, 166, 0.04) 0%,
-        transparent 50%
-      ),
-      linear-gradient(
-        135deg,
-        rgba(251, 235, 247, 0.4) 0%,
-        rgba(255, 255, 255, 0.9) 50%,
-        rgba(240, 249, 255, 0.6) 100%
-      );
-    pointer-events: none;
-    z-index: 0;
-    will-change: opacity;
-    transition: opacity 0.3s ease;
-  }
-
-  /* Subtle grid pattern for light mode */
-  .dashboard-background::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: linear-gradient(
-        rgba(176, 45, 148, 0.025) 1px,
-        transparent 1px
-      ),
-      linear-gradient(90deg, rgba(176, 45, 148, 0.025) 1px, transparent 1px);
-    background-size: 50px 50px;
-    background-position: 0 0, 0 0;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.6;
-  }
-
-  /* Dark Mode Dashboard Background */
-  .dark .dashboard-background::before {
-    background: radial-gradient(
-        circle at 20% 50%,
-        rgba(176, 45, 148, 0.2) 0%,
-        transparent 60%
-      ),
-      radial-gradient(
-        circle at 80% 80%,
-        rgba(128, 55, 182, 0.18) 0%,
-        transparent 60%
-      ),
-      radial-gradient(
-        circle at 40% 20%,
-        rgba(236, 72, 153, 0.12) 0%,
-        transparent 60%
-      ),
-      radial-gradient(
-        circle at 60% 60%,
-        rgba(20, 184, 166, 0.08) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 90% 10%,
-        rgba(139, 34, 119, 0.1) 0%,
-        transparent 50%
-      ),
-      linear-gradient(
-        135deg,
-        rgba(17, 17, 17, 0.98) 0%,
-        rgba(23, 23, 23, 0.95) 50%,
-        rgba(38, 38, 38, 0.97) 100%
-      );
-  }
-
-  /* Grid pattern for dark mode - more visible */
-  .dark .dashboard-background::after {
-    background-image: linear-gradient(
-        rgba(176, 45, 148, 0.08) 1px,
-        transparent 1px
-      ),
-      linear-gradient(90deg, rgba(176, 45, 148, 0.08) 1px, transparent 1px);
-    background-size: 50px 50px;
-    opacity: 0.4;
-  }
-
-  /* Ensure content is above the background layers */
-  .dashboard-background > * {
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Smooth scroll behavior with background */
-  .dashboard-background {
-    background-attachment: scroll;
+    border-color: rgba(176, 45, 148, 0.5);
+    box-shadow: 0 0 15px rgba(176, 45, 148, 0.5);
   }
 }

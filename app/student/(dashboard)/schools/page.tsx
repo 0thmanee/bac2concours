@@ -105,8 +105,11 @@ export default function StudentSchoolsPage() {
             value={filters.type || "all"}
             onChange={(value) => updateFilter("type", value === "all" ? "" : value)}
             options={[
-              "Tous les types",
-              ...filterOptions.types.map((t) => SCHOOL_TYPE_LABELS[t] || t),
+              { value: "all", label: "Tous les types" },
+              ...filterOptions.types.map((type) => ({
+                value: type,
+                label: SCHOOL_TYPE_LABELS[type] || type,
+              })),
             ]}
             placeholder="Type"
             className="w-full sm:w-45"
@@ -115,7 +118,10 @@ export default function StudentSchoolsPage() {
           <FilterSelect
             value={filters.city || "all"}
             onChange={(value) => updateFilter("city", value === "all" ? "" : value)}
-            options={["Toutes les villes", ...filterOptions.cities]}
+            options={[
+              { value: "all", label: "Toutes les villes" },
+              ...filterOptions.cities.map((city) => ({ value: city, label: city })),
+            ]}
             placeholder="Ville"
             className="w-full sm:w-45"
           />

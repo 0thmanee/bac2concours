@@ -93,7 +93,10 @@ export default function StudentVideosPage() {
           <FilterSelect
             value={filters.category || "all"}
             onChange={(value) => updateFilter("category", value === "all" ? "" : value)}
-            options={["Toutes", ...filterOptions.categories]}
+            options={[
+              { value: "all", label: "Toutes catégories" },
+              ...filterOptions.categories.map((cat) => ({ value: cat, label: cat })),
+            ]}
             placeholder="Catégorie"
             className="w-full sm:w-45"
           />
@@ -101,7 +104,10 @@ export default function StudentVideosPage() {
           <FilterSelect
             value={filters.level || "all"}
             onChange={(value) => updateFilter("level", value === "all" ? "" : value)}
-            options={["Tous", ...filterOptions.levels]}
+            options={[
+              { value: "all", label: "Tous niveaux" },
+              ...filterOptions.levels.map((level) => ({ value: level, label: level })),
+            ]}
             placeholder="Niveau"
             className="w-full sm:w-45"
           />

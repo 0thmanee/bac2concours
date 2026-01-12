@@ -204,12 +204,12 @@ const Contact = () => {
                     <p className="text-sm font-medium text-foreground">Temps de réponse</p>
                     <p className="text-lg font-bold text-primary">24h</p>
                   </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
       <Toaster />
     </section>
   );

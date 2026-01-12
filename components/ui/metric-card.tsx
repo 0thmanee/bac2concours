@@ -17,54 +17,46 @@ interface MetricCardProps {
   className?: string;
 }
 
-const colorStyles: Record<MetricColor, { bg: string; iconBg: string; icon: string; text: string }> = {
+const colorStyles: Record<MetricColor, { iconBg: string; icon: string; accentColor: string }> = {
   blue: {
-    bg: "bg-[rgb(var(--metric-blue-light))]",
     iconBg: "bg-[rgb(var(--metric-blue-main))]",
     icon: "text-white",
-    text: "text-[rgb(var(--metric-blue-dark))]",
+    accentColor: "text-metric-blue",
   },
   orange: {
-    bg: "bg-[rgb(var(--metric-orange-light))]",
     iconBg: "bg-[rgb(var(--metric-orange-main))]",
     icon: "text-white",
-    text: "text-[rgb(var(--metric-orange-dark))]",
+    accentColor: "text-metric-orange",
   },
   cyan: {
-    bg: "bg-[rgb(var(--metric-cyan-light))]",
     iconBg: "bg-[rgb(var(--metric-cyan-main))]",
     icon: "text-white",
-    text: "text-[rgb(var(--metric-cyan-dark))]",
+    accentColor: "text-metric-cyan",
   },
   rose: {
-    bg: "bg-[rgb(var(--metric-rose-light))]",
     iconBg: "bg-[rgb(var(--metric-rose-main))]",
     icon: "text-white",
-    text: "text-[rgb(var(--metric-rose-dark))]",
+    accentColor: "text-metric-rose",
   },
   mint: {
-    bg: "bg-[rgb(var(--metric-mint-light))]",
     iconBg: "bg-[rgb(var(--metric-mint-main))]",
     icon: "text-white",
-    text: "text-[rgb(var(--metric-mint-dark))]",
+    accentColor: "text-metric-mint",
   },
   purple: {
-    bg: "bg-[rgb(var(--metric-purple-light))]",
     iconBg: "bg-[rgb(var(--metric-purple-main))]",
     icon: "text-white",
-    text: "text-[rgb(var(--metric-purple-dark))]",
+    accentColor: "text-metric-purple",
   },
   yellow: {
-    bg: "bg-[rgb(var(--metric-yellow-light))]",
     iconBg: "bg-[rgb(var(--metric-yellow-main))]",
     icon: "text-white",
-    text: "text-[rgb(var(--metric-yellow-dark))]",
+    accentColor: "text-metric-yellow",
   },
   teal: {
-    bg: "bg-[rgb(var(--metric-teal-light))]",
     iconBg: "bg-[rgb(var(--metric-teal-main))]",
     icon: "text-white",
-    text: "text-[rgb(var(--metric-teal-dark))]",
+    accentColor: "text-metric-teal",
   },
 };
 
@@ -80,7 +72,7 @@ export function MetricCard({
   const styles = colorStyles[color];
 
   return (
-    <Card className={cn("border border-border bg-card transition-all", className)}>
+    <Card className={cn("border border-border bg-card transition-all hover:border-border/80", className)}>
       <CardContent>
         <div className="flex flex-col gap-4">
           {/* Icon */}
@@ -93,7 +85,7 @@ export function MetricCard({
             <p className="text-sm font-medium text-muted-foreground">
               {title}
             </p>
-            <p className={cn("text-3xl font-bold text-foreground")}>
+            <p className={cn("text-3xl font-bold", styles.accentColor)}>
               {value}
             </p>
             {subtitle && (
