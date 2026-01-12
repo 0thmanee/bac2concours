@@ -5,6 +5,7 @@ import { ToastProvider } from "@/lib/providers/toast-provider";
 import { ThemeProvider } from "@/lib/providers/theme-provider";
 import NextAuthProvider from "@/lib/providers/auth-provider";
 import { I18nProvider } from "@/lib/i18n/provider";
+import { MobileAlert } from "@/components/shared/mobile-alert";
 import "./globals.css";
 
 // Inter font - optimized for interfaces
@@ -49,6 +50,7 @@ export default function RootLayout({
             <NextAuthProvider>
               <QueryProvider>
                 {children}
+                <MobileAlert />
                 <ToastProvider />
               </QueryProvider>
             </NextAuthProvider>
