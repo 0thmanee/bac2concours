@@ -50,7 +50,7 @@ export function StudentMediaCard({
       onClick={onClick}
       className="ops-card border border-border group h-full flex flex-col overflow-hidden transition-all duration-300 hover:border-brand-400 dark:hover:border-brand-600 cursor-pointer"
     >
-      <div className="relative flex-1 flex flex-col p-4 sm:p-5">
+      <div className="relative flex-1 flex flex-col p-4 sm:p-5 border border-border rounded-lg">
         {/* Thumbnail */}
         <div
           className={`${aspectClass} bg-linear-to-br from-[rgb(var(--brand-50))] via-[rgb(var(--brand-100))] to-[rgb(var(--brand-200))] dark:from-[rgb(var(--brand-950))]/40 dark:via-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 rounded-xl mb-4 flex items-center justify-center relative overflow-hidden shadow-inner group-hover:shadow-md transition-shadow duration-300`}
