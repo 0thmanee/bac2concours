@@ -50,7 +50,7 @@ export default function RootLayout({
             <NextAuthProvider>
               <QueryProvider>
                 {children}
-                <MobileAlert />
+                {/* <MobileAlert /> */}
                 <ToastProvider />
               </QueryProvider>
             </NextAuthProvider>

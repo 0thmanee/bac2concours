@@ -70,10 +70,10 @@ function formatTimeSpent(seconds: number | null): string {
 
 // Get score color based on percentage
 function getScoreColor(percentage: number): string {
-  if (percentage >= 80) return "text-[rgb(var(--success))] dark:text-[rgb(var(--success-light))]";
-  if (percentage >= 60) return "text-[rgb(var(--warning))] dark:text-[rgb(var(--warning-light))]";
-  if (percentage >= 40) return "text-[rgb(var(--info))] dark:text-[rgb(var(--info-light))]";
-  return "text-[rgb(var(--error))] dark:text-[rgb(var(--error-light))]";
+  if (percentage >= 80) return "text-success dark:text-success-light";
+  if (percentage >= 60) return "text-warning dark:text-warning-light";
+  if (percentage >= 40) return "text-info dark:text-info-light";
+  return "text-error dark:text-error-light";
 }
 
 // Get score badge variant
@@ -225,7 +225,7 @@ export default function QuizHistoryPage() {
                     {/* Left: Quiz Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
-                        <FileQuestion className="h-5 w-5 text-[rgb(var(--brand-600))]" />
+                        <FileQuestion className="h-5 w-5 text-brand-600" />
                         <h3 className="font-semibold text-foreground truncate">
                           {attempt.school} - {attempt.matiere}
                         </h3>

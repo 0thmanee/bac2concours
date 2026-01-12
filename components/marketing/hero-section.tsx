@@ -36,8 +36,8 @@ export function HeroSection() {
       <div className="absolute inset-0 z-0 bg-gradient-to-b from-[rgb(var(--brand-50))]/30 via-white to-white dark:from-[rgb(var(--brand-950))]/20 dark:via-gray-900 dark:to-gray-900" />
 
       {/* Decorative elements */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-[rgb(var(--brand-200))]/30 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-[rgb(var(--brand-300))]/20 rounded-full blur-3xl" />
+      <div className="absolute top-20 left-10 w-72 h-72 bg-brand-200/30 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-brand-300/20 rounded-full blur-3xl" />
 
       {/* Hero Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -45,7 +45,7 @@ export function HeroSection() {
         <div className="pt-20 pb-16 md:pt-32 md:pb-24 text-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-white/[0.03] border border-border rounded-full text-gray-700 dark:text-gray-300 font-medium text-sm mb-8 shadow-sm animate-fade-in">
-            <GraduationCap className="w-4 h-4 text-[rgb(var(--brand-600))] dark:text-[rgb(var(--brand-400))]" />
+            <GraduationCap className="w-4 h-4 text-brand-600 dark:text-brand-400" />
             <span>Préparation Concours 2026</span>
           </div>
 
@@ -115,8 +115,8 @@ export function HeroSection() {
                   className="rounded-2xl border border-border bg-white dark:border-border dark:bg-white/[0.03] p-6 hover:border-border dark:hover:border-border transition-all duration-300 shadow-sm hover:shadow-md animate-fade-in-up"
                   style={{ animationDelay: `${600 + index * 100}ms` }}
                 >
-                  <div className="w-12 h-12 bg-[rgb(var(--brand-50))] dark:bg-[rgb(var(--brand-950))]/30 rounded-xl flex items-center justify-center mb-4">
-                    <IconComponent className="w-6 h-6 text-[rgb(var(--brand-600))] dark:text-[rgb(var(--brand-400))]" />
+                  <div className="w-12 h-12 bg-brand-50 dark:bg-brand-950/30 rounded-xl flex items-center justify-center mb-4">
+                    <IconComponent className="w-6 h-6 text-brand-600 dark:text-brand-400" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                     {feature.title}

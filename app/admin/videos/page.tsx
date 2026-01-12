@@ -131,9 +131,9 @@ export default function AdminVideosPage() {
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      ACTIVE: "bg-linear-to-r from-[rgb(var(--success-light))] to-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] border-[rgb(var(--success-light))]",
-      INACTIVE: "bg-linear-to-r from-[rgb(var(--neutral-100))] to-[rgb(var(--neutral-100))] text-[rgb(var(--neutral-600))] border-[rgb(var(--neutral-200))]",
-      PROCESSING: "bg-linear-to-r from-[rgb(var(--warning-light))] to-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))] border-[rgb(var(--warning-light))]",
+      ACTIVE: "bg-linear-to-r from-[rgb(var(--success-light))] to-[rgb(var(--success-light))] text-success-dark border-success-light",
+      INACTIVE: "bg-linear-to-r from-[rgb(var(--neutral-100))] to-[rgb(var(--neutral-100))] text-neutral-600 border-neutral-200",
+      PROCESSING: "bg-linear-to-r from-[rgb(var(--warning-light))] to-[rgb(var(--warning-light))] text-warning-dark border-warning-light",
     };
     const labels: Record<string, string> = {
       ACTIVE: "Actif",
@@ -287,7 +287,7 @@ export default function AdminVideosPage() {
         <div className="flex items-center gap-1 flex-wrap">
           {getStatusBadge(video.status)}
           {video.isPublic && (
-            <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-md bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-[rgb(var(--brand-700))] border border-[rgb(var(--brand-200))]">Publique</span>
+            <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-md bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-brand-700 border border-brand-200">Publique</span>
           )}
         </div>
       ),

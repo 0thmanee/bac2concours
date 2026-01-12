@@ -232,10 +232,10 @@ function QuizContent() {
               <span
                 className={`text-xs px-2 py-1 rounded-full shrink-0 self-start ${
                   currentQuestion.difficulty === "EASY"
-                    ? "bg-[rgb(var(--success-light))] text-[rgb(var(--success-dark))]"
+                    ? "bg-success-light text-success-dark"
                     : currentQuestion.difficulty === "MEDIUM"
-                      ? "bg-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))]"
-                      : "bg-[rgb(var(--error-light))] text-[rgb(var(--error-dark))]"
+                      ? "bg-warning-light text-warning-dark"
+                      : "bg-error-light text-error-dark"
                 }`}
               >
                 {currentQuestion.difficulty === "EASY"
@@ -343,7 +343,7 @@ function QuizContent() {
                   isCurrent
                     ? "bg-primary text-white"
                     : isAnswered
-                      ? "bg-[rgb(var(--success-light))] text-[rgb(var(--success-dark))]"
+                      ? "bg-success-light text-success-dark"
                       : "bg-muted text-muted-foreground hover:bg-muted/80"
                 }`}
               >

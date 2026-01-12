@@ -19,42 +19,42 @@ interface MetricCardProps {
 
 const colorStyles: Record<MetricColor, { iconBg: string; icon: string; accentColor: string }> = {
   blue: {
-    iconBg: "bg-[rgb(var(--metric-blue-main))]",
+    iconBg: "bg-metric-blue-main",
     icon: "text-white",
     accentColor: "text-metric-blue",
   },
   orange: {
-    iconBg: "bg-[rgb(var(--metric-orange-main))]",
+    iconBg: "bg-metric-orange-main",
     icon: "text-white",
     accentColor: "text-metric-orange",
   },
   cyan: {
-    iconBg: "bg-[rgb(var(--metric-cyan-main))]",
+    iconBg: "bg-metric-cyan-main",
     icon: "text-white",
     accentColor: "text-metric-cyan",
   },
   rose: {
-    iconBg: "bg-[rgb(var(--metric-rose-main))]",
+    iconBg: "bg-metric-rose-main",
     icon: "text-white",
     accentColor: "text-metric-rose",
   },
   mint: {
-    iconBg: "bg-[rgb(var(--metric-mint-main))]",
+    iconBg: "bg-metric-mint-main",
     icon: "text-white",
     accentColor: "text-metric-mint",
   },
   purple: {
-    iconBg: "bg-[rgb(var(--metric-purple-main))]",
+    iconBg: "bg-metric-purple-main",
     icon: "text-white",
     accentColor: "text-metric-purple",
   },
   yellow: {
-    iconBg: "bg-[rgb(var(--metric-yellow-main))]",
+    iconBg: "bg-metric-yellow-main",
     icon: "text-white",
     accentColor: "text-metric-yellow",
   },
   teal: {
-    iconBg: "bg-[rgb(var(--metric-teal-main))]",
+    iconBg: "bg-metric-teal-main",
     icon: "text-white",
     accentColor: "text-metric-teal",
   },
@@ -94,7 +94,7 @@ export function MetricCard({
               </p>
             )}
             {trend && (
-              <p className={cn("text-xs font-medium flex items-center gap-1", trend.isPositive ? "text-[rgb(var(--success-dark))] dark:text-[rgb(var(--success))]" : "text-[rgb(var(--error-dark))] dark:text-[rgb(var(--error))]")}>
+              <p className={cn("text-xs font-medium flex items-center gap-1", trend.isPositive ? "text-success-dark dark:text-success" : "text-error-dark dark:text-error")}>
                 <span>{trend.isPositive ? "↑" : "↓"}</span>
                 {trend.value}
               </p>

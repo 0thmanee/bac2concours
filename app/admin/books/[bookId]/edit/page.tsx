@@ -435,7 +435,7 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
                   ) : (
                     <label
                       htmlFor="cover-upload"
-                      className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] transition-colors"
+                      className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-brand-500 transition-colors"
                     >
                       <div className="flex flex-col items-center justify-center pt-5 pb-6">
                         <Upload className="h-10 w-10 text-ops-tertiary mb-3" />

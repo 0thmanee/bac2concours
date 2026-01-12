@@ -38,14 +38,14 @@ const notificationConfig: Record<
   NotificationType,
   { icon: React.ComponentType<{ className?: string }>; color: string; bgColor: string }
 > = {
-  USER_ACTIVATED: { icon: UserCheck, color: "text-[rgb(var(--success))]", bgColor: "bg-[rgb(var(--success-light))]" },
-  USER_DEACTIVATED: { icon: Lock, color: "text-[rgb(var(--error))]", bgColor: "bg-[rgb(var(--error-light))]" },
+  USER_ACTIVATED: { icon: UserCheck, color: "text-success", bgColor: "bg-success-light" },
+  USER_DEACTIVATED: { icon: Lock, color: "text-error", bgColor: "bg-error-light" },
   NEW_USER_REGISTERED: { icon: UserPlus, color: "text-primary", bgColor: "bg-primary/10" },
   SYSTEM_ANNOUNCEMENT: { icon: Megaphone, color: "text-primary", bgColor: "bg-primary/10" },
-  PAYMENT_SUBMITTED: { icon: CreditCard, color: "text-[rgb(var(--warning))]", bgColor: "bg-[rgb(var(--warning-light))]" },
-  PAYMENT_APPROVED: { icon: CheckCircle, color: "text-[rgb(var(--success))]", bgColor: "bg-[rgb(var(--success-light))]" },
-  PAYMENT_REJECTED: { icon: AlertCircle, color: "text-[rgb(var(--error))]", bgColor: "bg-[rgb(var(--error-light))]" },
-  NEW_RESOURCE: { icon: BookOpen, color: "text-[rgb(var(--info))]", bgColor: "bg-[rgb(var(--info-light))]" },
+  PAYMENT_SUBMITTED: { icon: CreditCard, color: "text-warning", bgColor: "bg-warning-light" },
+  PAYMENT_APPROVED: { icon: CheckCircle, color: "text-success", bgColor: "bg-success-light" },
+  PAYMENT_REJECTED: { icon: AlertCircle, color: "text-error", bgColor: "bg-error-light" },
+  NEW_RESOURCE: { icon: BookOpen, color: "text-info", bgColor: "bg-info-light" },
 };
 
 export function NotificationBell() {
@@ -96,7 +96,7 @@ export function NotificationBell() {
       >
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 h-5 min-w-5 flex items-center justify-center px-1 text-[10px] font-semibold text-white bg-[rgb(var(--error))] rounded-full">
+          <span className="absolute -top-1 -right-1 h-5 min-w-5 flex items-center justify-center px-1 text-[10px] font-semibold text-white bg-error rounded-full">
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}

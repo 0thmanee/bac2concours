@@ -102,11 +102,11 @@ export default function QuestionDetailPage({
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
       ACTIVE:
-        "bg-linear-to-r from-[rgb(var(--success-light))] to-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] border-[rgb(var(--success))]",
+        "bg-linear-to-r from-[rgb(var(--success-light))] to-[rgb(var(--success-light))] text-success-dark border-success",
       INACTIVE:
-        "bg-linear-to-r from-[rgb(var(--neutral-50))] to-[rgb(var(--neutral-100))] text-[rgb(var(--neutral-600))] border-[rgb(var(--neutral-200))]",
+        "bg-linear-to-r from-[rgb(var(--neutral-50))] to-[rgb(var(--neutral-100))] text-neutral-600 border-neutral-200",
       DRAFT:
-        "bg-linear-to-r from-[rgb(var(--warning-light))] to-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))] border-[rgb(var(--warning))]",
+        "bg-linear-to-r from-[rgb(var(--warning-light))] to-[rgb(var(--warning-light))] text-warning-dark border-warning",
     };
     const labels: Record<string, string> = {
       ACTIVE: "Actif",
@@ -124,9 +124,9 @@ export default function QuestionDetailPage({
 
   const getDifficultyBadge = (difficulty: string) => {
     const styles: Record<string, string> = {
-      EASY: "bg-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] border-[rgb(var(--success))]",
-      MEDIUM: "bg-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))] border-[rgb(var(--warning))]",
-      HARD: "bg-[rgb(var(--error-light))] text-[rgb(var(--error-dark))] border-[rgb(var(--error))]",
+      EASY: "bg-success-light text-success-dark border-success",
+      MEDIUM: "bg-warning-light text-warning-dark border-warning",
+      HARD: "bg-error-light text-error-dark border-error",
     };
     const labels: Record<string, string> = {
       EASY: "Facile",
@@ -145,11 +145,11 @@ export default function QuestionDetailPage({
   const getContentTypeIcon = (contentType?: string) => {
     switch (contentType) {
       case "MATH":
-        return <FunctionSquare className="h-4 w-4 text-[rgb(var(--brand-600))]" />;
+        return <FunctionSquare className="h-4 w-4 text-brand-600" />;
       case "IMAGE":
-        return <ImageIcon className="h-4 w-4 text-[rgb(var(--info))]" />;
+        return <ImageIcon className="h-4 w-4 text-info" />;
       default:
-        return <Type className="h-4 w-4 text-[rgb(var(--neutral-500))]" />;
+        return <Type className="h-4 w-4 text-neutral-500" />;
     }
   };
 
@@ -285,7 +285,7 @@ export default function QuestionDetailPage({
                       key={option.id}
                       className={`flex items-start gap-3 p-4 rounded-lg border-2 ${
                         isCorrect
-                          ? "border-[rgb(var(--success))] bg-[rgb(var(--success-light))] dark:bg-[rgb(var(--success-dark))]"
+                          ? "border-success bg-success-light dark:bg-success-dark"
                           : "border-border bg-ops-bg-secondary"
                       }`}
                     >
@@ -293,8 +293,8 @@ export default function QuestionDetailPage({
                       <div
                         className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
                           isCorrect
-                            ? "bg-[rgb(var(--success))] text-white"
-                            : "bg-[rgb(var(--neutral-200))] text-[rgb(var(--neutral-600))] dark:bg-[rgb(var(--neutral-700))] dark:text-[rgb(var(--neutral-300))]"
+                            ? "bg-success text-white"
+                            : "bg-neutral-200 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300"
                         }`}
                       >
                         {letter}
@@ -308,7 +308,7 @@ export default function QuestionDetailPage({
                             {contentType}
                           </span>
                           {isCorrect && (
-                            <span className="text-xs text-[rgb(var(--success))] font-medium flex items-center gap-1">
+                            <span className="text-xs text-success font-medium flex items-center gap-1">
                               <CheckCircle className="h-3 w-3" />
                               Correct
                             </span>

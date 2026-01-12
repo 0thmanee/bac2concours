@@ -172,8 +172,8 @@ export function SettingsResourceManager<T extends Resource>({
       <CardHeader className="pb-4 sm:pb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[rgb(var(--brand-100))] dark:bg-[rgb(var(--brand-900))] shrink-0">
-              <Icon className="h-5 w-5 text-[rgb(var(--brand-600))]" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-900 shrink-0">
+              <Icon className="h-5 w-5 text-brand-600" />
             </div>
             <div className="min-w-0">
               <CardTitle className="text-lg font-semibold text-ops-primary">
@@ -426,7 +426,7 @@ export function SettingsResourceManager<T extends Resource>({
             <AlertDialogCancel>Annuler</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
-              className="bg-[rgb(var(--error))] hover:bg-[rgb(var(--error-dark))]"
+              className="bg-error hover:bg-error-dark"
               disabled={deletePending}
             >
               {deletePending ? (

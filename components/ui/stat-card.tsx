@@ -43,7 +43,7 @@ export function StatCard({
               <div className="flex items-center gap-2 pt-1">
                 <span className={cn(
                   "text-xs font-medium flex items-center gap-1",
-                  trend.isPositive ? "text-[rgb(var(--success))]" : "text-[rgb(var(--error))]"
+                  trend.isPositive ? "text-success" : "text-error"
                 )}>
                   <span>{trend.isPositive ? "↑" : "↓"}</span>
                   {trend.value}
@@ -55,7 +55,7 @@ export function StatCard({
             )}
           </div>
           <div 
-            className="flex h-12 w-12 items-center justify-center rounded-lg shrink-0 bg-[rgb(var(--neutral-100))]"
+            className="flex h-12 w-12 items-center justify-center rounded-lg shrink-0 bg-neutral-100"
           >
             <Icon 
               className="h-6 w-6 text-action-primary"

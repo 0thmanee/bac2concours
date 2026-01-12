@@ -99,8 +99,8 @@ export default function PaymentPage() {
       <div className="min-h-screen flex items-center justify-center bg-ops-background p-4">
         <Card className="ops-card max-w-md w-full">
           <CardHeader className="text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[rgb(var(--metric-orange-light))]">
-              <Loader2 className="h-8 w-8 text-[rgb(var(--metric-orange-main))] animate-spin" />
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-metric-orange-light">
+              <Loader2 className="h-8 w-8 text-metric-orange animate-spin" />
             </div>
             <CardTitle className="text-2xl font-bold text-ops-primary">
               Paiement en cours de vérification
@@ -165,8 +165,8 @@ export default function PaymentPage() {
     <div className="min-h-screen flex items-center justify-center bg-ops-background p-4">
       <Card className="ops-card max-w-lg w-full">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[rgb(var(--brand-50))]">
-            <Upload className="h-8 w-8 text-[rgb(var(--brand-500))]" />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand-50">
+            <Upload className="h-8 w-8 text-brand-500" />
           </div>
           <CardTitle className="text-2xl font-bold text-ops-primary">
             Preuve de paiement
@@ -180,8 +180,8 @@ export default function PaymentPage() {
           <div
             className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
               dragActive
-                ? "border-[rgb(var(--brand-500))] bg-[rgb(var(--brand-50))]"
-                : "border-border hover:border-[rgb(var(--brand-300))]"
+                ? "border-brand-500 bg-brand-50"
+                : "border-border hover:border-brand-300"
             }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
@@ -209,11 +209,11 @@ export default function PaymentPage() {
                   </div>
                 ) : (
                   <div className="flex items-center justify-center gap-2 text-ops-primary">
-                    <FileText className="h-12 w-12 text-[rgb(var(--brand-500))]" />
+                    <FileText className="h-12 w-12 text-brand-500" />
                   </div>
                 )}
                 <div className="flex items-center justify-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-[rgb(var(--success))]" />
+                  <CheckCircle className="h-4 w-4 text-success" />
                   <span className="text-sm font-medium text-ops-primary">
                     {selectedFile.name}
                   </span>
@@ -223,7 +223,7 @@ export default function PaymentPage() {
                       e.preventDefault();
                       handleRemoveFile();
                     }}
-                    className="p-1 hover:bg-[rgb(var(--neutral-100))] rounded"
+                    className="p-1 hover:bg-neutral-100 rounded"
                   >
                     <X className="h-4 w-4 text-ops-secondary" />
                   </button>
@@ -251,9 +251,9 @@ export default function PaymentPage() {
           </div>
 
           {/* Info box */}
-          <div className="rounded-lg bg-[rgb(var(--neutral-50))] p-4">
+          <div className="rounded-lg bg-neutral-50 p-4">
             <div className="flex items-start gap-3">
-              <AlertCircle className="h-5 w-5 text-[rgb(var(--brand-500))] shrink-0 mt-0.5" />
+              <AlertCircle className="h-5 w-5 text-brand-500 shrink-0 mt-0.5" />
               <div className="text-sm text-ops-secondary">
                 <p className="font-medium text-ops-primary mb-1">Documents acceptés :</p>
                 <ul className="list-disc list-inside space-y-1">

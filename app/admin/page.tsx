@@ -189,9 +189,9 @@ export default async function AdminDashboard() {
                       <p className="truncate text-xs text-ops-secondary">{user.email}</p>
                     </div>
                     <span className={`ml-2 rounded-full px-2 py-0.5 text-xs font-medium ${
-                      user.status === "ACTIVE" 
-                        ? "bg-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] dark:bg-[rgb(var(--success))]/30 dark:text-[rgb(var(--success-light))]" 
-                        : "bg-[rgb(var(--neutral-100))] text-[rgb(var(--neutral-700))] dark:bg-[rgb(var(--neutral-900))]/30 dark:text-[rgb(var(--neutral-400))]"
+                      user.status === "ACTIVE"
+                        ? "bg-success-light text-success-dark dark:bg-success/30 dark:text-success-light"
+                        : "bg-neutral-100 text-neutral-700 dark:bg-neutral-900/30 dark:text-neutral-400"
                     }`}>
                       {user.status === "ACTIVE" ? "Actif" : "Inactif"}
                     </span>

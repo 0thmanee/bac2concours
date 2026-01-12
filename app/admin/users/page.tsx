@@ -2,23 +2,16 @@
 
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Users, Plus, MoreHorizontal, UserPlus, Shield, User } from "lucide-react";
+import { DataTable, Column } from "@/components/ui/data-table";
 import {
   AdminPageHeader,
   AdminStatsGrid,
   AdminFilterBar,
+  AdminEmptyState,
   type AdminStatItem,
   type FilterConfig,
 } from "@/components/admin";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
@@ -55,7 +48,6 @@ import {
 import { useUsers, useCreateUser, useUpdateUser, useDeleteUser, useUserMetrics } from "@/lib/hooks/use-users";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { LoadingState } from "@/components/shared/loading-state";
-import { EmptyState } from "@/components/shared/empty-state";
 import { MESSAGES, USER_ROLE, USER_STATUS } from "@/lib/constants";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
@@ -68,7 +60,7 @@ import {
   type UserUIFilters,
 } from "@/lib/validations/user.validation";
 import { Label } from "@/components/ui/label";
-import { TablePagination, type PaginationConfig } from "@/components/ui/data-table";
+import { type PaginationConfig } from "@/components/ui/data-table";
 import { toApiParam } from "@/lib/utils/filter.utils";
 
 // User type based on what's returned from the user service
@@ -240,6 +232,107 @@ export default function UsersPage() {
     },
   ];
 
+  const columns: Column<User>[] = [
+    {
+      header: "User",
+      cell: (user) => (
+        <div>
+          <p className="font-medium text-sm text-foreground">
+            {user.name}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {user.email}
+          </p>
+        </div>
+      ),
+    },
+    {
+      header: "Role",
+      cell: (user) => (
+        <StatusBadge
+          status={user.role}
+          className="h-6 text-xs bg-metric-purple-light text-metric-purple-dark! border-metric-purple-main!"
+        />
+      ),
+    },
+    {
+      header: "Status",
+      cell: (user) => (
+        <StatusBadge status={user.status} className="h-6 text-xs" />
+      ),
+    },
+    {
+      header: "Email Verified",
+      cell: (user) => (
+        user.emailVerified && typeof user.emailVerified !== 'boolean' ? (
+          <span className="text-xs text-metric-mint-dark">
+            {formatDate(user.emailVerified)}
+          </span>
+        ) : (
+          <span className="text-xs text-muted-foreground">Not verified</span>
+        )
+      ),
+    },
+    {
+      header: "Created",
+      cell: (user) => (
+        <span className="text-sm text-muted-foreground">
+          {formatDate(user.createdAt)}
+        </span>
+      ),
+    },
+    {
+      header: "Actions",
+      headerClassName: "text-right",
+      cellClassName: "text-right",
+      cell: (user) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="ops-card">
+            <DropdownMenuItem
+              className="text-sm"
+              onClick={() => handleEdit(user)}
+            >
+              Edit
+            </DropdownMenuItem>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem
+                  className="text-sm text-destructive"
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  Delete
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="ops-card">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete User</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to delete {user.name}? This action
+                    cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => handleDelete(user.id, user.name)}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -265,120 +358,20 @@ export default function UsersPage() {
       />
 
       {/* Users Table */}
-      <Card className="ops-card border-0">
-        <Table>
-          <TableHeader>
-            <TableRow className="border-border">
-              <TableHead className="font-medium text-ops-secondary">User</TableHead>
-              <TableHead className="font-medium text-ops-secondary">Role</TableHead>
-              <TableHead className="font-medium text-ops-secondary">Status</TableHead>
-              <TableHead className="font-medium text-ops-secondary">Email Verified</TableHead>
-              <TableHead className="font-medium text-ops-secondary">Created</TableHead>
-              <TableHead className="text-right font-medium text-ops-secondary">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {users.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center">
-                  <EmptyState
-                    title="No users found"
-                    description="Create your first user to get started"
-                  />
-                </TableCell>
-              </TableRow>
-            ) : (
-              users.map((user) => (
-                <TableRow key={user.id} className="border-border">
-                  <TableCell>
-                    <div>
-                      <p className="font-medium text-sm text-ops-primary">
-                        {user.name}
-                      </p>
-                      <p className="text-xs text-ops-tertiary">
-                        {user.email}
-                      </p>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <StatusBadge
-                      status={user.role}
-                      className="h-6 text-xs bg-metric-purple-light text-metric-purple-dark! border-metric-purple-main!"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <StatusBadge status={user.status} className="h-6 text-xs" />
-                  </TableCell>
-                  <TableCell>
-                    {user.emailVerified ? (
-                      <span className="text-xs text-metric-mint-dark">
-                        {formatDate(user.emailVerified)}
-                      </span>
-                    ) : (
-                      <span className="text-xs text-ops-tertiary">Not verified</span>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-sm text-ops-secondary">
-                      {formatDate(user.createdAt)}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="ops-card">
-                        <DropdownMenuItem
-                          className="text-sm"
-                          onClick={() => handleEdit(user)}
-                        >
-                          Edit
-                        </DropdownMenuItem>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <DropdownMenuItem
-                              className="text-sm text-destructive"
-                              onSelect={(e) => e.preventDefault()}
-                            >
-                              Delete
-                            </DropdownMenuItem>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent className="ops-card">
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Delete User</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Are you sure you want to delete {user.name}? This action
-                                cannot be undone.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => handleDelete(user.id, user.name)}
-                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                              >
-                                Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-        
-        {/* Pagination */}
-        {pagination && pagination.totalPages > 1 && (
-          <TablePagination {...pagination} />
-        )}
-      </Card>
+      <DataTable
+        data={users}
+        columns={columns}
+        keyExtractor={(user) => user.id}
+        isLoading={isLoading}
+        pagination={pagination}
+        emptyState={
+          <AdminEmptyState
+            icon={Users}
+            title="No users found"
+            description="Create your first user to get started"
+          />
+        }
+      />
 
       {/* Create User Dialog */}
       <CreateUserDialog

@@ -13,18 +13,18 @@ interface StatusBadgeProps {
 
 const statusClasses: Record<string, string> = {
   // Common statuses
-  ACTIVE: "bg-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] hover:bg-[rgb(var(--success-light))]",
-  INACTIVE: "bg-[rgb(var(--neutral-100))] text-[rgb(var(--neutral-600))] hover:bg-[rgb(var(--neutral-100))]",
-  PROCESSING: "bg-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))] hover:bg-[rgb(var(--warning-light))]",
+  ACTIVE: "bg-success-light text-success-dark hover:bg-success-light",
+  INACTIVE: "bg-neutral-100 text-neutral-600 hover:bg-neutral-100",
+  PROCESSING: "bg-warning-light text-warning-dark hover:bg-warning-light",
   // Payment statuses
-  PENDING: "bg-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))] hover:bg-[rgb(var(--warning-light))]",
-  APPROVED: "bg-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] hover:bg-[rgb(var(--success-light))]",
-  REJECTED: "bg-[rgb(var(--error-light))] text-[rgb(var(--error-dark))] hover:bg-[rgb(var(--error-light))]",
-  NOT_SUBMITTED: "bg-[rgb(var(--neutral-100))] text-[rgb(var(--neutral-600))] hover:bg-[rgb(var(--neutral-100))]",
+  PENDING: "bg-warning-light text-warning-dark hover:bg-warning-light",
+  APPROVED: "bg-success-light text-success-dark hover:bg-success-light",
+  REJECTED: "bg-error-light text-error-dark hover:bg-error-light",
+  NOT_SUBMITTED: "bg-neutral-100 text-neutral-600 hover:bg-neutral-100",
 };
 
 function getStatusBadgeClasses(status: string): string {
-  return statusClasses[status.toUpperCase()] || "bg-[rgb(var(--neutral-100))] text-[rgb(var(--neutral-600))] hover:bg-[rgb(var(--neutral-100))]";
+  return statusClasses[status.toUpperCase()] || "bg-neutral-100 text-neutral-600 hover:bg-neutral-100";
 }
 
 function formatStatus(status: string): string {

@@ -140,7 +140,7 @@ export default function StudentBooksPage() {
               thumbnailAspect="book"
               fallbackIcon={BookOpen}
               badge={
-                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-white/95 backdrop-blur-sm text-foreground shadow-sm border border-white/50">
+                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-background backdrop-blur-sm text-foreground shadow-sm border border-white/50">
                   {book.totalPages ? `${book.totalPages}p` : "PDF"}
                 </span>
               }

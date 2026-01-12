@@ -316,7 +316,7 @@ export default function NewQuestionPage() {
                     </Button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] hover:bg-ops-bg-secondary transition-colors">
+                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-brand-500 hover:bg-ops-bg-secondary transition-colors">
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                       <ImageIcon className="w-8 h-8 text-ops-tertiary mb-2" />
                       <p className="text-sm text-ops-tertiary">
@@ -351,7 +351,7 @@ export default function NewQuestionPage() {
                       onClick={() => toggleCorrect(option.id)}
                       className={`mt-1 shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
                         correctIds.includes(option.id)
-                          ? "bg-[rgb(var(--success))] border-[rgb(var(--success))] text-white"
+                          ? "bg-success border-success text-white"
                           : "border-border hover:border-green-400"
                       }`}
                     >
@@ -449,7 +449,7 @@ export default function NewQuestionPage() {
                             </Button>
                           </div>
                         ) : (
-                          <label className="flex items-center justify-center w-full h-20 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-[rgb(var(--brand-500))] transition-colors">
+                          <label className="flex items-center justify-center w-full h-20 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-brand-500 transition-colors">
                             <div className="flex items-center gap-2 text-ops-tertiary">
                               <ImageIcon className="w-5 h-5" />
                               <span className="text-sm">Ajouter une image</span>

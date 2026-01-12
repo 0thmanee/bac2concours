@@ -169,13 +169,13 @@ export default function StudentSchoolDetailPage() {
                       {SCHOOL_TYPE_LABELS[school.type] || school.type}
                     </span>
                     {school.featured && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[rgb(var(--warning))] text-white">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-warning text-white">
                         <Sparkles className="h-3 w-3 mr-1" />
                         Recommandée
                       </span>
                     )}
                     {school.bourses && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[rgb(var(--success))] text-white">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-success text-white">
                         <Coins className="h-3 w-3 mr-1" />
                         Bourses disponibles
                       </span>
@@ -223,34 +223,34 @@ export default function StudentSchoolDetailPage() {
               <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {school.nombreEtudiants && (
-                    <div className="text-center p-4 rounded-xl bg-[rgb(var(--info-light))] dark:bg-[rgb(var(--info-dark))]/20 border border-[rgb(var(--info))]/30 dark:border-[rgb(var(--info-dark))]/50">
-                      <Users className="h-8 w-8 mx-auto text-[rgb(var(--info))] mb-2" />
-                      <p className="text-2xl font-bold text-[rgb(var(--info-dark))] dark:text-[rgb(var(--info))]">
+                    <div className="text-center p-4 rounded-xl bg-info-light dark:bg-info-dark/20 border border-info/30 dark:border-info-dark/50">
+                      <Users className="h-8 w-8 mx-auto text-info mb-2" />
+                      <p className="text-2xl font-bold text-info-dark dark:text-info">
                         {school.nombreEtudiants.toLocaleString()}
                       </p>
-                      <p className="text-sm text-[rgb(var(--info))] dark:text-[rgb(var(--info))]">
+                      <p className="text-sm text-info dark:text-info">
                         Étudiants
                       </p>
                     </div>
                   )}
                   {school.tauxReussite && (
-                    <div className="text-center p-4 rounded-xl bg-[rgb(var(--success-light))] dark:bg-[rgb(var(--success-dark))]/20 border border-[rgb(var(--success))]/30 dark:border-[rgb(var(--success-dark))]/50">
-                      <Award className="h-8 w-8 mx-auto text-[rgb(var(--success))] mb-2" />
-                      <p className="text-2xl font-bold text-[rgb(var(--success-dark))] dark:text-[rgb(var(--success))]">
+                    <div className="text-center p-4 rounded-xl bg-success-light dark:bg-success-dark/20 border border-success/30 dark:border-success-dark/50">
+                      <Award className="h-8 w-8 mx-auto text-success mb-2" />
+                      <p className="text-2xl font-bold text-success-dark dark:text-success">
                         {school.tauxReussite}%
                       </p>
-                      <p className="text-sm text-[rgb(var(--success))] dark:text-[rgb(var(--success))]">
+                      <p className="text-sm text-success dark:text-success">
                         Taux de réussite
                       </p>
                     </div>
                   )}
                   {school.classementNational && (
-                    <div className="text-center p-4 rounded-xl bg-[rgb(var(--brand-50))] dark:bg-[rgb(var(--brand-900))]/20 border border-[rgb(var(--brand-200))] dark:border-[rgb(var(--brand-800))]">
+                    <div className="text-center p-4 rounded-xl bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800">
                       <Star className="h-8 w-8 mx-auto text-primary mb-2" />
-                      <p className="text-2xl font-bold text-[rgb(var(--brand-700))] dark:text-[rgb(var(--brand-400))]">
+                      <p className="text-2xl font-bold text-brand-700 dark:text-brand-400">
                         #{school.classementNational}
                       </p>
-                      <p className="text-sm text-primary dark:text-[rgb(var(--brand-500))]">
+                      <p className="text-sm text-primary dark:text-brand-500">
                         Classement national
                       </p>
                     </div>
@@ -320,7 +320,7 @@ export default function StudentSchoolDetailPage() {
                 {school.specializations.map((spec) => (
                   <span
                     key={spec}
-                    className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-[rgb(var(--brand-700))] dark:from-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 dark:text-[rgb(var(--brand-400))] border border-[rgb(var(--brand-200))] dark:border-[rgb(var(--brand-800))]"
+                    className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-brand-700 dark:from-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 dark:text-brand-400 border border-brand-200 dark:border-brand-800"
                   >
                     {spec}
                   </span>
@@ -334,7 +334,7 @@ export default function StudentSchoolDetailPage() {
             <Card className="ops-card border border-border">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg font-semibold text-ops-primary flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-[rgb(var(--success))]" />
+                  <CheckCircle2 className="h-5 w-5 text-success" />
                   Avantages
                 </CardTitle>
               </CardHeader>
@@ -342,7 +342,7 @@ export default function StudentSchoolDetailPage() {
                 <ul className="space-y-2">
                   {school.avantages.map((avantage, idx) => (
                     <li key={idx} className="flex items-start gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-[rgb(var(--success))] shrink-0 mt-0.5" />
+                      <CheckCircle2 className="h-5 w-5 text-success shrink-0 mt-0.5" />
                       <span className="text-ops-secondary">{avantage}</span>
                     </li>
                   ))}
@@ -409,7 +409,7 @@ export default function StudentSchoolDetailPage() {
                 {school.partenariats.map((partner) => (
                   <span
                     key={partner}
-                    className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-[rgb(var(--brand-50))] dark:bg-[rgb(var(--brand-900))]/20 text-[rgb(var(--brand-700))] dark:text-[rgb(var(--brand-400))] border border-[rgb(var(--brand-200))] dark:border-[rgb(var(--brand-800))]"
+                    className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-400 border border-brand-200 dark:border-brand-800"
                   >
                     {partner}
                   </span>
@@ -455,9 +455,9 @@ export default function StudentSchoolDetailPage() {
                 </div>
               )}
               {school.bourses && (
-                <div className="flex items-center gap-2 py-2 px-3 rounded-lg bg-[rgb(var(--success-light))] dark:bg-[rgb(var(--success-dark))]/20 border border-[rgb(var(--success))]/30 dark:border-[rgb(var(--success-dark))]/50">
-                  <Coins className="h-5 w-5 text-[rgb(var(--success))]" />
-                  <span className="text-sm font-medium text-[rgb(var(--success-dark))] dark:text-[rgb(var(--success))]">
+                <div className="flex items-center gap-2 py-2 px-3 rounded-lg bg-success-light dark:bg-success-dark/20 border border-success/30 dark:border-success-dark/50">
+                  <Coins className="h-5 w-5 text-success" />
+                  <span className="text-sm font-medium text-success-dark dark:text-success">
                     Bourses disponibles
                   </span>
                 </div>

@@ -29,7 +29,7 @@ export default function PaymentRejectedPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-ops-background p-4">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[rgb(var(--brand-500))]" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-500" />
       </div>
     );
   }
@@ -38,8 +38,8 @@ export default function PaymentRejectedPage() {
     <div className="min-h-screen flex items-center justify-center bg-ops-background p-4">
       <Card className="ops-card max-w-md w-full">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[rgb(var(--error-light))]">
-            <XCircle className="h-8 w-8 text-[rgb(var(--error))]" />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-error-light">
+            <XCircle className="h-8 w-8 text-error" />
           </div>
           <CardTitle className="text-2xl font-bold text-ops-primary">
             Paiement non validé
@@ -51,14 +51,14 @@ export default function PaymentRejectedPage() {
         <CardContent className="space-y-6">
           {/* Rejection reason */}
           {paymentStatus?.paymentRejectionReason && (
-            <div className="rounded-lg bg-[rgb(var(--error-light))] border border-[rgb(var(--error))]/30 p-4">
+            <div className="rounded-lg bg-error-light border border-error/30 p-4">
               <div className="flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-[rgb(var(--error))] shrink-0 mt-0.5" />
+                <AlertTriangle className="h-5 w-5 text-error shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-[rgb(var(--error-dark))] mb-1">
+                  <p className="text-sm font-medium text-error-dark mb-1">
                     Raison du rejet :
                   </p>
-                  <p className="text-sm text-[rgb(var(--error-dark))]">
+                  <p className="text-sm text-error-dark">
                     {paymentStatus.paymentRejectionReason}
                   </p>
                 </div>
@@ -67,7 +67,7 @@ export default function PaymentRejectedPage() {
           )}
 
           {/* Info box */}
-          <div className="rounded-lg bg-[rgb(var(--neutral-50))] p-4">
+          <div className="rounded-lg bg-neutral-50 p-4">
             <p className="text-sm text-ops-secondary">
               Assurez-vous que votre document est lisible et contient les informations suivantes :
             </p>

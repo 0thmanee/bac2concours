@@ -95,13 +95,13 @@ export function AdminTagsInput({
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-[rgb(var(--brand-700))] border border-[rgb(var(--brand-200))]"
+                className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-brand-700 border border-brand-200"
               >
                 {tag}
                 <button
                   type="button"
                   onClick={() => removeTag(tag)}
-                  className="ml-1 hover:text-[rgb(var(--error))] transition-colors"
+                  className="ml-1 hover:text-error transition-colors"
                 >
                   <X className="h-3 w-3" />
                 </button>

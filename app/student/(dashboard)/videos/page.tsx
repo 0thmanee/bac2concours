@@ -155,7 +155,7 @@ export default function StudentVideosPage() {
                   thumbnailUrl ? (
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="w-16 h-16 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
-                        <Play className="w-8 h-8 text-[rgb(var(--brand-600))] fill-current ml-1" />
+                        <Play className="w-8 h-8 text-brand-600 fill-current ml-1" />
                       </div>
                     </div>
                   ) : undefined

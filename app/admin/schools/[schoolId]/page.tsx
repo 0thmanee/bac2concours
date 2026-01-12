@@ -106,9 +106,9 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      ACTIVE: "bg-linear-to-r from-[rgb(var(--success-light))] to-[rgb(var(--success-light))] text-[rgb(var(--success-dark))] border-[rgb(var(--success-light))]",
-      INACTIVE: "bg-linear-to-r from-[rgb(var(--neutral-100))] to-[rgb(var(--neutral-100))] text-[rgb(var(--neutral-600))] border-[rgb(var(--neutral-200))]",
-      DRAFT: "bg-linear-to-r from-[rgb(var(--warning-light))] to-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))] border-[rgb(var(--warning))]",
+      ACTIVE: "bg-linear-to-r from-[rgb(var(--success-light))] to-[rgb(var(--success-light))] text-success-dark border-success-light",
+      INACTIVE: "bg-linear-to-r from-[rgb(var(--neutral-100))] to-[rgb(var(--neutral-100))] text-neutral-600 border-neutral-200",
+      DRAFT: "bg-linear-to-r from-[rgb(var(--warning-light))] to-[rgb(var(--warning-light))] text-warning-dark border-warning",
     };
     const labels: Record<string, string> = {
       ACTIVE: "Actif",
@@ -133,12 +133,12 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
           <>
             {getStatusBadge(school.status)}
             {school.isPublic && (
-              <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-[rgb(var(--brand-700))] border border-[rgb(var(--brand-200))]">
+              <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-brand-700 border border-brand-200">
                 Public
               </span>
             )}
             {school.featured && (
-              <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--warning-light))] to-[rgb(var(--warning-light))] text-[rgb(var(--warning-dark))] border border-[rgb(var(--warning))]">
+              <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--warning-light))] to-[rgb(var(--warning-light))] text-warning-dark border border-warning">
                 <Star className="h-3 w-3 mr-1 fill-current" />
                 À la une
               </span>
@@ -294,7 +294,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
                   <p className="text-base text-ops-primary mt-1 flex items-center gap-1">
                     {school.bourses ? (
                       <>
-                        <CheckCircle2 className="h-4 w-4 text-[rgb(var(--success))]" />
+                        <CheckCircle2 className="h-4 w-4 text-success" />
                         Oui
                       </>
                     ) : (
@@ -329,7 +329,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   {school.specializations.map((spec, index) => (
-                    <span key={index} className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-[rgb(var(--brand-700))] border border-[rgb(var(--brand-200))]">
+                    <span key={index} className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-brand-700 border border-brand-200">
                       {spec}
                     </span>
                   ))}
@@ -351,7 +351,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
                 <ul className="space-y-2">
                   {school.avantages.map((adv, index) => (
                     <li key={index} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[rgb(var(--success))] mt-0.5 shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-success mt-0.5 shrink-0" />
                       <span className="text-sm text-ops-primary">{adv}</span>
                     </li>
                   ))}
@@ -433,7 +433,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
               {school.email && (
                 <div className="flex items-center gap-3">
                   <Mail className="h-4 w-4 text-ops-tertiary" />
-                  <a href={`mailto:${school.email}`} className="text-sm text-[rgb(var(--brand-600))] hover:underline">
+                  <a href={`mailto:${school.email}`} className="text-sm text-brand-600 hover:underline">
                     {school.email}
                   </a>
                 </div>
@@ -441,7 +441,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
               {school.website && (
                 <div className="flex items-center gap-3">
                   <Globe className="h-4 w-4 text-ops-tertiary" />
-                  <a href={school.website} target="_blank" rel="noopener noreferrer" className="text-sm text-[rgb(var(--brand-600))] hover:underline truncate">
+                  <a href={school.website} target="_blank" rel="noopener noreferrer" className="text-sm text-brand-600 hover:underline truncate">
                     {school.website.replace(/^https?:\/\//, "")}
                   </a>
                 </div>

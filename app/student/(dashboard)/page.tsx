@@ -117,14 +117,14 @@ export default async function StudentDashboard() {
                   <Link
                     key={book.id}
                     href={STUDENT_ROUTES.BOOK(book.id)}
-                    className="flex items-center justify-between rounded-lg border border-border bg-ops-card-secondary p-3 transition-colors hover:bg-ops-hover"
+                    className="flex flex-wrap items-center gap-2 justify-between rounded-lg border border-border bg-ops-card-secondary p-3 transition-colors hover:bg-ops-hover"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center flex-wrap gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-metric-blue-light">
                         <BookOpen className="h-5 w-5 text-metric-blue" />
                       </div>
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-medium">{book.title}</p>
+                      <div>
+                        <p className="unknowntext-sm font-medium">{book.title}</p>
                         <p className="text-xs text-ops-secondary">{book.author}</p>
                       </div>
                     </div>
@@ -161,14 +161,14 @@ export default async function StudentDashboard() {
                   <Link
                     key={video.id}
                     href={STUDENT_ROUTES.VIDEO(video.id)}
-                    className="flex items-center justify-between rounded-lg border border-border bg-ops-card-secondary p-3 transition-colors hover:bg-ops-hover"
+                    className="flex flex-wrap items-center gap-2 justify-between rounded-lg border border-border bg-ops-card-secondary p-3 transition-colors hover:bg-ops-hover"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center flex-wrap gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-metric-orange-light">
                         <Video className="h-5 w-5 text-metric-orange" />
                       </div>
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-medium">{video.title}</p>
+                        <p className="unknowntext-sm font-medium">{video.title}</p>
                         <p className="text-xs text-ops-secondary">
                           {video.duration ? `${Math.floor(video.duration / 60)} min` : "Vidéo"}
                         </p>

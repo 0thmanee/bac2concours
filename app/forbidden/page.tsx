@@ -8,8 +8,8 @@ export default function ForbiddenPage() {
     <div className="flex min-h-screen items-center justify-center p-4">
       <div className="w-full max-w-md text-center space-y-6">
         <div className="flex justify-center">
-          <div className="rounded-full bg-[rgb(var(--error-light))] p-4">
-            <ShieldAlert className="h-16 w-16 text-[rgb(var(--error))]" />
+          <div className="rounded-full bg-error-light p-4">
+            <ShieldAlert className="h-16 w-16 text-error" />
           </div>
         </div>
         

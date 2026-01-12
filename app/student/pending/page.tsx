@@ -34,8 +34,8 @@ export default async function PendingPage() {
     <div className="min-h-screen flex items-center justify-center bg-ops-background p-4">
       <Card className="ops-card max-w-md w-full">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[rgb(var(--metric-orange-light))]">
-            <Clock className="h-8 w-8 text-[rgb(var(--metric-orange-main))]" />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-metric-orange-light">
+            <Clock className="h-8 w-8 text-metric-orange" />
           </div>
           <CardTitle className="text-2xl font-bold text-ops-primary">
             Compte en attente d&apos;activation
@@ -47,7 +47,7 @@ export default async function PendingPage() {
         <CardContent className="space-y-6">
           <div className="space-y-4">
             <div className="flex items-start gap-3">
-              <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[rgb(var(--neutral-100))]">
+              <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-100">
                 <UserCheck className="h-4 w-4 text-ops-secondary" />
               </div>
               <div>
@@ -61,7 +61,7 @@ export default async function PendingPage() {
             </div>
 
             <div className="flex items-start gap-3">
-              <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[rgb(var(--neutral-100))]">
+              <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-100">
                 <Mail className="h-4 w-4 text-ops-secondary" />
               </div>
               <div>
@@ -76,7 +76,7 @@ export default async function PendingPage() {
           </div>
 
           <div className="pt-4 border-t border-border">
-            <div className="rounded-lg bg-[rgb(var(--neutral-50))] p-4">
+            <div className="rounded-lg bg-neutral-50 p-4">
               <p className="text-sm text-ops-secondary text-center">
                 <span className="font-medium text-ops-primary">
                   {user.name}

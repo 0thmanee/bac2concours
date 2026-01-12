@@ -98,7 +98,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
         badges={
           <>
             {getStatusBadge(book.status)}
-            {book.isPublic && <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-[rgb(var(--brand-700))] border border-[rgb(var(--brand-200))]">Public</span>}
+            {book.isPublic && <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-brand-700 border border-brand-200">Public</span>}
           </>
         }
         subtitle={
@@ -232,7 +232,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   {book.tags.map((tag) => (
-                    <span key={tag} className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-[rgb(var(--brand-700))] border border-[rgb(var(--brand-200))]">
+                    <span key={tag} className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-brand-700 border border-brand-200">
                       {tag}
                     </span>
                   ))}

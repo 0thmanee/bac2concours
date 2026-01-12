@@ -96,8 +96,8 @@ export default function StudentSidebar() {
                       className={cn(
                         "h-9 px-3 text-sm font-medium",
                         isActive 
-                          ? "bg-[rgb(var(--ops-action-primary))] text-white"
-                          : "text-[rgb(var(--ops-text-secondary))]"
+                          ? "bg-primary text-white"
+                          : "text-muted-foreground"
                       )}
                     >
                       <Link href={item.href} className="flex items-center gap-3">

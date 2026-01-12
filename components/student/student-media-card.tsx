@@ -48,7 +48,7 @@ export function StudentMediaCard({
   return (
     <div
       onClick={onClick}
-      className="ops-card border border-border group h-full flex flex-col overflow-hidden transition-all duration-300 hover:border-[rgb(var(--brand-400))] dark:hover:border-[rgb(var(--brand-600))] cursor-pointer"
+      className="ops-card border border-border group h-full flex flex-col overflow-hidden transition-all duration-300 hover:border-brand-400 dark:hover:border-brand-600 cursor-pointer"
     >
       <div className="relative flex-1 flex flex-col p-4 sm:p-5">
         {/* Thumbnail */}
@@ -68,8 +68,8 @@ export function StudentMediaCard({
             </>
           ) : (
             <div className="relative">
-              <div className="absolute inset-0 bg-[rgb(var(--brand-500))]/10 blur-3xl" />
-              <FallbackIcon className="relative w-16 h-16 sm:w-20 sm:h-20 text-[rgb(var(--brand-500))] dark:text-[rgb(var(--brand-400))]" />
+              <div className="absolute inset-0 bg-brand-500/10 blur-3xl" />
+              <FallbackIcon className="relative w-16 h-16 sm:w-20 sm:h-20 text-brand-500 dark:text-brand-400" />
             </div>
           )}
           {badge && (
@@ -81,7 +81,7 @@ export function StudentMediaCard({
         <div className="flex-1 flex flex-col justify-between space-y-4">
           <div className="space-y-3">
             <div>
-              <h3 className="line-clamp-2 mb-1.5 font-semibold text-foreground text-base sm:text-lg group-hover:text-[rgb(var(--brand-600))] dark:group-hover:text-[rgb(var(--brand-400))] transition-colors">
+              <h3 className="line-clamp-2 mb-1.5 font-semibold text-foreground text-base sm:text-lg group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
                 {title}
               </h3>
               {subtitle && (
