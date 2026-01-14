@@ -81,7 +81,7 @@ export function AdminTagsInput({
             onClick={addTag}
             variant="outline"
             size="sm"
-            className="ops-btn-secondary h-9"
+            className="h-9"
           >
             <Plus className="h-4 w-4" />
           </Button>

@@ -66,7 +66,7 @@ export default function StudentVideoDetailPage() {
         <p className="text-ops-secondary">
           Cette vidéo n&apos;existe pas ou a été supprimée.
         </p>
-        <Button asChild variant="outline" className="ops-btn-secondary">
+        <Button asChild variant="outline" className="">
           <Link href={STUDENT_ROUTES.VIDEOS}>Retour aux vidéos</Link>
         </Button>
       </div>

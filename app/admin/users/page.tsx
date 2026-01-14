@@ -529,7 +529,7 @@ function CreateUserDialog({
                 reset();
                 onOpenChange(false);
               }}
-              className="ops-btn-secondary h-9"
+              className="h-9"
             >
               Cancel
             </Button>
@@ -686,7 +686,7 @@ function EditUserDialog({
                 reset();
                 onOpenChange(false);
               }}
-              className="ops-btn-secondary h-9"
+              className="h-9"
             >
               Cancel
             </Button>

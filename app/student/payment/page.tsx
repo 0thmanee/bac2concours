@@ -134,14 +134,14 @@ export default function PaymentPage() {
             <div className="flex gap-2">
               <Button
                 variant="outline"
-                className="ops-btn-secondary flex-1"
+                className="flex-1"
                 onClick={() => router.refresh()}
               >
                 Actualiser
               </Button>
               <Button
                 variant="ghost"
-                className="ops-btn-secondary flex-1"
+                className="flex-1"
                 asChild
               >
                 <Link href={API_ROUTES.AUTH_SIGNOUT}>
@@ -251,7 +251,7 @@ export default function PaymentPage() {
           </div>
 
           {/* Info box */}
-          <div className="rounded-lg bg-neutral-50 p-4">
+          <div className="rounded-lg border border-border p-4">
             <div className="flex items-start gap-3">
               <AlertCircle className="h-5 w-5 text-brand-500 shrink-0 mt-0.5" />
               <div className="text-sm text-ops-secondary">

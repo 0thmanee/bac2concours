@@ -76,9 +76,9 @@ export default function LoginPage() {
                 size="sm"
                 onClick={handleResendVerification}
                 disabled={resendVerificationMutation.isPending}
-                className="ops-btn-secondary mt-2"
+                className="mt-2"
               >
-                <Mail className="mr-2 h-4 w-4" />
+                <Mail className="mr-2 h-4 w-4 text-foreground" />
                 {resendVerificationMutation.isPending ? 'Envoi...' : 'Renvoyer le lien'}
               </Button>
             </div>

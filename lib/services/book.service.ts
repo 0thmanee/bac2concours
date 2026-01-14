@@ -48,7 +48,7 @@ export const bookService = {
     if (category) where.category = category;
     if (school) where.school = school;
     if (level) where.level = level;
-    if (subject) where.subject = subject;
+    if (subject) where.subjects = { has: subject }; // Filter by subjects array
     if (status) where.status = status;
     if (typeof isPublic === "boolean") where.isPublic = isPublic;
     if (tags && tags.length > 0) {
@@ -72,7 +72,7 @@ export const bookService = {
         fileSize: true,
         totalPages: true,
         level: true,
-        subject: true,
+        subjects: true,
         tags: true,
         downloads: true,
         views: true,
@@ -279,7 +279,7 @@ export const bookService = {
    * Get unique values for filters
    */
   async getFilterOptions(): Promise<BookFilterOptions> {
-    const [categories, schools, levels, subjects] = await Promise.all([
+    const [categories, schools, levels, booksWithSubjects] = await Promise.all([
       prisma.book.findMany({
         select: { category: true },
         distinct: ["category"],
@@ -296,35 +296,37 @@ export const bookService = {
         orderBy: { level: "asc" },
       }),
       prisma.book.findMany({
-        select: { subject: true },
-        distinct: ["subject"],
-        orderBy: { subject: "asc" },
+        select: { subjects: true },
       }),
     ]);
+
+    // Flatten subjects arrays and get unique values
+    const allSubjects = booksWithSubjects.flatMap((b) => b.subjects || []);
+    const uniqueSubjects = Array.from(new Set(allSubjects)).sort();
 
     return {
       categories: categories.map((c) => c.category),
       schools: schools.map((s) => s.school),
       levels: levels.map((l) => l.level),
-      subjects: subjects.map((s) => s.subject),
+      subjects: uniqueSubjects,
     };
   },
 
   /**
-   * Get related books (same category or level, excluding current book)
+   * Get related books (same category, level, or subjects, excluding current book)
    */
   async findRelated(bookId: string, limit: number = 5) {
-    // First get the current book to know its category and level
+    // First get the current book to know its category, level and subjects
     const currentBook = await prisma.book.findUnique({
       where: { id: bookId },
-      select: { category: true, level: true, subject: true },
+      select: { category: true, level: true, subjects: true },
     });
 
     if (!currentBook) {
       return [];
     }
 
-    // Find books with same category, level, or subject (excluding current book)
+    // Find books with same category, level, or subjects (excluding current book)
     return prisma.book.findMany({
       where: {
         id: { not: bookId },
@@ -333,7 +335,9 @@ export const bookService = {
         OR: [
           { category: currentBook.category },
           { level: currentBook.level },
-          ...(currentBook.subject ? [{ subject: currentBook.subject }] : []),
+          ...(currentBook.subjects && currentBook.subjects.length > 0
+            ? [{ subjects: { hasSome: currentBook.subjects } }]
+            : []),
         ],
       },
       select: {

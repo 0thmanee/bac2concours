@@ -621,7 +621,7 @@ export default function EditQuestionPage({ params }: PageProps) {
                     variant="outline"
                     size="sm"
                     onClick={addOption}
-                    className="w-full ops-btn-secondary"
+                    className="w-full "
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Ajouter une Option

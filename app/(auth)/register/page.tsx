@@ -88,9 +88,9 @@ export default function RegisterPage() {
             variant="outline"
             onClick={handleResendVerification}
             disabled={resendVerificationMutation.isPending}
-            className="ops-btn-secondary w-full h-10"
+            className="w-full h-10"
           >
-            <Mail className="h-4 w-4 mr-2" />
+            <Mail className="h-4 w-4 mr-2 text-foreground" />
             {resendVerificationMutation.isPending ? 'Envoi...' : 'Renvoyer l\'email'}
           </Button>
         </div>

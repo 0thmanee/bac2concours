@@ -88,7 +88,7 @@ export default function StudentSchoolDetailPage() {
         <p className="text-ops-secondary">
           Cette école n&apos;existe pas ou a été supprimée.
         </p>
-        <Button asChild variant="outline" className="ops-btn-secondary">
+        <Button asChild variant="outline" className="">
           <Link href={STUDENT_ROUTES.SCHOOLS}>Retour aux écoles</Link>
         </Button>
       </div>

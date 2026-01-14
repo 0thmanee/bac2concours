@@ -10,8 +10,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { X, Upload, Loader2 } from "lucide-react";
 import { useBook, useUpdateBook } from "@/lib/hooks/use-books";
-import { useDropdownOptions } from "@/lib/hooks/use-settings-resources";
-import { useSchoolsForDropdown } from "@/lib/hooks/use-schools";
 import { useUploadFile, useDeleteFile } from "@/lib/hooks/use-files";
 import { updateBookSchema, type UpdateBookInput } from "@/lib/validations/book.validation";
 import {
@@ -49,8 +47,6 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
   const updateMutation = useUpdateBook(bookId);
   const uploadFileMutation = useUploadFile();
   const deleteFileMutation = useDeleteFile();
-  const { data: dropdownData, isLoading: isLoadingDropdowns } = useDropdownOptions();
-  const { data: schoolsData, isLoading: isLoadingSchools } = useSchoolsForDropdown();
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [existingCoverId, setExistingCoverId] = useState<string | null>(null);
@@ -76,7 +72,7 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
         author: book.author || "",
         school: book.school || "",
         category: book.category || "",
-        subject: book.subject || "",
+        subjects: book.subjects || [],
         level: book.level || "",
         description: book.description || "",
         coverFileId: book.coverFileId || null,
@@ -89,7 +85,7 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
         status: book.status || BookStatus.ACTIVE,
         isPublic: book.isPublic ?? true,
       });
-      
+
       // Set existing cover preview if available
       if (book.coverFile?.publicUrl) {
         setCoverPreview(book.coverFile.publicUrl);
@@ -100,6 +96,7 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
   }, [book?.id, isLoading]);
 
   const watchedTags = (watch("tags") as string[]) || [];
+  const watchedSubjects = (watch("subjects") as string[]) || [];
   const watchedStatus = watch("status") || BookStatus.ACTIVE;
   const watchedIsPublic = watch("isPublic") ?? true;
 
@@ -123,12 +120,9 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
   };
 
   const onSubmit = async (data: UpdateBookInput) => {
-    try {
-      // Clean NaN values
-      if (Number.isNaN(data.totalPages)) {
-        data.totalPages = undefined;
-      }
+    let newUploadedCoverId: string | undefined;
 
+    try {
       // Handle cover changes
       if (coverFile) {
         // New file uploaded - delete old one if exists
@@ -147,6 +141,7 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
           folder: "book-covers",
         });
         data.coverFileId = uploadResult.data.id;
+        newUploadedCoverId = uploadResult.data.id;
       } else if (!existingCoverId && book?.coverFileId) {
         // Cover was removed (existingCoverId is null but book had one)
         try {
@@ -161,6 +156,15 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
       toast.success(MESSAGES.SUCCESS.BOOK_UPDATED);
       router.push(ADMIN_ROUTES.BOOK(bookId));
     } catch (error) {
+      // Clean up newly uploaded cover if update failed
+      if (newUploadedCoverId) {
+        try {
+          await deleteFileMutation.mutateAsync(newUploadedCoverId);
+        } catch (cleanupError) {
+          console.error("Failed to clean up uploaded cover:", cleanupError);
+        }
+      }
+
       toast.error(getErrorMessage(error));
     }
   };
@@ -178,11 +182,6 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
       />
     );
   }
-
-  const categories = dropdownData?.data?.categories || [];
-  const levels = dropdownData?.data?.levels || [];
-  const matieres = dropdownData?.data?.matieres || [];
-  const schools = schoolsData?.data?.schools?.map(s => s.name) || [];
 
   return (
     <div className="space-y-6">
@@ -263,22 +262,12 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
                   <Label htmlFor="school" className="text-sm font-medium">
                     École/Filière
                   </Label>
-                  <Select
-                    value={watch("school") || ""}
-                    onValueChange={(value) => setValue("school", value, { shouldValidate: true })}
-                    disabled={isLoadingSchools}
-                  >
-                    <SelectTrigger id="school" className="ops-input h-9">
-                      <SelectValue placeholder={isLoadingSchools ? "Chargement..." : "Sélectionner une filière"} />
-                    </SelectTrigger>
-                    <SelectContent className="ops-card">
-                      {schools.map((school) => (
-                        <SelectItem key={school} value={school}>
-                          {school}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    id="school"
+                    {...register("school")}
+                    placeholder="ex: Sciences Mathématiques A"
+                    className="ops-input h-9"
+                  />
                   {errors.school && (
                     <p className="text-xs text-destructive">{errors.school.message as string}</p>
                   )}
@@ -288,22 +277,12 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
                   <Label htmlFor="level" className="text-sm font-medium">
                     Niveau
                   </Label>
-                  <Select
-                    value={watch("level") || ""}
-                    onValueChange={(value) => setValue("level", value, { shouldValidate: true })}
-                    disabled={isLoadingDropdowns}
-                  >
-                    <SelectTrigger id="level" className="ops-input h-9">
-                      <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner un niveau"} />
-                    </SelectTrigger>
-                    <SelectContent className="ops-card">
-                      {levels.map((level) => (
-                        <SelectItem key={level.value} value={level.value}>
-                          {level.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    id="level"
+                    {...register("level")}
+                    placeholder="ex: Terminale"
+                    className="ops-input h-9"
+                  />
                   {errors.level && (
                     <p className="text-xs text-destructive">{errors.level.message as string}</p>
                   )}
@@ -313,74 +292,51 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
                   <Label htmlFor="category" className="text-sm font-medium">
                     Catégorie
                   </Label>
-                  <Select
-                    value={watch("category") || ""}
-                    onValueChange={(value) => setValue("category", value, { shouldValidate: true })}
-                    disabled={isLoadingDropdowns}
-                  >
-                    <SelectTrigger id="category" className="ops-input h-9">
-                      <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner une catégorie"} />
-                    </SelectTrigger>
-                    <SelectContent className="ops-card">
-                      {categories.map((category) => (
-                        <SelectItem key={category.value} value={category.value}>
-                          {category.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    id="category"
+                    {...register("category")}
+                    placeholder="ex: Mathématiques"
+                    className="ops-input h-9"
+                  />
                   {errors.category && (
                     <p className="text-xs text-destructive">{errors.category.message as string}</p>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="subject" className="text-sm font-medium">
-                    Matière
+                  <Label htmlFor="language" className="text-sm font-medium">
+                    Langue
                   </Label>
                   <Select
-                    value={watch("subject") || ""}
-                    onValueChange={(value) => setValue("subject", value, { shouldValidate: true })}
-                    disabled={isLoadingDropdowns}
+                    value={watch("language") || "fr"}
+                    onValueChange={(value) => setValue("language", value, { shouldValidate: true })}
                   >
-                    <SelectTrigger id="subject" className="ops-input h-9">
-                      <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner une matière"} />
+                    <SelectTrigger id="language" className="ops-input h-9">
+                      <SelectValue placeholder="Sélectionner une langue" />
                     </SelectTrigger>
                     <SelectContent className="ops-card">
-                      {matieres.map((matiere) => (
-                        <SelectItem key={matiere.value} value={matiere.value}>
-                          {matiere.label}
-                        </SelectItem>
-                      ))}
+                      <SelectItem value="fr">Français</SelectItem>
+                      <SelectItem value="ar">Arabe</SelectItem>
+                      <SelectItem value="en">Anglais</SelectItem>
                     </SelectContent>
                   </Select>
-                  {errors.subject && (
-                    <p className="text-xs text-destructive">{errors.subject.message as string}</p>
+                  {errors.language && (
+                    <p className="text-xs text-destructive">{errors.language.message as string}</p>
                   )}
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="language" className="text-sm font-medium">
-                  Langue
-                </Label>
-                <Select
-                  value={watch("language") || "fr"}
-                  onValueChange={(value) => setValue("language", value, { shouldValidate: true })}
-                >
-                  <SelectTrigger id="language" className="ops-input h-9">
-                    <SelectValue placeholder="Sélectionner une langue" />
-                  </SelectTrigger>
-                  <SelectContent className="ops-card">
-                    <SelectItem value="fr">Français</SelectItem>
-                    <SelectItem value="ar">Arabe</SelectItem>
-                    <SelectItem value="en">Anglais</SelectItem>
-                  </SelectContent>
-                </Select>
-                {errors.language && (
-                  <p className="text-xs text-destructive">{errors.language.message as string}</p>
-                )}
-              </div>
+              <AdminTagsInput
+                tags={watchedSubjects}
+                onChange={(tags: string[]) => setValue("subjects", tags, { shouldValidate: true })}
+                cardTitle="Matières"
+                cardDescription="Ajoutez une ou plusieurs matières couvertes par ce livre"
+                placeholder="Ajouter une matière (ex: Mathématiques, Physique)"
+                withCard={false}
+              />
+              {errors.subjects && (
+                <p className="text-xs text-destructive">{errors.subjects.message as string}</p>
+              )}
             </AdminFormCard>
 
             {/* File Information */}
@@ -509,7 +465,9 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
                   id="totalPages"
                   type="number"
                   min="1"
-                  {...register("totalPages", { valueAsNumber: true })}
+                  {...register("totalPages", {
+                    setValueAs: (v) => v === "" || v === null ? undefined : parseInt(v, 10)
+                  })}
                   placeholder="456"
                   className="ops-input h-9"
                 />

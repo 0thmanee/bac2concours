@@ -10,9 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, X, Upload } from "lucide-react";
 import { useCreateBook } from "@/lib/hooks/use-books";
-import { useDropdownOptions } from "@/lib/hooks/use-settings-resources";
-import { useSchoolsForDropdown } from "@/lib/hooks/use-schools";
-import { useUploadFile } from "@/lib/hooks/use-files";
+import { useUploadFile, useDeleteFile } from "@/lib/hooks/use-files";
 import { createBookSchema, type CreateBookInput } from "@/lib/validations/book.validation";
 import {
   Select,
@@ -45,8 +43,7 @@ export default function NewBookPage() {
   const router = useRouter();
   const createMutation = useCreateBook();
   const uploadFileMutation = useUploadFile();
-  const { data: dropdownData, isLoading: isLoadingDropdowns } = useDropdownOptions();
-  const { data: schoolsData, isLoading: isLoadingSchools } = useSchoolsForDropdown();
+  const deleteFileMutation = useDeleteFile();
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
 
@@ -63,11 +60,13 @@ export default function NewBookPage() {
       status: BookStatus.ACTIVE,
       isPublic: true,
       tags: [],
+      subjects: [],
       totalPages: 0,
     },
   });
 
   const watchedTags = (watch("tags") as string[]) || [];
+  const watchedSubjects = (watch("subjects") as string[]) || [];
   const watchedStatus = watch("status") || BookStatus.ACTIVE;
   const watchedIsPublic = watch("isPublic") ?? true;
 
@@ -90,12 +89,9 @@ export default function NewBookPage() {
   };
 
   const onSubmit = async (data: CreateBookInput) => {
-    try {
-      // Clean NaN values
-      if (Number.isNaN(data.totalPages)) {
-        data.totalPages = 0;
-      }
+    let uploadedCoverId: string | undefined;
 
+    try {
       // Upload cover if provided
       if (coverFile) {
         const uploadResult = await uploadFileMutation.mutateAsync({
@@ -104,20 +100,25 @@ export default function NewBookPage() {
           folder: "book-covers",
         });
         data.coverFileId = uploadResult.data.id;
+        uploadedCoverId = uploadResult.data.id;
       }
 
       await createMutation.mutateAsync(data);
       toast.success(MESSAGES.SUCCESS.BOOK_CREATED || "Livre créé avec succès");
       router.push(ADMIN_ROUTES.BOOKS);
     } catch (error) {
+      // Clean up uploaded cover if book creation failed
+      if (uploadedCoverId) {
+        try {
+          await deleteFileMutation.mutateAsync(uploadedCoverId);
+        } catch (cleanupError) {
+          console.error("Failed to clean up uploaded cover:", cleanupError);
+        }
+      }
+
       toast.error(getErrorMessage(error));
     }
   };
-
-  const categories = dropdownData?.data?.categories || [];
-  const levels = dropdownData?.data?.levels || [];
-  const matieres = dropdownData?.data?.matieres || [];
-  const schools = schoolsData?.data?.schools?.map(s => s.name) || [];
 
   return (
     <div className="space-y-6">
@@ -196,20 +197,14 @@ export default function NewBookPage() {
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="school" className="text-sm font-medium">
-                    École/Filière
+                    École/Filière <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("school", value, { shouldValidate: true })} disabled={isLoadingSchools}>
-                    <SelectTrigger id="school" className="ops-input h-9">
-                      <SelectValue placeholder={isLoadingSchools ? "Chargement..." : "Sélectionner une filière"} />
-                    </SelectTrigger>
-                    <SelectContent className="ops-card">
-                      {schools.map((school) => (
-                        <SelectItem key={school} value={school}>
-                          {school}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    id="school"
+                    {...register("school")}
+                    placeholder="ex: Sciences Mathématiques A"
+                    className="ops-input h-9"
+                  />
                   {errors.school && (
                     <p className="text-xs text-destructive">{errors.school.message}</p>
                   )}
@@ -217,20 +212,14 @@ export default function NewBookPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="level" className="text-sm font-medium">
-                    Niveau
+                    Niveau <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("level", value, { shouldValidate: true })} disabled={isLoadingDropdowns}>
-                    <SelectTrigger id="level" className="ops-input h-9">
-                      <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner un niveau"} />
-                    </SelectTrigger>
-                    <SelectContent className="ops-card">
-                      {levels.map((level) => (
-                        <SelectItem key={level.value} value={level.value}>
-                          {level.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    id="level"
+                    {...register("level")}
+                    placeholder="ex: Terminale"
+                    className="ops-input h-9"
+                  />
                   {errors.level && (
                     <p className="text-xs text-destructive">{errors.level.message}</p>
                   )}
@@ -238,68 +227,53 @@ export default function NewBookPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="category" className="text-sm font-medium">
-                    Catégorie
+                    Catégorie <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("category", value, { shouldValidate: true })} disabled={isLoadingDropdowns}>
-                    <SelectTrigger id="category" className="ops-input h-9">
-                      <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner une catégorie"} />
-                    </SelectTrigger>
-                    <SelectContent className="ops-card">
-                      {categories.map((category) => (
-                        <SelectItem key={category.value} value={category.value}>
-                          {category.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    id="category"
+                    {...register("category")}
+                    placeholder="ex: Mathématiques"
+                    className="ops-input h-9"
+                  />
                   {errors.category && (
                     <p className="text-xs text-destructive">{errors.category.message}</p>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="subject" className="text-sm font-medium">
-                    Matière
+                  <Label htmlFor="language" className="text-sm font-medium">
+                    Langue
                   </Label>
-                  <Select onValueChange={(value) => setValue("subject", value, { shouldValidate: true })} disabled={isLoadingDropdowns}>
-                    <SelectTrigger id="subject" className="ops-input h-9">
-                      <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner une matière"} />
+                  <Select
+                    defaultValue="fr"
+                    onValueChange={(value) => setValue("language", value, { shouldValidate: true })}
+                  >
+                    <SelectTrigger id="language" className="ops-input h-9">
+                      <SelectValue placeholder="Sélectionner une langue" />
                     </SelectTrigger>
                     <SelectContent className="ops-card">
-                      {matieres.map((matiere) => (
-                        <SelectItem key={matiere.value} value={matiere.value}>
-                          {matiere.label}
-                        </SelectItem>
-                      ))}
+                      <SelectItem value="fr">Français</SelectItem>
+                      <SelectItem value="ar">Arabe</SelectItem>
+                      <SelectItem value="en">Anglais</SelectItem>
                     </SelectContent>
                   </Select>
-                  {errors.subject && (
-                    <p className="text-xs text-destructive">{errors.subject.message}</p>
+                  {errors.language && (
+                    <p className="text-xs text-destructive">{errors.language.message}</p>
                   )}
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="language" className="text-sm font-medium">
-                  Langue
-                </Label>
-                <Select
-                  defaultValue="fr"
-                  onValueChange={(value) => setValue("language", value, { shouldValidate: true })}
-                >
-                  <SelectTrigger id="language" className="ops-input h-9">
-                    <SelectValue placeholder="Sélectionner une langue" />
-                  </SelectTrigger>
-                  <SelectContent className="ops-card">
-                    <SelectItem value="fr">Français</SelectItem>
-                    <SelectItem value="ar">Arabe</SelectItem>
-                    <SelectItem value="en">Anglais</SelectItem>
-                  </SelectContent>
-                </Select>
-                {errors.language && (
-                  <p className="text-xs text-destructive">{errors.language.message}</p>
-                )}
-              </div>
+              <AdminTagsInput
+                tags={watchedSubjects}
+                onChange={(tags: string[]) => setValue("subjects", tags, { shouldValidate: true })}
+                cardTitle="Matières"
+                cardDescription="Ajoutez une ou plusieurs matières couvertes par ce livre"
+                placeholder="Ajouter une matière (ex: Mathématiques, Physique)"
+                withCard={false}
+              />
+              {errors.subjects && (
+                <p className="text-xs text-destructive">{errors.subjects.message as string}</p>
+              )}
             </AdminFormCard>
 
             {/* File Information */}
@@ -389,7 +363,7 @@ export default function NewBookPage() {
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="fileName" className="text-sm font-medium">
-                    Nom du Fichier <span className="text-xs text-ops-tertiary">(Optionnel)</span>
+                    Nom du Fichier <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="fileName"
@@ -404,7 +378,7 @@ export default function NewBookPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="fileSize" className="text-sm font-medium">
-                    Taille du Fichier <span className="text-xs text-ops-tertiary">(Optionnel)</span>
+                    Taille du Fichier <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="fileSize"
@@ -426,7 +400,9 @@ export default function NewBookPage() {
                   id="totalPages"
                   type="number"
                   min="1"
-                  {...register("totalPages", { valueAsNumber: true })}
+                  {...register("totalPages", {
+                    setValueAs: (v) => v === "" || v === null ? undefined : parseInt(v, 10)
+                  })}
                   placeholder="456"
                   className="ops-input h-9"
                 />

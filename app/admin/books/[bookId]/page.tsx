@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Trash2, Eye, FileText, BookOpen, User, School, Calendar } from "lucide-react";
+import { Edit, Trash2, Eye, FileText, BookOpen, User, School, Calendar, Download } from "lucide-react";
 import { MetricCard } from "@/components/ui/metric-card";
 import { useBook, useDeleteBook, useIncrementBookCounter } from "@/lib/hooks/use-books";
 import { toast } from "sonner";
@@ -110,7 +110,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
         description={book.description || undefined}
         actions={
           <>
-            <Button asChild variant="outline" className="ops-btn-secondary h-9 gap-2">
+            <Button asChild variant="outline" className="h-9 gap-2">
               <Link href={ADMIN_ROUTES.BOOK_EDIT(bookId)}>
                 <Edit className="h-4 w-4" />
                 Modifier
@@ -118,7 +118,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
             </Button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="outline" className="ops-btn-secondary h-9 gap-2 text-destructive hover:text-destructive">
+                <Button variant="outline" className="h-9 gap-2 text-destructive hover:text-destructive">
                   <Trash2 className="h-4 w-4" />
                   Supprimer
                 </Button>
@@ -149,6 +149,12 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
           value={book.views?.toLocaleString() || "0"}
           icon={Eye}
           color="blue"
+        />
+        <MetricCard
+          title="Téléchargements"
+          value={book.downloads?.toLocaleString() || "0"}
+          icon={Download}
+          color="mint"
         />
         <MetricCard
           title="Pages"
@@ -196,9 +202,22 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
                   <p className="text-sm font-medium text-ops-tertiary">Catégorie</p>
                   <p className="text-base text-ops-primary mt-1">{book.category}</p>
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-ops-tertiary">Matière</p>
-                  <p className="text-base text-ops-primary mt-1">{book.subject}</p>
+                <div className="col-span-2">
+                  <p className="text-sm font-medium text-ops-tertiary">Matières</p>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {book.subjects && book.subjects.length > 0 ? (
+                      book.subjects.map((subject, index) => (
+                        <span
+                          key={index}
+                          className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-brand-700 dark:from-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 dark:text-brand-400 border border-brand-200 dark:border-brand-800"
+                        >
+                          {subject}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-sm text-ops-tertiary">Aucune matière spécifiée</span>
+                    )}
+                  </div>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-ops-tertiary">École/Filière</p>

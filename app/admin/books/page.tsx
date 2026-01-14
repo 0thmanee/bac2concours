@@ -244,8 +244,8 @@ export default function AdminBooksPage() {
       cell: (book) => (
         <div>
           <p className="text-sm text-foreground">{book.category}</p>
-          {book.subject && (
-            <p className="text-xs text-muted-foreground">{book.subject}</p>
+          {book.subjects && book.subjects.length > 0 && (
+            <p className="text-xs text-muted-foreground">{book.subjects.join(", ")}</p>
           )}
         </div>
       ),

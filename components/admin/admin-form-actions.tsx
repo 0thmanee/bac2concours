@@ -44,7 +44,7 @@ export function AdminFormActions({
         variant="outline"
         disabled={isLoading}
         asChild
-        className="ops-btn-secondary w-full h-9"
+        className="w-full h-9"
       >
         <Link href={cancelHref}>Annuler</Link>
       </Button>

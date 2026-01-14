@@ -93,7 +93,7 @@ export default async function PendingPage() {
             <RefreshButton />
             <Button
               variant="ghost"
-              className="ops-btn-secondary flex-1"
+              className="flex-1"
               asChild
             >
               <Link href={AUTH_ROUTES.LOGIN}>

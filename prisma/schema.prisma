@@ -234,8 +234,8 @@ model Book {
   fileSize   String // e.g., "25.4 MB"
   totalPages Int
   language   String     @default("fr")
-  level      String // e.g., "Terminale", "Première"
-  subject    String // Same as category for consistency
+  level      String     @default("Terminale") // e.g., "Terminale", "Première"
+  subjects   String[] // Array of subjects/matieres for the book
   tags       String[] // Array of tags for filtering
   downloads  Int        @default(0)
   views      Int        @default(0)

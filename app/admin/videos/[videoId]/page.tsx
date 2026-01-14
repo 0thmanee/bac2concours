@@ -122,11 +122,11 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
         description={video.description || undefined}
         actions={
           <>
-            <Button onClick={handleWatch} variant="outline" className="ops-btn-secondary h-9 gap-2">
+            <Button onClick={handleWatch} variant="outline" className="h-9 gap-2">
               <ExternalLink className="h-4 w-4" />
               Regarder
             </Button>
-            <Button asChild variant="outline" className="ops-btn-secondary h-9 gap-2">
+            <Button asChild variant="outline" className="h-9 gap-2">
               <Link href={ADMIN_ROUTES.VIDEO_EDIT(videoId)}>
                 <Edit className="h-4 w-4" />
                 Modifier
@@ -134,7 +134,7 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
             </Button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="outline" className="ops-btn-secondary h-9 gap-2 text-destructive hover:text-destructive">
+                <Button variant="outline" className="h-9 gap-2 text-destructive hover:text-destructive">
                   <Trash2 className="h-4 w-4" />
                   Supprimer
                 </Button>

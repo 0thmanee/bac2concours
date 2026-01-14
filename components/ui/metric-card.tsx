@@ -20,42 +20,42 @@ interface MetricCardProps {
 const colorStyles: Record<MetricColor, { iconBg: string; icon: string; accentColor: string }> = {
   blue: {
     iconBg: "bg-metric-blue-main",
-    icon: "text-white",
+    icon: "text-foreground-reverse",
     accentColor: "text-metric-blue",
   },
   orange: {
     iconBg: "bg-metric-orange-main",
-    icon: "text-white",
+    icon: "text-foreground-reverse",
     accentColor: "text-metric-orange",
   },
   cyan: {
     iconBg: "bg-metric-cyan-main",
-    icon: "text-white",
+    icon: "text-foreground-reverse",
     accentColor: "text-metric-cyan",
   },
   rose: {
     iconBg: "bg-metric-rose-main",
-    icon: "text-white",
+    icon: "text-foreground-reverse",
     accentColor: "text-metric-rose",
   },
   mint: {
     iconBg: "bg-metric-mint-main",
-    icon: "text-white",
+    icon: "text-foreground-reverse",
     accentColor: "text-metric-mint",
   },
   purple: {
     iconBg: "bg-metric-purple-main",
-    icon: "text-white",
+    icon: "text-foreground-reverse",
     accentColor: "text-metric-purple",
   },
   yellow: {
     iconBg: "bg-metric-yellow-main",
-    icon: "text-white",
+    icon: "text-foreground-reverse",
     accentColor: "text-metric-yellow",
   },
   teal: {
     iconBg: "bg-metric-teal-main",
-    icon: "text-white",
+    icon: "text-foreground-reverse",
     accentColor: "text-metric-teal",
   },
 };

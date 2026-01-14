@@ -129,7 +129,7 @@ export default async function StudentDashboard() {
                       </div>
                     </div>
                     <span className="rounded-full bg-metric-blue-light px-2 py-0.5 text-xs font-medium text-metric-blue">
-                      {book.subject}
+                      {book.subjects && book.subjects.length > 0 ? book.subjects[0] : book.category}
                     </span>
                   </Link>
                 ))

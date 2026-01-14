@@ -113,7 +113,7 @@ export default function ProfilePage() {
               <Button
                 variant="outline"
                 size="sm"
-                className="ops-btn-secondary h-8"
+                className="h-8"
                 onClick={() => setIsEditing(true)}
               >
                 Edit
@@ -215,7 +215,7 @@ export default function ProfilePage() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="ops-btn-secondary h-9"
+                  className="h-9"
                   onClick={() => {
                     setIsEditing(false);
                     reset({

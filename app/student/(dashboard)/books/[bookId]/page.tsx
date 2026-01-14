@@ -52,6 +52,9 @@ export default function StudentBookDetailPage() {
 
   const handleRead = () => {
     if (book?.fileUrl) {
+      // Track download
+      incrementCounter.mutate("download");
+      // Open the file
       window.open(book.fileUrl, "_blank");
     }
   };
@@ -70,7 +73,7 @@ export default function StudentBookDetailPage() {
         <p className="text-ops-secondary">
           Ce livre n&apos;existe pas ou a été supprimé.
         </p>
-        <Button asChild variant="outline" className="ops-btn-secondary">
+        <Button asChild variant="outline" className="">
           <Link href={STUDENT_ROUTES.BOOKS}>Retour aux livres</Link>
         </Button>
       </div>
@@ -94,8 +97,8 @@ export default function StudentBookDetailPage() {
     { label: "École/Filière", value: book.school },
   ];
 
-  if (book.subject) {
-    detailItems.push({ label: "Matière", value: book.subject });
+  if (book.subjects && book.subjects.length > 0) {
+    detailItems.push({ label: "Matières", value: book.subjects.join(", ") });
   }
 
   if (book.totalPages) {

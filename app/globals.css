@@ -6,6 +6,7 @@
 @theme inline {
   --color-background: rgb(var(--background));
   --color-foreground: rgb(var(--foreground));
+  --color-foreground-reverse: rgb(var(--foreground-reverse));
   --font-sans: var(--font-inter);
   --font-mono: var(--font-mono);
   --color-sidebar-ring: rgb(var(--sidebar-ring));
@@ -199,6 +200,7 @@ html {
 
   /* Text Colors */
   --ops-text-primary: var(--neutral-900);
+  --ops-text-reverse: var(--neutral-50);
   --ops-text-secondary: var(--neutral-600);
   --ops-text-tertiary: var(--neutral-500);
   --ops-text-placeholder: var(--neutral-400);
@@ -236,6 +238,7 @@ html {
   --radius: var(--ops-radius-base);
   --background: var(--ops-background);
   --foreground: var(--ops-text-primary);
+  --foreground-reverse: var(--ops-text-reverse);
   --card: var(--ops-surface);
   --card-foreground: var(--ops-text-primary);
   --popover: var(--ops-surface-elevated);
@@ -288,6 +291,7 @@ html {
 
   /* Text Colors */
   --ops-text-primary: var(--neutral-50);
+  --ops-text-reverse: var(--neutral-950);
   --ops-text-secondary: var(--neutral-300);
   --ops-text-tertiary: var(--neutral-400);
   --ops-text-placeholder: var(--neutral-500);
@@ -441,31 +445,30 @@ html {
     position: absolute;
     inset: 0;
     background:
-      /* Subtle top-left glow */
-      radial-gradient(
+      /* Subtle top-left glow */ radial-gradient(
         ellipse 800px 600px at 10% 10%,
         rgba(176, 45, 148, 0.04),
         transparent 50%
       ),
       /* Bottom-right accent */
-      radial-gradient(
-        ellipse 700px 500px at 90% 90%,
-        rgba(128, 55, 182, 0.03),
-        transparent 50%
-      ),
+        radial-gradient(
+          ellipse 700px 500px at 90% 90%,
+          rgba(128, 55, 182, 0.03),
+          transparent 50%
+        ),
       /* Center subtle highlight */
-      radial-gradient(
-        ellipse 1200px 800px at 50% 50%,
-        rgba(251, 235, 247, 0.3),
-        transparent 70%
-      ),
+        radial-gradient(
+          ellipse 1200px 800px at 50% 50%,
+          rgba(251, 235, 247, 0.3),
+          transparent 70%
+        ),
       /* Base gradient */
-      linear-gradient(
-        180deg,
-        rgba(250, 250, 250, 1) 0%,
-        rgba(255, 255, 255, 0.98) 50%,
-        rgba(248, 250, 252, 1) 100%
-      );
+        linear-gradient(
+          180deg,
+          rgba(250, 250, 250, 1) 0%,
+          rgba(255, 255, 255, 0.98) 50%,
+          rgba(248, 250, 252, 1) 100%
+        );
     pointer-events: none;
     z-index: 0;
   }
@@ -475,12 +478,11 @@ html {
     content: "";
     position: absolute;
     inset: 0;
-    background-image:
-      radial-gradient(
-        circle at center,
-        rgba(176, 45, 148, 0.02) 0.5px,
-        transparent 0.5px
-      );
+    background-image: radial-gradient(
+      circle at center,
+      rgba(176, 45, 148, 0.02) 0.5px,
+      transparent 0.5px
+    );
     background-size: 40px 40px;
     background-position: 0 0;
     pointer-events: none;
@@ -491,41 +493,39 @@ html {
   /* Dark Mode - Ultra premium deep black atmosphere */
   .dark .public-background::before {
     background:
-      /* Primary brand glow - more visible */
-      radial-gradient(
+      /* Primary brand glow - more visible */ radial-gradient(
         ellipse 800px 600px at 10% 10%,
         rgba(176, 45, 148, 0.08),
         transparent 50%
       ),
       /* Secondary purple accent */
-      radial-gradient(
-        ellipse 700px 500px at 90% 90%,
-        rgba(128, 55, 182, 0.07),
-        transparent 50%
-      ),
+        radial-gradient(
+          ellipse 700px 500px at 90% 90%,
+          rgba(128, 55, 182, 0.07),
+          transparent 50%
+        ),
       /* Ambient center glow */
-      radial-gradient(
-        ellipse 1000px 700px at 50% 40%,
-        rgba(139, 34, 119, 0.05),
-        transparent 60%
-      ),
+        radial-gradient(
+          ellipse 1000px 700px at 50% 40%,
+          rgba(139, 34, 119, 0.05),
+          transparent 60%
+        ),
       /* Rich deep black gradient */
-      linear-gradient(
-        180deg,
-        rgba(6, 6, 8, 1) 0%,
-        rgba(10, 10, 12, 0.98) 50%,
-        rgba(12, 12, 14, 1) 100%
-      );
+        linear-gradient(
+          180deg,
+          rgba(6, 6, 8, 1) 0%,
+          rgba(10, 10, 12, 0.98) 50%,
+          rgba(12, 12, 14, 1) 100%
+        );
   }
 
   /* Premium mesh pattern for dark mode */
   .dark .public-background::after {
-    background-image:
-      radial-gradient(
-        circle at center,
-        rgba(176, 45, 148, 0.08) 0.5px,
-        transparent 0.5px
-      );
+    background-image: radial-gradient(
+      circle at center,
+      rgba(176, 45, 148, 0.08) 0.5px,
+      transparent 0.5px
+    );
     background-size: 40px 40px;
     opacity: 0.35;
   }
@@ -553,44 +553,43 @@ html {
     position: absolute;
     inset: 0;
     background:
-      /* Top-left primary accent */
-      radial-gradient(
+      /* Top-left primary accent */ radial-gradient(
         ellipse 900px 700px at 15% 20%,
         rgba(176, 45, 148, 0.06),
         transparent 55%
       ),
       /* Bottom-right secondary */
-      radial-gradient(
-        ellipse 800px 600px at 85% 80%,
-        rgba(128, 55, 182, 0.05),
-        transparent 55%
-      ),
+        radial-gradient(
+          ellipse 800px 600px at 85% 80%,
+          rgba(128, 55, 182, 0.05),
+          transparent 55%
+        ),
       /* Mid-right pink accent */
-      radial-gradient(
-        ellipse 600px 500px at 75% 45%,
-        rgba(236, 72, 153, 0.04),
-        transparent 50%
-      ),
+        radial-gradient(
+          ellipse 600px 500px at 75% 45%,
+          rgba(236, 72, 153, 0.04),
+          transparent 50%
+        ),
       /* Top-right teal complement */
-      radial-gradient(
-        ellipse 500px 400px at 90% 15%,
-        rgba(20, 184, 166, 0.03),
-        transparent 50%
-      ),
+        radial-gradient(
+          ellipse 500px 400px at 90% 15%,
+          rgba(20, 184, 166, 0.03),
+          transparent 50%
+        ),
       /* Center ambient light */
-      radial-gradient(
-        ellipse 1400px 900px at 50% 50%,
-        rgba(251, 235, 247, 0.25),
-        transparent 70%
-      ),
+        radial-gradient(
+          ellipse 1400px 900px at 50% 50%,
+          rgba(251, 235, 247, 0.25),
+          transparent 70%
+        ),
       /* Base premium gradient */
-      linear-gradient(
-        135deg,
-        rgba(250, 250, 250, 1) 0%,
-        rgba(255, 255, 255, 0.95) 40%,
-        rgba(248, 250, 252, 0.98) 70%,
-        rgba(252, 252, 253, 1) 100%
-      );
+        linear-gradient(
+          135deg,
+          rgba(250, 250, 250, 1) 0%,
+          rgba(255, 255, 255, 0.95) 40%,
+          rgba(248, 250, 252, 0.98) 70%,
+          rgba(252, 252, 253, 1) 100%
+        );
     pointer-events: none;
     z-index: 0;
   }
@@ -600,8 +599,10 @@ html {
     content: "";
     position: absolute;
     inset: 0;
-    background-image:
-      linear-gradient(rgba(176, 45, 148, 0.015) 1px, transparent 1px),
+    background-image: linear-gradient(
+        rgba(176, 45, 148, 0.015) 1px,
+        transparent 1px
+      ),
       linear-gradient(90deg, rgba(176, 45, 148, 0.015) 1px, transparent 1px);
     background-size: 60px 60px;
     background-position: -1px -1px;
@@ -618,56 +619,57 @@ html {
   /* Dark Mode - Ultra premium deep workspace */
   .dark .dashboard-background::before {
     background:
-      /* Primary brand glow - vibrant and visible */
-      radial-gradient(
+      /* Primary brand glow - vibrant and visible */ radial-gradient(
         ellipse 900px 700px at 15% 20%,
         rgba(176, 45, 148, 0.15),
         transparent 55%
       ),
       /* Secondary purple - enhanced depth */
-      radial-gradient(
-        ellipse 800px 600px at 85% 80%,
-        rgba(128, 55, 182, 0.12),
-        transparent 55%
-      ),
+        radial-gradient(
+          ellipse 800px 600px at 85% 80%,
+          rgba(128, 55, 182, 0.12),
+          transparent 55%
+        ),
       /* Pink accent - premium pop */
-      radial-gradient(
-        ellipse 600px 500px at 75% 45%,
-        rgba(236, 72, 153, 0.10),
-        transparent 50%
-      ),
+        radial-gradient(
+          ellipse 600px 500px at 75% 45%,
+          rgba(236, 72, 153, 0.1),
+          transparent 50%
+        ),
       /* Teal complement - sophisticated */
-      radial-gradient(
-        ellipse 500px 400px at 90% 15%,
-        rgba(20, 184, 166, 0.08),
-        transparent 50%
-      ),
+        radial-gradient(
+          ellipse 500px 400px at 90% 15%,
+          rgba(20, 184, 166, 0.08),
+          transparent 50%
+        ),
       /* Deep brand accent - rich warmth */
-      radial-gradient(
-        ellipse 700px 500px at 40% 70%,
-        rgba(139, 34, 119, 0.09),
-        transparent 50%
-      ),
+        radial-gradient(
+          ellipse 700px 500px at 40% 70%,
+          rgba(139, 34, 119, 0.09),
+          transparent 50%
+        ),
       /* Ambient center glow - premium depth */
-      radial-gradient(
-        ellipse 1200px 800px at 50% 50%,
-        rgba(56, 10, 48, 0.5),
-        transparent 65%
-      ),
+        radial-gradient(
+          ellipse 1200px 800px at 50% 50%,
+          rgba(56, 10, 48, 0.5),
+          transparent 65%
+        ),
       /* Ultra premium deep black base */
-      linear-gradient(
-        135deg,
-        rgba(6, 6, 8, 1) 0%,
-        rgba(8, 8, 10, 0.98) 40%,
-        rgba(10, 10, 12, 0.95) 70%,
-        rgba(12, 12, 14, 1) 100%
-      );
+        linear-gradient(
+          135deg,
+          rgba(6, 6, 8, 1) 0%,
+          rgba(8, 8, 10, 0.98) 40%,
+          rgba(10, 10, 12, 0.95) 70%,
+          rgba(12, 12, 14, 1) 100%
+        );
   }
 
   /* Premium grid for dark mode */
   .dark .dashboard-background::after {
-    background-image:
-      linear-gradient(rgba(176, 45, 148, 0.08) 1px, transparent 1px),
+    background-image: linear-gradient(
+        rgba(176, 45, 148, 0.08) 1px,
+        transparent 1px
+      ),
       linear-gradient(90deg, rgba(176, 45, 148, 0.08) 1px, transparent 1px);
     background-size: 60px 60px;
     opacity: 0.4;
@@ -713,18 +715,6 @@ html {
 
   .ops-btn-primary:hover:not(:disabled) {
     background: rgb(var(--ops-action-primary-hover));
-  }
-
-  .ops-btn-secondary {
-    background: rgb(var(--ops-action-secondary));
-    color: rgb(var(--ops-action-secondary-text));
-    border: 1px solid rgb(var(--ops-border));
-    font-weight: 500;
-    transition: background-color 0.15s ease;
-  }
-
-  .ops-btn-secondary:hover:not(:disabled) {
-    background: rgb(var(--ops-action-secondary-hover));
   }
 
   /* Professional Input */
@@ -1443,18 +1433,30 @@ html {
 
   /* Gradients */
   .bg-gradient-primary {
-    background-image: linear-gradient(135deg, #b02d94 0%, #8037b6 100%) !important;
+    background-image: linear-gradient(
+      135deg,
+      #b02d94 0%,
+      #8037b6 100%
+    ) !important;
   }
 
   .bg-gradient-hover {
-    background-image: linear-gradient(135deg, #d435af 0%, #924ad1 100%) !important;
+    background-image: linear-gradient(
+      135deg,
+      #d435af 0%,
+      #924ad1 100%
+    ) !important;
   }
 
   .text-gradient {
     background-clip: text !important;
     -webkit-background-clip: text !important;
     color: transparent !important;
-    background-image: linear-gradient(135deg, #b02d94 0%, #8037b6 100%) !important;
+    background-image: linear-gradient(
+      135deg,
+      #b02d94 0%,
+      #8037b6 100%
+    ) !important;
   }
 
   /* Shadows for Marketing */

@@ -283,7 +283,7 @@ export default function PaymentsPage() {
                     <p className="text-sm text-muted-foreground">Document PDF</p>
                     <Button
                       variant="outline"
-                      className="ops-btn-secondary"
+                      className=""
                       onClick={() => window.open(viewingUser.paymentProofUrl!, "_blank")}
                     >
                       Ouvrir le PDF
@@ -297,7 +297,7 @@ export default function PaymentsPage() {
             <Button
               variant="outline"
               onClick={() => setViewingUser(null)}
-              className="ops-btn-secondary"
+              className=""
             >
               Fermer
             </Button>
@@ -372,7 +372,7 @@ export default function PaymentsPage() {
                 setRejectingUser(null);
                 setRejectionReason("");
               }}
-              className="ops-btn-secondary"
+              className=""
             >
               Annuler
             </Button>

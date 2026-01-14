@@ -25,7 +25,7 @@ import {
   type CreateSchoolInput,
 } from "@/lib/validations/school.validation";
 import { useCreateSchool } from "@/lib/hooks/use-schools";
-import { useUploadFile } from "@/lib/hooks/use-files";
+import { useUploadFile, useDeleteFile } from "@/lib/hooks/use-files";
 import { SupabaseImage } from "@/components/ui/supabase-image";
 import {
   AdminFormHeader,
@@ -54,6 +54,7 @@ export default function NewSchoolPage() {
   const router = useRouter();
   const createMutation = useCreateSchool();
   const uploadFileMutation = useUploadFile();
+  const deleteFileMutation = useDeleteFile();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -90,6 +91,9 @@ export default function NewSchoolPage() {
   const watchedSpecializations = (watch("specializations") as string[]) || [];
   const watchedAvantages = (watch("avantages") as string[]) || [];
   const watchedDocumentsRequis = (watch("documentsRequis") as string[]) || [];
+  const watchedServices = (watch("services") as string[]) || [];
+  const watchedInfrastructures = (watch("infrastructures") as string[]) || [];
+  const watchedPartenariats = (watch("partenariats") as string[]) || [];
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -128,6 +132,8 @@ export default function NewSchoolPage() {
   };
 
   const onSubmit = async (data: CreateSchoolInput) => {
+    const uploadedFileIds: string[] = [];
+
     try {
       // Upload image if provided
       if (imageFile) {
@@ -137,6 +143,7 @@ export default function NewSchoolPage() {
           folder: "school-images",
         });
         data.imageFileId = uploadResult.data.id;
+        uploadedFileIds.push(uploadResult.data.id);
       }
 
       // Upload logo if provided
@@ -147,12 +154,24 @@ export default function NewSchoolPage() {
           folder: "school-logos",
         });
         data.logoFileId = uploadResult.data.id;
+        uploadedFileIds.push(uploadResult.data.id);
       }
 
       await createMutation.mutateAsync(data);
       toast.success("École créée avec succès");
       router.push(ADMIN_ROUTES.SCHOOLS);
     } catch (error) {
+      // Clean up uploaded files if school creation failed
+      if (uploadedFileIds.length > 0) {
+        try {
+          await Promise.all(
+            uploadedFileIds.map((fileId) => deleteFileMutation.mutateAsync(fileId))
+          );
+        } catch (cleanupError) {
+          console.error("Failed to clean up uploaded files:", cleanupError);
+        }
+      }
+
       toast.error(getErrorMessage(error));
     }
   };
@@ -210,7 +229,10 @@ export default function NewSchoolPage() {
                   <Label htmlFor="type" className="text-sm font-medium">
                     Type <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("type", value as SchoolType, { shouldValidate: true })}>
+                  <Select
+                    value={watch("type") || SchoolType.UNIVERSITE}
+                    onValueChange={(value) => setValue("type", value as SchoolType, { shouldValidate: true })}
+                  >
                     <SelectTrigger id="type" className="ops-input h-9">
                       <SelectValue placeholder="Sélectionner un type" />
                     </SelectTrigger>
@@ -364,7 +386,11 @@ export default function NewSchoolPage() {
                     id="seuilDeSelection"
                     type="number"
                     step="0.1"
-                    {...register("seuilDeSelection", { valueAsNumber: true })}
+                    min="0"
+                    max="20"
+                    {...register("seuilDeSelection", {
+                      setValueAs: (v) => v === "" || v === null ? undefined : parseFloat(v)
+                    })}
                     placeholder="ex: 16.5"
                     className="ops-input h-9"
                   />
@@ -380,7 +406,10 @@ export default function NewSchoolPage() {
                   <Input
                     id="fraisInscription"
                     type="number"
-                    {...register("fraisInscription", { valueAsNumber: true })}
+                    min="0"
+                    {...register("fraisInscription", {
+                      setValueAs: (v) => v === "" || v === null ? undefined : parseFloat(v)
+                    })}
                     placeholder="ex: 1200"
                     className="ops-input h-9"
                   />
@@ -405,7 +434,11 @@ export default function NewSchoolPage() {
                   <Input
                     id="establishedYear"
                     type="number"
-                    {...register("establishedYear", { valueAsNumber: true })}
+                    min="1800"
+                    max="2100"
+                    {...register("establishedYear", {
+                      setValueAs: (v) => v === "" || v === null ? undefined : parseInt(v, 10)
+                    })}
                     placeholder="ex: 1993"
                     className="ops-input h-9"
                   />
@@ -448,7 +481,10 @@ export default function NewSchoolPage() {
                   <Input
                     id="nombreEtudiants"
                     type="number"
-                    {...register("nombreEtudiants", { valueAsNumber: true })}
+                    min="1"
+                    {...register("nombreEtudiants", {
+                      setValueAs: (v) => v === "" || v === null ? undefined : parseInt(v, 10)
+                    })}
                     placeholder="ex: 1200"
                     className="ops-input h-9"
                   />
@@ -462,7 +498,11 @@ export default function NewSchoolPage() {
                     id="tauxReussite"
                     type="number"
                     step="0.1"
-                    {...register("tauxReussite", { valueAsNumber: true })}
+                    min="0"
+                    max="100"
+                    {...register("tauxReussite", {
+                      setValueAs: (v) => v === "" || v === null ? undefined : parseFloat(v)
+                    })}
                     placeholder="ex: 92"
                     className="ops-input h-9"
                   />
@@ -475,7 +515,10 @@ export default function NewSchoolPage() {
                   <Input
                     id="classementNational"
                     type="number"
-                    {...register("classementNational", { valueAsNumber: true })}
+                    min="1"
+                    {...register("classementNational", {
+                      setValueAs: (v) => v === "" || v === null ? undefined : parseInt(v, 10)
+                    })}
                     placeholder="ex: 2"
                     className="ops-input h-9"
                   />
@@ -503,6 +546,33 @@ export default function NewSchoolPage() {
                 cardTitle="Avantages"
                 cardDescription="Points forts de l'école"
                 placeholder="Ajouter un avantage"
+                withCard={false}
+              />
+
+              <AdminTagsInput
+                tags={watchedServices}
+                onChange={(tags: string[]) => setValue("services", tags, { shouldValidate: true })}
+                cardTitle="Services"
+                cardDescription="Services offerts aux étudiants"
+                placeholder="Ajouter un service (ex: Restaurant, Bibliothèque)"
+                withCard={false}
+              />
+
+              <AdminTagsInput
+                tags={watchedInfrastructures}
+                onChange={(tags: string[]) => setValue("infrastructures", tags, { shouldValidate: true })}
+                cardTitle="Infrastructures"
+                cardDescription="Équipements et installations disponibles"
+                placeholder="Ajouter une infrastructure (ex: Laboratoires, Terrains de sport)"
+                withCard={false}
+              />
+
+              <AdminTagsInput
+                tags={watchedPartenariats}
+                onChange={(tags: string[]) => setValue("partenariats", tags, { shouldValidate: true })}
+                cardTitle="Partenariats"
+                cardDescription="Partenaires académiques et industriels"
+                placeholder="Ajouter un partenariat (ex: Entreprise, Université)"
                 withCard={false}
               />
             </AdminFormCard>

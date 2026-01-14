@@ -9,7 +9,7 @@ export function RefreshButton() {
   return (
     <Button
       variant="outline"
-      className="ops-btn-secondary flex-1"
+      className="flex-1"
       onClick={() => router.refresh()}
     >
       Actualiser
