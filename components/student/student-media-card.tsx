@@ -72,13 +72,11 @@ export function StudentMediaCard({
               <FallbackIcon className="relative w-16 h-16 sm:w-20 sm:h-20 text-brand-500 dark:text-brand-400" />
             </div>
           )}
-          {badge && (
-            <div className="absolute top-3 right-3 z-10">{badge}</div>
-          )}
         </div>
 
         {/* Content */}
-        <div className="flex-1 flex flex-col justify-between space-y-4">
+        <div className="flex-1 flex flex-col gap-4">
+          {/* Main content */}
           <div className="space-y-3">
             <div>
               <h3 className="line-clamp-2 mb-1.5 font-semibold text-foreground text-base sm:text-lg group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
@@ -97,26 +95,26 @@ export function StudentMediaCard({
               </p>
             )}
 
-            {/* Metadata */}
-            <div className="space-y-2.5">
-              {(category || level) && (
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  {category && <StudentCategoryBadge category={category} variant="brand" />}
-                  {level && <StudentCategoryBadge category={level} variant="purple" />}
-                </div>
-              )}
-              {metrics && metrics.length > 0 && (
-                <div className="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border">
-                  {metrics.map((metric, index) => (
-                    <span key={index} className="flex items-center gap-1.5">
-                      <metric.icon size={13} className="text-muted-foreground" />
-                      <span className="font-medium">{metric.value}</span>
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Category badges */}
+            {(category || level) && (
+              <div className="flex items-center gap-1.5 flex-wrap">
+                {category && <StudentCategoryBadge category={category} variant="brand" />}
+                {level && <StudentCategoryBadge category={level} variant="purple" />}
+              </div>
+            )}
           </div>
+
+          {/* Footer metrics - pushed to bottom */}
+          {metrics && metrics.length > 0 && (
+            <div className="flex items-center justify-between text-xs text-muted-foreground pt-3 mt-auto border-t border-border">
+              {metrics.map((metric, index) => (
+                <span key={index} className="flex items-center gap-1.5">
+                  <metric.icon size={13} className="text-muted-foreground" />
+                  <span className="font-medium">{metric.value}</span>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

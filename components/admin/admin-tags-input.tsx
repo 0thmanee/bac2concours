@@ -12,7 +12,7 @@ interface AdminTagsInputProps {
   tags: string[];
   /** Handler for tags change */
   onChange: (tags: string[]) => void;
-  /** Label for the add input (default: "Ajouter une Étiquette") */
+  /** Label for the add input (default: "Ajouter une Matière") */
   inputLabel?: string;
   /** Placeholder for the add input */
   placeholder?: string;
@@ -33,11 +33,11 @@ interface AdminTagsInputProps {
 export function AdminTagsInput({
   tags,
   onChange,
-  inputLabel = "Ajouter une Étiquette",
+  inputLabel = "Ajouter une Matière",
   placeholder = "ex: cours, exercices, bac",
   helpText,
   withCard = true,
-  cardTitle = "Étiquettes",
+  cardTitle = "Matières",
   cardDescription = "Ajoutez des mots-clés pour faciliter la recherche",
 }: AdminTagsInputProps) {
   const [newTag, setNewTag] = useState("");
@@ -90,7 +90,7 @@ export function AdminTagsInput({
 
       {tags.length > 0 && (
         <div className="space-y-2">
-          <Label className="text-sm font-medium">Étiquettes Ajoutées</Label>
+          <Label className="text-sm font-medium">Matières Ajoutées</Label>
           <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
               <span
