@@ -95,6 +95,7 @@ export default function EditQuestionPage({ params }: PageProps) {
     reset,
   } = useForm({
     resolver: zodResolver(updateQuestionSchema),
+    mode: "onSubmit", // Prevent premature validation before form data loads
   });
 
   // Initialize form when question data loads

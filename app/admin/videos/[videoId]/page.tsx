@@ -179,8 +179,8 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
           color="blue"
         />
         <MetricCard
-          title="Matière"
-          value={video.subject || "Non spécifiée"}
+          title="Matières"
+          value={video.subjects?.length > 0 ? video.subjects.join(", ") : "Non spécifiées"}
           icon={Play}
           color="purple"
         />
@@ -238,8 +238,18 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
                   <p className="text-base text-ops-primary mt-1">{video.category}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-ops-tertiary">Matière</p>
-                  <p className="text-base text-ops-primary mt-1">{video.subject || "Non spécifiée"}</p>
+                  <p className="text-sm font-medium text-ops-tertiary">Matières</p>
+                  <div className="flex flex-wrap gap-1.5 mt-1">
+                    {video.subjects?.length > 0 ? (
+                      video.subjects.map((subject: string) => (
+                        <span key={subject} className="inline-flex items-center px-2 py-0.5 text-sm font-medium rounded-md bg-purple-50 text-purple-700 border border-purple-200">
+                          {subject}
+                        </span>
+                      ))
+                    ) : (
+                      <p className="text-base text-ops-primary">Non spécifiées</p>
+                    )}
+                  </div>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-ops-tertiary">École/Filière</p>

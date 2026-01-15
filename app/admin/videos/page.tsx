@@ -249,9 +249,9 @@ export default function AdminVideosPage() {
           <p className="text-sm text-foreground">
             {video.category}
           </p>
-          {video.subject && (
+          {video.subjects && video.subjects.length > 0 && (
             <p className="text-xs text-muted-foreground">
-              {video.subject}
+              {video.subjects.join(", ")}
             </p>
           )}
         </div>

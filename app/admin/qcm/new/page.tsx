@@ -83,6 +83,7 @@ export default function NewQuestionPage() {
     watch,
   } = useForm({
     resolver: zodResolver(createQuestionSchema),
+    mode: "onSubmit", // Prevent premature validation
     defaultValues: {
       text: "",
       options: [],

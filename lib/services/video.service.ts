@@ -48,7 +48,7 @@ export const videoService = {
     if (category) where.category = category;
     if (school) where.school = school;
     if (level) where.level = level;
-    if (subject) where.subject = subject;
+    if (subject) where.subjects = { has: subject };
     if (status) where.status = status;
     if (typeof isPublic === "boolean") where.isPublic = isPublic;
     if (tags && tags.length > 0) {
@@ -72,7 +72,7 @@ export const videoService = {
         school: true,
         category: true,
         level: true,
-        subject: true,
+        subjects: true,
         tags: true,
         duration: true,
         views: true,
@@ -237,15 +237,15 @@ export const videoService = {
         category: true,
         school: true,
         level: true,
-        subject: true,
+        subjects: true,
       },
     });
 
-    // Extract unique values
+    // Extract unique values (flatten subjects arrays)
     const categories = [...new Set(videos.map((v) => v.category))].sort();
     const schools = [...new Set(videos.map((v) => v.school))].sort();
     const levels = [...new Set(videos.map((v) => v.level))].sort();
-    const subjects = [...new Set(videos.map((v) => v.subject))].sort();
+    const subjects = [...new Set(videos.flatMap((v) => v.subjects))].sort();
 
     return {
       categories,

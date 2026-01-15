@@ -273,10 +273,10 @@ model Video {
   thumbnailFileId String? // FK to File model
   thumbnailFile   File?   @relation("VideoThumbnailFile", fields: [thumbnailFileId], references: [id], onDelete: SetNull)
 
-  school   String // e.g., "Sciences Mathématiques", "Sciences Physiques"
-  category String // e.g., "Mathématiques", "Physique"
-  level    String // e.g., "Terminale", "Première"
-  subject  String // Same as category for consistency
+  school   String   // e.g., "Sciences Mathématiques", "Sciences Physiques"
+  category String   // e.g., "Mathématiques", "Physique"
+  level    String   // e.g., "Terminale", "Première"
+  subjects String[] // Array of subjects/matières for filtering
   tags     String[] // Array of tags for filtering
   duration Int? // Duration in seconds
   views    Int         @default(0)

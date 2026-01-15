@@ -1330,7 +1330,7 @@ async function main() {
         school: videoData.school,
         category: videoData.category,
         level: videoData.level,
-        subject: videoData.subject,
+        subjects: videoData.subjects,
         duration: videoData.duration,
         tags: videoData.tags,
         youtubeId,

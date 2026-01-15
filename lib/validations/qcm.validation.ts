@@ -1,13 +1,12 @@
 import { z } from "zod";
-import { QuestionDifficulty, QuestionStatus } from "@prisma/client";
 
 /**
  * QCM validation schemas - Source of truth for all question/quiz types
  */
 
-// Enums
-export const questionDifficultySchema = z.nativeEnum(QuestionDifficulty);
-export const questionStatusSchema = z.nativeEnum(QuestionStatus);
+// Enums - Using z.enum() for client/server compatibility (avoid z.nativeEnum from Prisma)
+export const questionDifficultySchema = z.enum(["EASY", "MEDIUM", "HARD"]);
+export const questionStatusSchema = z.enum(["ACTIVE", "INACTIVE", "DRAFT"]);
 
 // Option content type enum
 export const optionContentTypeSchema = z
@@ -45,7 +44,7 @@ export const createQuestionSchema = z.object({
   school: z.string().min(1, "L'école/filière est requise"),
   matiere: z.string().min(1, "La matière est requise"),
   chapter: z.string().max(200).optional().nullable(),
-  difficulty: questionDifficultySchema.default(QuestionDifficulty.MEDIUM),
+  difficulty: questionDifficultySchema.default("MEDIUM"),
   imageFileId: z.string().optional().nullable(),
   tags: z.array(z.string().max(50)).default([]),
   points: z.preprocess(
@@ -62,7 +61,7 @@ export const createQuestionSchema = z.object({
         : Number(val),
     z.number().int().min(10).max(600).optional().nullable()
   ),
-  status: questionStatusSchema.default(QuestionStatus.ACTIVE),
+  status: questionStatusSchema.default("ACTIVE"),
   isPublic: z.boolean().default(true),
 });
 
@@ -172,7 +171,7 @@ export interface QuestionFilterOptions {
   schools: string[];
   matieres: string[];
   chapters: string[];
-  difficulties: QuestionDifficulty[];
+  difficulties: QuestionDifficultyType[];
 }
 
 // Quiz stats type

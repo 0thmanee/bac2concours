@@ -1,13 +1,18 @@
 import { z } from "zod";
-import { SchoolStatus, SchoolType } from "@prisma/client";
 
 /**
  * School validation schemas - Source of truth for all school types
  */
 
-// School status and type enum schemas
-export const schoolStatusSchema = z.nativeEnum(SchoolStatus);
-export const schoolTypeSchema = z.nativeEnum(SchoolType);
+// School status and type enum schemas using string literals for client/server compatibility
+export const schoolStatusSchema = z.enum(["ACTIVE", "INACTIVE", "DRAFT"]);
+export const schoolTypeSchema = z.enum([
+  "UNIVERSITE",
+  "ECOLE_INGENIEUR",
+  "ECOLE_COMMERCE",
+  "INSTITUT",
+  "FACULTE",
+]);
 
 // Program schema for the programs JSON field
 export const schoolProgramSchema = z.object({
@@ -106,7 +111,7 @@ export const createSchoolSchema = z.object({
         : Number(val),
     z.number().int().min(1800).max(2100).optional()
   ),
-  status: schoolStatusSchema.default(SchoolStatus.DRAFT),
+  status: schoolStatusSchema.default("DRAFT"),
 });
 
 // Helper to coerce NaN to null for optional positive integer fields

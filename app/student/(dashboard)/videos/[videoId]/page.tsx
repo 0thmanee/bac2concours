@@ -102,8 +102,8 @@ export default function StudentVideoDetailPage() {
     { label: "École/Filière", value: video.school },
   ];
 
-  if (video.subject) {
-    detailItems.push({ label: "Matière", value: video.subject });
+  if (video.subjects && video.subjects.length > 0) {
+    detailItems.push({ label: "Matières", value: video.subjects.join(", ") });
   }
 
   // Prepare related items for sidebar

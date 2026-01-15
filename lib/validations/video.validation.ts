@@ -1,12 +1,11 @@
 import { z } from "zod";
-import { VideoStatus } from "@prisma/client";
 
 /**
  * Video validation schemas - Source of truth for all video types
  */
 
-// Video status enum schema
-export const videoStatusSchema = z.nativeEnum(VideoStatus);
+// Video status enum schema using string literals for client/server compatibility
+export const videoStatusSchema = z.enum(["ACTIVE", "INACTIVE", "PROCESSING"]);
 
 // Helper to validate YouTube URLs and extract video ID
 const youtubeUrlRegex =
@@ -32,10 +31,10 @@ export const createVideoSchema = z.object({
     .optional(),
   url: youtubeUrlSchema,
   thumbnailFileId: z.string().optional(), // Uploaded thumbnail image file ID
-  school: z.string().min(1, "L'école est requise").max(100),
+  school: z.string().min(1, "L'école/filière est requise").max(100),
   category: z.string().min(1, "La catégorie est requise").max(50),
   level: z.string().min(1, "Le niveau est requis").max(50),
-  subject: z.string().min(1, "La matière est requise").max(50),
+  subjects: z.array(z.string().max(50)).min(1, "Au moins une matière est requise").default([]),
   tags: z.array(z.string().max(50)).default([]),
   duration: z
     .number()
@@ -43,7 +42,7 @@ export const createVideoSchema = z.object({
     .positive("La durée doit être positive")
     .optional()
     .nullable(),
-  status: videoStatusSchema.default(VideoStatus.ACTIVE),
+  status: videoStatusSchema.default("ACTIVE"),
   isPublic: z.boolean().default(true),
 });
 
@@ -56,7 +55,7 @@ export const updateVideoSchema = z.object({
   school: z.string().min(1).max(100).optional(),
   category: z.string().min(1).max(50).optional(),
   level: z.string().min(1).max(50).optional(),
-  subject: z.string().min(1).max(50).optional(),
+  subjects: z.array(z.string().max(50)).optional(),
   tags: z.array(z.string().max(50)).optional(),
   duration: z.number().int().positive().optional().nullable(),
   status: videoStatusSchema.optional(),
@@ -123,7 +122,7 @@ export const videoResponseSchema = z.object({
   school: z.string(),
   category: z.string(),
   level: z.string(),
-  subject: z.string(),
+  subjects: z.array(z.string()),
   tags: z.array(z.string()),
   duration: z.number().nullable(),
   views: z.number(),
@@ -179,7 +178,7 @@ export type VideoWithRelations = {
   school: string;
   category: string;
   level: string;
-  subject: string;
+  subjects: string[];
   tags: string[];
   duration: number | null;
   views: number;

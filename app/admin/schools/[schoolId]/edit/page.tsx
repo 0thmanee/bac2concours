@@ -64,6 +64,7 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [isFormReady, setIsFormReady] = useState(false);
 
   const {
     register,
@@ -74,6 +75,7 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
     reset,
   } = useForm({
     resolver: zodResolver(updateSchoolSchema),
+    mode: "onSubmit",
   });
 
   // Populate form when school data loads
@@ -133,6 +135,9 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
       if (school.logoFile?.publicUrl) {
         setLogoPreview(school.logoFile.publicUrl);
       }
+
+      // Mark form as ready after reset
+      setIsFormReady(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [school?.id, isLoading]);
@@ -261,7 +266,7 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
     }
   };
 
-  if (isLoading) {
+  if (isLoading || !isFormReady) {
     return <LoadingState message="Chargement de l'école..." />;
   }
 
@@ -329,8 +334,8 @@ export default function EditSchoolPage({ params }: { params: Promise<{ schoolId:
                     Type <span className="text-destructive">*</span>
                   </Label>
                   <Select
-                    value={watch("type") || ""}
-                    onValueChange={(value) => setValue("type", value as SchoolType, { shouldValidate: true })}
+                    value={watch("type") || SchoolType.UNIVERSITE}
+                    onValueChange={(value) => setValue("type", value as SchoolType)}
                   >
                     <SelectTrigger id="type" className="ops-input h-9">
                       <SelectValue placeholder="Sélectionner un type" />

@@ -10,15 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { X, Upload } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { toast } from "sonner";
-import { ADMIN_ROUTES, MESSAGES } from "@/lib/constants";
+import { ADMIN_ROUTES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/utils/error.utils";
 import { VideoStatus, FileType } from "@/lib/enums";
 import { SupabaseImage } from "@/components/ui/supabase-image";
@@ -29,8 +22,6 @@ import {
   getYouTubeThumbnailUrl,
 } from "@/lib/validations/video.validation";
 import { useCreateVideo } from "@/lib/hooks/use-videos";
-import { useDropdownOptions } from "@/lib/hooks/use-settings-resources";
-import { useSchoolsForDropdown } from "@/lib/hooks/use-schools";
 import { useUploadFile } from "@/lib/hooks/use-files";
 import {
   AdminFormHeader,
@@ -50,8 +41,6 @@ export default function NewVideoPage() {
   const router = useRouter();
   const createMutation = useCreateVideo();
   const uploadFileMutation = useUploadFile();
-  const { data: dropdownData, isLoading: isLoadingDropdowns } = useDropdownOptions();
-  const { data: schoolsData, isLoading: isLoadingSchools } = useSchoolsForDropdown();
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
 
@@ -67,10 +56,12 @@ export default function NewVideoPage() {
       status: VideoStatus.ACTIVE,
       isPublic: true,
       tags: [],
+      subjects: [],
     },
   });
 
   const watchedTags = (watch("tags") as string[]) || [];
+  const watchedSubjects = (watch("subjects") as string[]) || [];
   const watchedUrl = watch("url");
   const watchedStatus = watch("status") || VideoStatus.ACTIVE;
   const watchedIsPublic = watch("isPublic") ?? true;
@@ -117,11 +108,6 @@ export default function NewVideoPage() {
       toast.error(getErrorMessage(error));
     }
   };
-
-  const categories = dropdownData?.data?.categories || [];
-  const levels = dropdownData?.data?.levels || [];
-  const matieres = dropdownData?.data?.matieres || [];
-  const schools = schoolsData?.data?.schools?.map(s => s.name) || [];
 
   // Auto-detect YouTube thumbnail
   const youtubeId = watchedUrl ? extractYouTubeId(watchedUrl) : null;
@@ -216,7 +202,9 @@ export default function NewVideoPage() {
                 <Input
                   id="duration"
                   type="number"
-                  {...register("duration", { valueAsNumber: true })}
+                  {...register("duration", {
+                    setValueAs: (v) => v === "" || v === null ? undefined : parseInt(v, 10)
+                  })}
                   placeholder="ex: 1800 pour 30 minutes"
                   className="ops-input h-9"
                 />
@@ -238,22 +226,14 @@ export default function NewVideoPage() {
                   <Label htmlFor="school" className="text-sm font-medium">
                     École/Filière <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("school", value, { shouldValidate: true })} disabled={isLoadingSchools}>
-                    <SelectTrigger id="school" className="ops-input h-9">
-                      <SelectValue placeholder={isLoadingSchools ? "Chargement..." : "Sélectionner une filière"} />
-                    </SelectTrigger>
-                    <SelectContent className="ops-card">
-                      {schools.map((school: string) => (
-                        <SelectItem key={school} value={school}>
-                          {school}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    id="school"
+                    {...register("school")}
+                    placeholder="ex: Sciences Mathématiques A"
+                    className="ops-input h-9"
+                  />
                   {errors.school && (
-                    <p className="text-xs text-destructive">
-                      {errors.school.message}
-                    </p>
+                    <p className="text-xs text-destructive">{errors.school.message}</p>
                   )}
                 </div>
 
@@ -261,71 +241,44 @@ export default function NewVideoPage() {
                   <Label htmlFor="level" className="text-sm font-medium">
                     Niveau <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("level", value, { shouldValidate: true })} disabled={isLoadingDropdowns}>
-                    <SelectTrigger id="level" className="ops-input h-9">
-                      <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner un niveau"} />
-                    </SelectTrigger>
-                    <SelectContent className="ops-card">
-                      {levels.map((level) => (
-                        <SelectItem key={level.value} value={level.value}>
-                          {level.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    id="level"
+                    {...register("level")}
+                    placeholder="ex: Terminale"
+                    className="ops-input h-9"
+                  />
                   {errors.level && (
-                    <p className="text-xs text-destructive">
-                      {errors.level.message}
-                    </p>
+                    <p className="text-xs text-destructive">{errors.level.message}</p>
                   )}
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="category" className="text-sm font-medium">
                     Catégorie <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("category", value, { shouldValidate: true })} disabled={isLoadingDropdowns}>
-                    <SelectTrigger id="category" className="ops-input h-9">
-                      <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner une catégorie"} />
-                    </SelectTrigger>
-                    <SelectContent className="ops-card">
-                      {categories.map((category) => (
-                        <SelectItem key={category.value} value={category.value}>
-                          {category.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    id="category"
+                    {...register("category")}
+                    placeholder="ex: Cours"
+                    className="ops-input h-9"
+                  />
                   {errors.category && (
-                    <p className="text-xs text-destructive">
-                      {errors.category.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="subject" className="text-sm font-medium">
-                    Matière <span className="text-destructive">*</span>
-                  </Label>
-                  <Select onValueChange={(value) => setValue("subject", value, { shouldValidate: true })} disabled={isLoadingDropdowns}>
-                    <SelectTrigger id="subject" className="ops-input h-9">
-                      <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner une matière"} />
-                    </SelectTrigger>
-                    <SelectContent className="ops-card">
-                      {matieres.map((matiere) => (
-                        <SelectItem key={matiere.value} value={matiere.value}>
-                          {matiere.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.subject && (
-                    <p className="text-xs text-destructive">
-                      {errors.subject.message}
-                    </p>
+                    <p className="text-xs text-destructive">{errors.category.message}</p>
                   )}
                 </div>
               </div>
+
+              <AdminTagsInput
+                tags={watchedSubjects}
+                onChange={(tags: string[]) => setValue("subjects", tags, { shouldValidate: true })}
+                cardTitle="Matières"
+                cardDescription="Ajoutez une ou plusieurs matières couvertes par cette vidéo"
+                placeholder="Ajouter une matière (ex: Mathématiques, Physique)"
+                withCard={false}
+              />
+              {errors.subjects && (
+                <p className="text-xs text-destructive">{errors.subjects.message as string}</p>
+              )}
             </AdminFormCard>
 
             {/* Thumbnail */}

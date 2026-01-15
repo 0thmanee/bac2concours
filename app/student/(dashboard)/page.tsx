@@ -175,7 +175,7 @@ export default async function StudentDashboard() {
                       </div>
                     </div>
                     <span className="rounded-full bg-metric-orange-light px-2 py-0.5 text-xs font-medium text-metric-orange">
-                      {video.subject}
+                      {video.subjects?.length > 0 ? video.subjects[0] : video.category}
                     </span>
                   </Link>
                 ))
