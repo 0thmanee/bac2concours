@@ -320,7 +320,7 @@ export default function StudentSchoolDetailPage() {
                 {school.specializations.map((spec) => (
                   <span
                     key={spec}
-                    className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-brand-700 dark:from-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 dark:text-brand-400 border border-brand-200 dark:border-brand-800"
+                    className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:from-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 dark:text-brand-400 border border-brand-200 dark:border-brand-800"
                   >
                     {spec}
                   </span>

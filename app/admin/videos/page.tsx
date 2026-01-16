@@ -287,7 +287,7 @@ export default function AdminVideosPage() {
         <div className="flex items-center gap-1 flex-wrap">
           {getStatusBadge(video.status)}
           {video.isPublic && (
-            <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-md bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-brand-700 border border-brand-200">Publique</span>
+            <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-md bg-brand-50 dark:bg-brand-900/20 text-brand-700 border border-brand-200">Publique</span>
           )}
         </div>
       ),

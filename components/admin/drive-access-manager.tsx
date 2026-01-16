@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo } from "react";
@@ -20,6 +21,7 @@ import {
   CheckSquare,
   Square,
   MinusSquare,
+  Lock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -202,8 +204,9 @@ export function DriveAccessManager() {
 
           {/* Quick Stats */}
           {userPermissions.length > 0 && (
-            <div className="grid grid-cols-3 gap-2 text-center">
-              {ROLE_OPTIONS.map((role) => {
+            <>
+            <div className="grid grid-cols-2 gap-2 text-center">
+              {ROLE_OPTIONS.slice(0, 2).map((role) => {
                 const count = userPermissions.filter((p) => p.role === role.value).length;
                 return (
                   <div key={role.value} className={cn("rounded-lg p-2", role.bg)}>
@@ -213,6 +216,16 @@ export function DriveAccessManager() {
                 );
               })}
             </div>
+            {ROLE_OPTIONS.slice(2).map((role) => {
+                const count = userPermissions.filter((p) => p.role === role.value).length;
+                return (
+                  <div key={role.value} className={cn("rounded-lg p-2 flex flex-col items-center", role.bg)}>
+                    <p className={cn("text-lg font-semibold", role.color)}>{count}</p>
+                    <p className="text-xs text-muted-foreground">{role.label}s</p>
+                  </div>
+                );
+              })}
+            </>
           )}
         </CardContent>
       </Card>
@@ -282,7 +295,7 @@ function GrantAccessPanel({ onSuccess, existingPermissions }: GrantAccessPanelPr
 
   // State
   const [role, setRole] = useState<"reader" | "commenter" | "writer">("reader");
-  const [targetFilter, setTargetFilter] = useState<"approved" | "active" | "all">("approved");
+  const [targetFilter] = useState<"approved" | "active" | "all">("approved");
   const [sendNotification, setSendNotification] = useState(false);
   const [emailMessage, setEmailMessage] = useState("");
   const [selectedUserIds, setSelectedUserIds] = useState<Set<string>>(new Set());
@@ -433,27 +446,36 @@ function GrantAccessPanel({ onSuccess, existingPermissions }: GrantAccessPanelPr
 
       {/* User Selection Section */}
       <div className="flex-1 min-h-0 flex flex-col border rounded-lg overflow-hidden">
-        {/* Header with Search and Select All */}
-        <div className="flex items-center gap-3 p-3 bg-muted/30 border-b shrink-0">
-          {/* Select All Checkbox */}
-          <button
-            type="button"
-            onClick={toggleAll}
-            className="flex items-center gap-2 hover:opacity-80 shrink-0"
-          >
-            {allSelected ? (
-              <CheckSquare className="h-5 w-5 text-brand-500" />
-            ) : someSelected ? (
-              <MinusSquare className="h-5 w-5 text-brand-500" />
-            ) : (
-              <Square className="h-5 w-5 text-muted-foreground" />
-            )}
-            <span className="text-sm font-medium">
-              {allSelected ? "Tout désélectionner" : "Tout sélectionner"}
-            </span>
-          </button>
+        {/* Header with Search and Select All - Same layout as revoke */}
+        <div className="p-3 space-y-2 bg-muted/30 border-b shrink-0">
+          {/* Select All Checkbox and Counter on same row */}
+          <div className="flex items-center justify-between h-8">
+            <button
+              type="button"
+              onClick={toggleAll}
+              className="flex items-center gap-2 hover:opacity-80 shrink-0"
+            >
+              {allSelected ? (
+                <CheckSquare className="h-5 w-5 text-brand-500" />
+              ) : someSelected ? (
+                <MinusSquare className="h-5 w-5 text-brand-500" />
+              ) : (
+                <Square className="h-5 w-5 text-muted-foreground" />
+              )}
+              <span className="text-sm font-medium">
+                {allSelected ? "Tout désélectionner" : "Tout sélectionner"}
+              </span>
+            </button>
 
-          {/* Search Input */}
+            {/* Selection Counter */}
+            {selectedCount > 0 && (
+              <Badge variant="secondary" className="shrink-0">
+                {selectedCount} sélectionné{selectedCount > 1 ? "s" : ""}
+              </Badge>
+            )}
+          </div>
+
+          {/* Search Input on its own row */}
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -463,13 +485,6 @@ function GrantAccessPanel({ onSuccess, existingPermissions }: GrantAccessPanelPr
               className="pl-9 h-9"
             />
           </div>
-
-          {/* Selection Counter */}
-          {selectedCount > 0 && (
-            <Badge variant="secondary" className="shrink-0">
-              {selectedCount} sélectionné{selectedCount > 1 ? "s" : ""}
-            </Badge>
-          )}
         </div>
 
         {/* User List */}
@@ -611,6 +626,11 @@ function RevokeAccessPanel({ permissions, onSuccess }: RevokeAccessPanelProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isRevoking, setIsRevoking] = useState(false);
 
+  // Check if a permission is protected (owner or service account)
+  const isProtected = (perm: DrivePermission) => {
+    return perm.type === "owner" || perm.email.includes(".iam.gserviceaccount.com");
+  };
+
   // Search filtered permissions
   const displayedPermissions = useMemo(() => {
     if (!searchQuery.trim()) return permissions;
@@ -620,9 +640,14 @@ function RevokeAccessPanel({ permissions, onSuccess }: RevokeAccessPanelProps) {
     );
   }, [permissions, searchQuery]);
 
-  // Selection state helpers
-  const allSelected = displayedPermissions.length > 0 && displayedPermissions.every((p) => selectedEmails.has(p.email));
-  const someSelected = displayedPermissions.some((p) => selectedEmails.has(p.email));
+  // Selectable permissions (exclude protected)
+  const selectablePermissions = useMemo(() => {
+    return displayedPermissions.filter((p) => !isProtected(p));
+  }, [displayedPermissions]);
+
+  // Selection state helpers (only count selectable)
+  const allSelected = selectablePermissions.length > 0 && selectablePermissions.every((p) => selectedEmails.has(p.email));
+  const someSelected = selectablePermissions.some((p) => selectedEmails.has(p.email));
   const selectedCount = selectedEmails.size;
 
   const toggleEmail = (email: string) => {
@@ -641,13 +666,13 @@ function RevokeAccessPanel({ permissions, onSuccess }: RevokeAccessPanelProps) {
     if (allSelected) {
       setSelectedEmails((prev) => {
         const next = new Set(prev);
-        displayedPermissions.forEach((p) => next.delete(p.email));
+        selectablePermissions.forEach((p) => next.delete(p.email));
         return next;
       });
     } else {
       setSelectedEmails((prev) => {
         const next = new Set(prev);
-        displayedPermissions.forEach((p) => next.add(p.email));
+        selectablePermissions.forEach((p) => next.add(p.email));
         return next;
       });
     }
@@ -709,9 +734,10 @@ function RevokeAccessPanel({ permissions, onSuccess }: RevokeAccessPanelProps) {
       {/* User Selection Section */}
       <div className="flex-1 min-h-0 flex flex-col border rounded-lg overflow-hidden">
         {/* Header with Search and Select All */}
-        <div className="flex items-center gap-3 p-3 bg-muted/30 border-b shrink-0">
+        <div className="p-3 space-y-2 bg-muted/30 border-b shrink-0">
           {/* Select All Checkbox */}
-          <button
+          <div className="flex items-center justify-between h-8">
+            <button
             type="button"
             onClick={toggleAll}
             className="flex items-center gap-2 hover:opacity-80 shrink-0"
@@ -728,6 +754,14 @@ function RevokeAccessPanel({ permissions, onSuccess }: RevokeAccessPanelProps) {
             </span>
           </button>
 
+          {/* Selection Counter */}
+          {selectedCount > 0 && (
+            <Badge variant="destructive" className="shrink-0">
+              {selectedCount} sélectionné{selectedCount > 1 ? "s" : ""}
+            </Badge>
+          )}
+          </div>
+
           {/* Search Input */}
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -738,13 +772,6 @@ function RevokeAccessPanel({ permissions, onSuccess }: RevokeAccessPanelProps) {
               className="pl-9 h-9"
             />
           </div>
-
-          {/* Selection Counter */}
-          {selectedCount > 0 && (
-            <Badge variant="destructive" className="shrink-0">
-              {selectedCount} sélectionné{selectedCount > 1 ? "s" : ""}
-            </Badge>
-          )}
         </div>
 
         {/* Permissions List */}
@@ -760,22 +787,32 @@ function RevokeAccessPanel({ permissions, onSuccess }: RevokeAccessPanelProps) {
               {displayedPermissions.map((perm) => {
                 const isSelected = selectedEmails.has(perm.email);
                 const roleConfig = getRoleConfig(perm.role);
+                const permIsProtected = isProtected(perm);
+                const isOwner = perm.type === "owner";
                 return (
                   <div
                     key={perm.id}
-                    onClick={() => toggleEmail(perm.email)}
+                    onClick={() => !permIsProtected && toggleEmail(perm.email)}
                     className={cn(
-                      "flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors",
-                      isSelected ? "bg-destructive/5" : "hover:bg-muted/50"
+                      "flex items-center gap-3 px-4 py-3 transition-colors",
+                      permIsProtected
+                        ? "bg-muted/30 cursor-not-allowed opacity-60"
+                        : isSelected
+                        ? "bg-destructive/5 cursor-pointer"
+                        : "hover:bg-muted/50 cursor-pointer"
                     )}
                   >
-                    <Checkbox
-                      checked={isSelected}
-                      className={cn(
-                        "shrink-0",
-                        isSelected && "border-destructive data-[state=checked]:bg-destructive"
-                      )}
-                    />
+                    {permIsProtected ? (
+                      <Lock className="h-4 w-4 text-muted-foreground shrink-0" />
+                    ) : (
+                      <Checkbox
+                        checked={isSelected}
+                        className={cn(
+                          "shrink-0",
+                          isSelected && "border-destructive data-[state=checked]:bg-destructive"
+                        )}
+                      />
+                    )}
                     <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">
@@ -785,10 +822,17 @@ function RevokeAccessPanel({ permissions, onSuccess }: RevokeAccessPanelProps) {
                         <p className="text-xs text-muted-foreground truncate">{perm.email}</p>
                       )}
                     </div>
-                    <Badge variant="secondary" className={cn("shrink-0 text-[10px]", roleConfig.bg, roleConfig.color)}>
-                      <roleConfig.icon className="h-3 w-3 mr-1" />
-                      {roleConfig.label}
-                    </Badge>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {permIsProtected && (
+                        <Badge variant="outline" className="text-[10px] border-muted-foreground/30">
+                          {isOwner ? "Propriétaire" : "Service"}
+                        </Badge>
+                      )}
+                      <Badge variant="secondary" className={cn("text-[10px]", roleConfig.bg, roleConfig.color)}>
+                        <roleConfig.icon className="h-3 w-3 mr-1" />
+                        {roleConfig.label}
+                      </Badge>
+                    </div>
                   </div>
                 );
               })}

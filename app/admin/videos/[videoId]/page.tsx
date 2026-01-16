@@ -110,7 +110,7 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
         badges={
           <>
             {getStatusBadge(video.status)}
-            {video.isPublic && <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-brand-700 border border-brand-200">Public</span>}
+            {video.isPublic && <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg bg-brand-50 dark:bg-brand-900/20 text-brand-700 border border-brand-200">Public</span>}
           </>
         }
         subtitle={
@@ -277,7 +277,7 @@ export default function VideoDetailPage({ params }: { params: Promise<{ videoId:
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   {video.tags.map((tag) => (
-                    <span key={tag} className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-linear-to-r from-[rgb(var(--brand-50))] to-[rgb(var(--brand-100))] text-brand-700 border border-brand-200">
+                    <span key={tag} className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-brand-50 dark:bg-brand-900/20 text-brand-700 border border-brand-200">
                       {tag}
                     </span>
                   ))}
