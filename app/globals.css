@@ -38,6 +38,18 @@
   --color-popover: rgb(var(--popover));
   --color-card-foreground: rgb(var(--card-foreground));
   --color-card: rgb(var(--card));
+  /* Brand Colors for Tailwind gradient utilities */
+  --color-brand-50: #FBEBF7;
+  --color-brand-100: #F7D6EE;
+  --color-brand-200: #EFADDF;
+  --color-brand-300: #E37AC9;
+  --color-brand-400: #D247AD;
+  --color-brand-500: #BD2D98;
+  --color-brand-600: #b02d94;
+  --color-brand-700: #8B2277;
+  --color-brand-800: #6B1B5E;
+  --color-brand-900: #54154B;
+  --color-brand-950: #380A30;
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
