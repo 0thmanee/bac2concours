@@ -20,3 +20,6 @@ export { AdminTagsInput } from "./admin-tags-input";
 
 // Settings components
 export { SettingsResourceManager } from "./settings-resource-manager";
+
+// Drive access management
+export { DriveAccessManager } from "./drive-access-manager";

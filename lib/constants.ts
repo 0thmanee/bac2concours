@@ -109,6 +109,10 @@ export const API_ROUTES = {
   MATIERE: (id: string) => `/api/settings/matieres/${id}`,
   MATIERES_ACTIVE: "/api/settings/matieres/active",
   DROPDOWN_OPTIONS: "/api/settings/dropdown-options",
+  // Google Drive
+  DRIVE: "/api/drive",
+  DRIVE_GRANT_ACCESS: "/api/drive/grant-access",
+  DRIVE_REVOKE_ACCESS: "/api/drive/revoke-access",
 } as const;
 
 // ============================================================
@@ -229,6 +233,10 @@ export const QUERY_KEYS = {
   },
   DROPDOWN_OPTIONS: {
     ALL: ["dropdown-options"] as const,
+  },
+  DRIVE: {
+    ALL: ["drive"] as const,
+    INFO: () => [...QUERY_KEYS.DRIVE.ALL, "info"] as const,
   },
 } as const;
 

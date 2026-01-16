@@ -1,6 +1,6 @@
-import { 
-  Users, 
-  BookOpen, 
+import {
+  Users,
+  BookOpen,
   Video,
   CreditCard,
   UserCheck,
@@ -11,6 +11,7 @@ import {
 import { MetricCard } from "@/components/ui/metric-card";
 import { StatCard } from "@/components/ui/stat-card";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { DriveAccessManager } from "@/components/admin";
 import { userService } from "@/lib/services/user.service";
 import { bookService } from "@/lib/services/book.service";
 import { videoService } from "@/lib/services/video.service";
@@ -119,47 +120,47 @@ export default async function AdminDashboard() {
         />
       </div>
 
-      {/* Quick Links & Recent Activity */}
-      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
+      {/* Quick Links & Drive Access */}
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
         {/* Quick Links */}
-        <Card className="ops-card">
+        <Card className="ops-card lg:col-span-2">
           <CardHeader>
             <CardTitle className="text-lg">Actions Rapides</CardTitle>
             <CardDescription>Accès rapide aux fonctionnalités principales</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 gap-3">
-              <Link 
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <Link
                 href={ADMIN_ROUTES.USERS}
                 className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover"
               >
                 <Users className="h-6 w-6 text-metric-blue mb-2" />
                 <span className="text-sm font-medium">Gérer Utilisateurs</span>
               </Link>
-              <Link 
+              <Link
                 href={ADMIN_ROUTES.BOOKS}
                 className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover"
               >
                 <BookOpen className="h-6 w-6 text-metric-orange mb-2" />
                 <span className="text-sm font-medium">Gérer Livres</span>
               </Link>
-              <Link 
+              <Link
                 href={ADMIN_ROUTES.VIDEOS}
                 className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover"
               >
                 <Video className="h-6 w-6 text-metric-mint mb-2" />
                 <span className="text-sm font-medium">Gérer Vidéos</span>
               </Link>
-              <Link 
+              <Link
                 href={ADMIN_ROUTES.QCM}
                 className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover"
               >
                 <HelpCircle className="h-6 w-6 text-metric-purple mb-2" />
                 <span className="text-sm font-medium">Gérer QCM</span>
               </Link>
-              <Link 
+              <Link
                 href="/admin/payments"
-                className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover col-span-2"
+                className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover sm:col-span-2"
               >
                 <CreditCard className="h-6 w-6 text-metric-rose mb-2" />
                 <span className="text-sm font-medium">Paiements</span>
@@ -168,7 +169,12 @@ export default async function AdminDashboard() {
           </CardContent>
         </Card>
 
-        {/* Recent Users */}
+        {/* Google Drive Access Manager */}
+        <DriveAccessManager />
+      </div>
+
+      {/* Recent Users */}
+      <div className="grid gap-6 grid-cols-1">
         <Card className="ops-card">
           <CardHeader>
             <CardTitle className="text-lg">Utilisateurs Récents</CardTitle>
