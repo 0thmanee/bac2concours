@@ -1,26 +1,79 @@
-import { 
-  BookOpen, 
+import {
+  BookOpen,
   Video,
   GraduationCap,
-  Clock,
   HelpCircle,
+  ArrowRight,
+  Play,
+  TrendingUp,
+  Target,
+  Sparkles,
+  Eye,
+  ChevronRight,
+  Flame,
+  School,
 } from "lucide-react";
-import { MetricCard } from "@/components/ui/metric-card";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
+import Image from "next/image";
 import { STUDENT_ROUTES } from "@/lib/routes";
 import { bookService } from "@/lib/services/book.service";
 import { videoService } from "@/lib/services/video.service";
 import { qcmService } from "@/lib/services/qcm.service";
+import { SupabaseImage } from "@/components/ui/supabase-image";
+
+// Helper to get time-based greeting
+function getGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Bonjour";
+  if (hour < 18) return "Bon après-midi";
+  return "Bonsoir";
+}
+
+// Helper to get motivational message
+function getMotivationalMessage(): string {
+  const messages = [
+    "Chaque jour est une nouvelle opportunité d'apprendre.",
+    "La persévérance est la clé du succès.",
+    "Votre avenir se construit aujourd'hui.",
+    "Un pas de plus vers vos objectifs.",
+    "Le savoir est votre meilleur investissement.",
+  ];
+  return messages[Math.floor(Math.random() * messages.length)];
+}
+
+// Helper to format duration
+function formatDuration(seconds: number): string {
+  const mins = Math.floor(seconds / 60);
+  if (mins < 60) return `${mins} min`;
+  const hours = Math.floor(mins / 60);
+  const remainingMins = mins % 60;
+  return `${hours}h ${remainingMins}min`;
+}
+
+// Helper to get YouTube thumbnail
+function getYouTubeThumbnail(url: string): string | null {
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s?]+)/,
+  ];
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) {
+      return `https://img.youtube.com/vi/${match[1]}/mqdefault.jpg`;
+    }
+  }
+  return null;
+}
 
 export default async function StudentDashboard() {
   const session = await auth();
-  
+
   if (!session?.user) {
     return null;
   }
-  
+
   // Get available content stats
   const [bookStats, videoStats, qcmStats] = await Promise.all([
     bookService.getStats(),
@@ -40,187 +93,325 @@ export default async function StudentDashboard() {
   // Get recent videos
   const recentVideos = await videoService.findAll({
     page: 1,
-    limit: 4,
+    limit: 6,
     sortBy: "createdAt",
     sortOrder: "desc",
     status: "ACTIVE",
   });
-  
+
+  const greeting = getGreeting();
+  const motivationalMessage = getMotivationalMessage();
+  const firstName = session.user.name?.split(" ")[0] || "Étudiant";
+
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-ops-primary">
-            Bienvenue, {session.user.name}
-          </h1>
-          <p className="mt-1 text-sm text-ops-secondary">
-            Accédez à vos ressources éducatives pour préparer le concours 2BAC.
-          </p>
+    <div className="space-y-8 pb-8">
+      {/* Hero Welcome Section */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-600 via-brand-500 to-brand-400 p-6 md:p-8">
+        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+
+        <div className="relative z-10">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-brand-200" />
+                <span className="text-sm font-medium text-brand-100">{motivationalMessage}</span>
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white">
+                {greeting}, {firstName} !
+              </h1>
+              <p className="text-brand-100 max-w-xl">
+                Continuez votre préparation au concours 2BAC. Explorez nos ressources et testez vos connaissances.
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <Link href={STUDENT_ROUTES.QUIZ}>
+                <Button className="bg-white text-brand-600 hover:bg-brand-50">
+                  <Target className="mr-2 h-4 w-4" />
+                  Lancer un Quiz
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Quick Stats Row */}
+          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 p-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20">
+                  <BookOpen className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-white">{bookStats.activeBooks}</p>
+                  <p className="text-xs text-brand-100">Livres</p>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 p-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20">
+                  <Video className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-white">{videoStats.active}</p>
+                  <p className="text-xs text-brand-100">Vidéos</p>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 p-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20">
+                  <HelpCircle className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-white">{qcmStats.activeQuestions}</p>
+                  <p className="text-xs text-brand-100">Questions</p>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 p-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20">
+                  <TrendingUp className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-white">{qcmStats.averageSuccessRate}%</p>
+                  <p className="text-xs text-brand-100">Réussite</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Metric Cards */}
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard
-          title="Livres Disponibles"
-          value={bookStats.activeBooks}
-          icon={BookOpen}
-          color="blue"
-          subtitle={`${bookStats.totalBooks} total`}
-        />
-        <MetricCard
-          title="Vidéos Disponibles"
-          value={videoStats.active}
-          icon={Video}
-          color="orange"
-          subtitle={`${videoStats.total} total`}
-        />
-        <MetricCard
-          title="Questions QCM"
-          value={qcmStats.activeQuestions}
-          icon={HelpCircle}
-          color="purple"
-          subtitle="Testez vos connaissances"
-        />
-        <MetricCard
-          title="Taux de Réussite"
-          value={`${qcmStats.averageSuccessRate}%`}
-          icon={GraduationCap}
-          color="mint"
-          subtitle="Performance globale"
-        />
+      {/* Feature Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Link href={STUDENT_ROUTES.BOOKS} className="group">
+          <Card className="h-full border border-border hover:border-metric-blue transition-colors">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-metric-blue-light">
+                  <BookOpen className="h-6 w-6 text-metric-blue" />
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-metric-blue transition-colors" />
+              </div>
+              <h3 className="mt-4 text-lg font-semibold">Bibliothèque</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Accédez à {bookStats.activeBooks} livres et documents de préparation
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href={STUDENT_ROUTES.VIDEOS} className="group">
+          <Card className="h-full border border-border hover:border-metric-orange transition-colors">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-metric-orange-light">
+                  <Video className="h-6 w-6 text-metric-orange" />
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-metric-orange transition-colors" />
+              </div>
+              <h3 className="mt-4 text-lg font-semibold">Vidéothèque</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Regardez {videoStats.active} vidéos explicatives et cours
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href={STUDENT_ROUTES.QUIZ} className="group">
+          <Card className="h-full border border-border hover:border-metric-purple transition-colors">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-metric-purple-light">
+                  <HelpCircle className="h-6 w-6 text-metric-purple" />
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-metric-purple transition-colors" />
+              </div>
+              <h3 className="mt-4 text-lg font-semibold">Quiz QCM</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Testez vos connaissances avec {qcmStats.activeQuestions} questions
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
-      {/* Recent Content */}
-      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
-        {/* Recent Books */}
-        <Card className="ops-card">
-          <CardHeader className="flex flex-row items-center justify-between">
+      {/* Recent Videos Section */}
+      {recentVideos.videos.length > 0 && (
+        <section>
+          <div className="flex items-center justify-between mb-4">
             <div>
-              <CardTitle className="text-lg">Livres Récents</CardTitle>
-              <CardDescription>Derniers livres ajoutés</CardDescription>
+              <h2 className="text-xl font-semibold">Vidéos récentes</h2>
+              <p className="text-sm text-muted-foreground">Les dernières vidéos ajoutées</p>
             </div>
-            <Link 
-              href={STUDENT_ROUTES.BOOKS}
-              className="text-sm text-metric-blue hover:underline"
-            >
-              Voir tout
+            <Link href={STUDENT_ROUTES.VIDEOS}>
+              <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground hover:text-foreground">
+                Voir tout
+                <ArrowRight className="h-4 w-4" />
+              </Button>
             </Link>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {recentBooks.books.length === 0 ? (
-                <p className="text-sm text-ops-secondary">Aucun livre disponible</p>
-              ) : (
-                recentBooks.books.map((book) => (
-                  <Link
-                    key={book.id}
-                    href={STUDENT_ROUTES.BOOK(book.id)}
-                    className="flex flex-wrap items-center gap-2 justify-between rounded-lg border border-border bg-ops-card-secondary p-3 transition-colors hover:bg-ops-hover"
-                  >
-                    <div className="flex items-center flex-wrap gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-metric-blue-light">
-                        <BookOpen className="h-5 w-5 text-metric-blue" />
-                      </div>
-                      <div>
-                        <p className="unknowntext-sm font-medium">{book.title}</p>
-                        <p className="text-xs text-ops-secondary">{book.author}</p>
-                      </div>
-                    </div>
-                    <span className="rounded-full bg-metric-blue-light px-2 py-0.5 text-xs font-medium text-metric-blue">
-                      {book.subjects && book.subjects.length > 0 ? book.subjects[0] : book.category}
-                    </span>
-                  </Link>
-                ))
-              )}
-            </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Recent Videos */}
-        <Card className="ops-card">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-lg">Vidéos Récentes</CardTitle>
-              <CardDescription>Dernières vidéos ajoutées</CardDescription>
-            </div>
-            <Link 
-              href={STUDENT_ROUTES.VIDEOS}
-              className="text-sm text-metric-orange hover:underline"
-            >
-              Voir tout
-            </Link>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {recentVideos.videos.length === 0 ? (
-                <p className="text-sm text-ops-secondary">Aucune vidéo disponible</p>
-              ) : (
-                recentVideos.videos.map((video) => (
-                  <Link
-                    key={video.id}
-                    href={STUDENT_ROUTES.VIDEO(video.id)}
-                    className="flex flex-wrap items-center gap-2 justify-between rounded-lg border border-border bg-ops-card-secondary p-3 transition-colors hover:bg-ops-hover"
-                  >
-                    <div className="flex items-center flex-wrap gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-metric-orange-light">
-                        <Video className="h-5 w-5 text-metric-orange" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {recentVideos.videos.map((video) => {
+              const thumbnail = video.thumbnailFile?.publicUrl || getYouTubeThumbnail(video.url);
+              return (
+                <Link key={video.id} href={STUDENT_ROUTES.VIDEO(video.id)} className="group">
+                  <Card className="h-full overflow-hidden border border-border hover:border-metric-orange transition-colors flex">
+                    {/* Thumbnail */}
+                    <div className="relative aspect-video bg-muted overflow-hidden">
+                      {thumbnail ? (
+                        <Image
+                          src={thumbnail}
+                          alt={video.title}
+                          fill
+                          unoptimized
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-metric-orange-light">
+                          <Video className="h-12 w-12 text-metric-orange/50" />
+                        </div>
+                      )}
+                      {/* Play overlay */}
+                      <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/20 transition-colors flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-full bg-background/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Play className="h-5 w-5 text-metric-orange ml-0.5" fill="currentColor" />
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <p className="unknowntext-sm font-medium">{video.title}</p>
-                        <p className="text-xs text-ops-secondary">
-                          {video.duration ? `${Math.floor(video.duration / 60)} min` : "Vidéo"}
-                        </p>
-                      </div>
+                      {/* Duration badge */}
+                      {video.duration && (
+                        <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-foreground/80 text-background text-xs font-medium">
+                          {formatDuration(video.duration)}
+                        </div>
+                      )}
                     </div>
-                    <span className="rounded-full bg-metric-orange-light px-2 py-0.5 text-xs font-medium text-metric-orange">
-                      {video.subjects?.length > 0 ? video.subjects[0] : video.category}
-                    </span>
-                  </Link>
-                ))
-              )}
+                    {/* Content */}
+                    <CardContent className="p-4">
+                      <h3 className="font-medium line-clamp-2 group-hover:text-metric-orange transition-colors">
+                        {video.title}
+                      </h3>
+                      <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
+                        <span className="inline-flex items-center gap-1">
+                          <Eye className="h-3 w-3" />
+                          {video.views || 0} vues
+                        </span>
+                        {video.subjects?.length > 0 && (
+                          <span className="px-2 py-0.5 rounded-full bg-metric-orange-light text-metric-orange font-medium">
+                            {video.subjects[0]}
+                          </span>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Recent Books Section */}
+      {recentBooks.books.length > 0 && (
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-xl font-semibold">Livres récents</h2>
+              <p className="text-sm text-muted-foreground">Les derniers documents ajoutés</p>
             </div>
-          </CardContent>
-        </Card>
+            <Link href={STUDENT_ROUTES.BOOKS}>
+              <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground hover:text-foreground">
+                Voir tout
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {recentBooks.books.map((book) => (
+              <Link key={book.id} href={STUDENT_ROUTES.BOOK(book.id)} className="group">
+                <Card className="overflow-hidden border border-border hover:border-metric-blue transition-colors">
+                  {/* Cover */}
+                  <div className="relative aspect-[3/4] bg-muted overflow-hidden">
+                    {book.coverFile?.publicUrl ? (
+                      <SupabaseImage
+                        src={book.coverFile.publicUrl}
+                        alt={book.title}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-metric-blue-light">
+                        <BookOpen className="h-10 w-10 text-metric-blue/50" />
+                      </div>
+                    )}
+                  </div>
+                  {/* Content */}
+                  <CardContent className="p-3">
+                    <h3 className="font-medium text-sm line-clamp-2 group-hover:text-metric-blue transition-colors">
+                      {book.title}
+                    </h3>
+                    <p className="mt-1 text-xs text-muted-foreground line-clamp-1">
+                      {book.author}
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Bottom CTA Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Schools Card */}
+        <Link href={STUDENT_ROUTES.SCHOOLS} className="group">
+          <Card className="h-full overflow-hidden border border-border hover:border-metric-cyan transition-colors">
+            <CardContent className="p-6 flex items-center gap-4">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-metric-cyan-light">
+                <School className="h-7 w-7 text-metric-cyan" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-semibold group-hover:text-metric-cyan transition-colors">Explorer les Écoles</h3>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  Découvrez les écoles et universités pour votre orientation
+                </p>
+              </div>
+              <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground group-hover:text-metric-cyan transition-colors" />
+            </CardContent>
+          </Card>
+        </Link>
+
+        {/* Profile Card */}
+        <Link href={STUDENT_ROUTES.PROFILE} className="group">
+          <Card className="h-full overflow-hidden border border-border hover:border-metric-mint transition-colors">
+            <CardContent className="p-6 flex items-center gap-4">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-metric-mint-light">
+                <GraduationCap className="h-7 w-7 text-metric-mint" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-semibold group-hover:text-metric-mint transition-colors">Mon Profil</h3>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  Gérez vos informations et suivez votre progression
+                </p>
+              </div>
+              <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground group-hover:text-metric-mint transition-colors" />
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
-      {/* Quick Actions */}
-      <Card className="ops-card">
-        <CardHeader>
-          <CardTitle className="text-lg">Accès Rapide</CardTitle>
-          <CardDescription>Explorez votre contenu éducatif</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Link 
-              href={STUDENT_ROUTES.BOOKS}
-              className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover text-center"
-            >
-              <BookOpen className="h-8 w-8 text-metric-blue mb-3" />
-              <span className="text-sm font-medium">Tous les Livres</span>
-            </Link>
-            <Link 
-              href={STUDENT_ROUTES.VIDEOS}
-              className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover text-center"
-            >
-              <Video className="h-8 w-8 text-metric-orange mb-3" />
-              <span className="text-sm font-medium">Toutes les Vidéos</span>
-            </Link>
-            <Link 
-              href={STUDENT_ROUTES.QUIZ}
-              className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover text-center"
-            >
-              <HelpCircle className="h-8 w-8 text-metric-purple mb-3" />
-              <span className="text-sm font-medium">Quiz QCM</span>
-            </Link>
-            <Link 
-              href={STUDENT_ROUTES.PROFILE}
-              className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-6 transition-colors hover:bg-ops-hover text-center"
-            >
-              <GraduationCap className="h-8 w-8 text-metric-mint mb-3" />
-              <span className="text-sm font-medium">Mon Profil</span>
-            </Link>
+      {/* Motivation Footer */}
+      <Card className="border-dashed border-border">
+        <CardContent className="py-6 text-center">
+          <div className="inline-flex items-center gap-2 text-muted-foreground">
+            <Flame className="h-5 w-5 text-metric-orange" />
+            <span className="text-sm">
+              Continuez vos efforts ! La régularité est la clé de la réussite.
+            </span>
           </div>
         </CardContent>
       </Card>
