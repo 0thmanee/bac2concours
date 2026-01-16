@@ -343,10 +343,16 @@ function GrantAccessPanel({ onSuccess, existingPermissions }: GrantAccessPanelPr
     );
   }, [availableUsers, searchQuery]);
 
+  // Valid selected IDs (only those in availableUsers)
+  const availableUserIds = useMemo(() => new Set(availableUsers.map((u) => u.id)), [availableUsers]);
+  const validSelectedIds = useMemo(() => {
+    return new Set(Array.from(selectedUserIds).filter((id) => availableUserIds.has(id)));
+  }, [selectedUserIds, availableUserIds]);
+
   // Selection state helpers
   const allSelected = displayedUsers.length > 0 && displayedUsers.every((u) => selectedUserIds.has(u.id));
   const someSelected = displayedUsers.some((u) => selectedUserIds.has(u.id));
-  const selectedCount = selectedUserIds.size;
+  const selectedCount = validSelectedIds.size;
 
   const toggleUser = (userId: string) => {
     setSelectedUserIds((prev) => {
@@ -390,7 +396,7 @@ function GrantAccessPanel({ onSuccess, existingPermissions }: GrantAccessPanelPr
 
     const input: GrantAccessInput = {
       role,
-      userIds: Array.from(selectedUserIds),
+      userIds: Array.from(validSelectedIds),
       sendNotification,
       emailMessage: emailMessage.trim() || undefined,
     };
