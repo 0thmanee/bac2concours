@@ -106,84 +106,75 @@ export default async function StudentDashboard() {
   return (
     <div className="space-y-8 pb-8">
       {/* Hero Welcome Section */}
-      <div className="relative overflow-hidden rounded-2xl p-6 md:p-8 bg-gradient-to-br from-brand-50 via-brand-100 to-brand-200 dark:from-brand-950 dark:via-brand-900 dark:to-brand-800 border border-brand-200 dark:border-brand-800">
-        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-brand-300/20 dark:bg-brand-500/20 blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-brand-300/20 dark:bg-brand-400/15 blur-3xl" />
-
-        <div className="relative z-10">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-brand-600 dark:text-brand-400" />
-                <span className="text-sm font-medium text-brand-600 dark:text-brand-300">{motivationalMessage}</span>
+      <Card className="border border-border">
+        <CardContent className="p-6 md:p-8">
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Sparkles className="h-4 w-4" />
+                <span className="text-sm">{motivationalMessage}</span>
               </div>
-              <h1 className="text-2xl md:text-3xl font-bold text-brand-900 dark:text-white">
-                {greeting}, {firstName} !
-              </h1>
-              <p className="text-brand-700 dark:text-brand-200 max-w-xl">
-                Continuez votre préparation au concours 2BAC. Explorez nos ressources et testez vos connaissances.
-              </p>
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+                  {greeting}, {firstName} !
+                </h1>
+                <p className="mt-1 text-muted-foreground max-w-lg">
+                  Continuez votre préparation au concours 2BAC. Explorez nos ressources et testez vos connaissances.
+                </p>
+              </div>
             </div>
 
-            <div className="flex gap-3">
-              <Link href={STUDENT_ROUTES.QUIZ}>
-                <Button className="bg-brand-600 text-white hover:bg-brand-700 dark:bg-brand-500 dark:hover:bg-brand-400">
-                  <Target className="mr-2 h-4 w-4" />
-                  Lancer un Quiz
-                </Button>
-              </Link>
-            </div>
+            <Link href={STUDENT_ROUTES.QUIZ}>
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                <Target className="mr-2 h-4 w-4" />
+                Lancer un Quiz
+              </Button>
+            </Link>
           </div>
 
           {/* Quick Stats Row */}
-          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="rounded-xl bg-white/60 dark:bg-brand-800/50 backdrop-blur-sm border border-brand-200 dark:border-brand-700 p-4">
+          <div className="mt-8 pt-6 border-t border-border">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-200 dark:bg-brand-700/50">
-                  <BookOpen className="h-5 w-5 text-brand-700 dark:text-brand-300" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-metric-blue-light">
+                  <BookOpen className="h-5 w-5 text-metric-blue" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-brand-900 dark:text-white">{bookStats.activeBooks}</p>
-                  <p className="text-xs text-brand-600 dark:text-brand-400">Livres</p>
+                  <p className="text-2xl font-semibold text-foreground">{bookStats.activeBooks}</p>
+                  <p className="text-xs text-muted-foreground">Livres</p>
                 </div>
               </div>
-            </div>
-            <div className="rounded-xl bg-white/60 dark:bg-brand-800/50 backdrop-blur-sm border border-brand-200 dark:border-brand-700 p-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-200 dark:bg-brand-700/50">
-                  <Video className="h-5 w-5 text-brand-700 dark:text-brand-300" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-metric-orange-light">
+                  <Video className="h-5 w-5 text-metric-orange" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-brand-900 dark:text-white">{videoStats.active}</p>
-                  <p className="text-xs text-brand-600 dark:text-brand-400">Vidéos</p>
+                  <p className="text-2xl font-semibold text-foreground">{videoStats.active}</p>
+                  <p className="text-xs text-muted-foreground">Vidéos</p>
                 </div>
               </div>
-            </div>
-            <div className="rounded-xl bg-white/60 dark:bg-brand-800/50 backdrop-blur-sm border border-brand-200 dark:border-brand-700 p-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-200 dark:bg-brand-700/50">
-                  <HelpCircle className="h-5 w-5 text-brand-700 dark:text-brand-300" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-metric-purple-light">
+                  <HelpCircle className="h-5 w-5 text-metric-purple" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-brand-900 dark:text-white">{qcmStats.activeQuestions}</p>
-                  <p className="text-xs text-brand-600 dark:text-brand-400">Questions</p>
+                  <p className="text-2xl font-semibold text-foreground">{qcmStats.activeQuestions}</p>
+                  <p className="text-xs text-muted-foreground">Questions</p>
                 </div>
               </div>
-            </div>
-            <div className="rounded-xl bg-white/60 dark:bg-brand-800/50 backdrop-blur-sm border border-brand-200 dark:border-brand-700 p-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-200 dark:bg-brand-700/50">
-                  <TrendingUp className="h-5 w-5 text-brand-700 dark:text-brand-300" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-metric-mint-light">
+                  <TrendingUp className="h-5 w-5 text-metric-mint" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-brand-900 dark:text-white">{qcmStats.averageSuccessRate}%</p>
-                  <p className="text-xs text-brand-600 dark:text-brand-400">Réussite</p>
+                  <p className="text-2xl font-semibold text-foreground">{qcmStats.averageSuccessRate}%</p>
+                  <p className="text-xs text-muted-foreground">Réussite</p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Feature Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
