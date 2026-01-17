@@ -31,7 +31,7 @@ const Hero = () => {
           <div className="space-y-8">
             <div>
               <span className="inline-block px-4 py-1 bg-primary/10 border border-primary/20 rounded-full text-primary font-medium text-sm mb-6">
-                Préparation Concours 2025
+                Préparation aux Concours
               </span>
             </div>
             
@@ -44,7 +44,7 @@ const Hero = () => {
             </h1>
             
             <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl">
-              Préparez-vous aux concours 2025 de MÉDECINE, DENTAIRE, PHARMACIE, 
+              Préparez-vous aux concours de MÉDECINE, DENTAIRE, PHARMACIE, 
               ENCG, ENA, ENSA, ENAM, IAV, ENSAM, ISPITS et ISCAE, au Maroc avec 
               notre plateforme de préparation en ligne complète.
             </p>
