@@ -526,7 +526,7 @@ function GrantAccessPanel({ onSuccess, existingPermissions }: GrantAccessPanelPr
                       checked={isSelected}
                       className={cn(
                         "shrink-0",
-                        isSelected && "border-brand-500 data-[state=checked]:bg-brand-500"
+                        isSelected && "border-brand-500 bg-brand-500 text-white"
                       )}
                     />
                     <div className="flex-1 min-w-0">
