@@ -46,13 +46,13 @@ const NavBar = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
-            <Link href="/" className="flex-shrink-0 flex items-center">
+            <Link href="/" className="shrink-0 flex items-center">
               <Image 
                 src="/logo.png" 
                 alt="2BAConcours Logo" 
                 width={140} 
                 height={40} 
-                className="h-14 w-auto" 
+                className="h-14 w-auto invert dark:invert-0" 
               />
             </Link>
 
@@ -126,7 +126,7 @@ const NavBar = () => {
                       alt="2BAConcours Logo" 
                       width={140} 
                       height={40} 
-                      className="h-10 w-auto" 
+                      className="h-10 w-auto invert dark:invert-0" 
                     />
                   </Link>
                   <button

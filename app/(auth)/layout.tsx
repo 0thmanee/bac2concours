@@ -34,7 +34,7 @@ export default async function AuthLayout({
               alt="2BAConcours"
               width={200}
               height={80}
-              className="h-16 w-auto"
+              className="h-16 w-auto invert dark:invert-0"
               priority
             />
           </div>

@@ -106,7 +106,7 @@ export default function AdminSidebar() {
           alt="2BAConcours"
           width={160}
           height={60}
-          className="h-10 w-auto brightness-0 dark:brightness-0 dark:invert"
+          className="h-10 w-auto invert dark:invert-0"
           priority
         />
       </SidebarHeader>

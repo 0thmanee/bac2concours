@@ -54,7 +54,7 @@ export function PublicHeader() {
               alt="2BAConcours"
               width={150}
               height={50}
-              className="h-10 sm:h-12 w-auto brightness-0 dark:brightness-0 dark:invert"
+              className="h-10 sm:h-12 w-auto invert dark:invert-0"
               priority
             />
           </Link>
