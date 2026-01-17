@@ -232,7 +232,7 @@ export function DriveAccessManager() {
 
       {/* Full Management Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-3xl h-[85vh] overflow-hidden flex flex-col p-0">
+        <DialogContent className="h-[85vh] overflow-hidden flex flex-col p-0">
           <DialogHeader className="px-6 pt-6 pb-4 border-b shrink-0">
             <DialogTitle className="flex items-center gap-2">
               <FolderSync className="h-5 w-5 text-brand-500" />
