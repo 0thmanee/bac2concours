@@ -109,21 +109,23 @@ const Contact = () => {
             
             <div className="pt-6">
               <h3 className="text-xl font-semibold mb-4 text-foreground">Suivez-nous</h3>
-              <div className="flex items-center gap-4">
-                {[
-                  { icon: <FaFacebookF />, href: "https://www.facebook.com/profile.php?id=100090164057717" },
-                  { icon: <FaInstagram />, href: "https://www.instagram.com/concours_bac2" }
-                ].map((item, i) => (
-                  <Link
-                    key={i}
-                    href={item.href}
-                    target="_blank"
-                    className="w-10 h-10 bg-muted hover:bg-primary/10 border border-border hover:border-primary rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-all duration-300 hover:shadow-glow"
-                  >
-                    {item.icon}
-                  </Link>
-                ))}
-              </div>
+              <div className="pt-6 flex items-center gap-4">
+              {[
+                { icon: <FaRegEnvelope />, href: "mailto:bac2concours@gmail.com" },
+                { icon: <FaPhoneAlt />, href: "tel:+212684528279" },
+                { icon: <FaFacebookF />, href: "https://www.facebook.com/profile.php?id=100090164057717" },
+                { icon: <FaInstagram />, href: "https://www.instagram.com/concours_bac2" }
+              ].map((item, i) => (
+                <Link
+                  key={i}
+                  href={item.href}
+                  target="_blank"
+                  className="w-10 h-10 bg-muted hover:bg-primary/10 border border-border hover:border-primary rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-all duration-300 hover:shadow-glow"
+                >
+                  {item.icon}
+                </Link>
+              ))}
+            </div>
             </div>
           </div>
           
@@ -193,19 +195,6 @@ const Contact = () => {
                   )}
                 </button>
               </form>
-              
-              {/* Floating decoration element */}
-              <div className="absolute -bottom-12 -right-2 sm:-right-6 p-4 glass-card rounded-xl shadow-lg">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                    <FaRegEnvelope className="w-4 h-4 text-primary-foreground" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-foreground">Temps de réponse</p>
-                    <p className="text-lg font-bold text-primary">24h</p>
-                  </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

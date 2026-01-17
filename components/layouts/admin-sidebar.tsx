@@ -117,7 +117,12 @@ export default function AdminSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="space-y-0.5">
               {navigation.map((item) => {
-                const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+                let isActive;
+                if (item.href === ADMIN_ROUTES.DASHBOARD) {
+                  isActive = pathname === item.href;
+                } else {
+                  isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+                }
                 return (
                   <SidebarMenuItem key={item.name}>
                     <SidebarMenuButton 
