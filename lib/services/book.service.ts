@@ -148,6 +148,12 @@ export const bookService = {
    * Update a book
    */
   async update(id: string, data: UpdateBookInput) {
+    // Get current book to check for status changes
+    const currentBook = await prisma.book.findUnique({
+      where: { id },
+      select: { status: true, title: true },
+    });
+
     // Only include defined values (not undefined)
     const cleanedData: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(data)) {
@@ -156,7 +162,7 @@ export const bookService = {
       }
     }
 
-    return prisma.book.update({
+    const updatedBook = await prisma.book.update({
       where: { id },
       data: cleanedData,
       include: {
@@ -170,15 +176,43 @@ export const bookService = {
         coverFile: true,
       },
     });
+
+    // Notify admins if status changed
+    if (currentBook && data.status && data.status !== currentBook.status) {
+      notificationService
+        .onResourceStatusChanged(
+          "BOOK",
+          currentBook.title,
+          currentBook.status,
+          data.status,
+          updatedBook.uploadedById
+        )
+        .catch(console.error);
+    }
+
+    return updatedBook;
   },
 
   /**
    * Delete a book
    */
   async delete(id: string): Promise<void> {
+    // Get book details before deletion
+    const book = await prisma.book.findUnique({
+      where: { id },
+      select: { title: true, uploadedById: true },
+    });
+
     await prisma.book.delete({
       where: { id },
     });
+
+    // Notify admins about deletion
+    if (book) {
+      notificationService
+        .onResourceDeleted("BOOK", book.title, book.uploadedById)
+        .catch(console.error);
+    }
   },
 
   /**

@@ -77,6 +77,8 @@ export async function POST(request: NextRequest) {
       });
       if (fullUser) {
         notificationService.onNewUserRegistered(fullUser).catch(console.error);
+        // Also notify the student that their account was created
+        notificationService.onAccountCreated(fullUser).catch(console.error);
       }
     }
 

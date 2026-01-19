@@ -240,14 +240,31 @@ const notificationIcons: Record<
   NotificationType,
   { icon: string; color: string }
 > = {
-  USER_ACTIVATED: { icon: "", color: BRAND.primary },
-  USER_DEACTIVATED: { icon: "", color: BRAND.primary },
-  NEW_USER_REGISTERED: { icon: "", color: BRAND.primary },
-  SYSTEM_ANNOUNCEMENT: { icon: "", color: BRAND.primary },
-  PAYMENT_SUBMITTED: { icon: "", color: BRAND.primary },
-  PAYMENT_APPROVED: { icon: "", color: BRAND.primary },
-  PAYMENT_REJECTED: { icon: "", color: BRAND.primary },
-  NEW_RESOURCE: { icon: "", color: BRAND.primary },
+  // User Management
+  USER_ACTIVATED: { icon: "✓", color: BRAND.primary },
+  USER_DEACTIVATED: { icon: "🔒", color: BRAND.primary },
+  USER_DELETED: { icon: "❌", color: BRAND.primary },
+  NEW_USER_REGISTERED: { icon: "👤", color: BRAND.primary },
+  EMAIL_VERIFIED: { icon: "✉️", color: BRAND.primary },
+  ACCOUNT_CREATED: { icon: "🎉", color: BRAND.primary },
+  
+  // System
+  SYSTEM_ANNOUNCEMENT: { icon: "📢", color: BRAND.primary },
+  
+  // Payment
+  PAYMENT_SUBMITTED: { icon: "💳", color: BRAND.primary },
+  PAYMENT_RESUBMITTED: { icon: "🔄", color: BRAND.primary },
+  PAYMENT_APPROVED: { icon: "✅", color: BRAND.primary },
+  PAYMENT_REJECTED: { icon: "⚠️", color: BRAND.primary },
+  PAYMENT_CONFIRMATION: { icon: "📋", color: BRAND.primary },
+  
+  // Resources
+  NEW_RESOURCE: { icon: "📚", color: BRAND.primary },
+  RESOURCE_UPDATED: { icon: "📝", color: BRAND.primary },
+  RESOURCE_DELETED: { icon: "🗑️", color: BRAND.primary },
+  
+  // Quiz
+  QUIZ_COMPLETED: { icon: "🏆", color: BRAND.primary },
 };
 
 export const notificationEmailService = {

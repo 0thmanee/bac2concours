@@ -156,7 +156,13 @@ export const qcmService = {
    * Update a question
    */
   async updateQuestion(id: string, data: UpdateQuestionInput) {
-    return prisma.question.update({
+    // Get current question to check for status changes
+    const currentQuestion = await prisma.question.findUnique({
+      where: { id },
+      select: { status: true, text: true },
+    });
+
+    const updatedQuestion = await prisma.question.update({
       where: { id },
       data,
       include: {
@@ -170,15 +176,49 @@ export const qcmService = {
         imageFile: true,
       },
     });
+
+    // Notify admins if status changed
+    if (currentQuestion && data.status && data.status !== currentQuestion.status) {
+      notificationService
+        .onResourceStatusChanged(
+          "QUESTION",
+          currentQuestion.text.substring(0, 50) + "...",
+          currentQuestion.status,
+          data.status,
+          updatedQuestion.uploadedById
+        )
+        .catch(console.error);
+    }
+
+    return updatedQuestion;
   },
 
   /**
    * Delete a question
    */
   async deleteQuestion(id: string) {
-    return prisma.question.delete({
+    // Get question details before deletion
+    const question = await prisma.question.findUnique({
+      where: { id },
+      select: { text: true, uploadedById: true },
+    });
+
+    const result = await prisma.question.delete({
       where: { id },
     });
+
+    // Notify admins about deletion
+    if (question) {
+      notificationService
+        .onResourceDeleted(
+          "QUESTION",
+          question.text.substring(0, 50) + "...",
+          question.uploadedById
+        )
+        .catch(console.error);
+    }
+
+    return result;
   },
 
   /**
@@ -396,6 +436,17 @@ export const qcmService = {
         })
       )
     );
+
+    // Notify student about quiz completion
+    notificationService
+      .onQuizCompleted(userId, {
+        school,
+        matiere,
+        score: correctCount,
+        totalQuestions: answers.length,
+        percentage: Math.round(percentage * 10) / 10,
+      })
+      .catch(console.error);
 
     return {
       attemptId: attempt.id,

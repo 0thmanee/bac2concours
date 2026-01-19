@@ -19,6 +19,14 @@ import {
   CheckCircle,
   AlertCircle,
   BookOpen,
+  UserX,
+  Mail,
+  PartyPopper,
+  RefreshCw,
+  FileCheck,
+  FileX,
+  FileEdit,
+  Trophy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -38,14 +46,31 @@ const notificationConfig: Record<
   NotificationType,
   { icon: React.ComponentType<{ className?: string }>; color: string; bgColor: string }
 > = {
+  // User Management
   USER_ACTIVATED: { icon: UserCheck, color: "text-success", bgColor: "bg-success-light" },
   USER_DEACTIVATED: { icon: Lock, color: "text-error", bgColor: "bg-error-light" },
+  USER_DELETED: { icon: UserX, color: "text-error", bgColor: "bg-error-light" },
   NEW_USER_REGISTERED: { icon: UserPlus, color: "text-primary", bgColor: "bg-primary/10" },
+  EMAIL_VERIFIED: { icon: Mail, color: "text-success", bgColor: "bg-success-light" },
+  ACCOUNT_CREATED: { icon: PartyPopper, color: "text-primary", bgColor: "bg-primary/10" },
+  
+  // System
   SYSTEM_ANNOUNCEMENT: { icon: Megaphone, color: "text-primary", bgColor: "bg-primary/10" },
+  
+  // Payment
   PAYMENT_SUBMITTED: { icon: CreditCard, color: "text-warning", bgColor: "bg-warning-light" },
+  PAYMENT_RESUBMITTED: { icon: RefreshCw, color: "text-warning", bgColor: "bg-warning-light" },
   PAYMENT_APPROVED: { icon: CheckCircle, color: "text-success", bgColor: "bg-success-light" },
   PAYMENT_REJECTED: { icon: AlertCircle, color: "text-error", bgColor: "bg-error-light" },
+  PAYMENT_CONFIRMATION: { icon: FileCheck, color: "text-info", bgColor: "bg-info-light" },
+  
+  // Resources
   NEW_RESOURCE: { icon: BookOpen, color: "text-info", bgColor: "bg-info-light" },
+  RESOURCE_UPDATED: { icon: FileEdit, color: "text-warning", bgColor: "bg-warning-light" },
+  RESOURCE_DELETED: { icon: FileX, color: "text-error", bgColor: "bg-error-light" },
+  
+  // Quiz
+  QUIZ_COMPLETED: { icon: Trophy, color: "text-success", bgColor: "bg-success-light" },
 };
 
 export function NotificationBell() {

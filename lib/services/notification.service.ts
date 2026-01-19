@@ -366,6 +366,44 @@ export const notificationService = {
   },
 
   /**
+   * Trigger: Account created (notify student)
+   */
+  async onAccountCreated(user: User) {
+    await this.notifyUser(
+      user.id,
+      "ACCOUNT_CREATED",
+      "Bienvenue !",
+      `Votre compte a été créé avec succès. Veuillez vérifier votre email pour activer votre compte.`,
+      { userId: user.id },
+      "BOTH"
+    );
+  },
+
+  /**
+   * Trigger: Email verified (notify admins)
+   */
+  async onEmailVerified(user: User) {
+    await this.notifyAdmins(
+      "EMAIL_VERIFIED",
+      "Email vérifié",
+      `${user.name} (${user.email}) a vérifié son adresse email.`,
+      { userId: user.id, email: user.email }
+    );
+  },
+
+  /**
+   * Trigger: User deleted (notify admins)
+   */
+  async onUserDeleted(userName: string, userEmail: string, deletedById: string) {
+    await this.notifyAdmins(
+      "USER_DELETED",
+      "Utilisateur supprimé",
+      `L'utilisateur ${userName} (${userEmail}) a été supprimé du système.`,
+      { userName, userEmail, deletedById }
+    );
+  },
+
+  /**
    * Trigger: Payment proof submitted (notify admins)
    */
   async onPaymentSubmitted(user: User) {
@@ -374,6 +412,32 @@ export const notificationService = {
       "Nouveau paiement soumis",
       `${user.name} (${user.email}) a soumis une preuve de paiement et attend la vérification.`,
       { userId: user.id, email: user.email }
+    );
+  },
+
+  /**
+   * Trigger: Payment proof re-submitted after rejection (notify admins)
+   */
+  async onPaymentResubmitted(user: User) {
+    await this.notifyAdmins(
+      "PAYMENT_RESUBMITTED",
+      "Paiement re-soumis",
+      `${user.name} (${user.email}) a re-soumis une preuve de paiement après rejet.`,
+      { userId: user.id, email: user.email }
+    );
+  },
+
+  /**
+   * Trigger: Payment submitted confirmation (notify student)
+   */
+  async onPaymentConfirmation(user: User) {
+    await this.notifyUser(
+      user.id,
+      "PAYMENT_CONFIRMATION",
+      "Paiement reçu",
+      "Votre preuve de paiement a été reçue avec succès. Elle sera examinée par un administrateur sous peu.",
+      { userId: user.id },
+      "BOTH"
     );
   },
 
@@ -444,5 +508,119 @@ export const notificationService = {
         data: notifications,
       });
     }
+  },
+
+  /**
+   * Trigger: Resource deleted (notify admins)
+   */
+  async onResourceDeleted(
+    resourceType: "BOOK" | "VIDEO" | "QCM" | "QUESTION",
+    resourceTitle: string,
+    deletedById: string
+  ) {
+    const typeLabels = {
+      BOOK: "Livre",
+      VIDEO: "Vidéo",
+      QCM: "QCM",
+      QUESTION: "Question",
+    };
+
+    await this.notifyAdmins(
+      "RESOURCE_DELETED",
+      "Ressource supprimée",
+      `${typeLabels[resourceType]} "${resourceTitle}" a été supprimé(e) du système.`,
+      { resourceType, resourceTitle, deletedById }
+    );
+  },
+
+  /**
+   * Trigger: Resource status updated (notify admins)
+   */
+  async onResourceStatusChanged(
+    resourceType: "BOOK" | "VIDEO" | "QCM" | "QUESTION",
+    resourceTitle: string,
+    oldStatus: string,
+    newStatus: string,
+    updatedById: string
+  ) {
+    const typeLabels = {
+      BOOK: "Livre",
+      VIDEO: "Vidéo",
+      QCM: "QCM",
+      QUESTION: "Question",
+    };
+
+    await this.notifyAdmins(
+      "RESOURCE_UPDATED",
+      "Statut de ressource modifié",
+      `${typeLabels[resourceType]} "${resourceTitle}" : ${oldStatus} → ${newStatus}`,
+      { resourceType, resourceTitle, oldStatus, newStatus, updatedById }
+    );
+  },
+
+  /**
+   * Trigger: Quiz completed (notify student)
+   */
+  async onQuizCompleted(
+    userId: string,
+    quizData: {
+      school: string;
+      matiere: string;
+      score: number;
+      totalQuestions: number;
+      percentage: number;
+    }
+  ) {
+    const { school, matiere, score, totalQuestions, percentage } = quizData;
+    
+    let message = `Vous avez terminé le quiz ${matiere} (${school}) avec un score de ${score}/${totalQuestions} (${percentage}%).`;
+    
+    // Add encouraging message based on performance
+    if (percentage >= 80) {
+      message += " Excellent travail ! 🎉";
+    } else if (percentage >= 60) {
+      message += " Bon travail ! Continuez comme ça ! 👍";
+    } else {
+      message += " Continuez à pratiquer pour vous améliorer ! 💪";
+    }
+
+    await this.notifyUser(
+      userId,
+      "QUIZ_COMPLETED",
+      "Quiz terminé",
+      message,
+      { school, matiere, score, totalQuestions, percentage },
+      "IN_APP"
+    );
+  },
+
+  /**
+   * Trigger: System announcement (notify all users or specific role)
+   */
+  async sendSystemAnnouncement(
+    title: string,
+    message: string,
+    targetRole?: "ADMIN" | "STUDENT",
+    channel: NotificationChannel = "BOTH"
+  ) {
+    // Get target users
+    const users = await prisma.user.findMany({
+      where: {
+        status: "ACTIVE",
+        ...(targetRole && { role: targetRole }),
+      },
+      select: { id: true },
+    });
+
+    const notifications = users.map((user) => ({
+      type: "SYSTEM_ANNOUNCEMENT" as const,
+      title,
+      message,
+      userId: user.id,
+      channel,
+    }));
+
+    // Create all notifications
+    return this.createBulk(notifications);
   },
 };

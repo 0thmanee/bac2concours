@@ -123,14 +123,31 @@ model IncubatorSettings {
 // ============================================================
 
 enum NotificationType {
+  // User Management
   USER_ACTIVATED
   USER_DEACTIVATED
+  USER_DELETED // User account deleted (for admins)
   NEW_USER_REGISTERED
+  EMAIL_VERIFIED // Student verified email (for admins)
+  ACCOUNT_CREATED // Account creation confirmation (for student)
+  
+  // System
   SYSTEM_ANNOUNCEMENT
+  
+  // Payment
   PAYMENT_SUBMITTED // Student submitted payment proof (for admins)
+  PAYMENT_RESUBMITTED // Student re-submitted after rejection (for admins)
   PAYMENT_APPROVED // Payment was approved (for student)
   PAYMENT_REJECTED // Payment was rejected (for student)
+  PAYMENT_CONFIRMATION // Payment received confirmation (for student)
+  
+  // Resources
   NEW_RESOURCE // New book/video/qcm available (for students)
+  RESOURCE_UPDATED // Resource updated (for admins/students)
+  RESOURCE_DELETED // Resource deleted (for admins)
+  
+  // Quiz
+  QUIZ_COMPLETED // Quiz completion summary (for student)
 }
 
 enum NotificationChannel {

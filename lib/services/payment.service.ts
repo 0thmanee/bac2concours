@@ -24,6 +24,9 @@ export const paymentService = {
       throw new Error("Utilisateur non trouvé");
     }
 
+    // Track if this is a resubmission
+    const isResubmission = user.paymentStatus === PAYMENT_STATUS.REJECTED;
+
     // Allow re-submission if rejected
     if (
       user.paymentStatus === PAYMENT_STATUS.PENDING ||
@@ -52,9 +55,20 @@ export const paymentService = {
       },
     });
 
-    // Notify admins about the new payment submission (async)
+    // Notify admins about the payment submission (async)
+    if (isResubmission) {
+      notificationService
+        .onPaymentResubmitted(updatedUser as any)
+        .catch(console.error);
+    } else {
+      notificationService
+        .onPaymentSubmitted(updatedUser as any)
+        .catch(console.error);
+    }
+
+    // Notify student that payment was received (async)
     notificationService
-      .onPaymentSubmitted(updatedUser as any)
+      .onPaymentConfirmation(updatedUser as any)
       .catch(console.error);
 
     return updatedUser;

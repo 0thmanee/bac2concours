@@ -153,6 +153,12 @@ export const videoService = {
    * Update a video
    */
   async update(id: string, data: UpdateVideoInput) {
+    // Get current video to check for status changes
+    const currentVideo = await prisma.video.findUnique({
+      where: { id },
+      select: { status: true, title: true },
+    });
+
     // Only include defined values (not undefined)
     const cleanedData: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(data)) {
@@ -166,7 +172,7 @@ export const videoService = {
       cleanedData.youtubeId = extractYouTubeId(data.url);
     }
 
-    return prisma.video.update({
+    const updatedVideo = await prisma.video.update({
       where: { id },
       data: cleanedData,
       include: {
@@ -180,15 +186,45 @@ export const videoService = {
         thumbnailFile: true,
       },
     });
+
+    // Notify admins if status changed
+    if (currentVideo && data.status && data.status !== currentVideo.status) {
+      notificationService
+        .onResourceStatusChanged(
+          "VIDEO",
+          currentVideo.title,
+          currentVideo.status,
+          data.status,
+          updatedVideo.uploadedById
+        )
+        .catch(console.error);
+    }
+
+    return updatedVideo;
   },
 
   /**
    * Delete a video
    */
   async delete(id: string) {
-    return prisma.video.delete({
+    // Get video details before deletion
+    const video = await prisma.video.findUnique({
+      where: { id },
+      select: { title: true, uploadedById: true },
+    });
+
+    const result = await prisma.video.delete({
       where: { id },
     });
+
+    // Notify admins about deletion
+    if (video) {
+      notificationService
+        .onResourceDeleted("VIDEO", video.title, video.uploadedById)
+        .catch(console.error);
+    }
+
+    return result;
   },
 
   /**

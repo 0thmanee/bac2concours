@@ -175,9 +175,22 @@ export const userService = {
       throw new Error("User not found");
     }
 
-    return prisma.user.delete({
+    // Delete the user
+    await prisma.user.delete({
       where: { id },
     });
+
+    // Import notification service dynamically to avoid circular dependency
+    const { notificationService } = await import(
+      "@/lib/services/notification.service"
+    );
+
+    // Notify admins about user deletion (async, don't block)
+    notificationService
+      .onUserDeleted(user.name, user.email, id)
+      .catch(console.error);
+
+    return user;
   },
 
   // Get user metrics

@@ -57,7 +57,7 @@ export const tokenService = {
     }
 
     // Mark user as verified
-    await prisma.user.update({
+    const user = await prisma.user.update({
       where: { email: verificationToken.email },
       data: { emailVerified: new Date() },
     });
@@ -66,6 +66,12 @@ export const tokenService = {
     await prisma.verificationToken.delete({
       where: { token },
     });
+
+    // Notify admins that email was verified (async)
+    const { notificationService } = await import(
+      "@/lib/services/notification.service"
+    );
+    notificationService.onEmailVerified(user).catch(console.error);
 
     return { success: true, email: verificationToken.email };
   },
