@@ -72,7 +72,6 @@ export default function LoginPage() {
               </p>
               <Button
                 type="button"
-                variant="outline"
                 size="sm"
                 onClick={handleResendVerification}
                 disabled={resendVerificationMutation.isPending}

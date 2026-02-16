@@ -198,7 +198,7 @@ export const fileService = {
    */
   async updateFileMetadata(
     fileId: string,
-    metadata: Prisma.InputJsonValue
+    metadata: Prisma.InputJsonValue,
   ): Promise<void> {
     await prisma.file.update({
       where: { id: fileId },

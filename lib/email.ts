@@ -4,7 +4,7 @@ import type { NotificationType } from "@prisma/client";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const fromEmail = process.env.EMAIL_FROM || "onboarding@resend.dev";
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:5000";
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:4000";
 
 // Brand colors - Simple and clean
 const BRAND = {
@@ -50,8 +50,8 @@ function emailTemplate(content: string): string {
               BRAND.textMuted
             }; font-size: 12px; margin: 8px 0 0 0;">
               <a href="${appUrl}" style="color: ${
-    BRAND.primary
-  }; text-decoration: none;">Visit Dashboard</a>
+                BRAND.primary
+              }; text-decoration: none;">Visit Dashboard</a>
             </p>
           </div>
         </div>
@@ -180,7 +180,7 @@ export const emailService = {
   async sendPaymentRejectedEmail(
     email: string,
     userName: string,
-    rejectionReason: string
+    rejectionReason: string,
   ) {
     const paymentUrl = `${appUrl}/student/payment`;
 
@@ -257,7 +257,7 @@ export const notificationEmailService = {
     title: string,
     message: string,
     type: NotificationType,
-    data?: Record<string, unknown> | null
+    data?: Record<string, unknown> | null,
   ) {
     const { icon, color } = notificationIcons[type] || {
       icon: "",

@@ -23,10 +23,16 @@ CREATE TYPE "SchoolStatus" AS ENUM ('ACTIVE', 'INACTIVE', 'DRAFT');
 CREATE TYPE "SchoolType" AS ENUM ('UNIVERSITE', 'ECOLE_INGENIEUR', 'ECOLE_COMMERCE', 'INSTITUT', 'FACULTE');
 
 -- CreateEnum
-CREATE TYPE "NotificationType" AS ENUM ('USER_ACTIVATED', 'USER_DEACTIVATED', 'NEW_USER_REGISTERED', 'SYSTEM_ANNOUNCEMENT', 'PAYMENT_SUBMITTED', 'PAYMENT_APPROVED', 'PAYMENT_REJECTED', 'NEW_RESOURCE');
+CREATE TYPE "NotificationType" AS ENUM ('USER_ACTIVATED', 'USER_DEACTIVATED', 'USER_DELETED', 'NEW_USER_REGISTERED', 'EMAIL_VERIFIED', 'ACCOUNT_CREATED', 'SYSTEM_ANNOUNCEMENT', 'PAYMENT_SUBMITTED', 'PAYMENT_RESUBMITTED', 'PAYMENT_APPROVED', 'PAYMENT_REJECTED', 'PAYMENT_CONFIRMATION', 'NEW_RESOURCE', 'RESOURCE_UPDATED', 'RESOURCE_DELETED', 'QUIZ_COMPLETED');
 
 -- CreateEnum
 CREATE TYPE "NotificationChannel" AS ENUM ('IN_APP', 'EMAIL', 'BOTH');
+
+-- CreateEnum
+CREATE TYPE "AnnouncementStatus" AS ENUM ('DRAFT', 'PUBLISHED');
+
+-- CreateEnum
+CREATE TYPE "AnnouncementType" AS ENUM ('REGISTRATION', 'EVENT', 'GENERAL');
 
 -- CreateEnum
 CREATE TYPE "QuestionDifficulty" AS ENUM ('EASY', 'MEDIUM', 'HARD');
@@ -93,6 +99,23 @@ CREATE TABLE "notification_preferences" (
 );
 
 -- CreateTable
+CREATE TABLE "announcements" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "type" "AnnouncementType" NOT NULL DEFAULT 'GENERAL',
+    "status" "AnnouncementStatus" NOT NULL DEFAULT 'DRAFT',
+    "publishedAt" TIMESTAMP(3),
+    "linkUrl" TEXT,
+    "schoolId" TEXT,
+    "createdById" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "announcements_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "verification_tokens" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -125,8 +148,8 @@ CREATE TABLE "books" (
     "coverFileId" TEXT,
     "fileUrl" TEXT NOT NULL,
     "fileName" TEXT NOT NULL,
-    "fileSize" TEXT NOT NULL,
-    "totalPages" INTEGER NOT NULL,
+    "fileSize" TEXT,
+    "totalPages" INTEGER,
     "language" TEXT NOT NULL DEFAULT 'fr',
     "level" TEXT NOT NULL DEFAULT 'Terminale',
     "subjects" TEXT[],
@@ -155,6 +178,7 @@ CREATE TABLE "videos" (
     "subjects" TEXT[],
     "tags" TEXT[],
     "duration" INTEGER,
+    "year" INTEGER,
     "views" INTEGER NOT NULL DEFAULT 0,
     "status" "VideoStatus" NOT NULL DEFAULT 'ACTIVE',
     "isPublic" BOOLEAN NOT NULL DEFAULT true,
@@ -351,6 +375,21 @@ CREATE INDEX "notifications_createdAt_idx" ON "notifications"("createdAt");
 CREATE UNIQUE INDEX "notification_preferences_userId_key" ON "notification_preferences"("userId");
 
 -- CreateIndex
+CREATE INDEX "announcements_status_idx" ON "announcements"("status");
+
+-- CreateIndex
+CREATE INDEX "announcements_type_idx" ON "announcements"("type");
+
+-- CreateIndex
+CREATE INDEX "announcements_createdById_idx" ON "announcements"("createdById");
+
+-- CreateIndex
+CREATE INDEX "announcements_schoolId_idx" ON "announcements"("schoolId");
+
+-- CreateIndex
+CREATE INDEX "announcements_publishedAt_idx" ON "announcements"("publishedAt");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "verification_tokens_token_key" ON "verification_tokens"("token");
 
 -- CreateIndex
@@ -400,6 +439,9 @@ CREATE INDEX "videos_category_idx" ON "videos"("category");
 
 -- CreateIndex
 CREATE INDEX "videos_level_idx" ON "videos"("level");
+
+-- CreateIndex
+CREATE INDEX "videos_year_idx" ON "videos"("year");
 
 -- CreateIndex
 CREATE INDEX "videos_isPublic_idx" ON "videos"("isPublic");
@@ -511,6 +553,12 @@ ALTER TABLE "notifications" ADD CONSTRAINT "notifications_userId_fkey" FOREIGN K
 
 -- AddForeignKey
 ALTER TABLE "notification_preferences" ADD CONSTRAINT "notification_preferences_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "announcements" ADD CONSTRAINT "announcements_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "schools"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "announcements" ADD CONSTRAINT "announcements_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "books" ADD CONSTRAINT "books_coverFileId_fkey" FOREIGN KEY ("coverFileId") REFERENCES "files"("id") ON DELETE SET NULL ON UPDATE CASCADE;
