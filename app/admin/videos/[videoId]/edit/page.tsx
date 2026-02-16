@@ -82,6 +82,7 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
         description: video.description || "",
         url: video.url,
         duration: video.duration ?? undefined,
+        year: video.year ?? undefined,
         school: video.school,
         level: video.level,
         category: video.category,
@@ -290,6 +291,26 @@ export default function EditVideoPage({ params }: { params: Promise<{ videoId: s
                 />
                 {errors.duration && (
                   <p className="text-xs text-destructive">{errors.duration.message as string}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="year" className="text-sm font-medium">
+                  Année <span className="text-xs text-ops-tertiary">(Optionnel)</span>
+                </Label>
+                <Input
+                  id="year"
+                  type="number"
+                  min={2000}
+                  max={2100}
+                  {...register("year", {
+                    setValueAs: (v) => v === "" || v === null ? undefined : parseInt(v, 10)
+                  })}
+                  placeholder="ex: 2024"
+                  className="ops-input h-9"
+                />
+                {errors.year && (
+                  <p className="text-xs text-destructive">{errors.year?.message as string}</p>
                 )}
               </div>
             </AdminFormCard>

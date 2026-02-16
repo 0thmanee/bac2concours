@@ -25,6 +25,7 @@ export const videoService = {
       school,
       level,
       subject,
+      year,
       status,
       isPublic,
       tags,
@@ -49,6 +50,7 @@ export const videoService = {
     if (school) where.school = school;
     if (level) where.level = level;
     if (subject) where.subjects = { has: subject };
+    if (year != null) where.year = year;
     if (status) where.status = status;
     if (typeof isPublic === "boolean") where.isPublic = isPublic;
     if (tags && tags.length > 0) {
@@ -75,6 +77,7 @@ export const videoService = {
         subjects: true,
         tags: true,
         duration: true,
+        year: true,
         views: true,
         status: true,
         isPublic: true,
@@ -195,7 +198,7 @@ export const videoService = {
           currentVideo.title,
           currentVideo.status,
           data.status,
-          updatedVideo.uploadedById
+          updatedVideo.uploadedById,
         )
         .catch(console.error);
     }
@@ -274,6 +277,7 @@ export const videoService = {
         school: true,
         level: true,
         subjects: true,
+        year: true,
       },
     });
 
@@ -282,12 +286,18 @@ export const videoService = {
     const schools = [...new Set(videos.map((v) => v.school))].sort();
     const levels = [...new Set(videos.map((v) => v.level))].sort();
     const subjects = [...new Set(videos.flatMap((v) => v.subjects))].sort();
+    const years = [
+      ...new Set(
+        videos.map((v) => v.year).filter((y): y is number => y != null),
+      ),
+    ].sort((a, b) => b - a);
 
     return {
       categories,
       schools,
       levels,
       subjects,
+      years,
     };
   },
 

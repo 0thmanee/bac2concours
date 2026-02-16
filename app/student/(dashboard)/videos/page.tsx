@@ -35,16 +35,21 @@ export default function StudentVideosPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 12;
 
-  // API calls with proper params
+  // API calls with proper params (sort by year then createdAt for grouping)
+  const yearParam =
+    filters.year !== undefined && filters.year !== "" && filters.year !== "all"
+      ? Number(filters.year)
+      : undefined;
   const { data: videosData, isLoading } = useVideos({
     search: toApiParam(filters.search),
     category: toApiParam(filters.category),
     level: toApiParam(filters.level),
+    year: yearParam,
     status: VideoStatus.ACTIVE,
     isPublic: true,
     page: currentPage,
     limit: pageSize,
-    sortBy: "createdAt",
+    sortBy: "year",
     sortOrder: "desc",
   });
 
@@ -58,7 +63,26 @@ export default function StudentVideosPage() {
     schools: [],
     levels: [],
     subjects: [],
+    years: [],
   };
+
+  // Group videos by year for section display (newest first; null year last)
+  const videosByYear = (() => {
+    const map = new Map<number | null, VideoWithRelations[]>();
+    for (const video of videos) {
+      const y = video.year ?? null;
+      if (!map.has(y)) map.set(y, []);
+      map.get(y)!.push(video);
+    }
+    const withYear = [...map.entries()].filter(([year]) => year !== null) as [number, VideoWithRelations[]][];
+    const withoutYear = map.get(null) ?? [];
+    withYear.sort(([a], [b]) => b - a);
+    const result: { year: number | null; label: string; items: VideoWithRelations[] }[] = [
+      ...withYear.map(([year, items]) => ({ year, label: String(year), items })),
+      ...(withoutYear.length ? [{ year: null as number | null, label: "Sans année", items: withoutYear }] : []),
+    ];
+    return result;
+  })();
 
   // Filter change handler - resets pagination
   const updateFilter = useCallback(<K extends keyof VideoUIFilters>(key: K, value: VideoUIFilters[K]) => {
@@ -111,10 +135,23 @@ export default function StudentVideosPage() {
             placeholder="Niveau"
             className="w-full sm:w-45"
           />
+
+          <FilterSelect
+            value={filters.year === undefined || filters.year === "" ? "all" : String(filters.year)}
+            onChange={(value) =>
+              updateFilter("year", value === "all" ? undefined : value)
+            }
+            options={[
+              { value: "all", label: "Toutes les années" },
+              ...filterOptions.years.map((y) => ({ value: String(y), label: String(y) })),
+            ]}
+            placeholder="Année"
+            className="w-full sm:w-45"
+          />
         </div>
       </FilterPanel>
 
-      {/* Videos Grid */}
+      {/* Videos by year */}
       {videos.length === 0 ? (
         <StudentEmptyState
           icon={VideoIcon}
@@ -122,47 +159,58 @@ export default function StudentVideosPage() {
           description="Essayez de modifier vos critères de recherche ou vos filtres."
         />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-          {videos.map((video) => {
-            const thumbnailUrl =
-              video.thumbnailFile?.publicUrl ||
-              (video.youtubeId ? getYouTubeThumbnailUrl(video.youtubeId) : null);
-            const duration = formatDuration(video.duration);
+        <div className="space-y-10">
+          {videosByYear.map(({ year, label, items }) => (
+            <section key={year ?? "none"} className="space-y-4">
+              <h2 className="text-lg font-semibold text-foreground border-b border-border pb-2">
+                {label}
+                <span className="ml-2 text-sm font-normal text-muted-foreground">
+                  ({items.length} vidéo{items.length !== 1 ? "s" : ""})
+                </span>
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+                {items.map((video) => {
+                  const thumbnailUrl =
+                    video.thumbnailFile?.publicUrl ||
+                    (video.youtubeId ? getYouTubeThumbnailUrl(video.youtubeId) : null);
+                  const duration = formatDuration(video.duration);
 
-            return (
-              <StudentMediaCard
-                key={video.id}
-                onClick={() => router.push(STUDENT_ROUTES.VIDEO(video.id))}
-                thumbnailUrl={thumbnailUrl}
-                thumbnailAlt={video.title}
-                thumbnailAspect="video"
-                fallbackIcon={VideoIcon}
-                badge={
-                  duration ? (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-black/80 backdrop-blur-sm text-white shadow-sm">
-                      <Clock size={12} className="mr-1" />
-                      {duration}
-                    </span>
-                  ) : undefined
-                }
-                title={video.title}
-                description={video.description}
-                category={video.category}
-                level={video.level}
-                metrics={[{ icon: Eye, value: video.views || 0 }]}
-
-                overlayContent={
-                  thumbnailUrl ? (
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="w-16 h-16 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
-                        <Play className="w-8 h-8 text-brand-600 fill-current ml-1" />
-                      </div>
-                    </div>
-                  ) : undefined
-                }
-              />
-            );
-          })}
+                  return (
+                    <StudentMediaCard
+                      key={video.id}
+                      onClick={() => router.push(STUDENT_ROUTES.VIDEO(video.id))}
+                      thumbnailUrl={thumbnailUrl}
+                      thumbnailAlt={video.title}
+                      thumbnailAspect="video"
+                      fallbackIcon={VideoIcon}
+                      badge={
+                        duration ? (
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-black/80 backdrop-blur-sm text-white shadow-sm">
+                            <Clock size={12} className="mr-1" />
+                            {duration}
+                          </span>
+                        ) : undefined
+                      }
+                      title={video.title}
+                      description={video.description}
+                      category={video.category}
+                      level={video.level}
+                      metrics={[{ icon: Eye, value: video.views || 0 }]}
+                      overlayContent={
+                        thumbnailUrl ? (
+                          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div className="w-16 h-16 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                              <Play className="w-8 h-8 text-brand-600 fill-current ml-1" />
+                            </div>
+                          </div>
+                        ) : undefined
+                      }
+                    />
+                  );
+                })}
+              </div>
+            </section>
+          ))}
         </div>
       )}
 

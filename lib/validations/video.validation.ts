@@ -16,7 +16,7 @@ export const youtubeUrlSchema = z
   .url("URL invalide")
   .refine(
     (url) => youtubeUrlRegex.test(url),
-    "L'URL doit être une URL YouTube valide"
+    "L'URL doit être une URL YouTube valide",
   );
 
 // Base video schema for creation
@@ -34,12 +34,22 @@ export const createVideoSchema = z.object({
   school: z.string().min(1, "L'école/filière est requise").max(100),
   category: z.string().min(1, "La catégorie est requise").max(50),
   level: z.string().min(1, "Le niveau est requis").max(50),
-  subjects: z.array(z.string().max(50)).min(1, "Au moins une matière est requise").default([]),
+  subjects: z
+    .array(z.string().max(50))
+    .min(1, "Au moins une matière est requise")
+    .default([]),
   tags: z.array(z.string().max(50)).default([]),
   duration: z
     .number()
     .int()
     .positive("La durée doit être positive")
+    .optional()
+    .nullable(),
+  year: z
+    .number()
+    .int()
+    .min(2000, "L'année doit être >= 2000")
+    .max(2100, "L'année doit être <= 2100")
     .optional()
     .nullable(),
   status: videoStatusSchema.default("ACTIVE"),
@@ -58,6 +68,7 @@ export const updateVideoSchema = z.object({
   subjects: z.array(z.string().max(50)).optional(),
   tags: z.array(z.string().max(50)).optional(),
   duration: z.number().int().positive().optional().nullable(),
+  year: z.number().int().min(2000).max(2100).optional().nullable(),
   status: videoStatusSchema.optional(),
   isPublic: z.boolean().optional(),
 });
@@ -69,12 +80,13 @@ export const videoFiltersSchema = z.object({
   school: z.string().optional(),
   level: z.string().optional(),
   subject: z.string().optional(),
+  year: z.number().int().min(2000).max(2100).optional(),
   status: videoStatusSchema.optional(),
   isPublic: z.boolean().optional(),
   tags: z.array(z.string()).optional(),
   page: z.number().int().positive().default(1),
   limit: z.number().int().positive().max(100).default(20),
-  sortBy: z.enum(["title", "createdAt", "views"]).default("createdAt"),
+  sortBy: z.enum(["title", "createdAt", "views", "year"]).default("createdAt"),
   sortOrder: z.enum(["asc", "desc"]).default("desc"),
 });
 
@@ -83,6 +95,7 @@ export const videoUIFiltersSchema = z.object({
   search: z.string().default(""),
   category: z.string().default(""),
   level: z.string().default(""),
+  year: z.union([z.number(), z.string()]).optional(), // number or "all"
 });
 
 // Query params schema for API (subset of filters as strings for URL)
@@ -92,6 +105,7 @@ export const videoQueryParamsSchema = z.object({
   school: z.string().optional(),
   level: z.string().optional(),
   subject: z.string().optional(),
+  year: z.string().optional(), // Parsed to number in API
   status: videoStatusSchema.optional(),
   isPublic: z.boolean().optional(),
   tags: z.string().optional(), // Comma-separated for URL
@@ -125,6 +139,7 @@ export const videoResponseSchema = z.object({
   subjects: z.array(z.string()),
   tags: z.array(z.string()),
   duration: z.number().nullable(),
+  year: z.number().nullable().optional(),
   views: z.number(),
   status: videoStatusSchema,
   isPublic: z.boolean(),
@@ -150,6 +165,7 @@ export type VideoFilterOptions = {
   schools: string[];
   levels: string[];
   subjects: string[];
+  years: number[];
 };
 
 // Stats for dashboard
@@ -181,6 +197,7 @@ export type VideoWithRelations = {
   subjects: string[];
   tags: string[];
   duration: number | null;
+  year: number | null;
   views: number;
   status: string;
   isPublic: boolean;
@@ -201,7 +218,7 @@ export function extractYouTubeId(url: string): string | null {
  */
 export function getYouTubeThumbnailUrl(
   videoId: string,
-  quality: "default" | "hq" | "mq" | "sd" | "maxres" = "hq"
+  quality: "default" | "hq" | "mq" | "sd" | "maxres" = "hq",
 ): string {
   return `https://img.youtube.com/vi/${videoId}/${quality}default.jpg`;
 }

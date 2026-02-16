@@ -838,6 +838,7 @@ const videosData = [
     level: "Terminale",
     subjects: ["Mathématiques"],
     duration: 2400,
+    year: 2024,
     tags: ["limites", "continuité", "analyse", "cours"],
   },
   {
@@ -850,6 +851,7 @@ const videosData = [
     level: "Terminale",
     subjects: ["Mathématiques"],
     duration: 1800,
+    year: 2024,
     tags: ["dérivées", "calcul", "fonctions", "cours"],
   },
   {
@@ -862,6 +864,7 @@ const videosData = [
     level: "Terminale",
     subjects: ["Mathématiques"],
     duration: 3600,
+    year: 2023,
     tags: ["intégrales", "primitives", "calcul", "cours"],
   },
   {
@@ -874,6 +877,7 @@ const videosData = [
     level: "Terminale",
     subjects: ["Physique"],
     duration: 2700,
+    year: 2024,
     tags: ["mécanique", "cinématique", "dynamique", "physique"],
   },
   {
@@ -886,6 +890,7 @@ const videosData = [
     level: "Terminale",
     subjects: ["Physique"],
     duration: 2100,
+    year: 2023,
     tags: ["électromagnétisme", "champs", "physique", "cours"],
   },
   {
@@ -898,6 +903,7 @@ const videosData = [
     level: "Terminale",
     subjects: ["Chimie"],
     duration: 1500,
+    year: 2024,
     tags: ["chimie", "réactions", "stœchiométrie", "équilibrage"],
   },
   {
@@ -910,6 +916,7 @@ const videosData = [
     level: "Terminale",
     subjects: ["SVT"],
     duration: 2400,
+    year: 2023,
     tags: ["génétique", "ADN", "hérédité", "svt"],
   },
   {
@@ -922,6 +929,7 @@ const videosData = [
     level: "Terminale",
     subjects: ["Philosophie"],
     duration: 1800,
+    year: 2024,
     tags: ["philosophie", "dissertation", "méthodologie", "bac"],
   },
   {
@@ -934,6 +942,7 @@ const videosData = [
     level: "Terminale",
     subjects: ["Mathématiques"],
     duration: 2200,
+    year: 2023,
     tags: ["probabilités", "loi normale", "statistiques"],
   },
   {
@@ -945,7 +954,8 @@ const videosData = [
     category: "Mathématiques",
     level: "Bac+2",
     subjects: ["Mathématiques"],
-    duration: 4000,
+    duration: 5000,
+    year: 2024,
     tags: ["algèbre", "espaces vectoriels", "cpge"],
   },
 ];
@@ -1332,6 +1342,7 @@ async function main() {
         level: videoData.level,
         subjects: videoData.subjects,
         duration: videoData.duration,
+        year: videoData.year ?? new Date().getFullYear(),
         tags: videoData.tags,
         youtubeId,
         uploadedById: adminId,

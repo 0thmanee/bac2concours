@@ -53,6 +53,7 @@ export default function NewVideoPage() {
   } = useForm({
     resolver: zodResolver(createVideoSchema),
     defaultValues: {
+      year: new Date().getFullYear(),
       status: VideoStatus.ACTIVE,
       isPublic: true,
       tags: [],
@@ -211,6 +212,28 @@ export default function NewVideoPage() {
                 {errors.duration && (
                   <p className="text-xs text-destructive">
                     {errors.duration.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="year" className="text-sm font-medium">
+                  Année <span className="text-xs text-ops-tertiary">(Optionnel)</span>
+                </Label>
+                <Input
+                  id="year"
+                  type="number"
+                  min={2000}
+                  max={2100}
+                  {...register("year", {
+                    setValueAs: (v) => v === "" || v === null ? undefined : parseInt(v, 10)
+                  })}
+                  placeholder="ex: 2024"
+                  className="ops-input h-9"
+                />
+                {errors.year && (
+                  <p className="text-xs text-destructive">
+                    {errors.year.message}
                   </p>
                 )}
               </div>

@@ -4,7 +4,7 @@ import type { NotificationType } from "@prisma/client";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const fromEmail = process.env.EMAIL_FROM || "onboarding@resend.dev";
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:4000";
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:5000";
 
 // Brand colors - Simple and clean
 const BRAND = {
@@ -240,31 +240,14 @@ const notificationIcons: Record<
   NotificationType,
   { icon: string; color: string }
 > = {
-  // User Management
-  USER_ACTIVATED: { icon: "✓", color: BRAND.primary },
-  USER_DEACTIVATED: { icon: "🔒", color: BRAND.primary },
-  USER_DELETED: { icon: "❌", color: BRAND.primary },
-  NEW_USER_REGISTERED: { icon: "👤", color: BRAND.primary },
-  EMAIL_VERIFIED: { icon: "✉️", color: BRAND.primary },
-  ACCOUNT_CREATED: { icon: "🎉", color: BRAND.primary },
-  
-  // System
-  SYSTEM_ANNOUNCEMENT: { icon: "📢", color: BRAND.primary },
-  
-  // Payment
-  PAYMENT_SUBMITTED: { icon: "💳", color: BRAND.primary },
-  PAYMENT_RESUBMITTED: { icon: "🔄", color: BRAND.primary },
-  PAYMENT_APPROVED: { icon: "✅", color: BRAND.primary },
-  PAYMENT_REJECTED: { icon: "⚠️", color: BRAND.primary },
-  PAYMENT_CONFIRMATION: { icon: "📋", color: BRAND.primary },
-  
-  // Resources
-  NEW_RESOURCE: { icon: "📚", color: BRAND.primary },
-  RESOURCE_UPDATED: { icon: "📝", color: BRAND.primary },
-  RESOURCE_DELETED: { icon: "🗑️", color: BRAND.primary },
-  
-  // Quiz
-  QUIZ_COMPLETED: { icon: "🏆", color: BRAND.primary },
+  USER_ACTIVATED: { icon: "", color: BRAND.primary },
+  USER_DEACTIVATED: { icon: "", color: BRAND.primary },
+  NEW_USER_REGISTERED: { icon: "", color: BRAND.primary },
+  SYSTEM_ANNOUNCEMENT: { icon: "", color: BRAND.primary },
+  PAYMENT_SUBMITTED: { icon: "", color: BRAND.primary },
+  PAYMENT_APPROVED: { icon: "", color: BRAND.primary },
+  PAYMENT_REJECTED: { icon: "", color: BRAND.primary },
+  NEW_RESOURCE: { icon: "", color: BRAND.primary },
 };
 
 export const notificationEmailService = {

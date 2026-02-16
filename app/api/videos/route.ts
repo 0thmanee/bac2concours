@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
     if (!user) {
       return NextResponse.json(
         { error: MESSAGES.ERROR.UNAUTHORIZED },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -38,6 +38,9 @@ export async function GET(req: NextRequest) {
       school: searchParams.get("school") || undefined,
       level: searchParams.get("level") || undefined,
       subject: searchParams.get("subject") || undefined,
+      year: searchParams.get("year")
+        ? parseInt(searchParams.get("year")!, 10)
+        : undefined,
       status: searchParams.get("status") || undefined,
       isPublic: searchParams.get("isPublic")
         ? searchParams.get("isPublic") === "true"
@@ -76,20 +79,20 @@ export async function GET(req: NextRequest) {
     if (error instanceof ApiAuthError) {
       return NextResponse.json(
         { error: error.message },
-        { status: error.status }
+        { status: error.status },
       );
     }
 
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: formatZodError(error) },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     return NextResponse.json(
       { error: MESSAGES.ERROR.GENERIC },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -113,7 +116,7 @@ export async function POST(req: NextRequest) {
         message: "Vidéo créée avec succès",
         data: video,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.error("Create video error:", error);
@@ -121,20 +124,20 @@ export async function POST(req: NextRequest) {
     if (error instanceof ApiAuthError) {
       return NextResponse.json(
         { error: error.message },
-        { status: error.status }
+        { status: error.status },
       );
     }
 
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: formatZodError(error) },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     return NextResponse.json(
       { error: MESSAGES.ERROR.GENERIC },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

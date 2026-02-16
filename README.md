@@ -242,7 +242,7 @@ DATABASE_URL="postgresql://..."
 
 # NextAuth
 NEXTAUTH_SECRET="votre-secret-32-chars"
-NEXTAUTH_URL="http://localhost:4000"
+NEXTAUTH_URL="http://localhost:5000"
 
 # Email (Resend)
 RESEND_API_KEY="re_..."

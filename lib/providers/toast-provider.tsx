@@ -8,7 +8,7 @@ export function ToastProvider() {
       position="top-right" 
       richColors
       closeButton
-      duration={4000}
+      duration={5000}
     />
   )
 }

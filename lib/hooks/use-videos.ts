@@ -47,16 +47,17 @@ export function useVideos(filters?: Partial<VideoFilters>) {
           school: filters?.school,
           level: filters?.level,
           subject: filters?.subject,
+          year: filters?.year,
           status: filters?.status,
           isPublic: filters?.isPublic,
           tags: filters?.tags,
           sortBy: filters?.sortBy,
           sortOrder: filters?.sortOrder,
         },
-        { page: filters?.page || 1, limit: filters?.limit || 10 }
+        { page: filters?.page || 1, limit: filters?.limit || 10 },
       );
       return apiClient.get<ApiSuccessResponse<VideosResponse>>(
-        `${API_ROUTES.VIDEOS}?${params.toString()}`
+        `${API_ROUTES.VIDEOS}?${params.toString()}`,
       );
     },
     staleTime: QUERY_CONFIG.STALE_TIME.MEDIUM,
@@ -72,7 +73,7 @@ export function useVideo(videoId: string) {
     queryKey: videoKeys.detail(videoId),
     queryFn: () =>
       apiClient.get<ApiSuccessResponse<VideoWithRelations>>(
-        API_ROUTES.VIDEO(videoId)
+        API_ROUTES.VIDEO(videoId),
       ),
     staleTime: QUERY_CONFIG.STALE_TIME.MEDIUM,
     gcTime: QUERY_CONFIG.CACHE_TIME.MEDIUM,
@@ -87,7 +88,7 @@ export function useRelatedVideos(videoId: string) {
     queryKey: videoKeys.related(videoId),
     queryFn: () =>
       apiClient.get<ApiSuccessResponse<VideoWithRelations[]>>(
-        API_ROUTES.VIDEO_RELATED(videoId)
+        API_ROUTES.VIDEO_RELATED(videoId),
       ),
     staleTime: QUERY_CONFIG.STALE_TIME.MEDIUM,
     gcTime: QUERY_CONFIG.CACHE_TIME.MEDIUM,
@@ -115,7 +116,7 @@ export function useVideoFilterOptions() {
     queryKey: videoKeys.filters(),
     queryFn: () =>
       apiClient.get<ApiSuccessResponse<VideoFilterOptions>>(
-        API_ROUTES.VIDEOS_FILTERS
+        API_ROUTES.VIDEOS_FILTERS,
       ),
     staleTime: QUERY_CONFIG.STALE_TIME.LONG,
     gcTime: QUERY_CONFIG.CACHE_TIME.LONG,
@@ -132,7 +133,7 @@ export function useCreateVideo() {
     mutationFn: (data: CreateVideoInput) =>
       apiClient.post<ApiSuccessResponse<VideoWithRelations>>(
         API_ROUTES.VIDEOS,
-        data
+        data,
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: videoKeys.all });
@@ -151,7 +152,7 @@ export function useUpdateVideo(videoId: string) {
     mutationFn: (data: UpdateVideoInput) =>
       apiClient.patch<ApiSuccessResponse<VideoWithRelations>>(
         API_ROUTES.VIDEO(videoId),
-        data
+        data,
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: videoKeys.all });
@@ -170,7 +171,7 @@ export function useDeleteVideo() {
   return useMutation({
     mutationFn: (videoId: string) =>
       apiClient.delete<ApiSuccessResponse<{ message: string }>>(
-        API_ROUTES.VIDEO(videoId)
+        API_ROUTES.VIDEO(videoId),
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: videoKeys.all });
@@ -189,7 +190,7 @@ export function useIncrementVideoViews(videoId: string) {
     mutationFn: () =>
       apiClient.post<ApiSuccessResponse<{ views: number }>>(
         API_ROUTES.VIDEO_VIEW(videoId),
-        {}
+        {},
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: videoKeys.detail(videoId) });
