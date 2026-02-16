@@ -17,6 +17,7 @@ import {
   BookOpen,
   Video,
   HelpCircle,
+  Megaphone,
 } from "lucide-react";
 import {
   Sidebar,
@@ -70,6 +71,11 @@ const navigation = [
     name: "QCM",
     href: ADMIN_ROUTES.QCM,
     icon: HelpCircle,
+  },
+  {
+    name: "Annonces",
+    href: ADMIN_ROUTES.ANNOUNCEMENTS,
+    icon: Megaphone,
   },
   {
     name: "Paramètres",

@@ -36,6 +36,10 @@ export const ADMIN_ROUTES = {
   QCM_VIEW: (id: string) => `/admin/qcm/${id}`,
   QCM_NEW: "/admin/qcm/new",
   QCM_EDIT: (id: string) => `/admin/qcm/${id}/edit`,
+  ANNOUNCEMENTS: "/admin/announcements",
+  ANNOUNCEMENT: (id: string) => `/admin/announcements/${id}`,
+  ANNOUNCEMENT_NEW: "/admin/announcements/new",
+  ANNOUNCEMENT_EDIT: (id: string) => `/admin/announcements/${id}/edit`,
   SETTINGS: "/admin/settings",
   PROFILE: "/admin/profile",
 } as const;
@@ -84,7 +88,7 @@ export const STUDENT_ROUTE_PATTERN = /^\/student/;
  */
 export function isPublicRoute(pathname: string): boolean {
   return (PUBLIC_ROUTES as readonly string[]).some(
-    (route) => pathname === route || pathname.startsWith(route)
+    (route) => pathname === route || pathname.startsWith(route),
   );
 }
 
@@ -106,7 +110,7 @@ export function isStudentRoute(pathname: string): boolean {
  * Get the default dashboard route for a user role
  */
 export function getDefaultDashboard(
-  role: "ADMIN" | "STUDENT" | import("@prisma/client").UserRole
+  role: "ADMIN" | "STUDENT" | import("@prisma/client").UserRole,
 ): string {
   return role === "ADMIN" ? ADMIN_ROUTES.DASHBOARD : STUDENT_ROUTES.DASHBOARD;
 }

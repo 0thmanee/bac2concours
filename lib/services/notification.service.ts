@@ -54,7 +54,7 @@ export const notificationService = {
    */
   async createBulk(notifications: CreateNotificationInput[]) {
     const results = await Promise.all(
-      notifications.map((notification) => this.create(notification))
+      notifications.map((notification) => this.create(notification)),
     );
     return results;
   },
@@ -181,7 +181,7 @@ export const notificationService = {
    */
   async updatePreferences(
     userId: string,
-    data: UpdateNotificationPreferencesInput
+    data: UpdateNotificationPreferencesInput,
   ) {
     // Ensure preferences exist
     await this.getPreferences(userId);
@@ -203,7 +203,7 @@ export const notificationService = {
     type: NotificationType,
     title: string,
     message: string,
-    data?: Record<string, unknown>
+    data?: Record<string, unknown>,
   ) {
     const admins = await prisma.user.findMany({
       where: { role: USER_ROLE.ADMIN, status: "ACTIVE" },
@@ -231,14 +231,14 @@ export const notificationService = {
     title: string,
     message: string,
     data?: Record<string, unknown>,
-    channel: NotificationChannel = "BOTH"
+    channel: NotificationChannel = "BOTH",
   ) {
     // Check user preferences
     const preferences = await this.getPreferences(userId);
     const effectiveChannel = this.getEffectiveChannel(
       type,
       preferences,
-      channel
+      channel,
     );
 
     if (effectiveChannel === "IN_APP" || effectiveChannel === "BOTH") {
@@ -274,7 +274,7 @@ export const notificationService = {
     preferences: {
       systemAnnouncements: NotificationChannel;
     },
-    defaultChannel: NotificationChannel
+    defaultChannel: NotificationChannel,
   ): NotificationChannel {
     switch (type) {
       case "USER_ACTIVATED":
@@ -313,7 +313,7 @@ export const notificationService = {
         notification.title,
         notification.message,
         notification.type,
-        notification.data as Record<string, unknown> | null
+        notification.data as Record<string, unknown> | null,
       );
     } catch (error) {
       console.error("Failed to send notification email:", error);
@@ -334,7 +334,7 @@ export const notificationService = {
       "Compte activé",
       "Votre compte a été activé par un administrateur. Vous pouvez maintenant accéder à toutes les fonctionnalités.",
       { userId: user.id },
-      "BOTH"
+      "BOTH",
     );
   },
 
@@ -349,7 +349,7 @@ export const notificationService = {
       "Compte désactivé",
       "Votre compte a été désactivé. Veuillez contacter un administrateur pour plus d'informations.",
       "USER_DEACTIVATED",
-      { userId: user.id }
+      { userId: user.id },
     );
   },
 
@@ -361,7 +361,7 @@ export const notificationService = {
       "NEW_USER_REGISTERED",
       "Nouvelle inscription",
       `${user.name} (${user.email}) s'est inscrit et attend l'activation de son compte.`,
-      { userId: user.id, email: user.email }
+      { userId: user.id, email: user.email },
     );
   },
 
@@ -375,7 +375,7 @@ export const notificationService = {
       "Bienvenue !",
       `Votre compte a été créé avec succès. Veuillez vérifier votre email pour activer votre compte.`,
       { userId: user.id },
-      "BOTH"
+      "BOTH",
     );
   },
 
@@ -387,19 +387,23 @@ export const notificationService = {
       "EMAIL_VERIFIED",
       "Email vérifié",
       `${user.name} (${user.email}) a vérifié son adresse email.`,
-      { userId: user.id, email: user.email }
+      { userId: user.id, email: user.email },
     );
   },
 
   /**
    * Trigger: User deleted (notify admins)
    */
-  async onUserDeleted(userName: string, userEmail: string, deletedById: string) {
+  async onUserDeleted(
+    userName: string,
+    userEmail: string,
+    deletedById: string,
+  ) {
     await this.notifyAdmins(
       "USER_DELETED",
       "Utilisateur supprimé",
       `L'utilisateur ${userName} (${userEmail}) a été supprimé du système.`,
-      { userName, userEmail, deletedById }
+      { userName, userEmail, deletedById },
     );
   },
 
@@ -411,7 +415,7 @@ export const notificationService = {
       "PAYMENT_SUBMITTED",
       "Nouveau paiement soumis",
       `${user.name} (${user.email}) a soumis une preuve de paiement et attend la vérification.`,
-      { userId: user.id, email: user.email }
+      { userId: user.id, email: user.email },
     );
   },
 
@@ -423,7 +427,7 @@ export const notificationService = {
       "PAYMENT_RESUBMITTED",
       "Paiement re-soumis",
       `${user.name} (${user.email}) a re-soumis une preuve de paiement après rejet.`,
-      { userId: user.id, email: user.email }
+      { userId: user.id, email: user.email },
     );
   },
 
@@ -437,7 +441,7 @@ export const notificationService = {
       "Paiement reçu",
       "Votre preuve de paiement a été reçue avec succès. Elle sera examinée par un administrateur sous peu.",
       { userId: user.id },
-      "BOTH"
+      "BOTH",
     );
   },
 
@@ -451,7 +455,7 @@ export const notificationService = {
       "Paiement approuvé",
       "Excellente nouvelle ! Votre paiement a été approuvé. Vous pouvez maintenant accéder à tous les contenus de la plateforme.",
       { userId: user.id },
-      "IN_APP" // Email is sent separately in payment service
+      "IN_APP", // Email is sent separately in payment service
     );
   },
 
@@ -465,7 +469,7 @@ export const notificationService = {
       "Paiement refusé",
       `Votre preuve de paiement a été refusée. Raison : ${reason}. Veuillez soumettre une nouvelle preuve.`,
       { userId: user.id, reason },
-      "IN_APP" // Email is sent separately in payment service
+      "IN_APP", // Email is sent separately in payment service
     );
   },
 
@@ -475,7 +479,7 @@ export const notificationService = {
   async onNewResourcePublished(
     resourceType: "BOOK" | "VIDEO" | "QCM",
     resourceTitle: string,
-    resourceId: string
+    resourceId: string,
   ) {
     // Get all active students with approved payment
     const students = await prisma.user.findMany({
@@ -516,7 +520,7 @@ export const notificationService = {
   async onResourceDeleted(
     resourceType: "BOOK" | "VIDEO" | "QCM" | "QUESTION",
     resourceTitle: string,
-    deletedById: string
+    deletedById: string,
   ) {
     const typeLabels = {
       BOOK: "Livre",
@@ -529,7 +533,7 @@ export const notificationService = {
       "RESOURCE_DELETED",
       "Ressource supprimée",
       `${typeLabels[resourceType]} "${resourceTitle}" a été supprimé(e) du système.`,
-      { resourceType, resourceTitle, deletedById }
+      { resourceType, resourceTitle, deletedById },
     );
   },
 
@@ -541,7 +545,7 @@ export const notificationService = {
     resourceTitle: string,
     oldStatus: string,
     newStatus: string,
-    updatedById: string
+    updatedById: string,
   ) {
     const typeLabels = {
       BOOK: "Livre",
@@ -554,7 +558,7 @@ export const notificationService = {
       "RESOURCE_UPDATED",
       "Statut de ressource modifié",
       `${typeLabels[resourceType]} "${resourceTitle}" : ${oldStatus} → ${newStatus}`,
-      { resourceType, resourceTitle, oldStatus, newStatus, updatedById }
+      { resourceType, resourceTitle, oldStatus, newStatus, updatedById },
     );
   },
 
@@ -569,12 +573,12 @@ export const notificationService = {
       score: number;
       totalQuestions: number;
       percentage: number;
-    }
+    },
   ) {
     const { school, matiere, score, totalQuestions, percentage } = quizData;
-    
+
     let message = `Vous avez terminé le quiz ${matiere} (${school}) avec un score de ${score}/${totalQuestions} (${percentage}%).`;
-    
+
     // Add encouraging message based on performance
     if (percentage >= 80) {
       message += " Excellent travail ! 🎉";
@@ -590,8 +594,38 @@ export const notificationService = {
       "Quiz terminé",
       message,
       { school, matiere, score, totalQuestions, percentage },
-      "IN_APP"
+      "IN_APP",
     );
+  },
+
+  /**
+   * Trigger: Announcement published (notify all active users)
+   */
+  async onAnnouncementPublished(
+    announcementId: string,
+    title: string,
+    content: string,
+  ) {
+    const users = await prisma.user.findMany({
+      where: { status: "ACTIVE" },
+      select: { id: true },
+    });
+
+    const message =
+      content.length > 300 ? `${content.slice(0, 297)}...` : content;
+
+    const notifications = users.map((user) => ({
+      type: "SYSTEM_ANNOUNCEMENT" as const,
+      title,
+      message,
+      data: { announcementId } as Record<string, unknown>,
+      userId: user.id,
+      channel: "BOTH" as NotificationChannel,
+    }));
+
+    if (notifications.length > 0) {
+      return this.createBulk(notifications);
+    }
   },
 
   /**
@@ -601,7 +635,7 @@ export const notificationService = {
     title: string,
     message: string,
     targetRole?: "ADMIN" | "STUDENT",
-    channel: NotificationChannel = "BOTH"
+    channel: NotificationChannel = "BOTH",
   ) {
     // Get target users
     const users = await prisma.user.findMany({

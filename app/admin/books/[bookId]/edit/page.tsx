@@ -443,7 +443,7 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
 
                 <div className="space-y-2">
                   <Label htmlFor="fileSize" className="text-sm font-medium">
-                    Taille du Fichier
+                    Taille du Fichier <span className="text-xs text-ops-tertiary">(Optionnel)</span>
                   </Label>
                   <Input
                     id="fileSize"
@@ -459,12 +459,12 @@ export default function EditBookPage({ params }: { params: Promise<{ bookId: str
 
               <div className="space-y-2">
                 <Label htmlFor="totalPages" className="text-sm font-medium">
-                  Nombre de Pages
+                  Nombre de Pages <span className="text-xs text-ops-tertiary">(Optionnel)</span>
                 </Label>
                 <Input
                   id="totalPages"
                   type="number"
-                  min="1"
+                  min="0"
                   {...register("totalPages", {
                     setValueAs: (v) => v === "" || v === null ? undefined : parseInt(v, 10)
                   })}

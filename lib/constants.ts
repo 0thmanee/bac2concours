@@ -96,7 +96,7 @@ export const API_ROUTES = {
     `/api/quiz/matieres?school=${encodeURIComponent(school)}`,
   QUIZ_COUNT: (school: string, matiere: string) =>
     `/api/quiz/count?school=${encodeURIComponent(
-      school
+      school,
     )}&matiere=${encodeURIComponent(matiere)}`,
   // Settings Resources
   CATEGORIES: "/api/settings/categories",
@@ -109,6 +109,10 @@ export const API_ROUTES = {
   MATIERE: (id: string) => `/api/settings/matieres/${id}`,
   MATIERES_ACTIVE: "/api/settings/matieres/active",
   DROPDOWN_OPTIONS: "/api/settings/dropdown-options",
+  // Announcements
+  ANNOUNCEMENTS: "/api/announcements",
+  ANNOUNCEMENT: (id: string) => `/api/announcements/${id}`,
+  ANNOUNCEMENT_PUBLISH: (id: string) => `/api/announcements/${id}/publish`,
   // Google Drive
   DRIVE: "/api/drive",
   DRIVE_GRANT_ACCESS: "/api/drive/grant-access",
@@ -233,6 +237,15 @@ export const QUERY_KEYS = {
   },
   DROPDOWN_OPTIONS: {
     ALL: ["dropdown-options"] as const,
+  },
+  ANNOUNCEMENTS: {
+    ALL: ["announcements"] as const,
+    LISTS: () => [...QUERY_KEYS.ANNOUNCEMENTS.ALL, "list"] as const,
+    LIST: (filters?: Record<string, unknown>) =>
+      [...QUERY_KEYS.ANNOUNCEMENTS.LISTS(), filters] as const,
+    DETAILS: () => [...QUERY_KEYS.ANNOUNCEMENTS.ALL, "detail"] as const,
+    DETAIL: (id: string) =>
+      [...QUERY_KEYS.ANNOUNCEMENTS.DETAILS(), id] as const,
   },
   DRIVE: {
     ALL: ["drive"] as const,

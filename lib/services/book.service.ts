@@ -120,6 +120,8 @@ export const bookService = {
     const book = await prisma.book.create({
       data: {
         ...data,
+        fileSize: data.fileSize?.trim() || null,
+        totalPages: data.totalPages ?? null,
         uploadedById,
       },
       include: {
@@ -154,11 +156,15 @@ export const bookService = {
       select: { status: true, title: true },
     });
 
-    // Only include defined values (not undefined)
+    // Only include defined values (not undefined); coerce empty fileSize to null
     const cleanedData: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(data)) {
       if (value !== undefined) {
-        cleanedData[key] = value;
+        if (key === "fileSize" && typeof value === "string" && !value.trim()) {
+          cleanedData[key] = null;
+        } else {
+          cleanedData[key] = value;
+        }
       }
     }
 
@@ -185,7 +191,7 @@ export const bookService = {
           currentBook.title,
           currentBook.status,
           data.status,
-          updatedBook.uploadedById
+          updatedBook.uploadedById,
         )
         .catch(console.error);
     }

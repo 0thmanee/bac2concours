@@ -7,6 +7,7 @@ import {
   Clock,
   CheckCircle2,
   HelpCircle,
+  Megaphone,
 } from "lucide-react";
 import { MetricCard } from "@/components/ui/metric-card";
 import { StatCard } from "@/components/ui/stat-card";
@@ -157,6 +158,13 @@ export default async function AdminDashboard() {
               >
                 <HelpCircle className="h-6 w-6 text-metric-purple mb-2" />
                 <span className="text-sm font-medium">Gérer QCM</span>
+              </Link>
+              <Link
+                href={ADMIN_ROUTES.ANNOUNCEMENTS}
+                className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover"
+              >
+                <Megaphone className="h-6 w-6 text-metric-amber mb-2" />
+                <span className="text-sm font-medium">Annonces</span>
               </Link>
               <Link
                 href="/admin/payments"

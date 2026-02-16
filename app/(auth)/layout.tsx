@@ -41,7 +41,7 @@ export default async function AuthLayout({
         </div>
         
         {/* Content Card */}
-        <div className="glass-card rounded-2xl p-8 border border-ops-border">
+        <div className="rounded-2xl p-8 border border-ops-border">
           {children}
         </div>
 

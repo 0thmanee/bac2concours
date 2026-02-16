@@ -92,6 +92,7 @@ model User {
   uploadedFiles           File[] // Files uploaded by this user
   questions               Question[] // Questions uploaded by this user (admin)
   quizAttempts            QuizAttempt[] // Quiz attempts by this user (student)
+  announcements           Announcement[] // Announcements created by this user (admin)
 
   // Audit fields
   createdAt DateTime @default(now())
@@ -198,8 +199,44 @@ model NotificationPreference {
 }
 
 // ============================================================
-// EMAIL VERIFICATION & PASSWORD RESET
+// ANNOUNCEMENTS
 // ============================================================
+
+enum AnnouncementStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum AnnouncementType {
+  REGISTRATION // e.g. school opens registration
+  EVENT // event, deadline
+  GENERAL // general news
+}
+
+model Announcement {
+  id          String             @id @default(cuid())
+  title       String
+  content     String             @db.Text
+  type        AnnouncementType   @default(GENERAL)
+  status      AnnouncementStatus @default(DRAFT)
+  publishedAt DateTime?
+  linkUrl     String? // Optional "Learn more" link
+  schoolId    String? // Optional: link to a school (e.g. "School X opens registration")
+  school      School?            @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([type])
+  @@index([createdById])
+  @@index([schoolId])
+  @@index([publishedAt])
+  @@map("announcements")
+}
 
 model VerificationToken {
   id      String   @id @default(cuid())
@@ -248,8 +285,8 @@ model Book {
   // PDF file - Google Drive link only
   fileUrl    String // Google Drive or external link to PDF
   fileName   String
-  fileSize   String // e.g., "25.4 MB"
-  totalPages Int
+  fileSize   String? // e.g., "25.4 MB" (optional)
+  totalPages Int? // Optional
   language   String     @default("fr")
   level      String     @default("Terminale") // e.g., "Terminale", "Première"
   subjects   String[] // Array of subjects/matieres for the book
@@ -413,8 +450,9 @@ model School {
   status          SchoolStatus @default(DRAFT)
 
   // Relations
-  uploadedById String
-  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+  uploadedById  String
+  uploadedBy    User           @relation(fields: [uploadedById], references: [id])
+  announcements Announcement[]
 
   // Stats
   views Int @default(0)

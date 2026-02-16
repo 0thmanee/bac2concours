@@ -61,7 +61,6 @@ export default function NewBookPage() {
       isPublic: true,
       tags: [],
       subjects: [],
-      totalPages: 0,
     },
   });
 
@@ -378,12 +377,12 @@ export default function NewBookPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="fileSize" className="text-sm font-medium">
-                    Taille du Fichier <span className="text-destructive">*</span>
+                    Taille du Fichier <span className="text-xs text-ops-tertiary">(Optionnel)</span>
                   </Label>
                   <Input
                     id="fileSize"
                     {...register("fileSize")}
-                    placeholder="25.4 MB"
+                    placeholder="ex: 25.4 MB"
                     className="ops-input h-9"
                   />
                   {errors.fileSize && (
@@ -399,11 +398,11 @@ export default function NewBookPage() {
                 <Input
                   id="totalPages"
                   type="number"
-                  min="1"
+                  min="0"
                   {...register("totalPages", {
                     setValueAs: (v) => v === "" || v === null ? undefined : parseInt(v, 10)
                   })}
-                  placeholder="456"
+                  placeholder="ex: 456 (optionnel)"
                   className="ops-input h-9"
                 />
                 {errors.totalPages && (

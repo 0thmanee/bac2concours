@@ -30,17 +30,28 @@ export const createBookSchema = z.object({
     .url("URL du fichier invalide")
     .min(1, "L'URL du fichier (Google Drive) est requise"),
   fileName: z.string().min(1, "Le nom du fichier est requis").max(255),
-  fileSize: z.string().min(1, "La taille du fichier est requise"),
+  fileSize: z
+    .string()
+    .max(50, "La taille est trop longue")
+    .optional()
+    .or(z.literal("")),
   totalPages: z.preprocess(
     (val) =>
       val === "" || val === null || val === undefined || Number.isNaN(val)
-        ? 0
+        ? undefined
         : Number(val),
-    z.number().int().positive("Le nombre de pages doit être positif")
+    z
+      .number()
+      .int()
+      .min(0, "Le nombre de pages doit être positif ou zéro")
+      .optional(),
   ),
   language: z.string().max(10).default("fr"),
   level: z.string().min(1, "Le niveau est requis").max(50),
-  subjects: z.array(z.string().max(50)).min(1, "Au moins une matière est requise").default([]),
+  subjects: z
+    .array(z.string().max(50))
+    .min(1, "Au moins une matière est requise")
+    .default([]),
   tags: z.array(z.string().max(50)).default([]),
   status: bookStatusSchema.default(BookStatus.ACTIVE),
   isPublic: z.boolean().default(true),
@@ -56,13 +67,13 @@ export const updateBookSchema = z.object({
   coverFileId: z.string().optional().nullable(),
   fileUrl: z.string().url().optional(),
   fileName: z.string().min(1).max(255).optional(),
-  fileSize: z.string().optional(),
+  fileSize: z.string().max(50).optional().nullable().or(z.literal("")),
   totalPages: z.preprocess(
     (val) =>
       val === "" || val === null || val === undefined || Number.isNaN(val)
         ? undefined
         : Number(val),
-    z.number().int().positive().optional()
+    z.number().int().min(0).optional().nullable(),
   ),
   language: z.string().max(10).optional(),
   level: z.string().min(1).max(50).optional(),
