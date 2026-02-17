@@ -50,15 +50,17 @@ export default function ForgotPasswordPage() {
         </div>
 
         {/* Instructions */}
-        <div className="ops-status-info rounded-lg p-4 text-left">
+        <div className="rounded-lg border border-border p-4 text-left">
           <div className="flex gap-3">
-            <Mail className="h-5 w-5 shrink-0 mt-0.5" />
             <div className="space-y-2">
-              <p className="text-sm font-medium">Prochaines Étapes</p>
+              <div className="flex items-center gap-2">
+                <Mail className="h-5 w-5 shrink-0 mt-0.5" />
+                <p className="text-sm font-medium">Prochaines Étapes</p>
+              </div>
               <ul className="space-y-1.5 text-sm">
-                <li>1. Vérifiez votre boîte de réception pour l'email de réinitialisation</li>
-                <li>2. Cliquez sur le lien de réinitialisation (valide pendant 1 heure)</li>
-                <li>3. Créez un nouveau mot de passe et connectez-vous</li>
+                <li>1. Vérifiez votre boîte de réception pour l&apos;email de vérification</li>
+                <li>2. Cliquez sur le lien de vérification pour activer votre compte</li>
+                <li>3. Revenez ici pour vous connecter une fois vérifié</li>
               </ul>
             </div>
           </div>

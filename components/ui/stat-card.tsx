@@ -54,13 +54,9 @@ export function StatCard({
               </div>
             )}
           </div>
-          <div 
-            className="flex h-12 w-12 items-center justify-center rounded-lg shrink-0 bg-neutral-100"
-          >
-            <Icon 
-              className="h-6 w-6 text-action-primary"
-            />
-          </div>
+          <Icon 
+            className="h-6 w-6 text-action-primary"
+          />
         </div>
       </CardContent>
     </Card>

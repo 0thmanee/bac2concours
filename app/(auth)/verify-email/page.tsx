@@ -143,7 +143,7 @@ function VerifyEmailForm() {
           </div>
 
           {/* Info Box */}
-          <div className="ops-status-info rounded-lg p-4">
+          <div className="border border-border rounded-lg p-4">
             <div className="flex gap-3">
               <Mail className="h-5 w-5 shrink-0 mt-0.5" />
               <div className="space-y-2">

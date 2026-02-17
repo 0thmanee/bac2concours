@@ -248,6 +248,38 @@ const notificationIcons: Record<
   PAYMENT_APPROVED: { icon: "", color: BRAND.primary },
   PAYMENT_REJECTED: { icon: "", color: BRAND.primary },
   NEW_RESOURCE: { icon: "", color: BRAND.primary },
+  USER_DELETED: {
+    icon: "",
+    color: ""
+  },
+  EMAIL_VERIFIED: {
+    icon: "",
+    color: ""
+  },
+  ACCOUNT_CREATED: {
+    icon: "",
+    color: ""
+  },
+  PAYMENT_RESUBMITTED: {
+    icon: "",
+    color: ""
+  },
+  PAYMENT_CONFIRMATION: {
+    icon: "",
+    color: ""
+  },
+  RESOURCE_UPDATED: {
+    icon: "",
+    color: ""
+  },
+  RESOURCE_DELETED: {
+    icon: "",
+    color: ""
+  },
+  QUIZ_COMPLETED: {
+    icon: "",
+    color: ""
+  }
 };
 
 export const notificationEmailService = {
