@@ -13,6 +13,7 @@ import { FilterPanel } from "@/components/ui/filter-panel";
 import { TablePagination } from "@/components/ui/data-table";
 import { STUDENT_ROUTES } from "@/lib/routes";
 import { toApiParam } from "@/lib/utils/filter.utils";
+import { getCitiesArray } from "@/lib/utils";
 import {
   StudentPageHeader,
   StudentEmptyState,
@@ -152,7 +153,7 @@ export default function StudentSchoolsPage() {
               }
               title={school.shortName ? `${school.name} (${school.shortName})` : school.name}
               description={school.description}
-              category={school.city}
+              category={getCitiesArray(school.city)}
               level={school.region || undefined}
               metrics={[
                 { icon: Eye, value: school.views || 0 },

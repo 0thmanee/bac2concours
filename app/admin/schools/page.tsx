@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, Plus, Eye, Star, MapPin, Users } from "lucide-react";
 import { DataTable, Column, type PaginationConfig } from "@/components/ui/data-table";
@@ -69,6 +70,7 @@ const SCHOOL_TYPE_LABELS: Record<string, string> = {
 };
 
 export default function AdminSchoolsPage() {
+  const router = useRouter();
   // Filter state using proper types
   const [filters, setFilters] = useState<SchoolAdminFilters>(DEFAULT_FILTERS);
   const [currentPage, setCurrentPage] = useState(1);
@@ -315,13 +317,14 @@ export default function AdminSchoolsPage() {
       headerClassName: "text-right",
       cellClassName: "text-right",
       cell: (school) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="ops-card">
+        <div onClick={(e) => e.stopPropagation()}>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="ops-card">
             <DropdownMenuItem asChild className="text-sm">
               <Link
                 href={ADMIN_ROUTES.SCHOOL(school.id)}
@@ -380,6 +383,7 @@ export default function AdminSchoolsPage() {
             </AlertDialog>
           </DropdownMenuContent>
         </DropdownMenu>
+        </div>
       ),
     },
   ];
@@ -417,6 +421,7 @@ export default function AdminSchoolsPage() {
         data={schools}
         columns={columns}
         keyExtractor={(school) => school.id}
+        onRowClick={(school) => router.push(ADMIN_ROUTES.SCHOOL(school.id))}
         isLoading={isLoading}
         pagination={pagination}
         emptyState={

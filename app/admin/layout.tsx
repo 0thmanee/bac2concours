@@ -16,15 +16,15 @@ export default async function AdminLayout({
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
         <AdminSidebar />
-        <SidebarInset className="flex-1 flex flex-col">
+        <SidebarInset className="flex-1 flex flex-col min-w-0">
           <AdminHeader 
             userName={user.name || ""}
             userEmail={user.email || ""}
           />
           <main 
-            className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 dashboard-background"
+            className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8 dashboard-background min-w-0"
           >
-            <div className="mx-auto">
+            <div className="mx-auto min-w-0 w-full max-w-full">
               {children}
             </div>
           </main>

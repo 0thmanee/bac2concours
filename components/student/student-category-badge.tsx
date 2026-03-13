@@ -2,25 +2,17 @@
 
 interface StudentCategoryBadgeProps {
   category: string;
-  variant?: "brand" | "purple";
+  /** Kept for API compatibility; all tags use the same style. */
+  variant?: "brand" | "purple" | "border";
 }
+
+/** Tags: primary platform color for border and text, no background. */
+const tagClass =
+  "inline-flex items-center max-w-full px-2.5 py-1 rounded-lg text-xs font-semibold wrap-break-word bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400";
 
 export function StudentCategoryBadge({
   category,
-  variant = "brand",
+  variant: _variant,
 }: StudentCategoryBadgeProps) {
-  const variantClasses = {
-    brand:
-      "bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:from-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 dark:text-brand-400 border border-brand-200 dark:border-brand-800",
-    purple:
-      "bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:from-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 dark:text-brand-400 border border-brand-200 dark:border-brand-800",
-  };
-
-  return (
-    <span
-      className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold ${variantClasses[variant]}`}
-    >
-      {category}
-    </span>
-  );
+  return <span className={tagClass}>{category}</span>;
 }

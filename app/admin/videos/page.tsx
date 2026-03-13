@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Video, Plus, Eye } from "lucide-react";
 import { DataTable, Column, type PaginationConfig } from "@/components/ui/data-table";
@@ -61,6 +62,7 @@ const DEFAULT_FILTERS: VideoAdminFilters = {
 };
 
 export default function AdminVideosPage() {
+  const router = useRouter();
   // Filter state using proper types
   const [filters, setFilters] = useState<VideoAdminFilters>(DEFAULT_FILTERS);
   const [currentPage, setCurrentPage] = useState(1);
@@ -287,7 +289,7 @@ export default function AdminVideosPage() {
         <div className="flex items-center gap-1 flex-wrap">
           {getStatusBadge(video.status)}
           {video.isPublic && (
-            <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-md bg-brand-50 dark:bg-brand-900/20 text-brand-700 border border-brand-200">Publique</span>
+            <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-md bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400">Publique</span>
           )}
         </div>
       ),
@@ -305,13 +307,14 @@ export default function AdminVideosPage() {
       headerClassName: "text-right",
       cellClassName: "text-right",
       cell: (video) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="ops-card">
+        <div onClick={(e) => e.stopPropagation()}>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="ops-card">
             <DropdownMenuItem asChild className="text-sm">
               <Link
                 href={ADMIN_ROUTES.VIDEO_EDIT(video.id)}
@@ -360,6 +363,7 @@ export default function AdminVideosPage() {
             </AlertDialog>
           </DropdownMenuContent>
         </DropdownMenu>
+        </div>
       ),
     },
   ];
@@ -397,6 +401,7 @@ export default function AdminVideosPage() {
         data={videos}
         columns={columns}
         keyExtractor={(video) => video.id}
+        onRowClick={(video) => router.push(ADMIN_ROUTES.VIDEO(video.id))}
         isLoading={isLoading}
         pagination={pagination}
         emptyState={

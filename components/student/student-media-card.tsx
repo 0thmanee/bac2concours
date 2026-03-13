@@ -20,7 +20,8 @@ interface StudentMediaCardProps {
   title: string;
   subtitle?: ReactNode;
   description?: string | null;
-  category?: string | null;
+  /** Single label or array of labels (e.g. cities) rendered as tags. Array uses border variant. */
+  category?: string | string[] | null;
   level?: string | null;
   metrics?: MediaCardMetric[];
   actions?: ReactNode;
@@ -53,7 +54,7 @@ export function StudentMediaCard({
       <div className="relative flex-1 flex flex-col p-4 sm:p-5 border border-border rounded-lg">
         {/* Thumbnail */}
         <div
-          className={`${aspectClass} bg-linear-to-br from-[rgb(var(--brand-50))] via-[rgb(var(--brand-100))] to-[rgb(var(--brand-200))] dark:from-[rgb(var(--brand-950))]/40 dark:via-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 rounded-xl mb-4 flex items-center justify-center relative overflow-hidden shadow-inner group-hover:shadow-md transition-shadow duration-300`}
+          className={`${aspectClass} bg-linear-to-br from-[rgb(var(--brand-50))] via-[rgb(var(--brand-100))] to-[rgb(var(--brand-200))] dark:from-[rgb(var(--brand-950))]/40 dark:via-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 rounded-xl mb-4 flex items-center justify-center relative overflow-hidden shadow-inner transition-shadow duration-300`}
         >
           {thumbnailUrl ? (
             <>
@@ -63,7 +64,7 @@ export function StudentMediaCard({
                 fill
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
+              {/* <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" /> */}
               {overlayContent}
             </>
           ) : (
@@ -94,25 +95,33 @@ export function StudentMediaCard({
                 {description}
               </p>
             )}
-
-            {/* Category badges */}
-            {(category || level) && (
-              <div className="flex items-center gap-1.5 flex-wrap">
-                {category && <StudentCategoryBadge category={category} variant="brand" />}
-                {level && <StudentCategoryBadge category={level} variant="purple" />}
-              </div>
-            )}
           </div>
 
-          {/* Footer metrics - pushed to bottom */}
-          {metrics && metrics.length > 0 && (
-            <div className="flex items-center justify-between text-xs text-muted-foreground pt-3 mt-auto border-t border-border">
-              {metrics.map((metric, index) => (
-                <span key={index} className="flex items-center gap-1.5">
-                  <metric.icon size={13} className="text-muted-foreground" />
-                  <span className="font-medium">{metric.value}</span>
-                </span>
-              ))}
+          {/* Tags directly on top of border, then metrics */}
+          {((category != null && (Array.isArray(category) ? category.length > 0 : category) || level) || (metrics && metrics.length > 0)) && (
+            <div className="mt-auto flex flex-col">
+              {(category != null && (Array.isArray(category) ? category.length > 0 : category) || level) && (
+                <div className="flex items-center gap-1.5 flex-wrap pb-3">
+                  {Array.isArray(category)
+                    ? category.map((c, i) => (
+                        <StudentCategoryBadge key={`${c}-${i}`} category={c} />
+                      ))
+                    : category && <StudentCategoryBadge category={category} />}
+                  {level && <StudentCategoryBadge category={level} />}
+                </div>
+              )}
+              <div className="border-t border-border pt-3 flex items-center justify-between text-xs text-muted-foreground">
+                {metrics && metrics.length > 0 ? (
+                  metrics.map((metric, index) => (
+                    <span key={index} className="flex items-center gap-1.5">
+                      <metric.icon size={13} className="text-muted-foreground" />
+                      <span className="font-medium">{metric.value}</span>
+                    </span>
+                  ))
+                ) : (
+                  <span />
+                )}
+              </div>
             </div>
           )}
         </div>

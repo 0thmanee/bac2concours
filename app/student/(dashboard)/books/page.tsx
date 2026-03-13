@@ -162,7 +162,7 @@ export default function StudentBooksPage() {
                   <Button
                     onClick={(e) => handleRead(e, book.fileUrl)}
                     disabled={!book.fileUrl}
-                    className="flex-1 bg-linear-to-r from-[rgb(var(--brand-500))] to-[rgb(var(--brand-600))] hover:from-[rgb(var(--brand-600))] hover:to-[rgb(var(--brand-700))] text-white py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 bg-linear-to-r from-[rgb(var(--brand-500))] to-[rgb(var(--brand-600))] hover:from-[rgb(var(--brand-600))] hover:to-[rgb(var(--brand-700))] text-white py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <FileText size={15} className="mr-2" />
                     Lire

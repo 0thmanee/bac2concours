@@ -159,7 +159,7 @@ export default function ProfilePage() {
                 )}
               </div>
 
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="password" className="text-sm font-medium flex items-center gap-2">
                   <Lock className="h-4 w-4" />
                   New Password
@@ -178,7 +178,7 @@ export default function ProfilePage() {
                 <p className="text-xs text-ops-tertiary">
                   Leave blank to keep your current password
                 </p>
-              </div>
+              </div> */}
 
               <div className="space-y-2">
                 <Label className="text-sm font-medium">Role</Label>

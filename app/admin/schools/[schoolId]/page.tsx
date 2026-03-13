@@ -116,7 +116,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
       DRAFT: "Brouillon",
     };
     return (
-      <span className={`inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg border ${styles[status] || styles.ACTIVE}`}>
+      <span className={`inline-flex items-center px-3 py-0.5 text-sm font-medium rounded-lg border ${styles[status] || styles.ACTIVE}`}>
         {labels[status] || status}
       </span>
     );
@@ -133,7 +133,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
           <>
             {getStatusBadge(school.status)}
             {school.isPublic && (
-              <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg bg-brand-50 dark:bg-brand-900/20 text-brand-700 border border-brand-200">
+              <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400">
                 Public
               </span>
             )}
@@ -329,7 +329,7 @@ export default function SchoolDetailPage({ params }: { params: Promise<{ schoolI
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   {school.specializations.map((spec, index) => (
-                    <span key={index} className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-brand-50 dark:bg-brand-900/20 text-brand-700 border border-brand-200">
+                    <span key={index} className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400">
                       {spec}
                     </span>
                   ))}

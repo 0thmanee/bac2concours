@@ -95,7 +95,7 @@ export function AdminTagsInput({
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg bg-brand-50 dark:bg-brand-900/20 text-brand-700 border border-brand-200"
+                className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400"
               >
                 {tag}
                 <button

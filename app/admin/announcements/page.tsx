@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Megaphone, Plus, MoreHorizontal } from "lucide-react";
 import { DataTable, Column, type PaginationConfig } from "@/components/ui/data-table";
@@ -49,6 +50,7 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 export default function AdminAnnouncementsPage() {
+  const router = useRouter();
   const [filters, setFilters] = useState({
     search: "",
     status: "",
@@ -150,10 +152,12 @@ export default function AdminAnnouncementsPage() {
       headerClassName: "text-right",
       cellClassName: "text-right",
       cell: (a) => (
-        <AnnouncementActions
-          announcement={a}
-          onDelete={() => handleDelete(a.id, a.title)}
-        />
+        <div onClick={(e) => e.stopPropagation()}>
+          <AnnouncementActions
+            announcement={a}
+            onDelete={() => handleDelete(a.id, a.title)}
+          />
+        </div>
       ),
     },
   ];
@@ -205,6 +209,7 @@ export default function AdminAnnouncementsPage() {
         data={announcements}
         columns={columns}
         keyExtractor={(a) => a.id}
+        onRowClick={(a) => router.push(ADMIN_ROUTES.ANNOUNCEMENT_EDIT(a.id))}
         isLoading={isLoading}
         pagination={pagination}
         emptyState={

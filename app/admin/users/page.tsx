@@ -286,13 +286,14 @@ export default function UsersPage() {
       headerClassName: "text-right",
       cellClassName: "text-right",
       cell: (user) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="ops-card">
+        <div onClick={(e) => e.stopPropagation()}>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="ops-card">
             <DropdownMenuItem
               className="text-sm"
               onClick={() => handleEdit(user)}
@@ -329,6 +330,7 @@ export default function UsersPage() {
             </AlertDialog>
           </DropdownMenuContent>
         </DropdownMenu>
+        </div>
       ),
     },
   ];
@@ -362,6 +364,7 @@ export default function UsersPage() {
         data={users}
         columns={columns}
         keyExtractor={(user) => user.id}
+        onRowClick={(user) => handleEdit(user)}
         isLoading={isLoading}
         pagination={pagination}
         emptyState={

@@ -4,7 +4,7 @@ import type { NotificationType } from "@prisma/client";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const fromEmail = process.env.EMAIL_FROM || "onboarding@resend.dev";
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:4000";
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 // Brand colors - Simple and clean
 const BRAND = {
@@ -250,36 +250,36 @@ const notificationIcons: Record<
   NEW_RESOURCE: { icon: "", color: BRAND.primary },
   USER_DELETED: {
     icon: "",
-    color: ""
+    color: "",
   },
   EMAIL_VERIFIED: {
     icon: "",
-    color: ""
+    color: "",
   },
   ACCOUNT_CREATED: {
     icon: "",
-    color: ""
+    color: "",
   },
   PAYMENT_RESUBMITTED: {
     icon: "",
-    color: ""
+    color: "",
   },
   PAYMENT_CONFIRMATION: {
     icon: "",
-    color: ""
+    color: "",
   },
   RESOURCE_UPDATED: {
     icon: "",
-    color: ""
+    color: "",
   },
   RESOURCE_DELETED: {
     icon: "",
-    color: ""
+    color: "",
   },
   QUIZ_COMPLETED: {
     icon: "",
-    color: ""
-  }
+    color: "",
+  },
 };
 
 export const notificationEmailService = {

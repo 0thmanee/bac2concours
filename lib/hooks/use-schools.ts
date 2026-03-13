@@ -225,7 +225,7 @@ export function useSchoolsForDropdown() {
     queryFn: () => {
       const params = buildSearchParams(
         { status: "ACTIVE" },
-        { page: 1, limit: 200 }
+        { page: 1, limit: 100 }
       );
       return apiClient.get<ApiSuccessResponse<SchoolsResponse>>(
         `${API_ROUTES.SCHOOLS}?${params.toString()}`

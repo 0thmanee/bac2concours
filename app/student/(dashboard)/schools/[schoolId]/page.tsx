@@ -30,6 +30,7 @@ import { SupabaseImage } from "@/components/ui/supabase-image";
 import { LoadingState } from "@/components/shared/loading-state";
 
 import { STUDENT_ROUTES } from "@/lib/routes";
+import { formatCities } from "@/lib/utils";
 import {
   useSchool,
   useRelatedSchools,
@@ -97,7 +98,7 @@ export default function StudentSchoolDetailPage() {
 
   // Prepare header metrics
   const headerMetrics: { icon: typeof Calendar; value: React.ReactNode }[] = [
-    { icon: MapPin, value: school.city },
+    { icon: MapPin, value: formatCities(school.city) },
     { icon: Eye, value: `${school.views || 0} vues` },
   ];
 
@@ -121,7 +122,7 @@ export default function StudentSchoolDetailPage() {
     title: s.shortName ? `${s.name} (${s.shortName})` : s.name,
     thumbnailUrl: s.imageFile?.publicUrl || s.logoFile?.publicUrl,
     views: s.views,
-    extraInfo: s.city,
+    extraInfo: formatCities(s.city),
   }));
 
   return (
@@ -320,7 +321,7 @@ export default function StudentSchoolDetailPage() {
                 {school.specializations.map((spec) => (
                   <span
                     key={spec}
-                    className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:from-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 dark:text-brand-400 border border-brand-200 dark:border-brand-800"
+                    className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400"
                   >
                     {spec}
                   </span>
@@ -368,7 +369,7 @@ export default function StudentSchoolDetailPage() {
                       {school.infrastructures.map((item) => (
                         <span
                           key={item}
-                          className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 text-ops-secondary"
+                          className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400"
                         >
                           {item}
                         </span>
@@ -390,7 +391,7 @@ export default function StudentSchoolDetailPage() {
                       {school.services.map((item) => (
                         <span
                           key={item}
-                          className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 text-ops-secondary"
+                          className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400"
                         >
                           {item}
                         </span>
@@ -409,7 +410,7 @@ export default function StudentSchoolDetailPage() {
                 {school.partenariats.map((partner) => (
                   <span
                     key={partner}
-                    className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-400 border border-brand-200 dark:border-brand-800"
+                    className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400"
                   >
                     {partner}
                   </span>
@@ -496,8 +497,8 @@ export default function StudentSchoolDetailPage() {
             <CardContent className="space-y-3">
               <div className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-ops-tertiary shrink-0 mt-0.5" />
-                <div className="text-sm">
-                  <p className="font-medium text-ops-primary">{school.city}</p>
+                <div className="text-sm min-w-0">
+                  <p className="font-medium text-ops-primary wrap-break-word">{formatCities(school.city)}</p>
                   {school.address && (
                     <p className="text-ops-secondary">{school.address}</p>
                   )}

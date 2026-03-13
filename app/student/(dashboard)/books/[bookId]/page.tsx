@@ -160,17 +160,17 @@ export default function StudentBookDetailPage() {
 
                   <div className="flex flex-wrap gap-2">
                     {book.category && (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:from-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 dark:text-brand-400 border border-brand-200 dark:border-brand-800">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400">
                         {book.category}
                       </span>
                     )}
                     {book.level && (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:from-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 dark:text-brand-400 border border-brand-200 dark:border-brand-800">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400">
                         {book.level}
                       </span>
                     )}
                     {book.totalPages && (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-gray-100 text-gray-700 dark:bg-gray-800/50 dark:text-gray-300 border border-border">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400">
                         {book.totalPages} pages
                       </span>
                     )}
@@ -212,7 +212,7 @@ export default function StudentBookDetailPage() {
                 {book.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:from-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 dark:text-brand-400 border border-brand-200 dark:border-brand-800"
+                    className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400"
                   >
                     {tag}
                   </span>

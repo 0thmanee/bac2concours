@@ -10,15 +10,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2, X, ImageIcon, Type, FunctionSquare } from "lucide-react";
 import { useCreateQuestion } from "@/lib/hooks/use-qcm";
-import { useDropdownOptions } from "@/lib/hooks/use-settings-resources";
 import { useSchoolsForDropdown } from "@/lib/hooks/use-schools";
 import { useUploadFile } from "@/lib/hooks/use-files";
 import {
   createQuestionSchema,
+  questionOptionSchema,
   type CreateQuestionInput,
   type QuestionOption,
   type OptionContentType,
 } from "@/lib/validations/qcm.validation";
+import { z } from "zod";
 import {
   Select,
   SelectContent,
@@ -59,11 +60,48 @@ const DIFFICULTY_OPTIONS = [
   { value: QuestionDifficulty.HARD, label: "Difficile" },
 ];
 
+// Mock matieres (max possible) for QCM creation – typical bac/concours subjects
+const MOCK_MATIERES = [
+  { value: "Mathématiques", label: "Mathématiques" },
+  { value: "Physique", label: "Physique" },
+  { value: "Chimie", label: "Chimie" },
+  { value: "Sciences de la Vie et de la Terre", label: "Sciences de la Vie et de la Terre" },
+  { value: "Sciences de l'Ingénieur", label: "Sciences de l'Ingénieur" },
+  { value: "Sciences Économiques", label: "Sciences Économiques" },
+  { value: "Gestion et Comptabilité", label: "Gestion et Comptabilité" },
+  { value: "Philosophie", label: "Philosophie" },
+  { value: "Arabe", label: "Arabe" },
+  { value: "Français", label: "Français" },
+  { value: "Anglais", label: "Anglais" },
+  { value: "Espagnol", label: "Espagnol" },
+  { value: "Allemand", label: "Allemand" },
+  { value: "Histoire-Géographie", label: "Histoire-Géographie" },
+  { value: "Éducation Islamique", label: "Éducation Islamique" },
+  { value: "Informatique", label: "Informatique" },
+  { value: "Sciences Physiques", label: "Sciences Physiques" },
+  { value: "Biologie", label: "Biologie" },
+  { value: "Géologie", label: "Géologie" },
+  { value: "Culture Générale", label: "Culture Générale" },
+  { value: "Raisonnement logique", label: "Raisonnement logique" },
+  { value: "Expression", label: "Expression" },
+  { value: "Compréhension", label: "Compréhension" },
+  { value: "Autre", label: "Autre" },
+];
+
+// Form schema: same as createQuestionSchema but options/correctIds are optional so we can
+// validate them manually in onSubmit (they live in local state until submit).
+const createQuestionFormSchema = createQuestionSchema.omit({
+  options: true,
+  correctIds: true,
+}).extend({
+  options: z.array(questionOptionSchema).optional().default([]),
+  correctIds: z.array(z.string()).optional().default([]),
+});
+
 export default function NewQuestionPage() {
   const router = useRouter();
   const createMutation = useCreateQuestion();
   const uploadFileMutation = useUploadFile();
-  const { data: dropdownData, isLoading: isLoadingDropdowns } = useDropdownOptions();
   const { data: schoolsData, isLoading: isLoadingSchools } = useSchoolsForDropdown();
 
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -82,7 +120,7 @@ export default function NewQuestionPage() {
     setValue,
     watch,
   } = useForm({
-    resolver: zodResolver(createQuestionSchema),
+    resolver: zodResolver(createQuestionFormSchema),
     mode: "onSubmit", // Prevent premature validation
     defaultValues: {
       text: "",
@@ -249,8 +287,8 @@ export default function NewQuestionPage() {
     }
   };
 
-  const matieres = dropdownData?.data?.matieres || [];
-  const schools = schoolsData?.data?.schools?.map(s => s.name) || [];
+  const schools = schoolsData?.data?.schools ?? [];
+  const schoolOptions = schools.map((s) => ({ value: s.name, label: s.shortName ?? s.name }));
 
   return (
     <div className="space-y-6">
@@ -557,12 +595,12 @@ export default function NewQuestionPage() {
                   </Label>
                   <Select onValueChange={(value) => setValue("school", value, { shouldValidate: true })} disabled={isLoadingSchools}>
                     <SelectTrigger id="school" className="ops-input h-9">
-                      <SelectValue placeholder={isLoadingSchools ? "Chargement..." : "Sélectionner une filière"} />
+                      <SelectValue placeholder={isLoadingSchools ? "Chargement..." : schoolOptions.length === 0 ? "Aucune école (créez-en une)" : "Sélectionner une école/filière"} />
                     </SelectTrigger>
                     <SelectContent className="ops-card">
-                      {schools.map((school) => (
-                        <SelectItem key={school} value={school}>
-                          {school}
+                      {schoolOptions.map((opt) => (
+                        <SelectItem key={opt.value} value={opt.value}>
+                          {opt.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -578,12 +616,12 @@ export default function NewQuestionPage() {
                   <Label htmlFor="matiere" className="text-sm font-medium">
                     Matière <span className="text-destructive">*</span>
                   </Label>
-                  <Select onValueChange={(value) => setValue("matiere", value, { shouldValidate: true })} disabled={isLoadingDropdowns}>
+                  <Select onValueChange={(value) => setValue("matiere", value, { shouldValidate: true })}>
                     <SelectTrigger id="matiere" className="ops-input h-9">
-                      <SelectValue placeholder={isLoadingDropdowns ? "Chargement..." : "Sélectionner une matière"} />
+                      <SelectValue placeholder="Sélectionner une matière" />
                     </SelectTrigger>
                     <SelectContent className="ops-card">
-                      {matieres.map((matiere) => (
+                      {MOCK_MATIERES.map((matiere) => (
                         <SelectItem key={matiere.value} value={matiere.value}>
                           {matiere.label}
                         </SelectItem>

@@ -115,7 +115,7 @@ export default function QuestionDetailPage({
     };
     return (
       <span
-        className={`inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg border ${styles[status] || styles.ACTIVE}`}
+        className={`inline-flex items-center px-3 py-0.5 text-sm font-medium rounded-lg border ${styles[status] || styles.ACTIVE}`}
       >
         {labels[status] || status}
       </span>
@@ -135,7 +135,7 @@ export default function QuestionDetailPage({
     };
     return (
       <span
-        className={`inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg border ${styles[difficulty] || styles.MEDIUM}`}
+        className={`inline-flex items-center px-3 py-0.5 text-sm font-medium rounded-lg border ${styles[difficulty] || styles.MEDIUM}`}
       >
         {labels[difficulty] || difficulty}
       </span>
@@ -455,7 +455,7 @@ export default function QuestionDetailPage({
                   {question.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary"
+                      className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400"
                     >
                       {tag}
                     </span>

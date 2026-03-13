@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { HelpCircle, Plus, CheckCircle, XCircle, BarChart3 } from "lucide-react";
 import { DataTable, Column, type PaginationConfig } from "@/components/ui/data-table";
@@ -64,6 +65,7 @@ const DEFAULT_FILTERS: QuestionAdminFilters = {
 };
 
 export default function AdminQCMPage() {
+  const router = useRouter();
   // Filter state
   const [filters, setFilters] = useState<QuestionAdminFilters>(DEFAULT_FILTERS);
   const [currentPage, setCurrentPage] = useState(1);
@@ -324,13 +326,14 @@ export default function AdminQCMPage() {
       headerClassName: "text-right",
       cellClassName: "text-right",
       cell: (question: QuestionWithRelations) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="ops-card">
+        <div onClick={(e) => e.stopPropagation()}>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="ops-card">
             <DropdownMenuItem asChild>
               <Link href={ADMIN_ROUTES.QCM_VIEW(question.id)}>
                 Voir
@@ -371,6 +374,7 @@ export default function AdminQCMPage() {
             </AlertDialog>
           </DropdownMenuContent>
         </DropdownMenu>
+        </div>
       ),
     },
   ];
@@ -408,6 +412,7 @@ export default function AdminQCMPage() {
         data={questions}
         columns={columns}
         keyExtractor={(question: QuestionWithRelations) => question.id}
+        onRowClick={(question) => router.push(ADMIN_ROUTES.QCM_VIEW(question.id))}
         pagination={pagination}
         emptyState={
           <AdminEmptyState

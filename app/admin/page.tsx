@@ -168,7 +168,7 @@ export default async function AdminDashboard() {
               </Link>
               <Link
                 href="/admin/payments"
-                className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover sm:col-span-2"
+                className="flex flex-col items-center justify-center rounded-lg border border-border bg-ops-card-secondary p-4 transition-colors hover:bg-ops-hover"
               >
                 <CreditCard className="h-6 w-6 text-metric-rose mb-2" />
                 <span className="text-sm font-medium">Paiements</span>

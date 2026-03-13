@@ -217,7 +217,7 @@ export default function QuizHistoryPage() {
             {attempts.map((attempt: QuizAttempt) => (
               <Card
                 key={attempt.id}
-                className="ops-card hover:shadow-md transition-shadow cursor-pointer group"
+                className="ops-card transition-shadow cursor-pointer group"
                 onClick={() => router.push(STUDENT_ROUTES.QUIZ_ATTEMPT(attempt.id))}
               >
                 <CardContent className="p-4 sm:p-6">

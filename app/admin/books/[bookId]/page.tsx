@@ -82,7 +82,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
       PROCESSING: "En traitement",
     };
     return (
-      <span className={`inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg border ${styles[status] || styles.ACTIVE}`}>
+      <span className={`inline-flex items-center px-3 py-0.5 text-sm font-medium rounded-lg border ${styles[status] || styles.ACTIVE}`}>
         {labels[status] || status}
       </span>
     );
@@ -98,7 +98,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
         badges={
           <>
             {getStatusBadge(book.status)}
-            {book.isPublic && <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg bg-brand-50 dark:bg-brand-900/20 text-brand-700 border border-brand-200">Public</span>}
+            {book.isPublic && <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400">Public</span>}
           </>
         }
         subtitle={
@@ -209,7 +209,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
                       book.subjects.map((subject, index) => (
                         <span
                           key={index}
-                          className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:from-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 dark:text-brand-400 border border-brand-200 dark:border-brand-800"
+                          className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400"
                         >
                           {subject}
                         </span>
@@ -251,7 +251,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ bookId: s
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   {book.tags.map((tag) => (
-                    <span key={tag} className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-brand-50 dark:bg-brand-900/20 text-brand-700 border border-brand-200">
+                    <span key={tag} className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400">
                       {tag}
                     </span>
                   ))}

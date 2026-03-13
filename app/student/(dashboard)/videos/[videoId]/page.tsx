@@ -184,7 +184,7 @@ export default function StudentVideoDetailPage() {
                 {video.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:from-[rgb(var(--brand-900))]/30 dark:to-[rgb(var(--brand-800))]/20 dark:text-brand-400 border border-brand-200 dark:border-brand-800"
+                    className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-transparent border border-brand-500 text-brand-700 dark:border-brand-400 dark:text-brand-400"
                   >
                     {tag}
                   </span>

@@ -58,7 +58,7 @@ export function DataTable<T>({
 }: DataTableProps<T>) {
   if (isLoading) {
     return (
-      <Card className={cn("overflow-hidden border-border", className)}>
+      <Card className={cn("overflow-hidden border-border min-w-0", className)}>
         <Table>
           <TableHeader>
             <TableRow className="border-b border-border hover:bg-transparent bg-muted/50">
@@ -100,8 +100,8 @@ export function DataTable<T>({
   }
 
   return (
-    <Card className={cn("overflow-hidden border-border", className)}>
-      <div className="overflow-x-auto">
+    <Card className={cn("overflow-hidden border-border min-w-0", className)}>
+      <div className="overflow-x-auto min-w-0">
       <Table>
         <TableHeader>
           <TableRow className="border-b border-border hover:bg-transparent bg-muted/50">

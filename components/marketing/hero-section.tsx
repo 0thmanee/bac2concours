@@ -112,7 +112,7 @@ export function HeroSection() {
               return (
                 <div
                   key={index}
-                  className="rounded-2xl border border-border bg-white dark:border-border dark:bg-white/[0.03] p-6 hover:border-border dark:hover:border-border transition-all duration-300 shadow-sm hover:shadow-md animate-fade-in-up"
+                  className="rounded-2xl border border-border bg-white dark:border-border dark:bg-white/[0.03] p-6 hover:border-border dark:hover:border-border transition-all duration-300 shadow-sm animate-fade-in-up"
                   style={{ animationDelay: `${600 + index * 100}ms` }}
                 >
                   <div className="w-12 h-12 bg-brand-50 dark:bg-brand-950/30 rounded-xl flex items-center justify-center mb-4">

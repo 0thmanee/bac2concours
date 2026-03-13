@@ -40,9 +40,9 @@ export function StudentDetailHeader({
         {metrics && metrics.length > 0 && (
           <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-ops-secondary">
             {metrics.map((metric, index) => (
-              <div key={index} className="flex items-center gap-1.5">
-                <metric.icon className="h-4 w-4" />
-                <span>{metric.value}</span>
+              <div key={index} className="flex items-center gap-1.5 min-w-0">
+                <metric.icon className="h-4 w-4 shrink-0" />
+                <span className="wrap-break-word">{metric.value}</span>
               </div>
             ))}
           </div>

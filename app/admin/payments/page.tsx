@@ -189,7 +189,10 @@ export default function PaymentsPage() {
             variant="ghost"
             size="sm"
             className="h-8 gap-1 text-brand-500"
-            onClick={() => setViewingUser(user)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setViewingUser(user);
+            }}
           >
             <Eye className="h-4 w-4" />
             Voir
@@ -204,7 +207,7 @@ export default function PaymentsPage() {
       headerClassName: "text-right",
       cellClassName: "text-right",
       cell: (user) => (
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
           <Button
             variant="ghost"
             size="sm"
@@ -246,6 +249,7 @@ export default function PaymentsPage() {
         data={payments}
         columns={columns}
         keyExtractor={(user) => user.id}
+        onRowClick={(user) => user.paymentProofUrl && setViewingUser(user)}
         isLoading={isLoading}
         emptyState={
           <AdminEmptyState

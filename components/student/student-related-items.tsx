@@ -79,14 +79,14 @@ export function StudentRelatedItems({
               <h4 className="text-sm font-medium text-ops-primary line-clamp-2 group-hover:text-brand-500 transition-colors">
                 {item.title}
               </h4>
-              <div className="flex items-center gap-2 mt-1 text-xs text-ops-tertiary">
+              <div className="flex items-center gap-2 mt-1 text-xs text-ops-tertiary flex-wrap">
                 {item.views !== undefined && item.views !== null && (
                   <span className="flex items-center gap-1">
                     <Eye className="h-3 w-3" />
                     {item.views}
                   </span>
                 )}
-                {item.extraInfo && <span>{item.extraInfo}</span>}
+                {item.extraInfo && <span className="wrap-break-word min-w-0">{item.extraInfo}</span>}
               </div>
             </div>
           </Link>
