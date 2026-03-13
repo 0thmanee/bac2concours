@@ -136,18 +136,20 @@ export default function StudentVideosPage() {
             className="w-full sm:w-45"
           />
 
-          <FilterSelect
-            value={filters.year === undefined || filters.year === "" ? "all" : String(filters.year)}
-            onChange={(value) =>
-              updateFilter("year", value === "all" ? undefined : value)
-            }
-            options={[
-              { value: "all", label: "Toutes les années" },
-              ...filterOptions.years.map((y) => ({ value: String(y), label: String(y) })),
-            ]}
-            placeholder="Année"
-            className="w-full sm:w-45"
-          />
+          {filterOptions.years.length > 0 && (
+            <FilterSelect
+              value={filters.year === undefined || filters.year === "" ? "all" : String(filters.year)}
+              onChange={(value) =>
+                updateFilter("year", value === "all" ? undefined : value)
+              }
+              options={[
+                { value: "all", label: "Toutes les années" },
+                ...filterOptions.years.map((y) => ({ value: String(y), label: String(y) })),
+              ]}
+              placeholder="Année"
+              className="w-full sm:w-45"
+            />
+          )}
         </div>
       </FilterPanel>
 
