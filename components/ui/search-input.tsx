@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -24,11 +24,31 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
       containerClassName,
       placeholder = "Rechercher...",
       showClearButton = true,
-      ...props
+      onKeyDown: onKeyDownProp,
+      ...restProps
     },
     ref
   ) => {
+    const [localValue, setLocalValue] = useState(value);
+
+    useEffect(() => {
+      setLocalValue(value);
+    }, [value]);
+
+    const submitSearch = (v: string) => {
+      onChange(v);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        submitSearch(localValue);
+      }
+      onKeyDownProp?.(e);
+    };
+
     const handleClear = () => {
+      setLocalValue("");
       onChange("");
       onClear?.();
     };
@@ -39,8 +59,9 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
         <Input
           ref={ref}
           type="text"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
+          value={localValue}
+          onChange={(e) => setLocalValue(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className={cn(
             "pl-10 pr-10 h-10! py-0! leading-10!",
@@ -54,9 +75,9 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
             "transition-all duration-200",
             className
           )}
-          {...props}
+          {...restProps}
         />
-        {showClearButton && value && (
+        {showClearButton && (localValue || value) && (
           <button
             type="button"
             onClick={handleClear}

@@ -113,26 +113,37 @@ export default async function StudentDashboard() {
               {recentBooks.books.length === 0 ? (
                 <p className="text-sm text-ops-secondary">Aucun livre disponible</p>
               ) : (
-                recentBooks.books.map((book) => (
-                  <Link
-                    key={book.id}
-                    href={STUDENT_ROUTES.BOOK(book.id)}
-                    className="flex flex-wrap items-center gap-2 justify-between rounded-lg border border-border bg-ops-card-secondary p-3 transition-colors hover:bg-ops-hover"
-                  >
-                    <div className="flex items-center flex-wrap gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-metric-blue-light">
-                        <BookOpen className="h-5 w-5 text-metric-blue" />
+                recentBooks.books.map((book) => {
+                  const tags = (book.subjects?.length ? book.subjects : [book.category]).filter(Boolean);
+                  return (
+                    <Link
+                      key={book.id}
+                      href={STUDENT_ROUTES.BOOK(book.id)}
+                      className="flex flex-col gap-2 rounded-lg border border-border bg-ops-card-secondary p-3 transition-colors hover:bg-ops-hover"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-metric-blue-light">
+                          <BookOpen className="h-5 w-5 text-metric-blue" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium truncate">{book.title}</p>
+                          <p className="text-xs text-ops-secondary truncate">{book.author}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="unknowntext-sm font-medium">{book.title}</p>
-                        <p className="text-xs text-ops-secondary">{book.author}</p>
+                      <div className="flex flex-wrap items-center gap-x-1 gap-y-1.5">
+                        {tags.flatMap((tag, i) => [
+                          i > 0 ? <span key={`comma-${i}`} className="text-ops-secondary text-xs">, </span> : null,
+                          <span
+                            key={tag}
+                            className="rounded-full bg-metric-blue-light px-2 py-0.5 text-xs font-medium text-metric-blue whitespace-nowrap"
+                          >
+                            {tag}
+                          </span>,
+                        ].filter(Boolean))}
                       </div>
-                    </div>
-                    <span className="rounded-full bg-metric-blue-light px-2 py-0.5 text-xs font-medium text-metric-blue">
-                      {book.subjects && book.subjects.length > 0 ? book.subjects[0] : book.category}
-                    </span>
-                  </Link>
-                ))
+                    </Link>
+                  );
+                })
               )}
             </div>
           </CardContent>
@@ -157,28 +168,39 @@ export default async function StudentDashboard() {
               {recentVideos.videos.length === 0 ? (
                 <p className="text-sm text-ops-secondary">Aucune vidéo disponible</p>
               ) : (
-                recentVideos.videos.map((video) => (
-                  <Link
-                    key={video.id}
-                    href={STUDENT_ROUTES.VIDEO(video.id)}
-                    className="flex flex-wrap items-center gap-2 justify-between rounded-lg border border-border bg-ops-card-secondary p-3 transition-colors hover:bg-ops-hover"
-                  >
-                    <div className="flex items-center flex-wrap gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-metric-orange-light">
-                        <Video className="h-5 w-5 text-metric-orange" />
+                recentVideos.videos.map((video) => {
+                  const tags = (video.subjects?.length ? video.subjects : [video.category]).filter(Boolean);
+                  return (
+                    <Link
+                      key={video.id}
+                      href={STUDENT_ROUTES.VIDEO(video.id)}
+                      className="flex flex-col gap-2 rounded-lg border border-border bg-ops-card-secondary p-3 transition-colors hover:bg-ops-hover"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-metric-orange-light">
+                          <Video className="h-5 w-5 text-metric-orange" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium truncate">{video.title}</p>
+                          <p className="text-xs text-ops-secondary truncate">
+                            {video.duration ? `${Math.floor(video.duration / 60)} min` : "Vidéo"}
+                          </p>
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <p className="unknowntext-sm font-medium">{video.title}</p>
-                        <p className="text-xs text-ops-secondary">
-                          {video.duration ? `${Math.floor(video.duration / 60)} min` : "Vidéo"}
-                        </p>
+                      <div className="flex flex-wrap items-center gap-x-1 gap-y-1.5">
+                        {tags.flatMap((tag, i) => [
+                          i > 0 ? <span key={`comma-${i}`} className="text-ops-secondary text-xs">, </span> : null,
+                          <span
+                            key={tag}
+                            className="rounded-full bg-metric-orange-light px-2 py-0.5 text-xs font-medium text-metric-orange whitespace-nowrap"
+                          >
+                            {tag}
+                          </span>,
+                        ].filter(Boolean))}
                       </div>
-                    </div>
-                    <span className="rounded-full bg-metric-orange-light px-2 py-0.5 text-xs font-medium text-metric-orange">
-                      {video.subjects?.length > 0 ? video.subjects[0] : video.category}
-                    </span>
-                  </Link>
-                ))
+                    </Link>
+                  );
+                })
               )}
             </div>
           </CardContent>
